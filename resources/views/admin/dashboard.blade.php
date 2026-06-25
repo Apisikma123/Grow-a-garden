@@ -32,12 +32,12 @@
             <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-primary-container/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
         </div>
 
-        {{-- Active Gardens --}}
+        {{-- Total Gardens --}}
         <div class="bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group">
             <div class="flex justify-between items-start mb-2 relative z-10">
-                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Active Gardens</div>
+                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Total Gardens (Kebun)</div>
                 <div class="w-8 h-8 rounded-full bg-tertiary-container/30 text-tertiary flex items-center justify-center">
-                    <span class="material-symbols-outlined text-[16px]">local_florist</span>
+                    <span class="material-symbols-outlined text-[16px]">yard</span>
                 </div>
             </div>
             <div class="text-[32px] font-black text-on-surface leading-tight mb-2 relative z-10">18,204</div>
@@ -48,34 +48,34 @@
             <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-tertiary-container/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
         </div>
 
-        {{-- Community Growth --}}
+        {{-- Total Active Plants --}}
         <div class="bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group">
             <div class="flex justify-between items-start mb-2 relative z-10">
-                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Community Growth</div>
+                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Total Active Plants</div>
                 <div class="w-8 h-8 rounded-full bg-secondary-container/30 text-secondary flex items-center justify-center">
-                    <span class="material-symbols-outlined text-[16px]">forum</span>
+                    <span class="material-symbols-outlined text-[16px]">potted_plant</span>
                 </div>
             </div>
-            <div class="text-[32px] font-black text-on-surface leading-tight mb-2 relative z-10">42.5%</div>
+            <div class="text-[32px] font-black text-on-surface leading-tight mb-2 relative z-10">89,431</div>
             <div class="flex items-center gap-1 text-[11px] text-secondary font-bold relative z-10">
                 <span class="material-symbols-outlined text-[14px]">trending_up</span>
-                High engagement
+                +15% this month
             </div>
             <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-secondary-container/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
         </div>
 
-        {{-- Total Harvests --}}
+        {{-- Today's Activities --}}
         <div class="bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group">
             <div class="flex justify-between items-start mb-2 relative z-10">
-                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Total Harvests</div>
+                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Today's Activities</div>
                 <div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-                    <span class="material-symbols-outlined text-[16px]">eco</span>
+                    <span class="material-symbols-outlined text-[16px]">bolt</span>
                 </div>
             </div>
-            <div class="text-[32px] font-black text-on-surface leading-tight mb-2 relative z-10">1.2M</div>
+            <div class="text-[32px] font-black text-on-surface leading-tight mb-2 relative z-10">4,281</div>
             <div class="flex items-center gap-1 text-[11px] text-primary font-bold relative z-10">
                 <span class="material-symbols-outlined text-[14px]">trending_up</span>
-                +24% YoY
+                +5% from yesterday
             </div>
             <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-primary/5 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
         </div>
@@ -146,9 +146,9 @@
             </div>
         </div>
 
-        {{-- Top Crops Bar Chart --}}
+        {{-- Tanaman Populer Bar Chart --}}
         <div class="bg-surface-container-lowest rounded-[24px] p-6 ambient-shadow border border-outline-variant/30 flex flex-col">
-            <h3 class="text-[18px] font-bold text-on-surface mb-6">Top Crops</h3>
+            <h3 class="text-[18px] font-bold text-on-surface mb-6">Tanaman Populer</h3>
             
             <div class="flex-1 flex flex-col justify-between gap-4 pb-6 border-b border-outline-variant/20 relative">
                 
@@ -161,31 +161,31 @@
 
                 {{-- Bars --}}
                 <div class="flex items-center gap-3 relative z-10">
-                    <div class="w-14 text-[11px] font-bold text-on-surface text-right">Tomato</div>
+                    <div class="w-14 text-[11px] font-bold text-on-surface text-right">Tomat</div>
                     <div class="flex-1 h-4">
                         <div class="h-full bg-[#006c49] rounded-r-md" style="width: 85%;"></div>
                     </div>
                 </div>
                 <div class="flex items-center gap-3 relative z-10">
-                    <div class="w-14 text-[11px] font-bold text-on-surface text-right">Lettuce</div>
+                    <div class="w-14 text-[11px] font-bold text-on-surface text-right">Cabai</div>
                     <div class="flex-1 h-4">
                         <div class="h-full bg-[#10b981] rounded-r-md" style="width: 65%;"></div>
                     </div>
                 </div>
                 <div class="flex items-center gap-3 relative z-10">
-                    <div class="w-14 text-[11px] font-bold text-on-surface text-right">Chili</div>
+                    <div class="w-14 text-[11px] font-bold text-on-surface text-right">Bayam</div>
                     <div class="flex-1 h-4">
                         <div class="h-full bg-secondary-container rounded-r-md" style="width: 50%;"></div>
                     </div>
                 </div>
                 <div class="flex items-center gap-3 relative z-10">
-                    <div class="w-14 text-[11px] font-bold text-on-surface text-right">Spinach</div>
+                    <div class="w-14 text-[11px] font-bold text-on-surface text-right">Kangkung</div>
                     <div class="flex-1 h-4">
                         <div class="h-full bg-tertiary-container rounded-r-md" style="width: 40%;"></div>
                     </div>
                 </div>
                 <div class="flex items-center gap-3 relative z-10">
-                    <div class="w-14 text-[11px] font-bold text-on-surface text-right">Basil</div>
+                    <div class="w-14 text-[11px] font-bold text-on-surface text-right">Sawi</div>
                     <div class="flex-1 h-4">
                         <div class="h-full bg-inverse-primary rounded-r-md" style="width: 30%;"></div>
                     </div>
@@ -200,121 +200,149 @@
         </div>
     </div>
 
-    {{-- Bottom Row --}}
-    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        
-        {{-- Recent Community Activity --}}
-        <div class="xl:col-span-2 bg-surface-container-lowest rounded-[24px] p-6 ambient-shadow border border-outline-variant/30 flex flex-col">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-[18px] font-bold text-on-surface">Recent Community Activity</h3>
-                <a href="#" class="text-[13px] font-bold text-primary hover:text-primary/80 transition-colors">View All</a>
-            </div>
-
-            <div class="overflow-x-auto w-full no-scrollbar">
-                <table class="w-full min-w-[500px]">
-                    <thead>
-                        <tr class="border-b border-outline-variant/20 text-left">
-                            <th class="pb-3 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase px-2 w-1/2">User / Event</th>
-                            <th class="pb-3 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase px-2">Type</th>
-                            <th class="pb-3 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase px-2">Status</th>
-                            <th class="pb-3 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase text-right px-2">Time</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-outline-variant/10">
-                        {{-- Row 1 --}}
-                        <tr class="hover:bg-surface-container-lowest/50 transition-colors">
-                            <td class="py-3 px-2">
-                                <div class="flex items-center gap-3">
-                                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop" class="w-8 h-8 rounded-full object-cover">
-                                    <div>
-                                        <div class="text-[13px] font-bold text-on-surface">Sarah J. logged a harvest</div>
-                                        <div class="text-[11px] text-on-surface-variant">Heirloom Tomatoes - 2.5kg</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="py-3 px-2 text-[13px] text-on-surface-variant">Milestone</td>
-                            <td class="py-3 px-2">
-                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#10b981]/10 text-[#10b981]">Verified</span>
-                            </td>
-                            <td class="py-3 px-2 text-[12px] text-on-surface-variant text-right">10 mins ago</td>
-                        </tr>
-
-                        {{-- Row 2 --}}
-                        <tr class="hover:bg-surface-container-lowest/50 transition-colors">
-                            <td class="py-3 px-2">
-                                <div class="flex items-center gap-3">
-                                    <img src="https://images.unsplash.com/photo-1491841550275-ad7854e35ca6?w=100&h=100&fit=crop" class="w-8 h-8 rounded-full object-cover">
-                                    <div>
-                                        <div class="text-[13px] font-bold text-on-surface">UrbanRoots created a post</div>
-                                        <div class="text-[11px] text-on-surface-variant">"Tips for balcony composting"</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="py-3 px-2 text-[13px] text-on-surface-variant">Community Post</td>
-                            <td class="py-3 px-2">
-                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-secondary-container/30 text-on-secondary-container">Trending</span>
-                            </td>
-                            <td class="py-3 px-2 text-[12px] text-on-surface-variant text-right">1 hr ago</td>
-                        </tr>
-
-                        {{-- Row 3 --}}
-                        <tr class="hover:bg-surface-container-lowest/50 transition-colors">
-                            <td class="py-3 px-2">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded-full bg-outline-variant/30 text-on-surface font-bold text-[12px] flex items-center justify-center">M</div>
-                                    <div>
-                                        <div class="text-[13px] font-bold text-on-surface">New Garden Registration</div>
-                                        <div class="text-[11px] text-on-surface-variant">Community Plot #402, Portland</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="py-3 px-2 text-[13px] text-on-surface-variant">System</td>
-                            <td class="py-3 px-2">
-                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#10b981]/10 text-[#10b981]">Active</span>
-                            </td>
-                            <td class="py-3 px-2 text-[12px] text-on-surface-variant text-right">2 hrs ago</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        {{-- System Alerts --}}
-        <div class="bg-surface-container-lowest rounded-[24px] p-6 ambient-shadow border border-outline-variant/30 flex flex-col">
-            <h3 class="text-[18px] font-bold text-on-surface mb-6 flex items-center gap-2">
-                <span class="material-symbols-outlined text-secondary">warning</span>
-                System Alerts
-            </h3>
+    {{-- Row 3: Aktivitas & Rata-rata Umur --}}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {{-- Aktivitas Terbanyak --}}
+        <div class="lg:col-span-2 bg-surface-container-lowest rounded-[24px] p-6 ambient-shadow border border-outline-variant/30 flex flex-col">
+            <h3 class="text-[18px] font-bold text-on-surface mb-6">Aktivitas Terbanyak</h3>
             
-            <div class="flex-1 space-y-3 mb-6">
-                {{-- Alert 1 --}}
-                <div class="bg-surface-container-lowest border border-outline-variant/20 rounded-[16px] p-4 flex gap-3 shadow-sm hover:border-outline-variant/40 transition-colors cursor-pointer">
-                    <div class="w-8 h-8 rounded-full bg-secondary-container/20 flex items-center justify-center shrink-0">
-                        <span class="material-symbols-outlined text-[16px] text-secondary">router</span>
+            <div class="flex flex-col justify-center gap-5 flex-1">
+                {{-- Item 1 --}}
+                <div>
+                    <div class="flex justify-between text-[13px] font-bold text-on-surface mb-2">
+                        <span>Menyiram Tanaman</span>
+                        <span class="text-primary">45%</span>
                     </div>
-                    <div>
-                        <div class="text-[13px] font-bold text-on-surface mb-0.5">IoT Gateway Offline</div>
-                        <div class="text-[11px] text-on-surface-variant leading-relaxed">Gateway 'WestCoast-04' missed 3 heartbeats. Attempting reconnect.</div>
+                    <div class="w-full h-2.5 bg-surface-container-high rounded-full overflow-hidden">
+                        <div class="h-full bg-primary rounded-full" style="width: 45%;"></div>
                     </div>
                 </div>
 
-                {{-- Alert 2 --}}
-                <div class="bg-surface-container-lowest border border-outline-variant/20 rounded-[16px] p-4 flex gap-3 shadow-sm hover:border-outline-variant/40 transition-colors cursor-pointer">
-                    <div class="w-8 h-8 rounded-full bg-primary-container/20 flex items-center justify-center shrink-0">
-                        <span class="material-symbols-outlined text-[16px] text-primary">cloud_done</span>
+                {{-- Item 2 --}}
+                <div>
+                    <div class="flex justify-between text-[13px] font-bold text-on-surface mb-2">
+                        <span>Memberi Pupuk</span>
+                        <span class="text-primary-container">30%</span>
                     </div>
-                    <div>
-                        <div class="text-[13px] font-bold text-on-surface mb-0.5">Database Backup Completed</div>
-                        <div class="text-[11px] text-on-surface-variant leading-relaxed">Routine snapshot finished at 04:00 AM UTC. No errors.</div>
+                    <div class="w-full h-2.5 bg-surface-container-high rounded-full overflow-hidden">
+                        <div class="h-full bg-primary-container rounded-full" style="width: 30%;"></div>
+                    </div>
+                </div>
+
+                {{-- Item 3 --}}
+                <div>
+                    <div class="flex justify-between text-[13px] font-bold text-on-surface mb-2">
+                        <span>Memanen</span>
+                        <span class="text-secondary">15%</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-surface-container-high rounded-full overflow-hidden">
+                        <div class="h-full bg-secondary rounded-full" style="width: 15%;"></div>
+                    </div>
+                </div>
+
+                {{-- Item 4 --}}
+                <div>
+                    <div class="flex justify-between text-[13px] font-bold text-on-surface mb-2">
+                        <span>Lainnya</span>
+                        <span class="text-outline-variant">10%</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-surface-container-high rounded-full overflow-hidden">
+                        <div class="h-full bg-outline-variant rounded-full" style="width: 10%;"></div>
                     </div>
                 </div>
             </div>
-
-            <button class="w-full py-2.5 rounded-full border-2 border-outline-variant/30 text-on-surface font-bold text-[13px] hover:bg-outline-variant/10 active:scale-95 transition-all">
-                View All Logs
-            </button>
         </div>
 
+        {{-- Rata-rata Umur Panen --}}
+        <div class="bg-surface-container-lowest rounded-[24px] p-6 ambient-shadow border border-outline-variant/30 flex flex-col items-center justify-center text-center">
+            <h3 class="text-[18px] font-bold text-on-surface mb-6 w-full text-left">Rata-rata Umur Panen</h3>
+            
+            <div class="flex-1 flex flex-col items-center justify-center">
+                <div class="text-[64px] font-black text-primary leading-none mb-2">42</div>
+                <div class="text-[20px] font-bold text-on-surface mb-4">Hari</div>
+                
+                <div class="flex items-center gap-1 text-[12px] text-primary font-bold">
+                    <span class="material-symbols-outlined text-[16px]">trending_down</span>
+                    - 2 hari dari bulan lalu
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Row 4: Aktivitas Hari Ini --}}
+    <div class="bg-surface-container-lowest rounded-[24px] p-6 ambient-shadow border border-outline-variant/30 flex flex-col">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-[18px] font-bold text-on-surface">Aktivitas Hari Ini</h3>
+            <a href="#" class="text-[13px] font-bold text-primary hover:text-primary/80 transition-colors">View All</a>
+        </div>
+
+        <div class="overflow-x-auto w-full no-scrollbar">
+            <table class="w-full min-w-[500px]">
+                <thead>
+                    <tr class="border-b border-outline-variant/20 text-left">
+                        <th class="pb-3 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase px-2 w-1/2">User / Event</th>
+                        <th class="pb-3 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase px-2">Type</th>
+                        <th class="pb-3 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase px-2">Status</th>
+                        <th class="pb-3 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase text-right px-2">Time</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-outline-variant/10">
+                    {{-- Row 1 --}}
+                    <tr class="hover:bg-surface-container-lowest/50 transition-colors">
+                        <td class="py-3 px-2">
+                            <div class="flex items-center gap-3">
+                                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop" class="w-8 h-8 rounded-full object-cover">
+                                <div>
+                                    <div class="text-[13px] font-bold text-on-surface">Sarah J. logged a harvest</div>
+                                    <div class="text-[11px] text-on-surface-variant">Heirloom Tomatoes - 2.5kg</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-3 px-2 text-[13px] text-on-surface-variant">Milestone</td>
+                        <td class="py-3 px-2">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#10b981]/10 text-[#10b981]">Verified</span>
+                        </td>
+                        <td class="py-3 px-2 text-[12px] text-on-surface-variant text-right">10 mins ago</td>
+                    </tr>
+
+                    {{-- Row 2 --}}
+                    <tr class="hover:bg-surface-container-lowest/50 transition-colors">
+                        <td class="py-3 px-2">
+                            <div class="flex items-center gap-3">
+                                <img src="https://images.unsplash.com/photo-1491841550275-ad7854e35ca6?w=100&h=100&fit=crop" class="w-8 h-8 rounded-full object-cover">
+                                <div>
+                                    <div class="text-[13px] font-bold text-on-surface">UrbanRoots created a post</div>
+                                    <div class="text-[11px] text-on-surface-variant">"Tips for balcony composting"</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-3 px-2 text-[13px] text-on-surface-variant">Community Post</td>
+                        <td class="py-3 px-2">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-secondary-container/30 text-on-secondary-container">Trending</span>
+                        </td>
+                        <td class="py-3 px-2 text-[12px] text-on-surface-variant text-right">1 hr ago</td>
+                    </tr>
+
+                    {{-- Row 3 --}}
+                    <tr class="hover:bg-surface-container-lowest/50 transition-colors">
+                        <td class="py-3 px-2">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-outline-variant/30 text-on-surface font-bold text-[12px] flex items-center justify-center">M</div>
+                                <div>
+                                    <div class="text-[13px] font-bold text-on-surface">New Garden Registration</div>
+                                    <div class="text-[11px] text-on-surface-variant">Community Plot #402, Portland</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-3 px-2 text-[13px] text-on-surface-variant">System</td>
+                        <td class="py-3 px-2">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#10b981]/10 text-[#10b981]">Active</span>
+                        </td>
+                        <td class="py-3 px-2 text-[12px] text-on-surface-variant text-right">2 hrs ago</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 @endsection

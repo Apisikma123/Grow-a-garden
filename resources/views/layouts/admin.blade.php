@@ -16,7 +16,7 @@
                 <span class="text-[10px] text-on-surface-variant font-medium mt-0.5">Admin Console</span>
             </div>
         </a>
-        <button class="text-on-surface-variant active:opacity-80 transition-opacity p-1" aria-label="Menu">
+        <button id="mobile-menu-btn" class="text-on-surface-variant active:opacity-80 transition-opacity p-1" aria-label="Menu">
             <span class="material-symbols-outlined text-[24px]">menu</span>
         </button>
     </header>
@@ -24,27 +24,30 @@
     {{-- ============================================
          DESKTOP SIDEBAR NAVIGATION
          ============================================ --}}
-    <nav class="hidden md:flex flex-col h-screen w-64 fixed left-0 top-0 py-6 border-r border-outline-variant/50 bg-surface-container-lowest z-40" id="sidebar-nav">
+    <nav class="hidden md:flex flex-col h-screen w-[260px] fixed left-0 top-0 py-6 border-r border-outline-variant/30 bg-[#f8f9fa] z-40" id="sidebar-nav">
         {{-- Logo --}}
-        <div class="px-6 mb-8">
+        <div class="px-8 mb-8 flex justify-between items-start">
             <a href="/admin/dashboard" class="flex items-center gap-3">
-                <img src="/logo.png" alt="Logo" class="w-10 h-10 rounded-lg object-contain" onerror="this.outerHTML='<span class=\'material-symbols-outlined text-[40px] text-primary\'>local_florist</span>'">
+                <span class="material-symbols-outlined text-[32px] text-[#006c49]">local_florist</span>
                 <div class="flex flex-col">
-                    <span class="text-[18px] font-bold text-primary leading-tight">Grow a<br>Garden</span>
-                    <span class="text-[11px] text-on-surface-variant font-semibold mt-0.5">Admin Console</span>
+                    <span class="text-[20px] font-bold text-[#006c49] leading-tight tracking-tight">Grow a Garden</span>
+                    <span class="text-[12px] font-bold text-[#006c49]/80 mt-0.5">Admin</span>
                 </div>
             </a>
+            <button id="close-menu-btn" class="md:hidden text-on-surface-variant p-1">
+                <span class="material-symbols-outlined">close</span>
+            </button>
         </div>
 
         {{-- Nav Items --}}
-        <div class="flex-1 flex flex-col gap-1 overflow-y-auto no-scrollbar px-4">
+        <div class="flex-1 flex flex-col gap-2 overflow-y-auto no-scrollbar px-5">
             @php
                 $navItems = [
                     ['route' => 'admin.dashboard', 'label' => 'Dashboard', 'icon' => 'dashboard', 'url' => '/admin/dashboard'],
-                    ['route' => 'admin.users', 'label' => 'User Management', 'icon' => 'group', 'url' => '#'],
-                    ['route' => 'admin.plants', 'label' => 'Plant Database', 'icon' => 'local_florist', 'url' => '#'],
-                    ['route' => 'admin.reports', 'label' => 'Reports', 'icon' => 'bar_chart', 'url' => '#'],
-                    ['route' => 'admin.settings', 'label' => 'Settings', 'icon' => 'settings', 'url' => '#'],
+                    ['route' => 'admin.users', 'label' => 'User Management', 'icon' => 'group', 'url' => '/admin/users'],
+                    ['route' => 'admin.plants', 'label' => 'Plant Database', 'icon' => 'local_florist', 'url' => '/admin/plants'],
+                    ['route' => 'admin.care-templates', 'label' => 'Care Templates', 'icon' => 'assignment', 'url' => '/admin/care-templates'],
+                    ['route' => 'admin.weather', 'label' => 'Weather Rules', 'icon' => 'partly_cloudy_day', 'url' => '/admin/weather'],
                 ];
                 $currentRoute = request()->path();
             @endphp
@@ -53,21 +56,45 @@
                 @php
                     $isActive = ltrim($item['url'], '/') === $currentRoute || ($item['label'] === 'Dashboard' && str_contains($currentRoute, 'admin/dashboard'));
                 @endphp
-                <a href="{{ $item['url'] }}" class="{{ $isActive ? 'bg-primary text-on-primary font-bold shadow-sm' : 'text-on-surface-variant font-medium hover:bg-surface-container-high' }} rounded-[12px] px-4 py-3 flex items-center gap-3 transition-all duration-200">
-                    <span class="material-symbols-outlined text-[20px]">{{ $item['icon'] }}</span>
-                    <span class="text-[14px]">{{ $item['label'] }}</span>
+                <a href="{{ $item['url'] }}" class="{{ $isActive ? 'text-[#006c49] font-bold' : 'text-[#334155] font-semibold hover:bg-black/5' }} rounded-xl px-4 py-3 flex items-center gap-4 transition-all duration-200">
+                    <span class="material-symbols-outlined text-[24px] {{ $isActive ? 'text-[#006c49]' : 'text-[#475569]' }}">{{ $item['icon'] }}</span>
+                    <span class="text-[15px]">{{ $item['label'] }}</span>
                 </a>
             @endforeach
+
+            <div class="h-px w-full bg-outline-variant/40 my-2"></div>
+            
+            <form method="POST" action="/logout" class="w-full">
+                @csrf
+                <button type="submit" class="w-full text-left px-4 py-3 text-[#b91c1c] font-bold flex items-center gap-4 hover:bg-error/5 rounded-xl transition-all duration-200">
+                    <span class="material-symbols-outlined text-[24px]">logout</span>
+                    <span class="text-[15px]">Log Out</span>
+                </button>
+            </form>
         </div>
 
-        {{-- Bottom: Admin Profile --}}
-        <div class="px-6 mt-auto">
-            <div class="mt-4 flex items-center gap-3 pt-4 border-t border-outline-variant/50 cursor-pointer group">
-                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&q=80" alt="Admin avatar" class="w-10 h-10 rounded-full object-cover shadow-sm group-hover:scale-105 transition-transform" />
-                <div class="min-w-0 flex-1">
-                    <div class="text-[14px] font-bold text-on-surface truncate">Admin User</div>
-                    <div class="text-[11px] font-medium text-on-surface-variant truncate">admin@growagarden.com</div>
+        {{-- Bottom Area --}}
+        <div class="px-5 mt-auto flex flex-col gap-4">
+            {{-- Action Button --}}
+            <a href="/admin/plants" class="w-full flex items-center justify-center gap-2 bg-[#006c49] text-white px-4 py-3.5 rounded-full hover:bg-[#005236] transition-colors shadow-sm font-bold text-[15px]">
+                <span class="material-symbols-outlined text-[20px]">add</span>
+                Add New Plant
+            </a>
+
+            {{-- Profile & Settings Box --}}
+            <div class="bg-surface-container-low border border-outline-variant/30 rounded-[24px] p-3 flex items-center justify-between shadow-sm">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-outline-variant/20 flex items-center justify-center text-[#006c49] font-black text-[14px]">
+                        AU
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-[14px] font-bold text-on-surface leading-tight">Admin User</span>
+                        <span class="text-[11px] text-on-surface-variant font-medium">Profile & Settings</span>
+                    </div>
                 </div>
+                <a href="/admin/settings" class="p-2 text-on-surface-variant hover:text-[#006c49] transition-colors flex items-center justify-center rounded-full hover:bg-black/5">
+                    <span class="material-symbols-outlined text-[22px] font-bold">settings</span>
+                </a>
             </div>
         </div>
     </nav>
@@ -100,4 +127,26 @@
     </main>
 
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const sidebar = document.getElementById('sidebar-nav');
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const closeBtn = document.getElementById('close-menu-btn');
+
+        if (menuBtn && sidebar) {
+            menuBtn.addEventListener('click', () => {
+                sidebar.classList.remove('hidden');
+                sidebar.classList.add('flex');
+            });
+        }
+        
+        if (closeBtn && sidebar) {
+            closeBtn.addEventListener('click', () => {
+                sidebar.classList.add('hidden');
+                sidebar.classList.remove('flex');
+            });
+        }
+    });
+</script>
 @endsection
