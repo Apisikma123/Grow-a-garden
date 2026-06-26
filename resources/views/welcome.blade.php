@@ -3,6 +3,40 @@
 @section('title', 'Grow a Garden — Kebun Digital di Genggaman Anda')
 @section('description', 'Kelola kebun rumahan, urban farming, atau hidroponik dengan pemetaan cerdas dan kalender pertumbuhan otomatis.')
 
+@push('head')
+<style>
+    /* Premium Scroll Animations */
+    .scroll-trigger {
+        opacity: 0;
+        transition-property: opacity, transform;
+        transition-duration: 0.8s;
+        transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        will-change: opacity, transform;
+    }
+    
+    .scroll-fade-up { transform: translateY(30px); }
+    .scroll-fade-left { transform: translateX(30px); }
+    .scroll-fade-right { transform: translateX(-30px); }
+    .scroll-scale-in { transform: scale(0.95); }
+    
+    .scroll-trigger.scroll-in {
+        opacity: 1;
+        transform: translate(0) scale(1);
+    }
+
+    /* Stagger Delays */
+    .delay-100 { transition-delay: 100ms; }
+    .delay-200 { transition-delay: 200ms; }
+    .delay-300 { transition-delay: 300ms; }
+    .delay-400 { transition-delay: 400ms; }
+
+    /* Premium Shadows */
+    .premium-shadow { box-shadow: 0 16px 40px rgba(0, 108, 73, 0.08); border-color: rgba(255,255,255,0.8); }
+    .premium-shadow-hover { box-shadow: 0 24px 48px rgba(0, 108, 73, 0.12); transform: translateY(-4px); }
+</style>
+@endpush
+
+
 @section('content')
 {{-- ============================================
      NAVIGATION BAR
@@ -11,7 +45,7 @@
     <div class="max-w-[1280px] mx-auto flex items-center justify-between px-5 lg:px-8 h-16">
         {{-- Logo --}}
         <a href="/" class="flex items-center gap-2 group" id="nav-logo">
-            <span class="material-symbols-outlined text-primary text-[28px] transition-transform duration-200 group-hover:scale-110">yard</span>
+            <img src="{{ asset('images/logo.jpg') }}" alt="Grow a Garden Logo" class="w-8 h-8 rounded-md transition-transform duration-200 group-hover:scale-110 object-contain">
             <span class="text-lg font-bold text-on-surface tracking-tight">Grow a Garden</span>
         </a>
 
@@ -57,23 +91,23 @@
             {{-- Left: Text Content --}}
             <div class="order-2 lg:order-1">
                 {{-- Badge --}}
-                <div class="inline-flex items-center gap-2 bg-surface-container-low text-on-surface-variant text-xs font-medium px-4 py-2 rounded-full mb-6 border border-outline-variant/50">
+                <div class="inline-flex items-center gap-2 bg-surface-container-low text-on-surface-variant text-xs font-medium px-4 py-2 rounded-full mb-6 border border-outline-variant/50 scroll-trigger scroll-fade-up">
                     <span class="material-symbols-outlined text-primary" style="font-size: 16px;">energy_savings_leaf</span>
                     Smart Gardening App
                 </div>
 
                 {{-- Headline --}}
-                <h1 class="text-[40px] md:text-[48px] lg:text-[52px] font-bold text-on-surface leading-[1.1] tracking-tight mb-5">
+                <h1 class="text-[40px] md:text-[48px] lg:text-[52px] font-bold text-on-surface leading-[1.1] tracking-tight mb-5 scroll-trigger scroll-fade-up delay-100">
                     Kebun Digital di<br>Genggaman Anda.
                 </h1>
 
                 {{-- Subtitle --}}
-                <p class="text-base md:text-lg text-on-surface-variant leading-relaxed mb-8 max-w-[440px]">
+                <p class="text-base md:text-lg text-on-surface-variant leading-relaxed mb-8 max-w-[440px] scroll-trigger scroll-fade-up delay-200">
                     Kelola kebun rumahan, urban farming, atau hidroponik dengan pemetaan cerdas dan kalender pertumbuhan otomatis.
                 </p>
 
                 {{-- CTA Buttons --}}
-                <div class="flex flex-wrap items-center gap-4">
+                <div class="flex flex-wrap items-center gap-4 scroll-trigger scroll-fade-up delay-300">
                     <a href="/login" class="inline-flex items-center gap-2 bg-primary text-on-primary font-semibold px-7 py-3.5 rounded-full hover:bg-primary/90 active:scale-[0.97] transition-all duration-200 shadow-md text-sm" id="hero-cta-primary">
                         Mulai Berkebun Sekarang
                         <span class="material-symbols-outlined" style="font-size: 20px;">arrow_forward</span>
@@ -86,7 +120,7 @@
             </div>
 
             {{-- Right: Hero Image with Overlays --}}
-            <div class="order-1 lg:order-2 relative">
+            <div class="order-1 lg:order-2 relative scroll-trigger scroll-scale-in delay-200">
                 <div class="relative rounded-2xl overflow-hidden ambient-shadow-lg">
                     {{-- Garden Photo --}}
                     <img
@@ -134,7 +168,7 @@
 <section id="features" class="bg-surface-container-low py-16 md:py-20 lg:py-24">
     <div class="max-w-[1280px] mx-auto px-5 lg:px-8">
         {{-- Section Header --}}
-        <div class="text-center mb-12 md:mb-16 max-w-[672px] mx-auto">
+        <div class="text-center mb-12 md:mb-16 max-w-[672px] mx-auto scroll-trigger scroll-fade-up">
             <h2 class="text-[28px] md:text-[36px] font-bold text-on-surface tracking-tight mb-4">
                 Berkebun Lebih Mudah & Terukur
             </h2>
@@ -147,7 +181,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
             {{-- Feature 1: Garden Canvas --}}
-            <div class="bg-white rounded-2xl p-6 ambient-shadow border border-outline-variant/20 hover:ambient-shadow-lg hover:-translate-y-1 transition-all duration-300 group" id="feature-garden-canvas">
+            <div class="bg-white rounded-3xl p-8 premium-shadow hover:premium-shadow-hover transition-all duration-500 group scroll-trigger scroll-fade-up delay-100 border border-white/60" id="feature-garden-canvas">
                 {{-- Icon --}}
                 <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/15 transition-colors">
                     <span class="material-symbols-outlined text-primary text-2xl">draw</span>
@@ -159,21 +193,13 @@
                 </p>
 
                 {{-- Visual Preview: Mini Grid --}}
-                <div class="flex gap-3">
-                    <div class="w-16 h-16 rounded-2xl border-[3px] border-solid border-[#006c49] bg-white shadow-[0_8px_16px_rgba(0,108,73,0.15)] flex items-center justify-center">
-                        <span class="material-symbols-outlined text-[#006c49] text-[24px]">eco</span>
-                    </div>
-                    <div class="w-16 h-16 rounded-2xl border-[2px] border-dashed border-[#f59e0b] bg-white/80 shadow-sm flex items-center justify-center">
-                        <span class="material-symbols-outlined text-[#f59e0b] text-[24px]">eco</span>
-                    </div>
-                    <div class="w-16 h-16 rounded-2xl border-[2px] border-dashed border-slate-300 bg-slate-50/50 flex items-center justify-center">
-                        <span class="material-symbols-outlined text-slate-400 text-[24px]">add</span>
-                    </div>
+                <div class="mt-4 rounded-xl overflow-hidden border border-outline-variant/30 shadow-sm">
+                    <img src="{{ asset('images/garden-canvas-preview.png') }}" alt="Garden Canvas Preview" class="w-full h-auto object-cover">
                 </div>
             </div>
 
             {{-- Feature 2: Growth Calendar --}}
-            <div class="bg-white rounded-2xl p-6 ambient-shadow border border-outline-variant/20 hover:ambient-shadow-lg hover:-translate-y-1 transition-all duration-300 group" id="feature-growth-calendar">
+            <div class="bg-white rounded-3xl p-8 premium-shadow hover:premium-shadow-hover transition-all duration-500 group scroll-trigger scroll-fade-up delay-200 border border-white/60" id="feature-growth-calendar">
                 {{-- Icon --}}
                 <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/15 transition-colors">
                     <span class="material-symbols-outlined text-primary text-2xl">calendar_month</span>
@@ -202,7 +228,7 @@
             </div>
 
             {{-- Feature 3: Care Reminder --}}
-            <div class="bg-white rounded-2xl p-6 ambient-shadow border border-outline-variant/20 hover:ambient-shadow-lg hover:-translate-y-1 transition-all duration-300 group" id="feature-care-reminder">
+            <div class="bg-white rounded-3xl p-8 premium-shadow hover:premium-shadow-hover transition-all duration-500 group scroll-trigger scroll-fade-up delay-300 border border-white/60" id="feature-care-reminder">
                 {{-- Icon --}}
                 <div class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center mb-4 group-hover:bg-secondary/15 transition-colors">
                     <span class="material-symbols-outlined text-secondary text-2xl">notifications_active</span>
@@ -239,28 +265,28 @@
             {{-- Left: Text --}}
             <div>
                 {{-- Badge --}}
-                <div class="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-semibold px-4 py-2 rounded-full mb-6">
+                <div class="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-semibold px-4 py-2 rounded-full mb-6 scroll-trigger scroll-fade-up">
                     <span class="material-symbols-outlined" style="font-size: 16px;">auto_awesome</span>
                     Smart Adaptation
                 </div>
 
-                <h2 class="text-[28px] md:text-[36px] font-bold text-on-surface tracking-tight mb-5 leading-tight">
+                <h2 class="text-[28px] md:text-[36px] font-bold text-on-surface tracking-tight mb-5 leading-tight scroll-trigger scroll-fade-up delay-100">
                     Beradaptasi dengan<br>Cuaca Sekitar
                 </h2>
 
-                <p class="text-base text-on-surface-variant leading-relaxed mb-6 max-w-[512px]">
+                <p class="text-base text-on-surface-variant leading-relaxed mb-6 max-w-[512px] scroll-trigger scroll-fade-up delay-200">
                     Sistem kami terhubung dengan data cuaca lokal. Jika terdeteksi musim hujan, jadwal penyiraman otomatis dikurangi. Saat kemarau, pengingat penyiraman akan lebih sering muncul untuk menjaga kelembaban tanah.
                 </p>
 
-                <a href="#" class="inline-flex items-center gap-2 text-primary font-semibold text-sm hover:gap-3 transition-all duration-200">
+                <a href="#" class="inline-flex items-center gap-2 text-primary font-semibold text-sm hover:gap-3 transition-all duration-200 scroll-trigger scroll-fade-up delay-300">
                     Pelajari Sistem Cerdas Kami
                     <span class="material-symbols-outlined" style="font-size: 20px;">arrow_forward</span>
                 </a>
             </div>
 
             {{-- Right: Weather Card --}}
-            <div class="flex justify-center lg:justify-end">
-                <div class="bg-white rounded-2xl p-6 ambient-shadow-lg border border-outline-variant/20 max-w-[448px] w-full">
+            <div class="flex justify-center lg:justify-end scroll-trigger scroll-fade-left delay-200">
+                <div class="bg-white rounded-3xl p-8 premium-shadow border border-white/60 max-w-[448px] w-full hover:premium-shadow-hover transition-shadow duration-500">
                     {{-- Card Header --}}
                     <div class="flex items-center justify-between mb-5">
                         <div class="flex items-center gap-3">
@@ -291,7 +317,7 @@
 <section id="pricing" class="bg-surface-container-lowest py-16 md:py-20 lg:py-24 border-t border-outline-variant/20">
     <div class="max-w-[1280px] mx-auto px-5 lg:px-8">
         {{-- Section Header --}}
-        <div class="text-center mb-12 md:mb-16 max-w-[672px] mx-auto">
+        <div class="text-center mb-12 md:mb-16 max-w-[672px] mx-auto scroll-trigger scroll-fade-up">
             <h2 class="text-[28px] md:text-[36px] font-bold text-on-surface tracking-tight mb-4">
                 Pilih Paket Sesuai Kebutuhan Kebun Anda
             </h2>
@@ -303,7 +329,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             
             {{-- Paket 1: Bibit --}}
-            <div class="bg-white rounded-3xl p-8 ambient-shadow border border-outline-variant/30 flex flex-col hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+            <div class="bg-white rounded-3xl p-8 premium-shadow border border-white/60 flex flex-col hover:premium-shadow-hover transition-all duration-500 scroll-trigger scroll-fade-up delay-100">
                 <h3 class="text-xl font-bold text-on-surface mb-2">Bibit <span class="text-xs font-semibold bg-surface-container-high px-2 py-1 rounded-full text-on-surface-variant ml-2">Gratis</span></h3>
                 <div class="flex items-baseline gap-1 mb-4">
                     <span class="text-[32px] font-black text-on-surface">Rp 0</span>
@@ -313,7 +339,7 @@
                 <div class="space-y-4 flex-1 mb-8">
                     <div class="flex items-start gap-3">
                         <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">check_circle</span>
-                        <span class="text-sm text-on-surface">Maks. 4 Plot & 10 Tanaman Aktif</span>
+                        <span class="text-sm text-on-surface">Maks. 1 Garden, 4 Plot & 10 Tanaman Aktif</span>
                     </div>
                     <div class="flex items-start gap-3">
                         <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">check_circle</span>
@@ -341,7 +367,7 @@
             </div>
 
             {{-- Paket 2: Subur --}}
-            <div class="bg-gradient-to-b from-[#006c49] to-[#005236] rounded-3xl p-8 shadow-xl flex flex-col relative transform md:-translate-y-4 border border-[#008c5f]">
+            <div class="bg-gradient-to-b from-[#006c49] to-[#005236] rounded-3xl p-8 shadow-[0_24px_48px_rgba(0,108,73,0.3)] hover:shadow-[0_32px_64px_rgba(0,108,73,0.4)] flex flex-col relative transform md:-translate-y-4 border border-[#008c5f] transition-all duration-500 scroll-trigger scroll-fade-up delay-200">
                 <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-yellow-400 text-yellow-900 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-wider shadow-md whitespace-nowrap flex items-center gap-1.5">
                     <span class="material-symbols-outlined text-[14px]">star</span>
                     Paling Populer - Best Value
@@ -371,7 +397,7 @@
                 <div class="space-y-4 flex-1 mb-8 mt-2">
                     <div class="flex items-start gap-3">
                         <span class="material-symbols-outlined text-yellow-400 text-[20px] mt-0.5">check_circle</span>
-                        <span class="text-sm text-white font-medium">Maks. 50 Plot & 100 Tanaman Aktif</span>
+                        <span class="text-sm text-white font-medium">Maks. 10 Garden, 50 Plot & 100 Tanaman Aktif</span>
                     </div>
                     <div class="flex items-start gap-3">
                         <span class="material-symbols-outlined text-yellow-400 text-[20px] mt-0.5">smart_toy</span>
@@ -398,7 +424,7 @@
             </div>
 
             {{-- Paket 3: Panen Raya --}}
-            <div class="bg-white rounded-3xl p-8 ambient-shadow border border-outline-variant/30 flex flex-col hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
+            <div class="bg-white rounded-3xl p-8 premium-shadow border border-white/60 flex flex-col hover:premium-shadow-hover transition-all duration-500 relative overflow-hidden scroll-trigger scroll-fade-up delay-300">
                 <div class="absolute -right-6 -top-6 bg-primary/10 w-24 h-24 rounded-full"></div>
                 <h3 class="text-xl font-bold text-on-surface mb-2 relative z-10">Panen Raya <span class="text-xs font-semibold bg-primary-container text-on-primary-container px-2 py-1 rounded-full ml-2">Pro</span></h3>
                 
@@ -425,7 +451,7 @@
                 <div class="space-y-4 flex-1 mb-8 relative z-10">
                     <div class="flex items-start gap-3">
                         <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">all_inclusive</span>
-                        <span class="text-sm text-on-surface font-bold">Unlimited Plot & Tanaman Aktif</span>
+                        <span class="text-sm text-on-surface font-bold">Maks. 100 Garden, Unlimited Plot & Tanaman Aktif</span>
                     </div>
                     <div class="flex items-start gap-3">
                         <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">check_circle</span>
@@ -494,31 +520,23 @@
         });
     });
 
-    // Intersection Observer for scroll animations
+    // Premium Scroll Animations
     const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
+        threshold: 0.15,
+        rootMargin: '0px 0px -40px 0px'
     };
 
-    const observer = new IntersectionObserver((entries) => {
+    const scrollObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('animate-in');
-                observer.unobserve(entry.target);
+                entry.target.classList.add('scroll-in');
+                scrollObserver.unobserve(entry.target);
             }
         });
     }, observerOptions);
 
-    document.querySelectorAll('[id^="feature-"]').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        observer.observe(el);
+    document.querySelectorAll('.scroll-trigger').forEach(el => {
+        scrollObserver.observe(el);
     });
-
-    // Add animate-in styles
-    const style = document.createElement('style');
-    style.textContent = `.animate-in { opacity: 1 !important; transform: translateY(0) !important; }`;
-    document.head.appendChild(style);
 </script>
 @endpush
