@@ -3,10 +3,10 @@
 @section('admin-content')
 <div class="flex flex-col gap-6">
 
-    {{-- Dashboard Overview Header --}}
+    {{-- Ringkasan Beranda Header --}}
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-2">
         <div>
-            <h1 class="text-[28px] font-bold text-on-surface tracking-tight mb-1">Dashboard Overview</h1>
+            <h1 class="text-[28px] font-bold text-on-surface tracking-tight mb-1">Ringkasan Beranda</h1>
             <p class="text-[14px] text-on-surface-variant">Here's what's happening in the garden today.</p>
         </div>
         <button class="px-5 py-2 rounded-full border-2 border-secondary/40 text-secondary font-bold text-[14px] hover:bg-secondary/5 transition-colors">
@@ -16,10 +16,10 @@
 
     {{-- Stats Row --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {{-- Total Users --}}
-        <div class="bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group">
+        {{-- Total Pengguna --}}
+        <a href="/admin/users" class="block bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group hover:-translate-y-1 hover:shadow-md transition-all">
             <div class="flex justify-between items-start mb-2 relative z-10">
-                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Total Users</div>
+                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Total Pengguna</div>
                 <div class="w-8 h-8 rounded-full bg-primary-container/30 text-primary-container flex items-center justify-center">
                     <span class="material-symbols-outlined text-[16px] text-primary">group</span>
                 </div>
@@ -30,12 +30,12 @@
                 +12% this month
             </div>
             <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-primary-container/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
-        </div>
+        </a>
 
-        {{-- Total Gardens --}}
-        <div class="bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group">
+        {{-- Total Kebun --}}
+        <a href="#" class="block bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group hover:-translate-y-1 hover:shadow-md transition-all">
             <div class="flex justify-between items-start mb-2 relative z-10">
-                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Total Gardens (Kebun)</div>
+                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Total Kebun (Kebun)</div>
                 <div class="w-8 h-8 rounded-full bg-tertiary-container/30 text-tertiary flex items-center justify-center">
                     <span class="material-symbols-outlined text-[16px]">yard</span>
                 </div>
@@ -46,10 +46,10 @@
                 +8% this month
             </div>
             <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-tertiary-container/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
-        </div>
+        </a>
 
         {{-- Total Active Plants --}}
-        <div class="bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group">
+        <a href="/admin/plants" class="block bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group hover:-translate-y-1 hover:shadow-md transition-all">
             <div class="flex justify-between items-start mb-2 relative z-10">
                 <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Total Active Plants</div>
                 <div class="w-8 h-8 rounded-full bg-secondary-container/30 text-secondary flex items-center justify-center">
@@ -62,12 +62,12 @@
                 +15% this month
             </div>
             <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-secondary-container/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
-        </div>
+        </a>
 
-        {{-- Today's Activities --}}
-        <div class="bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group">
+        {{-- Hari Ini's Activities --}}
+        <a href="#" class="block bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group hover:-translate-y-1 hover:shadow-md transition-all">
             <div class="flex justify-between items-start mb-2 relative z-10">
-                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Today's Activities</div>
+                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Hari Ini's Activities</div>
                 <div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
                     <span class="material-symbols-outlined text-[16px]">bolt</span>
                 </div>
@@ -78,7 +78,7 @@
                 +5% from yesterday
             </div>
             <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-primary/5 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
-        </div>
+        </a>
     </div>
 
     {{-- Charts Row --}}
@@ -302,7 +302,7 @@
                         <td class="py-3 px-2">
                             <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#10b981]/10 text-[#10b981]">Verified</span>
                         </td>
-                        <td class="py-3 px-2 text-[12px] text-on-surface-variant text-right">10 mins ago</td>
+                        <td class="py-3 px-2 text-[12px] text-on-surface-variant text-right">10 menit yang lalu</td>
                     </tr>
 
                     {{-- Row 2 --}}

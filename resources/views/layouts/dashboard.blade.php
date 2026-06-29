@@ -42,10 +42,10 @@
         <div class="flex-1 flex flex-col gap-1 overflow-y-auto no-scrollbar px-2">
             @php
                 $navItems = [
-                    ['route' => 'dashboard', 'label' => 'Dashboard', 'icon' => 'dashboard', 'url' => '/dashboard'],
-                    ['route' => 'garden-plots', 'label' => 'Garden Plots', 'icon' => 'potted_plant', 'url' => '/garden-plots'],
-                    ['route' => 'growth-calendar', 'label' => 'Growth Calendar', 'icon' => 'calendar_month', 'url' => '/growth-calendar'],
-                    ['route' => 'care-tasks', 'label' => 'Care Tasks', 'icon' => 'water_drop', 'url' => '/care-tasks'],
+                    ['route' => 'dashboard', 'label' => 'Beranda', 'icon' => 'dashboard', 'url' => '/dashboard'],
+                    ['route' => 'garden-plots', 'label' => 'Plot Kebun', 'icon' => 'potted_plant', 'url' => '/garden-plots'],
+                    ['route' => 'growth-calendar', 'label' => 'Kalender Tanam', 'icon' => 'calendar_month', 'url' => '/growth-calendar'],
+                    ['route' => 'care-tasks', 'label' => 'Tugas Perawatan', 'icon' => 'water_drop', 'url' => '/care-tasks'],
                 ];
                 $currentRoute = request()->path();
             @endphp
@@ -64,7 +64,7 @@
             <div class="mt-4 pt-4 border-t border-outline-variant/50 px-2">
                 <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="text-error rounded-full px-4 py-3 flex items-center gap-3 hover:bg-error-container/50 transition-colors duration-200">
                     <span class="material-symbols-outlined">logout</span>
-                    <span class="text-sm font-semibold">Log Out</span>
+                    <span class="text-sm font-semibold">Keluar</span>
                 </a>
                 <form id="logout-form" action="/logout" method="POST" style="display: none;">
                     @csrf
@@ -76,7 +76,7 @@
         <div class="px-6 mt-auto">
             <button class="w-full bg-primary text-on-primary rounded-full py-3 text-sm font-semibold hover:bg-primary/90 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 shadow-sm mb-4" id="btn-add-plant" onclick="if(window.checkLimit && window.checkLimit('plants')){ alert('Plant added! (Demo)'); }">
                 <span class="material-symbols-outlined" style="font-size: 20px;">add</span>
-                Add New Plant
+                Tambah Tanaman Baru
             </button>
 
             {{-- Upgrade Ad Box (Kapitalis Style) --}}
@@ -94,14 +94,20 @@
                 </button>
             </div>
 
-            <a href="/settings" class="flex items-center gap-3 pt-4 border-t border-outline-variant/50 hover:bg-surface-container-high transition-colors p-2 -mx-2 rounded-xl group cursor-pointer">
-                <div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-primary font-bold text-sm flex-shrink-0 group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">GT</div>
-                <div class="min-w-0 flex-1">
-                    <div class="text-sm font-semibold text-on-surface truncate">Green Thumb</div>
-                    <div class="text-xs font-medium text-on-surface-variant">Profile & Settings</div>
+            <div class="bg-surface rounded-[20px] p-2 flex items-center justify-between border border-outline-variant/30 ambient-shadow">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-outline-variant/20 flex items-center justify-center text-[#006c49] font-black text-[14px]">
+                        GT
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-[14px] font-bold text-on-surface leading-tight">Green Thumb</span>
+                        <span class="text-[11px] text-on-surface-variant font-medium">Profil & Pengaturan</span>
+                    </div>
                 </div>
-                <span class="material-symbols-outlined text-on-surface-variant text-[20px] group-hover:text-on-surface transition-colors">settings</span>
-            </a>
+                <a href="/settings" class="p-2 text-on-surface-variant hover:text-[#006c49] transition-colors flex items-center justify-center rounded-full hover:bg-black/5">
+                    <span class="material-symbols-outlined text-[22px] font-bold">settings</span>
+                </a>
+            </div>
         </div>
     </nav>
 
@@ -298,10 +304,10 @@
 <nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-2 bg-surface/95 backdrop-blur-md z-50 rounded-t-xl shadow-[0_-4px_6px_-1px_rgba(6,95,70,0.08)]" id="mobile-bottom-nav" style="padding-bottom: max(0.5rem, env(safe-area-inset-bottom));">
     @php
         $bnavItems = [
-            ['route' => 'dashboard', 'label' => 'Home', 'icon' => 'home', 'url' => '/dashboard'],
-            ['route' => 'garden-plots', 'label' => 'Plots', 'icon' => 'potted_plant', 'url' => '/garden-plots'],
-            ['route' => 'growth-calendar', 'label' => 'Calendar', 'icon' => 'event_note', 'url' => '/growth-calendar'],
-            ['route' => 'care-tasks', 'label' => 'Tasks', 'icon' => 'checklist', 'url' => '/care-tasks'],
+            ['route' => 'dashboard', 'label' => 'Beranda', 'icon' => 'home', 'url' => '/dashboard'],
+            ['route' => 'garden-plots', 'label' => 'Plot', 'icon' => 'potted_plant', 'url' => '/garden-plots'],
+            ['route' => 'growth-calendar', 'label' => 'Kalender', 'icon' => 'event_note', 'url' => '/growth-calendar'],
+            ['route' => 'care-tasks', 'label' => 'Tugas', 'icon' => 'checklist', 'url' => '/care-tasks'],
         ];
     @endphp
 

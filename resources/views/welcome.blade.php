@@ -50,14 +50,14 @@
 
         {{-- Desktop Nav Links --}}
         <nav class="hidden md:flex items-center gap-8" id="nav-links">
-            <a href="#features" class="nav-link active text-sm font-semibold text-primary transition-colors duration-200">Features</a>
+            <a href="#features" class="nav-link active text-sm font-semibold text-primary transition-colors duration-200">Fitur</a>
             <a href="#how-it-works" class="nav-link text-sm font-medium text-on-surface-variant hover:text-primary transition-colors duration-200">How It Works</a>
-            <a href="#pricing" class="nav-link text-sm font-medium text-on-surface-variant hover:text-primary transition-colors duration-200">Pricing</a>
+            <a href="#pricing" class="nav-link text-sm font-medium text-on-surface-variant hover:text-primary transition-colors duration-200">Harga</a>
         </nav>
 
         {{-- CTA Button --}}
         <a href="/login" class="hidden md:inline-flex items-center gap-2 bg-primary text-on-primary text-sm font-semibold px-6 py-2.5 rounded-full hover:bg-primary/90 active:scale-[0.97] transition-all duration-200 shadow-sm" id="nav-cta">
-            Get Started
+            Mulai Sekarang
         </a>
 
         {{-- Mobile Menu Toggle --}}
@@ -68,10 +68,10 @@
 
     {{-- Mobile Menu Dropdown --}}
     <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-outline-variant/30 px-5 py-4 space-y-2">
-        <a href="#features" class="block text-sm font-semibold text-primary py-2 px-4 rounded-lg bg-primary/5">Features</a>
+        <a href="#features" class="block text-sm font-semibold text-primary py-2 px-4 rounded-lg bg-primary/5">Fitur</a>
         <a href="#how-it-works" class="block text-sm font-medium text-on-surface-variant py-2 px-4 rounded-lg hover:bg-surface-container-high transition-colors">How It Works</a>
-        <a href="#pricing" class="block text-sm font-medium text-on-surface-variant py-2 px-4 rounded-lg hover:bg-surface-container-high transition-colors">Pricing</a>
-        <a href="/login" class="block text-center bg-primary text-on-primary text-sm font-semibold px-6 py-2.5 rounded-full mt-2">Get Started</a>
+        <a href="#pricing" class="block text-sm font-medium text-on-surface-variant py-2 px-4 rounded-lg hover:bg-surface-container-high transition-colors">Harga</a>
+        <a href="/login" class="block text-center bg-primary text-on-primary text-sm font-semibold px-6 py-2.5 rounded-full mt-2">Mulai Sekarang</a>
     </div>
 </header>
 
@@ -485,9 +485,9 @@
 
         <nav class="flex items-center gap-6 text-xs font-medium text-on-surface-variant">
             <a href="#" class="hover:text-primary transition-colors">Sitemap</a>
-            <a href="#" class="hover:text-primary transition-colors">Privacy Policy</a>
-            <a href="#" class="hover:text-primary transition-colors">Terms of Service</a>
-            <a href="#" class="hover:text-primary transition-colors">Community</a>
+            <a href="#" class="hover:text-primary transition-colors">Kebijakan Privasi</a>
+            <a href="#" class="hover:text-primary transition-colors">Syarat Layanan</a>
+            <a href="#" class="hover:text-primary transition-colors">Komunitas</a>
         </nav>
 
         <p class="text-xs text-on-surface-variant">&copy; {{ date('Y') }} Grow a Garden. All rights reserved.</p>

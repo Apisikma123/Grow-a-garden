@@ -67,7 +67,7 @@
         {{-- Main Content Grid --}}
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-[32px]">
             
-            {{-- Left Column: Task List (Takes up 2 columns) --}}
+            {{-- Left Column: Daftar Tugas (Takes up 2 columns) --}}
             <div class="lg:col-span-2 flex flex-col gap-[16px]">
                 {{-- Header Filter --}}
                 <div class="flex items-center justify-between pb-4 border-b border-outline-variant/30">
@@ -80,7 +80,7 @@
                 </div>
 
                 <div class="space-y-[16px] pt-2">
-                    {{-- Task 1: High Priority Pending --}}
+                    {{-- Task 1: Tinggi Prioritas Pending --}}
                     <div class="bg-surface rounded-[24px] p-[20px] flex items-center justify-between ambient-shadow hover:ambient-shadow-lg hover:-translate-y-0.5 transition-all duration-300 border border-outline-variant/20">
                         <div class="flex items-center gap-4">
                             <div class="w-14 h-14 rounded-[16px] bg-[#ecfdf5] text-[#059669] flex items-center justify-center shadow-sm">
@@ -106,7 +106,7 @@
                         </div>
                     </div>
 
-                    {{-- Task 2: Completed --}}
+                    {{-- Task 2: Selesai --}}
                     <div class="bg-surface rounded-[24px] p-[20px] flex items-center justify-between ambient-shadow border border-outline-variant/20 opacity-80">
                         <div class="flex items-center gap-4">
                             <div class="w-14 h-14 rounded-[16px] bg-surface-container-highest text-on-surface-variant flex items-center justify-center shadow-sm">
@@ -131,7 +131,7 @@
                         </div>
                     </div>
 
-                    {{-- Task 3: High Priority Pending --}}
+                    {{-- Task 3: Tinggi Prioritas Pending --}}
                     <div class="bg-surface rounded-[24px] p-[20px] flex items-center justify-between ambient-shadow hover:ambient-shadow-lg hover:-translate-y-0.5 transition-all duration-300 border border-outline-variant/20">
                         <div class="flex items-center gap-4">
                             <div class="w-14 h-14 rounded-[16px] bg-[#fff7ed] text-[#ea580c] flex items-center justify-center shadow-sm">

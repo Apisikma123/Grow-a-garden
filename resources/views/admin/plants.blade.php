@@ -22,13 +22,13 @@
                 All Plants
             </button>
             <button class="px-5 py-2 rounded-lg border border-outline-variant/40 text-on-surface-variant font-medium text-[13px] hover:bg-surface-container-lowest transition-colors bg-white">
-                Vegetables
+                Sayuran
             </button>
             <button class="px-5 py-2 rounded-lg border border-outline-variant/40 text-on-surface-variant font-medium text-[13px] hover:bg-surface-container-lowest transition-colors bg-white">
-                Fruits
+                Buah-buahan
             </button>
             <button class="px-5 py-2 rounded-lg border border-outline-variant/40 text-on-surface-variant font-medium text-[13px] hover:bg-surface-container-lowest transition-colors bg-white">
-                Herbs
+                Herbal
             </button>
             <button class="flex items-center gap-2 px-5 py-2 rounded-lg bg-surface-container-low text-on-surface-variant font-bold text-[13px] hover:bg-surface-container-high transition-colors ml-2">
                 <span class="material-symbols-outlined text-[18px]">tune</span>
@@ -51,7 +51,7 @@
                     <tr class="bg-surface-container-lowest border-b border-outline-variant/20 text-left">
                         <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">Preview</th>
                         <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase w-[30%]">Plant Details</th>
-                        <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">Category</th>
+                        <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">Kategori</th>
                         <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">Color Code</th>
                         <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">Status</th>
                         <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase text-right">Actions</th>
@@ -59,15 +59,15 @@
                 </thead>
                 <tbody class="divide-y divide-outline-variant/10">
                     
-                    {{-- Row 1: Heirloom Tomato --}}
+                    {{-- Row 1: Heirloom Tomat --}}
                     <tr class="hover:bg-surface-container-lowest/50 transition-colors">
                         <td class="py-4 px-6">
                             <div class="w-12 h-12 rounded-xl overflow-hidden bg-surface-container-high border border-outline-variant/20">
-                                <img src="https://images.unsplash.com/photo-1592841200221-a6898f307baa?w=150&h=150&fit=crop" class="w-full h-full object-cover" alt="Tomato">
+                                <img src="https://images.unsplash.com/photo-1592841200221-a6898f307baa?w=150&h=150&fit=crop" class="w-full h-full object-cover" alt="Tomat">
                             </div>
                         </td>
                         <td class="py-4 px-6">
-                            <div class="text-[14px] font-bold text-on-surface mb-0.5">Heirloom Tomato</div>
+                            <div class="text-[14px] font-bold text-on-surface mb-0.5">Heirloom Tomat</div>
                             <div class="text-[12px] italic text-on-surface-variant">Solanum lycopersicum</div>
                         </td>
                         <td class="py-4 px-6">
@@ -100,15 +100,15 @@
                         </td>
                     </tr>
 
-                    {{-- Row 2: Sweet Basil --}}
+                    {{-- Row 2: Sweet Selasih --}}
                     <tr class="hover:bg-surface-container-lowest/50 transition-colors">
                         <td class="py-4 px-6">
                             <div class="w-12 h-12 rounded-xl overflow-hidden bg-surface-container-high border border-outline-variant/20">
-                                <img src="https://images.unsplash.com/photo-1615486171448-4fdcf58611eb?w=150&h=150&fit=crop" class="w-full h-full object-cover" alt="Basil">
+                                <img src="https://images.unsplash.com/photo-1615486171448-4fdcf58611eb?w=150&h=150&fit=crop" class="w-full h-full object-cover" alt="Selasih">
                             </div>
                         </td>
                         <td class="py-4 px-6">
-                            <div class="text-[14px] font-bold text-on-surface mb-0.5">Sweet Basil</div>
+                            <div class="text-[14px] font-bold text-on-surface mb-0.5">Sweet Selasih</div>
                             <div class="text-[12px] italic text-on-surface-variant">Ocimum basilicum</div>
                         </td>
                         <td class="py-4 px-6">
@@ -182,15 +182,15 @@
                         </td>
                     </tr>
 
-                    {{-- Row 4: Carrot --}}
+                    {{-- Row 4: Wortel --}}
                     <tr class="hover:bg-surface-container-lowest/50 transition-colors">
                         <td class="py-4 px-6">
                             <div class="w-12 h-12 rounded-xl overflow-hidden bg-surface-container-high border border-outline-variant/20">
-                                <img src="https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=150&h=150&fit=crop" class="w-full h-full object-cover" alt="Carrot">
+                                <img src="https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=150&h=150&fit=crop" class="w-full h-full object-cover" alt="Wortel">
                             </div>
                         </td>
                         <td class="py-4 px-6">
-                            <div class="text-[14px] font-bold text-on-surface mb-0.5">Carrot</div>
+                            <div class="text-[14px] font-bold text-on-surface mb-0.5">Wortel</div>
                             <div class="text-[12px] italic text-on-surface-variant">Daucus carota</div>
                         </td>
                         <td class="py-4 px-6">

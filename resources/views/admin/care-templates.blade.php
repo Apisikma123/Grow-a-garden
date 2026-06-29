@@ -115,7 +115,7 @@
                     </button>
                     <button class="flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#10b981]/15 text-[#006c49] hover:bg-[#10b981]/25 font-bold text-[13px] transition-colors">
                         <span class="material-symbols-outlined text-[18px]">edit</span>
-                        Edit
+                        Ubah
                     </button>
                 </div>
             </div>
@@ -212,7 +212,7 @@
                     </button>
                     <button class="flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#10b981]/15 text-[#006c49] hover:bg-[#10b981]/25 font-bold text-[13px] transition-colors">
                         <span class="material-symbols-outlined text-[18px]">edit</span>
-                        Edit
+                        Ubah
                     </button>
                 </div>
             </div>
