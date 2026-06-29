@@ -13,17 +13,52 @@
                 <p class="text-[16px] text-on-surface-variant">Your garden is thriving. Let's see what needs tending today.</p>
             </div>
             
-            {{-- Weather Widget --}}
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-surface-container-lowest rounded-full flex items-center justify-center ambient-shadow shrink-0">
-                    <span class="material-symbols-outlined text-[24px] text-primary">rainy</span>
-                </div>
-                <div class="max-w-[220px]">
-                    <h3 class="font-bold text-[16px] text-on-surface mb-0.5">Cloudy / Rainy</h3>
-                    <div class="flex items-center gap-1 text-primary text-[10px] font-bold uppercase tracking-wider mb-1">
-                        <span class="material-symbols-outlined text-[14px]">auto_awesome</span> Smart Adaptation
+            {{-- Weather Widget (Dynamic) --}}
+            <div id="weather-widget" class="flex items-center gap-4 transition-all duration-500">
+                {{-- Default: Ask Location State --}}
+                <div id="weather-ask" class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-surface-container-lowest rounded-full flex items-center justify-center ambient-shadow shrink-0">
+                        <span class="material-symbols-outlined text-[24px] text-on-surface-variant">location_off</span>
                     </div>
-                    <p class="text-[11px] text-on-surface-variant leading-tight">Watering frequency reduced by 20% today due to expected rainfall.</p>
+                    <div class="max-w-[260px]">
+                        <h3 class="font-bold text-[14px] text-on-surface mb-1">Aktifkan Lokasi Kebun</h3>
+                        <p class="text-[11px] text-on-surface-variant leading-tight mb-2">Deteksi lokasi untuk penyesuaian cuaca otomatis pada jadwal penyiraman.</p>
+                        <button type="button" id="dash-detect-location" class="bg-primary text-on-primary text-[12px] font-bold px-4 py-1.5 rounded-full flex items-center gap-1.5 hover:bg-primary/90 active:scale-95 transition-all shadow-sm">
+                            <span class="material-symbols-outlined text-[16px]">my_location</span>
+                            Deteksi Lokasi
+                        </button>
+                    </div>
+                </div>
+
+                {{-- Loading State --}}
+                <div id="weather-loading" class="hidden flex items-center gap-3">
+                    <div class="w-12 h-12 bg-surface-container-lowest rounded-full flex items-center justify-center ambient-shadow shrink-0">
+                        <span class="material-symbols-outlined text-[24px] text-primary animate-spin">sync</span>
+                    </div>
+                    <div class="max-w-[220px]">
+                        <h3 class="font-bold text-[14px] text-on-surface mb-0.5">Mendeteksi lokasi...</h3>
+                        <p class="text-[11px] text-on-surface-variant leading-tight">Sedang mencari koordinat dan data cuaca regional Anda.</p>
+                    </div>
+                </div>
+
+                {{-- Active Weather State --}}
+                <div id="weather-active" class="hidden flex items-center gap-4">
+                    <div class="w-12 h-12 bg-surface-container-lowest rounded-full flex items-center justify-center ambient-shadow shrink-0">
+                        <span class="material-symbols-outlined text-[24px] text-primary" id="weather-icon">rainy</span>
+                    </div>
+                    <div class="max-w-[260px]">
+                        <div class="flex items-center gap-2 mb-0.5">
+                            <h3 class="font-bold text-[16px] text-on-surface" id="weather-title">Cloudy / Rainy</h3>
+                        </div>
+                        <div class="flex items-center gap-1 text-primary text-[10px] font-bold uppercase tracking-wider mb-1">
+                            <span class="material-symbols-outlined text-[14px]">auto_awesome</span> Smart Adaptation
+                        </div>
+                        <p class="text-[11px] text-on-surface-variant leading-tight" id="weather-desc">Watering frequency reduced by 20% today due to expected rainfall.</p>
+                        <div class="flex items-center gap-1.5 mt-1.5">
+                            <span class="material-symbols-outlined text-[12px] text-on-surface-variant">location_on</span>
+                            <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider" id="weather-location">—</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -239,3 +274,194 @@
 
     </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // ── Indonesian Regional Season Map ──
+    // Maps provinces to their rainy months (1-indexed). Months NOT listed = dry.
+    // Based on BMKG general patterns. "Normal" returned for transition months.
+    const RAINY_MONTHS = {
+        'Aceh':               [9,10,11,12,1,2],
+        'Sumatera Utara':     [9,10,11,12,1,2],
+        'Sumatera Barat':     [9,10,11,12,1,2,3],
+        'Riau':               [9,10,11,12,1,2],
+        'Kepulauan Riau':     [10,11,12,1,2,3],
+        'Jambi':              [10,11,12,1,2,3],
+        'Sumatera Selatan':   [10,11,12,1,2,3],
+        'Bangka Belitung':    [10,11,12,1,2,3],
+        'Bengkulu':           [10,11,12,1,2,3],
+        'Lampung':            [10,11,12,1,2,3],
+        'DKI Jakarta':        [10,11,12,1,2,3],
+        'Jawa Barat':         [10,11,12,1,2,3],
+        'Banten':             [10,11,12,1,2,3],
+        'Jawa Tengah':        [10,11,12,1,2,3],
+        'DI Yogyakarta':      [10,11,12,1,2,3],
+        'Jawa Timur':         [10,11,12,1,2,3],
+        'Bali':               [10,11,12,1,2,3],
+        'Nusa Tenggara Barat':[11,12,1,2,3],
+        'Nusa Tenggara Timur':[11,12,1,2,3],
+        'Kalimantan Barat':   [9,10,11,12,1,2,3,4],
+        'Kalimantan Tengah':  [9,10,11,12,1,2,3],
+        'Kalimantan Selatan': [10,11,12,1,2,3],
+        'Kalimantan Timur':   [10,11,12,1,2,3],
+        'Kalimantan Utara':   [10,11,12,1,2,3],
+        'Sulawesi Utara':     [10,11,12,1,2,3],
+        'Gorontalo':          [10,11,12,1,2],
+        'Sulawesi Tengah':    [10,11,12,1,2,3],
+        'Sulawesi Barat':     [10,11,12,1,2,3],
+        'Sulawesi Selatan':   [10,11,12,1,2,3],
+        'Sulawesi Tenggara':  [10,11,12,1,2,3],
+        'Maluku':             [4,5,6,7,8],
+        'Maluku Utara':       [10,11,12,1,2,3],
+        'Papua Barat':        [10,11,12,1,2,3,4,5],
+        'Papua':              [10,11,12,1,2,3,4,5],
+    };
+
+    function getSeason(province) {
+        const month = new Date().getMonth() + 1; // 1-12
+        const rainyMonths = RAINY_MONTHS[province];
+        if (!rainyMonths) return 'normal';
+        if (rainyMonths.includes(month)) return 'rainy';
+        // Transition month check (1 month before/after rainy block)
+        const prevMonth = month === 1 ? 12 : month - 1;
+        const nextMonth = month === 12 ? 1 : month + 1;
+        if (rainyMonths.includes(prevMonth) || rainyMonths.includes(nextMonth)) {
+            // Could be transition — check if it's right on the edge
+            if (!rainyMonths.includes(month)) return 'dry';
+        }
+        return 'dry';
+    }
+
+    function getWeatherConfig(season) {
+        switch (season) {
+            case 'rainy':
+                return {
+                    icon: 'rainy',
+                    title: 'Musim Hujan',
+                    desc: 'Frekuensi penyiraman dikurangi 30% karena curah hujan tinggi di wilayah Anda.',
+                    modifier: '-30%',
+                    color: '#006c49'
+                };
+            case 'dry':
+                return {
+                    icon: 'sunny',
+                    title: 'Musim Kemarau',
+                    desc: 'Frekuensi penyiraman ditambah 50% untuk mengkompensasi penguapan tinggi.',
+                    modifier: '+50%',
+                    color: '#944a23'
+                };
+            default:
+                return {
+                    icon: 'partly_cloudy_day',
+                    title: 'Cuaca Normal',
+                    desc: 'Kondisi cuaca normal. Jadwal penyiraman berjalan sesuai standar.',
+                    modifier: '0%',
+                    color: '#006c49'
+                };
+        }
+    }
+
+    function showWeatherState(state) {
+        document.getElementById('weather-ask').classList.add('hidden');
+        document.getElementById('weather-loading').classList.add('hidden');
+        document.getElementById('weather-active').classList.add('hidden');
+        document.getElementById('weather-' + state).classList.remove('hidden');
+    }
+
+    function applyWeather(locationData) {
+        const province = locationData.region || '';
+        const season = getSeason(province);
+        const config = getWeatherConfig(season);
+
+        document.getElementById('weather-icon').textContent = config.icon;
+        document.getElementById('weather-title').textContent = config.title;
+        document.getElementById('weather-desc').textContent = config.desc;
+        document.getElementById('weather-location').textContent = locationData.formatted || province;
+        document.getElementById('weather-icon').style.color = config.color;
+
+        showWeatherState('active');
+    }
+
+    // ── Init: check localStorage ──
+    const saved = localStorage.getItem('garden_location');
+    if (saved) {
+        try {
+            applyWeather(JSON.parse(saved));
+        } catch(e) {
+            showWeatherState('ask');
+        }
+    } else {
+        showWeatherState('ask');
+    }
+
+    // ── Detect Location from Dashboard ──
+    const detectBtn = document.getElementById('dash-detect-location');
+    if (detectBtn) {
+        detectBtn.addEventListener('click', () => {
+            if (!navigator.geolocation) {
+                alert('Browser Anda tidak mendukung Geolocation.');
+                return;
+            }
+
+            showWeatherState('loading');
+
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+
+                    try {
+                        const resp = await fetch(
+                            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10`,
+                            { headers: { 'Accept-Language': 'id, en' } }
+                        );
+                        if (!resp.ok) throw new Error('API error');
+
+                        const data = await resp.json();
+                        const addr = data.address || {};
+                        const city = addr.city || addr.town || addr.municipality || addr.city_district || addr.county || 'Lokasi Terdeteksi';
+                        const state = addr.state || addr.region || '';
+                        const formatted = state ? `${city}, ${state}` : city;
+
+                        const locationData = {
+                            lat, lon, city,
+                            region: state || city,
+                            country: addr.country || 'Indonesia',
+                            formatted: `${formatted}, Indonesia`
+                        };
+
+                        localStorage.setItem('garden_location', JSON.stringify(locationData));
+                        applyWeather(locationData);
+
+                    } catch (err) {
+                        console.error('Reverse geocoding error:', err);
+                        const fallback = {
+                            lat, lon,
+                            city: `${lat.toFixed(4)}, ${lon.toFixed(4)}`,
+                            region: '',
+                            country: 'Indonesia',
+                            formatted: `Koordinat: ${lat.toFixed(4)}, ${lon.toFixed(4)}`
+                        };
+                        localStorage.setItem('garden_location', JSON.stringify(fallback));
+                        applyWeather(fallback);
+                    }
+                },
+                (error) => {
+                    showWeatherState('ask');
+                    let msg = 'Gagal mendeteksi lokasi.';
+                    if (error.code === error.PERMISSION_DENIED)
+                        msg = 'Izin lokasi ditolak. Anda bisa mengatur lokasi secara manual di halaman Settings.';
+                    else if (error.code === error.POSITION_UNAVAILABLE)
+                        msg = 'Informasi lokasi tidak tersedia.';
+                    else if (error.code === error.TIMEOUT)
+                        msg = 'Waktu permintaan lokasi habis. Coba lagi.';
+                    alert(msg);
+                },
+                { enableHighAccuracy: true, timeout: 10000 }
+            );
+        });
+    }
+});
+</script>
+@endpush
