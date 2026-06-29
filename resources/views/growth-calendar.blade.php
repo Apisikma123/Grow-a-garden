@@ -1,14 +1,14 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Growth Calendar — Grow a Garden')
-@section('description', 'Track and manage the growth stages of your plants.')
+@section('title', 'Kalender Tanam — Grow a Garden')
+@section('description', 'Pantau dan kelola tahap pertumbuhan tanaman Anda.')
 
 @section('dashboard-content')
     <div class="flex flex-col gap-[24px] pb-10">
         {{-- Header Section --}}
         <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-2">
             <div>
-                <h1 class="text-[32px] md:text-[48px] font-bold text-on-surface tracking-tight leading-tight mb-2">Growth Calendar</h1>
+                <h1 class="text-[32px] md:text-[48px] font-bold text-on-surface tracking-tight leading-tight mb-2">Kalender Tanam</h1>
                 <p class="text-[16px] text-on-surface-variant max-w-xl leading-[24px]">Pantau linimasa pertumbuhan cerdas yang beradaptasi dengan kondisi kebun Anda secara real-time.</p>
             </div>
         </div>

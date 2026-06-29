@@ -1,6 +1,6 @@
 @extends('errors.layout')
 
-@section('title', 'Page Not Found')
+@section('title', 'Halaman Tidak Ditemukan')
 @section('code', '404')
 
 @section('icon')
@@ -17,6 +17,6 @@
 @section('actions')
 <a href="/dashboard" class="bg-[#006c49] text-white px-8 py-4 rounded-[16px] font-semibold shadow-lg shadow-[#006c49]/20 hover:bg-[#005236] transition-all active:scale-95 w-full sm:w-auto text-center inline-flex items-center justify-center gap-2">
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-    Return to Dashboard
+    Kembali ke Beranda
 </a>
 @endsection

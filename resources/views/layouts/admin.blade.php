@@ -43,18 +43,18 @@
         <div class="flex-1 flex flex-col gap-2 overflow-y-auto no-scrollbar px-5">
             @php
                 $navItems = [
-                    ['route' => 'admin.dashboard', 'label' => 'Dashboard', 'icon' => 'dashboard', 'url' => '/admin/dashboard'],
+                    ['route' => 'admin.dashboard', 'label' => 'Beranda', 'icon' => 'dashboard', 'url' => '/admin/dashboard'],
                     ['route' => 'admin.users', 'label' => 'User Management', 'icon' => 'group', 'url' => '/admin/users'],
                     ['route' => 'admin.plants', 'label' => 'Plant Database', 'icon' => 'local_florist', 'url' => '/admin/plants'],
-                    ['route' => 'admin.care-templates', 'label' => 'Care Templates', 'icon' => 'assignment', 'url' => '/admin/care-templates'],
-                    ['route' => 'admin.weather', 'label' => 'Weather Rules', 'icon' => 'partly_cloudy_day', 'url' => '/admin/weather'],
+                    ['route' => 'admin.care-templates', 'label' => 'Template Perawatan', 'icon' => 'assignment', 'url' => '/admin/care-templates'],
+                    ['route' => 'admin.weather', 'label' => 'Cuaca Rules', 'icon' => 'partly_cloudy_day', 'url' => '/admin/weather'],
                 ];
                 $currentRoute = request()->path();
             @endphp
 
             @foreach($navItems as $item)
                 @php
-                    $isActive = ltrim($item['url'], '/') === $currentRoute || ($item['label'] === 'Dashboard' && str_contains($currentRoute, 'admin/dashboard'));
+                    $isActive = ltrim($item['url'], '/') === $currentRoute || ($item['label'] === 'Beranda' && str_contains($currentRoute, 'admin/dashboard'));
                 @endphp
                 <a href="{{ $item['url'] }}" class="{{ $isActive ? 'text-[#006c49] font-bold' : 'text-[#334155] font-semibold hover:bg-black/5' }} rounded-xl px-4 py-3 flex items-center gap-4 transition-all duration-200">
                     <span class="material-symbols-outlined text-[24px] {{ $isActive ? 'text-[#006c49]' : 'text-[#475569]' }}">{{ $item['icon'] }}</span>
@@ -68,7 +68,7 @@
                 @csrf
                 <button type="submit" class="w-full text-left px-4 py-3 text-[#b91c1c] font-bold flex items-center gap-4 hover:bg-error/5 rounded-xl transition-all duration-200">
                     <span class="material-symbols-outlined text-[24px]">logout</span>
-                    <span class="text-[15px]">Log Out</span>
+                    <span class="text-[15px]">Keluar</span>
                 </button>
             </form>
         </div>
@@ -81,7 +81,7 @@
                 Add New Plant
             </a>
 
-            {{-- Profile & Settings Box --}}
+            {{-- Profile & Pengaturan Box --}}
             <div class="bg-surface-container-low border border-outline-variant/30 rounded-[24px] p-3 flex items-center justify-between shadow-sm">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-outline-variant/20 flex items-center justify-center text-[#006c49] font-black text-[14px]">
@@ -89,7 +89,7 @@
                     </div>
                     <div class="flex flex-col">
                         <span class="text-[14px] font-bold text-on-surface leading-tight">Admin User</span>
-                        <span class="text-[11px] text-on-surface-variant font-medium">Profile & Settings</span>
+                        <span class="text-[11px] text-on-surface-variant font-medium">Profile & Pengaturan</span>
                     </div>
                 </div>
                 <a href="/admin/settings" class="p-2 text-on-surface-variant hover:text-[#006c49] transition-colors flex items-center justify-center rounded-full hover:bg-black/5">

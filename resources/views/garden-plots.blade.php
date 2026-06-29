@@ -178,12 +178,12 @@
     <div class="max-w-[1280px] mx-auto px-6 py-12 md:py-20 relative z-10">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-6">
             <div>
-                <h1 class="text-[40px] md:text-[56px] font-black text-[#191c1d] tracking-tight leading-none mb-3">My Gardens</h1>
-                <p class="text-[18px] text-[#6c7a71] font-medium">Select a planting zone to manage your plots and tasks</p>
+                <h1 class="text-[40px] md:text-[56px] font-black text-[#191c1d] tracking-tight leading-none mb-3">Kebunku</h1>
+                <p class="text-[18px] text-[#6c7a71] font-medium">Pilih zona tanam untuk mengelola plot dan tugas</p>
             </div>
             <button id="btn-create-garden" class="bg-[#006c49] text-white px-8 py-4 rounded-full font-bold text-[16px] hover:bg-[#005236] transition-all shadow-[0_8px_24px_rgba(0,108,73,0.25)] hover:shadow-[0_12px_32px_rgba(0,108,73,0.35)] flex items-center gap-3 transform hover:-translate-y-1">
                 <span class="material-symbols-outlined text-[24px]">add</span>
-                Create New Garden
+                Buat Kebun Baru
             </button>
         </div>
 
@@ -204,23 +204,23 @@
                     <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#006c49]/20 to-[#10b981]/20 text-[#006c49] flex items-center justify-center shrink-0 border border-[#006c49]/10">
                         <span class="material-symbols-outlined text-[28px]">park</span>
                     </div>
-                    <h2 class="text-2xl font-black text-[#191c1d] leading-tight">Create<br><span class="text-[#006c49]">New Garden</span></h2>
+                    <h2 class="text-2xl font-black text-[#191c1d] leading-tight">Buat<br><span class="text-[#006c49]">New Garden</span></h2>
                 </div>
                 
                 <div class="space-y-4 max-h-[60vh] overflow-y-auto premium-scroll pr-2">
                     <div>
-                        <label class="block text-[13px] font-bold text-[#6c7a71] uppercase tracking-wider mb-2">Garden Name</label>
+                        <label class="block text-[13px] font-bold text-[#6c7a71] uppercase tracking-wider mb-2">Nama Kebun</label>
                         <input type="text" id="input-garden-name" class="w-full bg-[#f8f9fa] border border-[#e1e3e4] rounded-2xl px-5 py-4 focus:border-[#006c49] focus:ring-2 focus:ring-[#006c49]/20 focus:bg-white focus:outline-none text-[16px] text-[#191c1d] font-medium transition-all" placeholder="e.g. Backyard Oasis">
                     </div>
                     <div>
-                        <label class="block text-[13px] font-bold text-[#6c7a71] uppercase tracking-wider mb-2">Location / Zone</label>
+                        <label class="block text-[13px] font-bold text-[#6c7a71] uppercase tracking-wider mb-2">Lokasi / Zona</label>
                         <input type="text" id="input-garden-location" class="w-full bg-[#f8f9fa] border border-[#e1e3e4] rounded-2xl px-5 py-4 focus:border-[#006c49] focus:ring-2 focus:ring-[#006c49]/20 focus:bg-white focus:outline-none text-[16px] text-[#191c1d] font-medium transition-all" placeholder="e.g. Zone 4b">
                     </div>
                 </div>
                 <div class="flex gap-4 mt-8">
-                    <button id="btn-cancel-garden-modal" class="flex-1 py-4 text-[#6c7a71] font-bold rounded-2xl hover:bg-[#f3f4f5] transition-colors text-[16px]">Cancel</button>
+                    <button id="btn-cancel-garden-modal" class="flex-1 py-4 text-[#6c7a71] font-bold rounded-2xl hover:bg-[#f3f4f5] transition-colors text-[16px]">Batal</button>
                     <button id="btn-confirm-garden-modal" class="flex-[1.5] py-4 bg-[#006c49] text-white font-bold rounded-2xl hover:bg-[#005236] active:scale-95 transition-all shadow-[0_8px_24px_rgba(0,108,73,0.25)] text-[16px] flex items-center justify-center gap-2">
-                        <span class="material-symbols-outlined text-[20px]">done</span> Create Garden
+                        <span class="material-symbols-outlined text-[20px]">done</span> Buat Kebun
                     </button>
                 </div>
             </div>
@@ -239,7 +239,7 @@
         <div class="p-8 pb-4 flex justify-between items-start relative z-10">
             <div>
                 <button id="btn-back-to-dashboard" class="flex items-center gap-2 text-[#6c7a71] hover:text-[#191c1d] font-bold text-[14px] mb-4 transition-colors group">
-                    <span class="material-symbols-outlined text-[18px] group-hover:-translate-x-1 transition-transform">arrow_back</span> Back to Gardens
+                    <span class="material-symbols-outlined text-[18px] group-hover:-translate-x-1 transition-transform">arrow_back</span> Kembali ke Kebun
                 </button>
                 <h1 id="canvas-garden-name" class="text-[32px] md:text-[36px] font-black text-[#191c1d] leading-tight tracking-tight mb-1">Green Valley</h1>
                 <div class="flex items-center gap-2 text-[#3c4a42] text-[14px] font-semibold bg-[#F1F5F2] inline-flex px-3 py-1.5 rounded-full border border-[#e1e3e4]">
@@ -324,7 +324,7 @@
     {{-- Right Sidebar (Premium Overlay) --}}
     <div id="right-sidebar" class="absolute right-0 top-0 bottom-0 w-[100%] sm:w-[420px] bg-white/90 backdrop-blur-3xl border-l border-white/60 flex flex-col flex-shrink-0 z-[70] shadow-[-20px_0_40px_rgba(0,0,0,0.04)] transition-transform duration-500 ease-[cubic-bezier(0.2,0.8,0.2,1)] translate-x-full">
         <div class="p-8 pb-6 flex justify-between items-center relative z-10">
-            <h2 class="text-[14px] font-black text-slate-400 uppercase tracking-[0.2em]">Plot Details</h2>
+            <h2 class="text-[14px] font-black text-slate-400 uppercase tracking-[0.2em]">Detail Plot</h2>
             <button id="btn-close-details" class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 shadow-sm border border-slate-100 transition-colors"><span class="material-symbols-outlined">close</span></button>
         </div>
 
@@ -367,11 +367,11 @@
                     <span class="text-[14px] font-bold text-[#006c49] bg-[#006c49]/10 px-3 py-1 rounded-full" id="detail-area">0 m²</span>
                 </div>
                 <div class="flex justify-between items-center">
-                    <span class="text-[14px] font-semibold text-[#6c7a71]">Planted Date</span>
+                    <span class="text-[14px] font-semibold text-[#6c7a71]">Tanggal Tanam</span>
                     <span class="text-[15px] font-bold text-[#191c1d]">May 15, 2024</span>
                 </div>
                 <div class="flex justify-between items-center">
-                    <span class="text-[14px] font-semibold text-[#6c7a71]">Est. Harvest</span>
+                    <span class="text-[14px] font-semibold text-[#6c7a71]">Perkiraan Panen</span>
                     <span class="text-[15px] font-bold text-[#191c1d]">Aug 10 - Aug 25</span>
                 </div>
             </div>
@@ -379,7 +379,7 @@
             <!-- Progress -->
             <div class="mb-6 px-2 bg-white/60 p-6 rounded-[24px] border border-white shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
                 <div class="flex justify-between text-[14px] font-bold mb-4">
-                    <span class="text-slate-500">Growth Progress</span>
+                    <span class="text-slate-500">Progres Tumbuh</span>
                     <span class="text-[#006c49] text-[18px] font-black" id="detail-progress-text">45%</span>
                 </div>
                 <div class="h-4 bg-slate-100 rounded-full overflow-hidden shadow-inner">
@@ -394,9 +394,9 @@
                 <!-- injected by JS -->
             </div>
 
-            <!-- Activity Log -->
+            <!-- Log Aktivitas -->
             <div class="mb-8">
-                <h4 class="text-[14px] font-bold text-[#191c1d] mb-4">Activity Log</h4>
+                <h4 class="text-[14px] font-bold text-[#191c1d] mb-4">Log Aktivitas</h4>
                 <div class="relative pl-4 border-l-2 border-slate-200 space-y-5" id="detail-activity-log">
                     <!-- injected by JS -->
                 </div>
@@ -432,7 +432,7 @@
                 <p class="text-[15px] font-medium text-[#6c7a71] mb-8 leading-relaxed">Are you sure you want to delete this plot? This action cannot be undone and you will lose all planted data.</p>
                 
                 <div class="flex gap-4">
-                    <button id="btn-cancel-delete" class="flex-1 py-4 px-4 rounded-2xl font-bold text-[#3c4a42] bg-[#f3f4f5] hover:bg-[#e7e8e9] transition-colors">Cancel</button>
+                    <button id="btn-cancel-delete" class="flex-1 py-4 px-4 rounded-2xl font-bold text-[#3c4a42] bg-[#f3f4f5] hover:bg-[#e7e8e9] transition-colors">Batal</button>
                     <button id="btn-confirm-delete" class="flex-1 py-4 px-4 rounded-2xl font-bold text-white bg-[#ba1a1a] hover:bg-[#93000a] transition-colors shadow-sm">Delete</button>
                 </div>
             </div>
@@ -451,7 +451,7 @@
                     <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#006c49]/20 to-[#10b981]/20 text-[#006c49] flex items-center justify-center shrink-0 border border-[#006c49]/10">
                         <span class="material-symbols-outlined text-[28px]">add_location_alt</span>
                     </div>
-                    <h2 class="text-2xl font-black text-slate-800 leading-tight">Create<br><span class="text-[#006c49]">New Plot</span></h2>
+                    <h2 class="text-2xl font-black text-slate-800 leading-tight">Buat<br><span class="text-[#006c49]">New Plot</span></h2>
                 </div>
                 
                 <div class="space-y-4 max-h-[60vh] overflow-y-auto premium-scroll pr-2">
@@ -487,16 +487,16 @@
                     </div>
                 </div>
                 <div class="flex gap-4 mt-8">
-                    <button id="btn-cancel-modal" class="flex-1 py-4 text-slate-500 font-bold rounded-2xl hover:bg-slate-100 transition-colors text-[16px]">Cancel</button>
+                    <button id="btn-cancel-modal" class="flex-1 py-4 text-slate-500 font-bold rounded-2xl hover:bg-slate-100 transition-colors text-[16px]">Batal</button>
                     <button id="btn-confirm-modal" class="flex-[1.5] py-4 bg-[#006c49] text-white font-bold rounded-2xl hover:bg-[#005236] active:scale-95 transition-all shadow-[0_8px_24px_rgba(0,108,73,0.25)] text-[16px] flex items-center justify-center gap-2">
-                        <span class="material-symbols-outlined text-[20px]">done</span> Create Plot
+                        <span class="material-symbols-outlined text-[20px]">done</span> Buat Plot
                     </button>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- Assign Plant Modal -->
+    <!-- Pilih Tanaman Modal -->
     <div id="assign-plant-modal" class="fixed inset-0 z-[99999] hidden">
         <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-md transition-opacity" id="assign-plant-backdrop"></div>
         <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-[420px] p-4 z-10">
@@ -505,7 +505,7 @@
                     <div class="w-12 h-12 rounded-2xl bg-[#6ffbbe]/20 text-[#006c49] flex items-center justify-center shrink-0 border border-[#006c49]/10">
                         <span class="material-symbols-outlined text-[24px]">local_florist</span>
                     </div>
-                    <h3 class="text-[20px] font-black text-[#191c1d] leading-tight">Assign Plant</h3>
+                    <h3 class="text-[20px] font-black text-[#191c1d] leading-tight">Pilih Tanaman</h3>
                 </div>
                 
                 <div class="space-y-4 mb-8">
@@ -526,7 +526,7 @@
                 </div>
                 
                 <div class="flex gap-4">
-                    <button id="btn-cancel-assign" class="flex-1 py-3.5 px-4 rounded-xl font-bold text-[#3c4a42] bg-[#f3f4f5] hover:bg-[#e7e8e9] transition-colors">Cancel</button>
+                    <button id="btn-cancel-assign" class="flex-1 py-3.5 px-4 rounded-xl font-bold text-[#3c4a42] bg-[#f3f4f5] hover:bg-[#e7e8e9] transition-colors">Batal</button>
                     <button id="btn-confirm-assign" class="flex-[1.5] py-3.5 px-4 rounded-xl font-bold text-white bg-[#006c49] hover:bg-[#005236] transition-colors shadow-sm">Save Changes</button>
                 </div>
             </div>
@@ -579,7 +579,7 @@ document.addEventListener('DOMContentLoaded', () => {
             case 'healthy': return { color: 'var(--color-status-healthy-text)', bg: 'var(--color-status-healthy-bg)', text: 'Healthy', border: 'var(--color-status-healthy)' }; 
             case 'attention': return { color: 'var(--color-status-attention-text)', bg: 'var(--color-status-attention-bg)', text: 'Needs Attention', border: 'var(--color-status-attention)' }; 
             case 'late': return { color: 'var(--color-status-late-text)', bg: 'var(--color-status-late-bg)', text: 'Late Care', border: 'var(--color-status-late)' }; 
-            case 'new': return { color: 'var(--color-status-new-text)', bg: 'var(--color-status-new-bg)', text: 'Newly Planted', border: 'var(--color-status-new)' }; 
+            case 'new': return { color: 'var(--color-status-new-text)', bg: 'var(--color-status-new-bg)', text: 'Baru Ditanam', border: 'var(--color-status-new)' }; 
             default: return { color: '#475569', bg: '#f1f5f9', text: 'Unknown', border: '#94a3b8' };
         }
     };
@@ -764,7 +764,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Mock data for premium sidebar design
             const moisture = zone.moisture || Math.floor(Math.random() * 40 + 40);
             const sun = zone.sun || ['Full Sun', 'Part Shade', 'Full Shade'][Math.floor(Math.random() * 3)];
-            const todos = zone.todos || ['Watering', 'Fertilize', 'Pruning', 'Harvest'].sort(() => 0.5 - Math.random()).slice(0, 2);
+            const todos = zone.todos || ['Menyiram', 'Memupuk', 'Memangkas', 'Panen'].sort(() => 0.5 - Math.random()).slice(0, 2);
             
             const shadowPremium = `box-shadow: 0 4px 20px rgba(6, 95, 70, 0.05)`;
             const shadowHover = `box-shadow: 0 12px 32px rgba(6, 95, 70, 0.12)`;
@@ -811,24 +811,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <div class="flex items-center gap-1.5 bg-[#006c49] text-white px-3 py-1.5 rounded-full shadow-sm">
                         <span class="material-symbols-outlined text-[16px]">eco</span>
-                        <span>Planted</span>
+                        <span>Ditanam</span>
                     </div>
                 </div>
 
-                <div class="pt-4 border-t border-[#e1e3e4]">
-                    <span class="text-[11px] font-semibold text-[#6c7a71] uppercase tracking-wider mb-3 block">To-Do List</span>
-                    <div class="flex flex-col gap-2.5">
-                        ${todos.map(todo => `
-                            <label class="flex items-center gap-3 group cursor-pointer p-2 -mx-2 rounded-[12px] hover:bg-[#F1F5F2] transition-colors">
-                                <div class="relative flex items-center justify-center w-5 h-5">
-                                    <input type="checkbox" class="peer appearance-none w-5 h-5 border-2 border-[#bbcabf] rounded-[6px] checked:bg-[#006c49] checked:border-[#006c49] transition-all cursor-pointer" onclick="event.stopPropagation()">
-                                    <span class="material-symbols-outlined text-white text-[14px] absolute pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity">check</span>
-                                </div>
-                                <span class="text-[14px] font-medium text-[#3c4a42] group-hover:text-[#191c1d] transition-colors">${todo}</span>
-                            </label>
-                        `).join('')}
-                    </div>
-                </div>
+
             `;
             item.addEventListener('click', () => {
                 if(window.innerWidth < 768) toggleSidebar(false); // Close sidebar on mobile after select
@@ -866,7 +853,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Mock data for premium sidebar design
                 const moisture = zone.moisture || Math.floor(Math.random() * 40 + 40);
                 const sun = zone.sun || ['Full Sun', 'Part Shade', 'Full Shade'][Math.floor(Math.random() * 3)];
-                const todos = zone.todos || ['Watering', 'Fertilize', 'Pruning', 'Harvest'].sort(() => 0.5 - Math.random()).slice(0, 3);
+                const todos = zone.todos || ['Menyiram', 'Memupuk', 'Memangkas', 'Panen'].sort(() => 0.5 - Math.random()).slice(0, 3);
                 
                 document.getElementById('detail-quick-stats').innerHTML = `
                     <div class="bg-[#F1F5F2] rounded-[16px] p-3 flex flex-col justify-center items-start transition-colors group">
@@ -890,7 +877,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
 
                 document.getElementById('detail-todos').innerHTML = `
-                    <h4 class="text-[14px] font-bold text-[#191c1d] mb-3">Tasks for today</h4>
+                    <h4 class="text-[14px] font-bold text-[#191c1d] mb-3">Tugas hari ini</h4>
                     <div class="flex flex-col gap-2.5">
                         ${todos.map(todo => `
                             <label class="flex items-center gap-3 cursor-pointer p-3 rounded-[16px] bg-white border border-[#e1e3e4] hover:border-[#bbcabf] transition-colors shadow-sm group">
@@ -906,9 +893,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Mock activity log
                 const activities = zone.activities || [
-                    { action: 'Watered', time: '2 hours ago', icon: 'water_drop', color: 'text-blue-500', bg: 'bg-blue-50' },
-                    { action: 'Fertilized', time: 'Yesterday', icon: 'science', color: 'text-purple-500', bg: 'bg-purple-50' },
-                    { action: 'Planted', time: 'May 15, 2024', icon: 'eco', color: 'text-[#006c49]', bg: 'bg-[#6ffbbe]/30' }
+                    { action: 'Disiram', time: '2 jam lalu', icon: 'water_drop', color: 'text-blue-500', bg: 'bg-blue-50' },
+                    { action: 'Diberi Pupuk', time: 'Kemarin', icon: 'science', color: 'text-purple-500', bg: 'bg-purple-50' },
+                    { action: 'Ditanam', time: '15 Mei 2024', icon: 'eco', color: 'text-[#006c49]', bg: 'bg-[#6ffbbe]/30' }
                 ];
                 
                 document.getElementById('detail-activity-log').innerHTML = activities.map(act => `
@@ -1499,7 +1486,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Assign Plant Logic
+    // Pilih Tanaman Logic
     const assignModal = document.getElementById('assign-plant-modal');
     document.getElementById('btn-assign-plant').addEventListener('click', () => {
         assignModal.classList.remove('hidden');
@@ -1521,9 +1508,9 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Add to activity log
             if (!z.activities) z.activities = [
-                { action: 'Watered', time: '2 hours ago', icon: 'water_drop', color: 'text-blue-500', bg: 'bg-blue-50' },
-                { action: 'Fertilized', time: 'Yesterday', icon: 'science', color: 'text-purple-500', bg: 'bg-purple-50' },
-                { action: 'Planted', time: 'May 15, 2024', icon: 'eco', color: 'text-[#006c49]', bg: 'bg-[#6ffbbe]/30' }
+                { action: 'Disiram', time: '2 jam lalu', icon: 'water_drop', color: 'text-blue-500', bg: 'bg-blue-50' },
+                { action: 'Diberi Pupuk', time: 'Kemarin', icon: 'science', color: 'text-purple-500', bg: 'bg-purple-50' },
+                { action: 'Ditanam', time: '15 Mei 2024', icon: 'eco', color: 'text-[#006c49]', bg: 'bg-[#6ffbbe]/30' }
             ];
             z.activities.unshift({ action: `Changed plant to ${z.plant}`, time: 'Just now', icon: 'local_florist', color: 'text-[#006c49]', bg: 'bg-[#6ffbbe]/30' });
             
@@ -1606,7 +1593,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('btn-back-to-dashboard').addEventListener('click', showDashboard);
 
-    // Create New Garden Logic
+    // Buat Kebun Baru Logic
     document.getElementById('btn-create-garden').addEventListener('click', () => {
         if(window.checkLimit && !window.checkLimit('gardens')) return;
         newGardenModal.classList.remove('hidden');
