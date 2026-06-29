@@ -8,7 +8,7 @@
          ============================================ --}}
     <header class="md:hidden w-full sticky top-0 bg-surface/95 backdrop-blur-md z-40 shadow-sm flex justify-between items-center px-5 py-3" id="mobile-header">
         <a href="/" class="text-[20px] font-bold text-primary flex items-center gap-2">
-            <img src="/logo.png" alt="Logo" class="w-8 h-8 rounded-lg object-contain" onerror="this.outerHTML='<span class=\'material-symbols-outlined text-[32px]\'>local_florist</span>'">
+            <img src="{{ asset('images/logo.jpg') }}" alt="Logo" class="w-8 h-8 rounded-lg object-contain" onerror="this.outerHTML='<span class=\'material-symbols-outlined text-[32px]\'>local_florist</span>'">
             Grow a Garden
         </a>
         <div class="flex items-center gap-3">
@@ -33,7 +33,7 @@
         {{-- Logo --}}
         <div class="px-6 mb-8">
             <a href="/" class="text-xl font-bold text-primary flex items-center gap-3">
-                <img src="/logo.png" alt="Logo" class="w-8 h-8 rounded-lg object-contain" onerror="this.outerHTML='<span class=\'material-symbols-outlined text-[32px]\'>local_florist</span>'">
+                <img src="{{ asset('images/logo.jpg') }}" alt="Logo" class="w-8 h-8 rounded-lg object-contain" onerror="this.outerHTML='<span class=\'material-symbols-outlined text-[32px]\'>local_florist</span>'">
                 Grow a Garden
             </a>
         </div>
@@ -153,7 +153,7 @@
                     <div class="space-y-4 flex-1 mb-6">
                         <div class="flex items-start gap-3">
                             <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">check_circle</span>
-                            <span class="text-sm text-on-surface">Maks. 4 Plot & 10 Tanaman Aktif</span>
+                            <span class="text-sm text-on-surface">Maks. 1 Garden, 4 Plot & 10 Tanaman Aktif</span>
                         </div>
                         <div class="flex items-start gap-3">
                             <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">check_circle</span>
@@ -211,7 +211,7 @@
                     <div class="space-y-4 flex-1 mb-6 mt-2">
                         <div class="flex items-start gap-3">
                             <span class="material-symbols-outlined text-yellow-400 text-[20px] mt-0.5">check_circle</span>
-                            <span class="text-sm text-white font-medium">Maks. 50 Plot & 100 Tanaman Aktif</span>
+                            <span class="text-sm text-white font-medium">Maks. 10 Garden, 50 Plot & 100 Tanaman Aktif</span>
                         </div>
                         <div class="flex items-start gap-3">
                             <span class="material-symbols-outlined text-yellow-400 text-[20px] mt-0.5">smart_toy</span>
@@ -265,7 +265,7 @@
                     <div class="space-y-4 flex-1 mb-6 relative z-10">
                         <div class="flex items-start gap-3">
                             <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">all_inclusive</span>
-                            <span class="text-sm text-on-surface font-bold">Unlimited Plot & Tanaman</span>
+                            <span class="text-sm text-on-surface font-bold">Maks. 100 Garden, Unlimited Plot & Tanaman</span>
                         </div>
                         <div class="flex items-start gap-3">
                             <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">check_circle</span>

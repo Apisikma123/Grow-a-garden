@@ -7,7 +7,7 @@
 
     <title>@yield('title', 'Grow a Garden — Smart Garden Manager')</title>
     <meta name="description" content="@yield('description', 'Kelola kebun rumahan, urban farming, atau hidroponik dengan pemetaan cerdas dan kalender pertumbuhan otomatis.')" />
-    <link rel="icon" type="image/png" href="/logo.png" />
+    <link rel="icon" type="image/jpeg" href="{{ asset('images/logo.jpg') }}" />
 
     {{-- Google Fonts: Be Vietnam Pro + Material Symbols --}}
     <link rel="preconnect" href="https://fonts.googleapis.com" />

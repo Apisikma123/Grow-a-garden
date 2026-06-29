@@ -10,7 +10,7 @@
          ============================================ --}}
     <header class="md:hidden w-full sticky top-0 bg-surface/95 backdrop-blur-md z-40 shadow-sm flex justify-between items-center px-5 py-3" id="mobile-header">
         <a href="/admin/dashboard" class="text-[20px] font-bold text-primary flex items-center gap-2">
-            <img src="/logo.png" alt="Logo" class="w-8 h-8 rounded-lg object-contain" onerror="this.outerHTML='<span class=\'material-symbols-outlined text-[32px]\'>local_florist</span>'">
+            <img src="{{ asset('images/logo.jpg') }}" alt="Logo" class="w-8 h-8 rounded-lg object-contain" onerror="this.outerHTML='<span class=\'material-symbols-outlined text-[32px]\'>local_florist</span>'">
             <div class="flex flex-col">
                 <span class="leading-none">Grow a Garden</span>
                 <span class="text-[10px] text-on-surface-variant font-medium mt-0.5">Admin Console</span>
@@ -28,7 +28,7 @@
         {{-- Logo --}}
         <div class="px-8 mb-8 flex justify-between items-start">
             <a href="/admin/dashboard" class="flex items-center gap-3">
-                <span class="material-symbols-outlined text-[32px] text-[#006c49]">local_florist</span>
+                <img src="{{ asset('images/logo.jpg') }}" alt="Logo" class="w-8 h-8 rounded-lg object-contain" onerror="this.outerHTML='<span class=\'material-symbols-outlined text-[32px] text-[#006c49]\'>local_florist</span>'">
                 <div class="flex flex-col">
                     <span class="text-[20px] font-bold text-[#006c49] leading-tight tracking-tight">Grow a Garden</span>
                     <span class="text-[12px] font-bold text-[#006c49]/80 mt-0.5">Admin</span>
