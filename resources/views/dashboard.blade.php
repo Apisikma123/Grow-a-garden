@@ -59,42 +59,96 @@
         {{-- Map & Schedule Row --}}
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-[24px]">
             
-            {{-- Garden Map --}}
+            {{-- Garden Plots --}}
             <div class="lg:col-span-2 bg-surface rounded-[24px] p-[24px] md:p-[32px] border border-outline-variant/20 ambient-shadow">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-                    <h3 class="text-[20px] font-bold text-[#1e293b]">Garden Map</h3>
-                    <div class="flex gap-4 text-[12px] font-bold text-on-surface-variant">
+                    <h3 class="text-[20px] font-bold text-[#1e293b]">Garden Plots</h3>
+                    <div class="flex flex-wrap gap-4 text-[12px] font-bold text-on-surface-variant">
                         <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-[#10b981]"></span> Healthy</div>
-                        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-[#f97316]"></span> Attention</div>
-                        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-[#78a994]"></span> New Plant</div>
+                        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-[#f59e0b]"></span> Attention</div>
+                        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-[#ef4444]"></span> Late Care</div>
+                        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-[#0ea5e9]"></span> Newly Planted</div>
                     </div>
                 </div>
                 
-                <div class="bg-[#f8fafc] rounded-[16px] p-[16px] md:p-[24px]">
-                    <div class="grid grid-cols-4 gap-3 md:gap-4">
-                        {{-- Row A --}}
-                        <div class="bg-[#10b981] text-white aspect-[5/3] rounded-[8px] flex items-center justify-center font-bold text-[14px] hover:opacity-90 transition-opacity cursor-pointer">A1</div>
-                        <div class="bg-[#10b981] text-white aspect-[5/3] rounded-[8px] flex items-center justify-center font-bold text-[14px] hover:opacity-90 transition-opacity cursor-pointer">A2</div>
-                        <div class="bg-[#10b981] text-white aspect-[5/3] rounded-[8px] flex items-center justify-center font-bold text-[14px] hover:opacity-90 transition-opacity cursor-pointer">A3</div>
-                        <div class="bg-[#78a994] text-white aspect-[5/3] rounded-[8px] flex items-center justify-center font-bold text-[14px] hover:opacity-90 transition-opacity cursor-pointer">A4</div>
+                <style>
+                    .dash-bg-grid {
+                        background-color: #f2f6f4;
+                        background-image: 
+                            linear-gradient(rgba(0, 108, 73, 0.05) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(0, 108, 73, 0.05) 1px, transparent 1px);
+                        background-size: 24px 24px;
+                        background-position: center center;
+                    }
+                    .dash-zone-box {
+                        position: absolute;
+                        border: 2px dashed;
+                        border-radius: 20px;
+                        background-color: rgba(255,255,255,0.85);
+                        backdrop-filter: blur(12px);
+                        -webkit-backdrop-filter: blur(12px);
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        box-shadow: inset 0 0 0 2px rgba(255,255,255,0.6), 0 8px 24px rgba(0,0,0,0.04);
+                        transition: transform 0.3s ease;
+                    }
+                    .dash-zone-box:hover {
+                        transform: scale(1.02);
+                        z-index: 10;
+                    }
+                    .dash-zone-label {
+                        background-color: rgba(255,255,255,0.95);
+                        padding: 8px 16px;
+                        border-radius: 30px;
+                        box-shadow: 0 8px 24px rgba(0, 108, 73, 0.08), inset 0 0 0 1px rgba(255,255,255,1);
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                    }
+                </style>
+
+                <div class="dash-bg-grid rounded-[16px] w-full h-[240px] md:h-[300px] relative overflow-hidden border border-outline-variant/20 cursor-pointer group hover:border-[#006c49]/30 transition-colors" onclick="window.location.href='/garden-plots'">
+                    <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-white/20 backdrop-blur-[2px] z-20">
+                        <span class="bg-[#006c49] text-white px-6 py-2 rounded-full font-bold shadow-lg flex items-center gap-2">
+                            <span class="material-symbols-outlined">open_in_new</span>
+                            Open Garden Plots
+                        </span>
+                    </div>
+
+                    <div class="absolute w-[1000px] h-[600px] left-1/2 top-1/2 -translate-x-[40%] -translate-y-[45%] scale-[0.4] md:scale-[0.6]">
+                        <!-- Zone 1 -->
+                        <div class="dash-zone-box" style="left: 240px; top: 144px; width: 264px; height: 168px; border-color: #006c49;">
+                            <div class="dash-zone-label" style="color: #006c49;">
+                                <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'wght' 600;">eco</span>
+                                <span class="text-[14px] md:text-[15px] font-bold truncate tracking-tight">Tomato Plot A1</span>
+                            </div>
+                        </div>
                         
-                        {{-- Row B --}}
-                        <div class="bg-[#10b981] text-white aspect-[5/3] rounded-[8px] flex items-center justify-center font-bold text-[14px] hover:opacity-90 transition-opacity cursor-pointer">B1</div>
-                        <div class="bg-[#f97316] text-white aspect-[5/3] rounded-[8px] flex items-center justify-center font-bold text-[14px] hover:opacity-90 transition-opacity cursor-pointer shadow-[0_0_15px_rgba(249,115,22,0.4)] animate-pulse">B2</div>
-                        <div class="bg-[#10b981] text-white aspect-[5/3] rounded-[8px] flex items-center justify-center font-bold text-[14px] hover:opacity-90 transition-opacity cursor-pointer">B3</div>
-                        <div class="bg-[#e2e8f0] text-[#64748b] aspect-[5/3] rounded-[8px] flex items-center justify-center font-bold text-[14px] hover:opacity-90 transition-opacity cursor-pointer">B4</div>
+                        <!-- Zone 2 (Attention) -->
+                        <div class="dash-zone-box" style="left: 552px; top: 192px; width: 216px; height: 120px; border-color: #f59e0b;">
+                            <div class="dash-zone-label" style="color: #b45309;">
+                                <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'wght' 600;">eco</span>
+                                <span class="text-[14px] md:text-[15px] font-bold truncate tracking-tight">Chili Field B2</span>
+                            </div>
+                        </div>
 
-                        {{-- Row C --}}
-                        <div class="bg-[#10b981] text-white aspect-[5/3] rounded-[8px] flex items-center justify-center font-bold text-[14px] hover:opacity-90 transition-opacity cursor-pointer">C1</div>
-                        <div class="bg-[#10b981] text-white aspect-[5/3] rounded-[8px] flex items-center justify-center font-bold text-[14px] hover:opacity-90 transition-opacity cursor-pointer">C2</div>
-                        <div class="bg-[#f97316] text-white aspect-[5/3] rounded-[8px] flex items-center justify-center font-bold text-[14px] hover:opacity-90 transition-opacity cursor-pointer shadow-[0_0_15px_rgba(249,115,22,0.4)] animate-pulse">C3</div>
-                        <div class="bg-[#e2e8f0] text-[#64748b] aspect-[5/3] rounded-[8px] flex items-center justify-center font-bold text-[14px] hover:opacity-90 transition-opacity cursor-pointer">C4</div>
-
-                        {{-- Row D --}}
-                        <div class="bg-[#78a994] text-white aspect-[5/3] rounded-[8px] flex items-center justify-center font-bold text-[14px] hover:opacity-90 transition-opacity cursor-pointer">D1</div>
-                        <div class="bg-[#e2e8f0] text-[#64748b] aspect-[5/3] rounded-[8px] flex items-center justify-center font-bold text-[14px] hover:opacity-90 transition-opacity cursor-pointer">D2</div>
-                        <div class="bg-[#e2e8f0] text-[#64748b] aspect-[5/3] rounded-[8px] flex items-center justify-center font-bold text-[14px] hover:opacity-90 transition-opacity cursor-pointer">D3</div>
-                        <div class="bg-[#e2e8f0] text-[#64748b] aspect-[5/3] rounded-[8px] flex items-center justify-center font-bold text-[14px] hover:opacity-90 transition-opacity cursor-pointer">D4</div>
+                        <!-- Zone 3 (Late Care) -->
+                        <div class="dash-zone-box" style="left: 240px; top: 360px; width: 384px; height: 168px; border-color: #ef4444;">
+                            <div class="dash-zone-label" style="color: #b91c1c;">
+                                <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'wght' 600;">eco</span>
+                                <span class="text-[14px] md:text-[15px] font-bold truncate tracking-tight">Carrot Patch C1</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Zone 4 (Newly Planted) -->
+                        <div class="dash-zone-box" style="left: 672px; top: 360px; width: 240px; height: 168px; border-color: #0ea5e9;">
+                            <div class="dash-zone-label" style="color: #0369a1;">
+                                <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'wght' 600;">eco</span>
+                                <span class="text-[14px] md:text-[15px] font-bold truncate tracking-tight">Lettuce Bed D4</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

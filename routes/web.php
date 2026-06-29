@@ -42,6 +42,10 @@ Route::get('/register', function () {
     return view('auth.register');
 });
 
+Route::get('/checkout', function () {
+    return view('checkout');
+});
+
 Route::get('/garden-plots', function () {
     return view('garden-plots');
 });

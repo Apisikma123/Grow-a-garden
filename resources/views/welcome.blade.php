@@ -19,6 +19,7 @@
         <nav class="hidden md:flex items-center gap-8" id="nav-links">
             <a href="#features" class="nav-link active text-sm font-semibold text-primary transition-colors duration-200">Features</a>
             <a href="#how-it-works" class="nav-link text-sm font-medium text-on-surface-variant hover:text-primary transition-colors duration-200">How It Works</a>
+            <a href="#pricing" class="nav-link text-sm font-medium text-on-surface-variant hover:text-primary transition-colors duration-200">Pricing</a>
         </nav>
 
         {{-- CTA Button --}}
@@ -36,6 +37,7 @@
     <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-outline-variant/30 px-5 py-4 space-y-2">
         <a href="#features" class="block text-sm font-semibold text-primary py-2 px-4 rounded-lg bg-primary/5">Features</a>
         <a href="#how-it-works" class="block text-sm font-medium text-on-surface-variant py-2 px-4 rounded-lg hover:bg-surface-container-high transition-colors">How It Works</a>
+        <a href="#pricing" class="block text-sm font-medium text-on-surface-variant py-2 px-4 rounded-lg hover:bg-surface-container-high transition-colors">Pricing</a>
         <a href="/login" class="block text-center bg-primary text-on-primary text-sm font-semibold px-6 py-2.5 rounded-full mt-2">Get Started</a>
     </div>
 </header>
@@ -144,23 +146,29 @@
         {{-- Feature Cards --}}
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-            {{-- Feature 1: Garden Map --}}
-            <div class="bg-white rounded-2xl p-6 ambient-shadow border border-outline-variant/20 hover:ambient-shadow-lg hover:-translate-y-1 transition-all duration-300 group" id="feature-garden-map">
+            {{-- Feature 1: Garden Canvas --}}
+            <div class="bg-white rounded-2xl p-6 ambient-shadow border border-outline-variant/20 hover:ambient-shadow-lg hover:-translate-y-1 transition-all duration-300 group" id="feature-garden-canvas">
                 {{-- Icon --}}
                 <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/15 transition-colors">
-                    <span class="material-symbols-outlined text-primary text-2xl">grid_view</span>
+                    <span class="material-symbols-outlined text-primary text-2xl">draw</span>
                 </div>
 
-                <h3 class="text-lg font-bold text-on-surface mb-2">Garden Map</h3>
+                <h3 class="text-lg font-bold text-on-surface mb-2">Garden Canvas</h3>
                 <p class="text-sm text-on-surface-variant leading-relaxed mb-5">
-                    Visual grid system (A1, B1, dll) untuk memetakan tanaman Anda layaknya game. Kelola tata letak dengan presisi.
+                    Drag and create based on your real garden's layout. Visual grid system interaktif layaknya bermain game.
                 </p>
 
                 {{-- Visual Preview: Mini Grid --}}
-                <div class="flex gap-2">
-                    <div class="w-16 h-16 rounded-lg bg-primary-container"></div>
-                    <div class="w-16 h-16 rounded-lg bg-secondary-container"></div>
-                    <div class="w-16 h-16 rounded-lg bg-surface-container-high border-2 border-dashed border-outline-variant"></div>
+                <div class="flex gap-3">
+                    <div class="w-16 h-16 rounded-2xl border-[3px] border-solid border-[#006c49] bg-white shadow-[0_8px_16px_rgba(0,108,73,0.15)] flex items-center justify-center">
+                        <span class="material-symbols-outlined text-[#006c49] text-[24px]">eco</span>
+                    </div>
+                    <div class="w-16 h-16 rounded-2xl border-[2px] border-dashed border-[#f59e0b] bg-white/80 shadow-sm flex items-center justify-center">
+                        <span class="material-symbols-outlined text-[#f59e0b] text-[24px]">eco</span>
+                    </div>
+                    <div class="w-16 h-16 rounded-2xl border-[2px] border-dashed border-slate-300 bg-slate-50/50 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-slate-400 text-[24px]">add</span>
+                    </div>
                 </div>
             </div>
 
@@ -273,6 +281,172 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</section>
+
+{{-- ============================================
+     PRICING SECTION
+     ============================================ --}}
+<section id="pricing" class="bg-surface-container-lowest py-16 md:py-20 lg:py-24 border-t border-outline-variant/20">
+    <div class="max-w-[1280px] mx-auto px-5 lg:px-8">
+        {{-- Section Header --}}
+        <div class="text-center mb-12 md:mb-16 max-w-[672px] mx-auto">
+            <h2 class="text-[28px] md:text-[36px] font-bold text-on-surface tracking-tight mb-4">
+                Pilih Paket Sesuai Kebutuhan Kebun Anda
+            </h2>
+            <p class="text-base text-on-surface-variant leading-relaxed">
+                Mulai dari hobi kecil hingga komunitas hidroponik besar.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            {{-- Paket 1: Bibit --}}
+            <div class="bg-white rounded-3xl p-8 ambient-shadow border border-outline-variant/30 flex flex-col hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                <h3 class="text-xl font-bold text-on-surface mb-2">Bibit <span class="text-xs font-semibold bg-surface-container-high px-2 py-1 rounded-full text-on-surface-variant ml-2">Gratis</span></h3>
+                <div class="flex items-baseline gap-1 mb-4">
+                    <span class="text-[32px] font-black text-on-surface">Rp 0</span>
+                </div>
+                <p class="text-sm text-on-surface-variant mb-8 min-h-[40px]">Tetap dipertahankan sebagai umpan (Lead Magnet).</p>
+                
+                <div class="space-y-4 flex-1 mb-8">
+                    <div class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">check_circle</span>
+                        <span class="text-sm text-on-surface">Maks. 4 Plot & 10 Tanaman Aktif</span>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">check_circle</span>
+                        <span class="text-sm text-on-surface">Akses ke Growth Calendar</span>
+                    </div>
+                    
+                    {{-- Kekurangan Sengaja --}}
+                    <div class="mt-4 pt-4 border-t border-outline-variant/20 space-y-4 opacity-75">
+                        <div class="flex items-start gap-3 text-on-surface-variant">
+                            <span class="material-symbols-outlined text-[20px] mt-0.5">cancel</span>
+                            <span class="text-sm line-through">Otomatisasi Care Template</span>
+                        </div>
+                        <div class="flex items-start gap-3 text-on-surface-variant">
+                            <span class="material-symbols-outlined text-[20px] mt-0.5">warning</span>
+                            <span class="text-sm">Care reminder isi manual</span>
+                        </div>
+                        <div class="flex items-start gap-3 text-on-surface-variant">
+                            <span class="material-symbols-outlined text-[20px] mt-0.5">cancel</span>
+                            <span class="text-sm line-through">Penyesuaian Cuaca Lokal</span>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="/login" class="w-full block text-center border-2 border-outline-variant text-on-surface font-bold py-3 rounded-xl hover:border-[#006c49] hover:text-[#006c49] transition-colors">Daftar Gratis</a>
+            </div>
+
+            {{-- Paket 2: Subur --}}
+            <div class="bg-gradient-to-b from-[#006c49] to-[#005236] rounded-3xl p-8 shadow-xl flex flex-col relative transform md:-translate-y-4 border border-[#008c5f]">
+                <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-yellow-400 text-yellow-900 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-wider shadow-md whitespace-nowrap flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-[14px]">star</span>
+                    Paling Populer - Best Value
+                </div>
+                
+                <h3 class="text-xl font-bold text-white mb-2">Subur</h3>
+                
+                <div class="bg-white/10 rounded-xl p-3 mb-4 backdrop-blur-sm">
+                    <div class="mb-2">
+                        <p class="text-[11px] text-white/80 font-medium uppercase tracking-wider mb-0.5">Paket Tahunan (Super Hemat)</p>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-[28px] font-black text-yellow-400">Rp 199.000</span>
+                            <span class="text-sm text-white/70 line-through">Rp 588.000</span>
+                        </div>
+                        <p class="text-xs text-white/90 font-medium bg-yellow-400/20 inline-block px-2 py-0.5 rounded text-yellow-300 mt-1">Setara Rp 16.500 / bln!</p>
+                    </div>
+                    <div class="h-px bg-white/20 w-full my-2"></div>
+                    <div>
+                        <p class="text-[10px] text-white/70 font-medium uppercase tracking-wider mb-0.5">Paket Bulanan</p>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-[16px] font-bold text-white">Rp 29.000</span>
+                            <span class="text-[11px] text-white/50 line-through">Rp 49k</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-4 flex-1 mb-8 mt-2">
+                    <div class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-yellow-400 text-[20px] mt-0.5">check_circle</span>
+                        <span class="text-sm text-white font-medium">Maks. 50 Plot & 100 Tanaman Aktif</span>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-yellow-400 text-[20px] mt-0.5">smart_toy</span>
+                        <div class="flex flex-col">
+                            <span class="text-sm text-white font-bold">Asisten Autopilot</span>
+                            <span class="text-xs text-white/80 mt-0.5">Rule Engine menghasilkan task perawatan otomatis berbasis Growth & Care Template.</span>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-yellow-400 text-[20px] mt-0.5">cloud_done</span>
+                        <div class="flex flex-col">
+                            <span class="text-sm text-white font-bold">Anti-Gagal Panen</span>
+                            <span class="text-xs text-white/80 mt-0.5">Weather Adjustment (-30% penyiraman hujan, +50% kemarau).</span>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-yellow-400 text-[20px] mt-0.5">emoji_events</span>
+                        <span class="text-sm text-white font-medium">Notifikasi Upcoming Harvest di Dashboard</span>
+                    </div>
+                </div>
+
+                <a href="/checkout?plan=subur" class="w-full block text-center bg-yellow-400 text-yellow-900 font-bold py-3 rounded-xl hover:bg-yellow-300 transition-colors shadow-lg mb-2 text-[15px]">Mulai 7-Day Free Trial</a>
+                <p class="text-center text-[11px] text-white/70">Cancel anytime. Bebas risiko.</p>
+            </div>
+
+            {{-- Paket 3: Panen Raya --}}
+            <div class="bg-white rounded-3xl p-8 ambient-shadow border border-outline-variant/30 flex flex-col hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
+                <div class="absolute -right-6 -top-6 bg-primary/10 w-24 h-24 rounded-full"></div>
+                <h3 class="text-xl font-bold text-on-surface mb-2 relative z-10">Panen Raya <span class="text-xs font-semibold bg-primary-container text-on-primary-container px-2 py-1 rounded-full ml-2">Pro</span></h3>
+                
+                <div class="bg-surface-container-low rounded-xl p-3 mb-4 mt-2">
+                    <div class="mb-2">
+                        <p class="text-[11px] text-on-surface-variant font-medium uppercase tracking-wider mb-0.5">Paket Tahunan</p>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-[28px] font-black text-on-surface">Rp 799.000</span>
+                        </div>
+                        <p class="text-xs font-bold text-[#006c49] mt-1 bg-primary/10 inline-block px-2 py-0.5 rounded">Hemat hampir 1 Juta Rupiah! (vs Rp 1.788k)</p>
+                    </div>
+                    <div class="h-px bg-outline-variant/30 w-full my-2"></div>
+                    <div>
+                        <p class="text-[10px] text-on-surface-variant font-medium uppercase tracking-wider mb-0.5">Paket Bulanan</p>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-[16px] font-bold text-on-surface">Rp 99.000</span>
+                            <span class="text-[11px] text-on-surface-variant/60 line-through">Rp 149.000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-sm text-on-surface-variant mb-6 relative z-10 font-medium">Skalabilitas maksimal untuk power user.</p>
+                
+                <div class="space-y-4 flex-1 mb-8 relative z-10">
+                    <div class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">all_inclusive</span>
+                        <span class="text-sm text-on-surface font-bold">Unlimited Plot & Tanaman Aktif</span>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">check_circle</span>
+                        <span class="text-sm text-on-surface">Seluruh fitur otomasi Paket Subur</span>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">history</span>
+                        <div class="flex flex-col">
+                            <span class="text-sm text-on-surface font-bold">Activity Log Tanpa Batas</span>
+                            <span class="text-xs text-on-surface-variant mt-0.5">Tracking tak terbatas untuk menyiram, memupuk, memangkas, dll.</span>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">groups</span>
+                        <span class="text-sm text-on-surface font-medium">Ideal untuk Sekolah, Urban Farming besar & Komunitas</span>
+                    </div>
+                </div>
+
+                <a href="/checkout?plan=pro" class="w-full block text-center bg-[#006c49] text-white font-bold py-3 rounded-xl hover:bg-[#005236] transition-colors shadow-sm relative z-10">Upgrade ke Pro</a>
+            </div>
+
         </div>
     </div>
 </section>
