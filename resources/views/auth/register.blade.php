@@ -22,7 +22,14 @@
         </div>
 
         {{-- Form --}}
-        <form action="/dashboard" method="GET" class="flex flex-col gap-5">
+        <form action="{{ route('register.post') }}" method="POST" class="flex flex-col gap-5">
+            @csrf
+            
+            @if ($errors->any())
+                <div class="bg-error-container/20 text-error text-sm p-3 rounded-[12px] border border-error/30 mb-2 font-medium">
+                    {{ $errors->first() }}
+                </div>
+            @endif
             {{-- Name Input --}}
             <div class="flex flex-col gap-2">
                 <label for="name" class="text-sm font-semibold text-on-surface ml-1">Full Name</label>
