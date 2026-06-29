@@ -25,7 +25,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-8">
         
         {{-- Card 1: Heirloom Tomato Mastery --}}
-        <div class="bg-white rounded-[32px] p-7 ambient-shadow border border-outline-variant/20 flex flex-col gap-6 hover:ambient-shadow-lg transition-shadow">
+        <div class="searchable-item bg-white rounded-[32px] p-7 ambient-shadow border border-outline-variant/20 flex flex-col gap-6 hover:ambient-shadow-lg transition-shadow">
             
             {{-- Top Info --}}
             <div class="flex gap-5 relative">
@@ -123,7 +123,7 @@
         </div>
 
         {{-- Card 2: Thai Bird's Eye Chili --}}
-        <div class="bg-white rounded-[32px] p-7 ambient-shadow border border-outline-variant/20 flex flex-col gap-6 hover:ambient-shadow-lg transition-shadow">
+        <div class="searchable-item bg-white rounded-[32px] p-7 ambient-shadow border border-outline-variant/20 flex flex-col gap-6 hover:ambient-shadow-lg transition-shadow">
             
             {{-- Top Info --}}
             <div class="flex gap-5 relative">

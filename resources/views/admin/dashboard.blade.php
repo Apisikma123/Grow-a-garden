@@ -114,23 +114,23 @@
                         <div class="w-full"></div>
                     </div>
 
-                    {{-- Mock Line using SVG --}}
-                    <svg class="absolute inset-0 w-full h-full z-10" preserveAspectRatio="none" viewBox="0 0 100 100">
+                    {{-- Mock Line using SVG (Optimized Aspect Ratio) --}}
+                    <svg class="absolute inset-0 w-full h-full z-10" preserveAspectRatio="none" viewBox="0 0 1000 250">
                         <defs>
                             <linearGradient id="gradientArea" x1="0%" y1="0%" x2="0%" y2="100%">
                                 <stop offset="0%" stop-color="#10b981" stop-opacity="0.3"></stop>
                                 <stop offset="100%" stop-color="#10b981" stop-opacity="0.05"></stop>
                             </linearGradient>
                         </defs>
-                        <path d="M 0 80 Q 20 60, 30 50 T 50 30 T 70 40 T 100 10 L 100 100 L 0 100 Z" fill="url(#gradientArea)"></path>
-                        <path d="M 0 80 Q 20 60, 30 50 T 50 30 T 70 40 T 100 10" fill="none" stroke="#006c49" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M 0 200 Q 200 150, 300 125 T 500 75 T 700 100 T 1000 25 L 1000 250 L 0 250 Z" fill="url(#gradientArea)"></path>
+                        <path d="M 0 200 Q 200 150, 300 125 T 500 75 T 700 100 T 1000 25" fill="none" stroke="#006c49" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
                         
                         {{-- Data points --}}
-                        <circle cx="0" cy="80" r="2" fill="white" stroke="#006c49" stroke-width="1"></circle>
-                        <circle cx="30" cy="50" r="2" fill="white" stroke="#006c49" stroke-width="1"></circle>
-                        <circle cx="50" cy="30" r="2" fill="white" stroke="#006c49" stroke-width="1"></circle>
-                        <circle cx="70" cy="40" r="2" fill="white" stroke="#006c49" stroke-width="1"></circle>
-                        <circle cx="100" cy="10" r="2" fill="white" stroke="#006c49" stroke-width="1"></circle>
+                        <circle cx="0" cy="200" r="6" fill="white" stroke="#006c49" stroke-width="3" vector-effect="non-scaling-stroke"></circle>
+                        <circle cx="300" cy="125" r="6" fill="white" stroke="#006c49" stroke-width="3" vector-effect="non-scaling-stroke"></circle>
+                        <circle cx="500" cy="75" r="6" fill="white" stroke="#006c49" stroke-width="3" vector-effect="non-scaling-stroke"></circle>
+                        <circle cx="700" cy="100" r="6" fill="white" stroke="#006c49" stroke-width="3" vector-effect="non-scaling-stroke"></circle>
+                        <circle cx="1000" cy="25" r="6" fill="white" stroke="#006c49" stroke-width="3" vector-effect="non-scaling-stroke"></circle>
                     </svg>
                 </div>
 

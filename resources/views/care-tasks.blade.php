@@ -89,7 +89,7 @@
                             <div>
                                 <div class="flex items-center gap-2 mb-0.5">
                                     <h3 class="text-[18px] font-bold text-on-surface">Penyiraman Rutin</h3>
-                                    <span class="bg-[#fee2e2] text-[#dc2626] text-[10px] font-bold px-2 py-0.5 rounded-[4px]">HIGH</span>
+                                    <span class="bg-[var(--color-status-late-bg)] text-[var(--color-status-late-text)] text-[10px] font-bold px-2 py-0.5 rounded-[4px]">HIGH</span>
                                 </div>
                                 <p class="text-[13px] text-on-surface-variant font-medium">Plot A1: Lidah Buaya & Basil</p>
                             </div>
@@ -140,7 +140,7 @@
                             <div>
                                 <div class="flex items-center gap-2 mb-0.5">
                                     <h3 class="text-[18px] font-bold text-on-surface">Pengendalian Hama</h3>
-                                    <span class="bg-[#fee2e2] text-[#dc2626] text-[10px] font-bold px-2 py-0.5 rounded-[4px]">HIGH</span>
+                                    <span class="bg-[var(--color-status-late-bg)] text-[var(--color-status-late-text)] text-[10px] font-bold px-2 py-0.5 rounded-[4px]">HIGH</span>
                                 </div>
                                 <p class="text-[13px] text-on-surface-variant font-medium">Plot C2: Mawar Merah</p>
                             </div>

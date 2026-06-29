@@ -34,12 +34,29 @@ Route::get('/admin/settings', function () {
     return view('admin.settings');
 });
 
+Route::get('/admin/settings/password', function () {
+    return view('admin.settings-password');
+});
+
+Route::post('/admin/settings/password', function () {
+    // Implement password update logic here
+    return redirect('/admin/settings');
+});
+
 Route::get('/login', function () {
     return view('auth.login');
 });
 
 Route::get('/register', function () {
     return view('auth.register');
+});
+
+Route::get('/forgot-password', function () {
+    return view('auth.forgot-password');
+});
+
+Route::get('/otp', function () {
+    return view('auth.otp');
 });
 
 Route::get('/checkout', function () {
@@ -62,7 +79,23 @@ Route::get('/settings', function () {
     return view('settings');
 });
 
+Route::get('/settings/password', function () {
+    return view('settings-password');
+});
+
+Route::post('/settings/password', function () {
+    // Implement password update logic here
+    return redirect('/settings');
+});
+
 Route::post('/logout', function () {
     // Implement logout logic here
     return redirect('/');
+});
+// Error Pages Preview Route
+Route::get('/error-preview/{code}', function ($code) {
+    if (in_array($code, ['404', '500', '403', 'offline'])) {
+        return view("errors.$code");
+    }
+    abort(404);
 });

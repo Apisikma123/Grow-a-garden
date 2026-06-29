@@ -30,9 +30,8 @@
     .delay-300 { transition-delay: 300ms; }
     .delay-400 { transition-delay: 400ms; }
 
-    /* Premium Shadows */
+    /* Premium Shadows & Tactile Feedback */
     .premium-shadow { box-shadow: 0 16px 40px rgba(0, 108, 73, 0.08); border-color: rgba(255,255,255,0.8); }
-    .premium-shadow-hover { box-shadow: 0 24px 48px rgba(0, 108, 73, 0.12); transform: translateY(-4px); }
 </style>
 @endpush
 
@@ -108,11 +107,11 @@
 
                 {{-- CTA Buttons --}}
                 <div class="flex flex-wrap items-center gap-4 scroll-trigger scroll-fade-up delay-300">
-                    <a href="/login" class="inline-flex items-center gap-2 bg-primary text-on-primary font-semibold px-7 py-3.5 rounded-full hover:bg-primary/90 active:scale-[0.97] transition-all duration-200 shadow-md text-sm" id="hero-cta-primary">
+                    <a href="/login" class="group inline-flex items-center gap-2 bg-primary text-on-primary font-semibold px-7 py-3.5 rounded-full hover:bg-primary/90 hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.98] transition-all duration-300 shadow-md text-sm" id="hero-cta-primary">
                         Mulai Berkebun Sekarang
-                        <span class="material-symbols-outlined" style="font-size: 20px;">arrow_forward</span>
+                        <span class="material-symbols-outlined transition-transform duration-300 ease-out group-hover:translate-x-1" style="font-size: 20px;">arrow_forward</span>
                     </a>
-                    <a href="#how-it-works" class="inline-flex items-center gap-2 border-2 border-outline-variant text-on-surface-variant font-semibold px-5 py-3 rounded-full hover:border-primary hover:text-primary transition-all duration-200 text-sm" id="hero-cta-secondary">
+                    <a href="#how-it-works" class="inline-flex items-center gap-2 border-2 border-outline-variant text-on-surface-variant font-semibold px-5 py-3 rounded-full hover:border-primary hover:text-primary hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300 text-sm" id="hero-cta-secondary">
                         <span class="material-symbols-outlined text-primary" style="font-size: 20px;">play_circle</span>
                         Cara Kerja
                     </a>
@@ -121,12 +120,12 @@
 
             {{-- Right: Hero Image with Overlays --}}
             <div class="order-1 lg:order-2 relative scroll-trigger scroll-scale-in delay-200">
-                <div class="relative rounded-2xl overflow-hidden ambient-shadow-lg">
+                <div class="relative rounded-2xl overflow-hidden ambient-shadow-lg group">
                     {{-- Garden Photo --}}
                     <img
                         src="/images/hero-garden.png"
                         alt="Kebun hijau dengan tanaman yang tumbuh subur dan teratur"
-                        class="w-full h-auto object-cover aspect-[4/3]"
+                        class="w-full h-auto object-cover aspect-[4/3] transition-transform duration-[1.5s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
                         loading="eager"
                     />
 
@@ -181,9 +180,9 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
             {{-- Feature 1: Garden Canvas --}}
-            <div class="bg-white rounded-3xl p-8 premium-shadow hover:premium-shadow-hover transition-all duration-500 group scroll-trigger scroll-fade-up delay-100 border border-white/60" id="feature-garden-canvas">
+            <div class="bg-white rounded-3xl p-8 premium-shadow tactile-card group scroll-trigger scroll-fade-up delay-100 border border-white/60" id="feature-garden-canvas">
                 {{-- Icon --}}
-                <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/15 transition-colors">
+                <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1 group-hover:scale-105 group-hover:bg-primary/20">
                     <span class="material-symbols-outlined text-primary text-2xl">draw</span>
                 </div>
 
@@ -199,9 +198,9 @@
             </div>
 
             {{-- Feature 2: Growth Calendar --}}
-            <div class="bg-white rounded-3xl p-8 premium-shadow hover:premium-shadow-hover transition-all duration-500 group scroll-trigger scroll-fade-up delay-200 border border-white/60" id="feature-growth-calendar">
+            <div class="bg-white rounded-3xl p-8 premium-shadow tactile-card group scroll-trigger scroll-fade-up delay-200 border border-white/60" id="feature-growth-calendar">
                 {{-- Icon --}}
-                <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/15 transition-colors">
+                <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1 group-hover:scale-105 group-hover:bg-primary/20">
                     <span class="material-symbols-outlined text-primary text-2xl">calendar_month</span>
                 </div>
 
@@ -228,9 +227,9 @@
             </div>
 
             {{-- Feature 3: Care Reminder --}}
-            <div class="bg-white rounded-3xl p-8 premium-shadow hover:premium-shadow-hover transition-all duration-500 group scroll-trigger scroll-fade-up delay-300 border border-white/60" id="feature-care-reminder">
+            <div class="bg-white rounded-3xl p-8 premium-shadow tactile-card group scroll-trigger scroll-fade-up delay-300 border border-white/60" id="feature-care-reminder">
                 {{-- Icon --}}
-                <div class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center mb-4 group-hover:bg-secondary/15 transition-colors">
+                <div class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center mb-4 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1 group-hover:scale-105 group-hover:bg-secondary/20">
                     <span class="material-symbols-outlined text-secondary text-2xl">notifications_active</span>
                 </div>
 
@@ -286,7 +285,7 @@
 
             {{-- Right: Weather Card --}}
             <div class="flex justify-center lg:justify-end scroll-trigger scroll-fade-left delay-200">
-                <div class="bg-white rounded-3xl p-8 premium-shadow border border-white/60 max-w-[448px] w-full hover:premium-shadow-hover transition-shadow duration-500">
+                <div class="bg-white rounded-3xl p-8 premium-shadow border border-white/60 max-w-[448px] w-full tactile-card">
                     {{-- Card Header --}}
                     <div class="flex items-center justify-between mb-5">
                         <div class="flex items-center gap-3">
@@ -329,7 +328,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             
             {{-- Paket 1: Bibit --}}
-            <div class="bg-white rounded-3xl p-8 premium-shadow border border-white/60 flex flex-col hover:premium-shadow-hover transition-all duration-500 scroll-trigger scroll-fade-up delay-100">
+            <div class="bg-white rounded-3xl p-8 premium-shadow border border-white/60 flex flex-col tactile-card scroll-trigger scroll-fade-up delay-100">
                 <h3 class="text-xl font-bold text-on-surface mb-2">Bibit <span class="text-xs font-semibold bg-surface-container-high px-2 py-1 rounded-full text-on-surface-variant ml-2">Gratis</span></h3>
                 <div class="flex items-baseline gap-1 mb-4">
                     <span class="text-[32px] font-black text-on-surface">Rp 0</span>
@@ -363,11 +362,11 @@
                     </div>
                 </div>
 
-                <a href="/login" class="w-full block text-center border-2 border-outline-variant text-on-surface font-bold py-3 rounded-xl hover:border-[#006c49] hover:text-[#006c49] transition-colors">Daftar Gratis</a>
+                <a href="/login" class="w-full block text-center border-2 border-outline-variant text-on-surface font-bold py-3 rounded-xl hover:border-[#006c49] hover:text-[#006c49] hover:shadow-sm active:scale-[0.98] transition-all duration-300">Daftar Gratis</a>
             </div>
 
             {{-- Paket 2: Subur --}}
-            <div class="bg-gradient-to-b from-[#006c49] to-[#005236] rounded-3xl p-8 shadow-[0_24px_48px_rgba(0,108,73,0.3)] hover:shadow-[0_32px_64px_rgba(0,108,73,0.4)] flex flex-col relative transform md:-translate-y-4 border border-[#008c5f] transition-all duration-500 scroll-trigger scroll-fade-up delay-200">
+            <div class="bg-gradient-to-b from-[#006c49] to-[#005236] rounded-3xl p-8 shadow-[0_24px_48px_rgba(0,108,73,0.3)] flex flex-col relative border border-[#008c5f] scroll-trigger scroll-fade-up delay-200 tactile-card-featured">
                 <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-yellow-400 text-yellow-900 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-wider shadow-md whitespace-nowrap flex items-center gap-1.5">
                     <span class="material-symbols-outlined text-[14px]">star</span>
                     Paling Populer - Best Value
@@ -419,12 +418,12 @@
                     </div>
                 </div>
 
-                <a href="/checkout?plan=subur" class="w-full block text-center bg-yellow-400 text-yellow-900 font-bold py-3 rounded-xl hover:bg-yellow-300 transition-colors shadow-lg mb-2 text-[15px]">Mulai 7-Day Free Trial</a>
+                <a href="/checkout?plan=subur" class="w-full block text-center bg-yellow-400 text-yellow-900 font-bold py-3 rounded-xl hover:bg-yellow-300 active:scale-[0.98] hover:shadow-lg transition-all duration-300 shadow-md mb-2 text-[15px]">Mulai 7-Day Free Trial</a>
                 <p class="text-center text-[11px] text-white/70">Cancel anytime. Bebas risiko.</p>
             </div>
 
             {{-- Paket 3: Panen Raya --}}
-            <div class="bg-white rounded-3xl p-8 premium-shadow border border-white/60 flex flex-col hover:premium-shadow-hover transition-all duration-500 relative overflow-hidden scroll-trigger scroll-fade-up delay-300">
+            <div class="bg-white rounded-3xl p-8 premium-shadow border border-white/60 flex flex-col tactile-card relative overflow-hidden scroll-trigger scroll-fade-up delay-300">
                 <div class="absolute -right-6 -top-6 bg-primary/10 w-24 h-24 rounded-full"></div>
                 <h3 class="text-xl font-bold text-on-surface mb-2 relative z-10">Panen Raya <span class="text-xs font-semibold bg-primary-container text-on-primary-container px-2 py-1 rounded-full ml-2">Pro</span></h3>
                 
@@ -470,7 +469,7 @@
                     </div>
                 </div>
 
-                <a href="/checkout?plan=pro" class="w-full block text-center bg-[#006c49] text-white font-bold py-3 rounded-xl hover:bg-[#005236] transition-colors shadow-sm relative z-10">Upgrade ke Pro</a>
+                <a href="/checkout?plan=pro" class="w-full block text-center bg-[#006c49] text-white font-bold py-3 rounded-xl hover:bg-[#005236] active:scale-[0.98] hover:shadow-lg transition-all duration-300 shadow-md relative z-10">Upgrade ke Pro</a>
             </div>
 
         </div>

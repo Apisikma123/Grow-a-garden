@@ -29,38 +29,36 @@
         </div>
 
         {{-- Stats Row --}}
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-[16px]">
-            {{-- Card 1 --}}
-            <div class="bg-surface rounded-[24px] p-6 flex flex-col items-center justify-center border border-outline-variant/20 ambient-shadow hover:-translate-y-1 transition-transform">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-[16px]">
+            {{-- Card 1: Gardens & Plots --}}
+            <a href="/garden-plots" class="bg-surface rounded-[24px] p-6 flex flex-col items-center justify-center border border-outline-variant/20 ambient-shadow hover:-translate-y-1 hover:border-primary/30 transition-all cursor-pointer">
                 <span class="material-symbols-outlined text-[#0f766e] text-[24px] mb-2">energy_savings_leaf</span>
-                <div class="text-[36px] font-black text-[#1e293b] leading-none mb-1">1</div>
-                <div class="text-[11px] text-on-surface-variant font-bold uppercase tracking-wider">Total Gardens</div>
-            </div>
-            {{-- Card 2 --}}
-            <div class="bg-surface rounded-[24px] p-6 flex flex-col items-center justify-center border border-outline-variant/20 ambient-shadow hover:-translate-y-1 transition-transform">
+                <div class="flex items-baseline gap-2 mb-1">
+                    <span class="text-[36px] font-black text-[#1e293b] leading-none">1</span>
+                    <span class="text-[16px] font-bold text-on-surface-variant">/ 16</span>
+                </div>
+                <div class="text-[11px] text-on-surface-variant font-bold uppercase tracking-wider text-center">Gardens / Plots</div>
+            </a>
+            {{-- Card 2: Active Plants --}}
+            <a href="/growth-calendar" class="bg-surface rounded-[24px] p-6 flex flex-col items-center justify-center border border-outline-variant/20 ambient-shadow hover:-translate-y-1 hover:border-primary/30 transition-all cursor-pointer">
                 <span class="material-symbols-outlined text-[#10b981] text-[24px] mb-2">potted_plant</span>
                 <div class="text-[36px] font-black text-[#1e293b] leading-none mb-1">12</div>
-                <div class="text-[11px] text-on-surface-variant font-bold uppercase tracking-wider">Active Plants</div>
-            </div>
-            {{-- Card 3 --}}
-            <div class="bg-surface rounded-[24px] p-6 flex flex-col items-center justify-center border border-outline-variant/20 ambient-shadow hover:-translate-y-1 transition-transform">
-                <span class="material-symbols-outlined text-[#0ea5e9] text-[24px] mb-2">grid_view</span>
-                <div class="text-[36px] font-black text-[#1e293b] leading-none mb-1">16</div>
-                <div class="text-[11px] text-on-surface-variant font-bold uppercase tracking-wider">Total Plots</div>
-            </div>
+                <div class="text-[11px] text-on-surface-variant font-bold uppercase tracking-wider text-center">Active Plants</div>
+            </a>
+
             {{-- Card 4 --}}
-            <div class="bg-surface rounded-[24px] p-6 flex flex-col items-center justify-center border border-outline-variant/20 ambient-shadow hover:-translate-y-1 transition-transform">
+            <a href="/care-tasks" class="bg-surface rounded-[24px] p-6 flex flex-col items-center justify-center border border-outline-variant/20 ambient-shadow hover:-translate-y-1 hover:border-primary/30 transition-all cursor-pointer">
                 <span class="material-symbols-outlined text-[#f97316] text-[24px] mb-2">task_alt</span>
                 <div class="text-[36px] font-black text-[#1e293b] leading-none mb-1">3</div>
-                <div class="text-[11px] text-on-surface-variant font-bold uppercase tracking-wider">Today's Activities</div>
-            </div>
+                <div class="text-[11px] text-on-surface-variant font-bold uppercase tracking-wider text-center">Today's Activities</div>
+            </a>
         </div>
 
-        {{-- Map & Schedule Row --}}
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-[24px]">
+        {{-- Map Row --}}
+        <div class="flex flex-col gap-[24px]">
             
             {{-- Garden Plots --}}
-            <div class="lg:col-span-2 bg-surface rounded-[24px] p-[24px] md:p-[32px] border border-outline-variant/20 ambient-shadow">
+            <div class="bg-surface rounded-[24px] p-[24px] md:p-[32px] border border-outline-variant/20 ambient-shadow">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                     <h3 class="text-[20px] font-bold text-[#1e293b]">Garden Plots</h3>
                     <div class="flex flex-wrap gap-4 text-[12px] font-bold text-on-surface-variant">
@@ -153,44 +151,6 @@
                 </div>
             </div>
 
-            {{-- Today's Schedule --}}
-            <div class="bg-surface rounded-[24px] p-[32px] border border-outline-variant/20 ambient-shadow flex flex-col">
-                <h3 class="text-[20px] font-bold text-[#1e293b] mb-8">Today's Schedule</h3>
-                
-                <div class="flex-1 space-y-6">
-                    {{-- Task 1 --}}
-                    <div class="flex items-start gap-4">
-                        <div class="w-6 h-6 rounded-[6px] border-2 border-outline-variant mt-0.5 cursor-pointer hover:border-primary transition-colors flex items-center justify-center"></div>
-                        <div>
-                            <div class="text-[15px] font-bold text-[#1e293b] mb-0.5">Watering - Plot A1</div>
-                            <div class="text-[13px] text-on-surface-variant">Tomato • Soil moisture low</div>
-                        </div>
-                    </div>
-                    
-                    {{-- Task 2 --}}
-                    <div class="flex items-start gap-4">
-                        <div class="w-6 h-6 rounded-[6px] border-2 border-outline-variant mt-0.5 cursor-pointer hover:border-primary transition-colors flex items-center justify-center"></div>
-                        <div>
-                            <div class="text-[15px] font-bold text-[#1e293b] mb-0.5">Fertilizing - Plot B2</div>
-                            <div class="text-[13px] text-on-surface-variant">Chili • Scheduled feed</div>
-                        </div>
-                    </div>
-
-                    {{-- Task 3 --}}
-                    <div class="flex items-start gap-4">
-                        <div class="w-6 h-6 rounded-[6px] border-2 border-outline-variant mt-0.5 cursor-pointer hover:border-primary transition-colors flex items-center justify-center"></div>
-                        <div>
-                            <div class="text-[15px] font-bold text-[#1e293b] mb-0.5">Check health - Plot C3</div>
-                            <div class="text-[13px] text-on-surface-variant">Spinach • Potential pests spotted</div>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="w-full mt-8 py-3 rounded-full border-[2px] border-[#b45309] text-[#b45309] font-bold text-[14px] hover:bg-[#b45309]/5 active:scale-95 transition-all">
-                    View All Tasks
-                </button>
-            </div>
-
         </div>
 
         {{-- Charts Row --}}
@@ -275,75 +235,7 @@
 
         </div>
 
-        {{-- Bottom Row --}}
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-[24px]">
-            
-            {{-- Upcoming Harvest --}}
-            <div class="bg-surface rounded-[24px] p-[32px] border border-outline-variant/20 ambient-shadow">
-                <h3 class="text-[20px] font-bold text-[#1e293b] mb-6">Upcoming Harvest</h3>
-                
-                <div class="space-y-5">
-                    {{-- Item 1 --}}
-                    <div class="flex items-center justify-between group hover:bg-surface-container-lowest p-2 -m-2 rounded-[12px] transition-colors cursor-pointer">
-                        <div class="flex items-center gap-4">
-                            <img src="https://images.unsplash.com/photo-1592841200221-a6898f307baa?w=100&h=100&fit=crop&q=80" class="w-14 h-14 rounded-[12px] object-cover shadow-sm group-hover:scale-105 transition-transform">
-                            <div>
-                                <div class="text-[15px] font-bold text-[#1e293b]">Tomato Cherry</div>
-                                <div class="text-[13px] text-on-surface-variant">Plot A1, A2</div>
-                            </div>
-                        </div>
-                        <span class="bg-[#10b981] text-white text-[12px] font-bold px-4 py-1.5 rounded-full shadow-sm">5 days</span>
-                    </div>
-                    
-                    {{-- Item 2 --}}
-                    <div class="flex items-center justify-between group hover:bg-surface-container-lowest p-2 -m-2 rounded-[12px] transition-colors cursor-pointer">
-                        <div class="flex items-center gap-4">
-                            <img src="https://images.unsplash.com/photo-1588252303782-cb80119abd6d?w=100&h=100&fit=crop&q=80" class="w-14 h-14 rounded-[12px] object-cover shadow-sm group-hover:scale-105 transition-transform">
-                            <div>
-                                <div class="text-[15px] font-bold text-[#1e293b]">Chili</div>
-                                <div class="text-[13px] text-on-surface-variant">Plot B2</div>
-                            </div>
-                        </div>
-                        <span class="border-2 border-outline-variant/50 text-on-surface-variant text-[12px] font-bold px-4 py-1.5 rounded-full bg-surface-container-lowest">12 days</span>
-                    </div>
-                </div>
-            </div>
 
-            {{-- Growth Calendar Overview --}}
-            <div class="lg:col-span-2 bg-surface rounded-[24px] p-[32px] border border-outline-variant/20 ambient-shadow">
-                <div class="flex justify-between items-center mb-8">
-                    <h3 class="text-[20px] font-bold text-[#1e293b]">Growth Calendar Overview</h3>
-                    <button class="text-on-surface-variant hover:text-[#1e293b] transition-colors"><span class="material-symbols-outlined">more_horiz</span></button>
-                </div>
-                
-                <div class="relative pl-6 space-y-8">
-                    {{-- Connecting Line --}}
-                    <div class="absolute left-[7px] top-2 bottom-2 w-[2px] bg-outline-variant/30"></div>
-                    
-                    {{-- Step 1 --}}
-                    <div class="relative">
-                        <div class="absolute -left-[30px] top-1 w-4 h-4 rounded-full bg-[#0f766e] ring-4 ring-surface"></div>
-                        <h4 class="text-[15px] font-bold text-[#0f766e] mb-1">Current Stage: Vegetative</h4>
-                        <p class="text-[13px] text-on-surface-variant font-medium leading-relaxed">Majority of plots are experiencing rapid leaf and stem growth. Ensure consistent watering.</p>
-                    </div>
-                    
-                    {{-- Step 2 --}}
-                    <div class="relative opacity-60 hover:opacity-100 transition-opacity cursor-pointer group">
-                        <div class="absolute -left-[30px] top-1 w-4 h-4 rounded-full bg-outline-variant ring-4 ring-surface group-hover:bg-[#1e293b] transition-colors"></div>
-                        <h4 class="text-[15px] font-bold text-[#1e293b] mb-1">Flowering (Est. 2 weeks)</h4>
-                        <p class="text-[13px] text-on-surface-variant font-medium leading-relaxed">Transition to bloom fertilizers recommended for fruiting plots.</p>
-                    </div>
-                    
-                    {{-- Step 3 --}}
-                    <div class="relative opacity-60 hover:opacity-100 transition-opacity cursor-pointer group">
-                        <div class="absolute -left-[30px] top-1 w-4 h-4 rounded-full bg-outline-variant ring-4 ring-surface group-hover:bg-[#1e293b] transition-colors"></div>
-                        <h4 class="text-[15px] font-bold text-[#1e293b] mb-1">Peak Harvest (Est. 4 weeks)</h4>
-                        <p class="text-[13px] text-on-surface-variant font-medium leading-relaxed">Prepare for major yield collection across all primary crops.</p>
-                    </div>
-                </div>
-            </div>
-
-        </div>
 
     </div>
 @endsection

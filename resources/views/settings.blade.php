@@ -10,27 +10,9 @@
             <p class="text-[16px] text-on-surface-variant leading-[24px]">Kelola preferensi akun dan paket langganan Anda.</p>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-[24px]">
-            {{-- Sidebar Nav for Settings --}}
-            <div class="lg:col-span-1 space-y-[8px]">
-                <button class="w-full text-left px-4 py-3 bg-surface-container-high text-on-surface rounded-[16px] text-[16px] font-bold flex items-center gap-3 transition-colors shadow-sm">
-                    <span class="material-symbols-outlined text-[20px]">person</span>
-                    Profile
-                </button>
-                <button class="w-full text-left px-4 py-3 text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface rounded-[16px] text-[16px] font-bold flex items-center gap-3 transition-colors">
-                    <span class="material-symbols-outlined text-[20px]">notifications</span>
-                    Notifications
-                </button>
-
-                <div class="h-px w-full bg-outline-variant/30 my-[16px]"></div>
-                <button class="w-full text-left px-4 py-3 text-error hover:bg-error-container/50 rounded-[16px] text-[16px] font-bold flex items-center gap-3 transition-colors">
-                    <span class="material-symbols-outlined text-[20px]">logout</span>
-                    Log Out
-                </button>
-            </div>
-
+        <div class="max-w-[800px] w-full mx-auto">
             {{-- Main Settings Content --}}
-            <div class="lg:col-span-3 space-y-[24px]">
+            <div class="space-y-[24px]">
                 
                 {{-- Profile Settings Box --}}
                 <div class="bg-surface rounded-[24px] p-[24px] ambient-shadow-lg border border-outline-variant/20 hover:shadow-xl transition-shadow duration-300">
@@ -50,11 +32,32 @@
                         <div class="flex-1 space-y-[16px]">
                             <div class="group">
                                 <label class="block text-[14px] font-bold text-on-surface mb-2 group-focus-within:text-primary transition-colors">Nama Lengkap</label>
-                                <input type="text" value="Petani Urban" class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary hover:border-outline transition-all">
+                                <input type="text" value="Petani Urban" class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
                             </div>
                             <div class="group">
                                 <label class="block text-[14px] font-bold text-on-surface mb-2 group-focus-within:text-primary transition-colors">Alamat Email</label>
-                                <input type="email" value="petani@urbanfarming.com" class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary hover:border-outline transition-all">
+                                <input type="email" value="petani@urbanfarming.com" class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+                            </div>
+                            <div class="group">
+                                <label class="block text-[14px] font-bold text-on-surface mb-2 group-focus-within:text-primary transition-colors">Nomor Telepon</label>
+                                <input type="tel" value="081234567890" placeholder="08xxxxxxxxxx" class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+                            </div>
+                            <div class="group">
+                                <label class="block text-[14px] font-bold text-on-surface mb-2">Role Akun</label>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="bg-primary-container text-on-primary-container px-3 py-1.5 rounded-full text-[13px] font-bold tracking-wide">
+                                        Free User
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="group">
+                                <label class="block text-[14px] font-bold text-on-surface mb-2 group-focus-within:text-primary transition-colors">Password</label>
+                                <div class="flex items-center justify-between surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 transition-all">
+                                    <span class="text-[16px] text-on-surface-variant tracking-[0.2em] font-medium mt-1">••••••••</span>
+                                    <a href="/settings/password" class="text-primary text-[14px] font-bold hover:underline active:scale-95 transition-all">
+                                        Ganti Password
+                                    </a>
+                                </div>
                             </div>
                             <div class="pt-2">
                                 <button class="bg-primary text-on-primary px-6 py-3 rounded-full text-[14px] font-bold hover:-translate-y-0.5 hover:shadow-lg active:scale-95 transition-all duration-300">
@@ -65,8 +68,42 @@
                     </div>
                 </div>
 
+                {{-- Notifications Settings Box --}}
+                <div class="bg-surface rounded-[24px] p-[24px] ambient-shadow-lg border border-outline-variant/20 hover:shadow-xl transition-shadow duration-300">
+                    <h2 class="text-[24px] font-bold text-on-surface mb-6">Notifications</h2>
+                    <div class="space-y-[16px]">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-[16px] font-bold text-on-surface">Email Notifications</h3>
+                                <p class="text-[13px] text-on-surface-variant">Terima email untuk jadwal perawatan tanaman Anda.</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" value="" class="sr-only peer" checked>
+                                <div class="w-11 h-6 bg-outline-variant/30 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                            </label>
+                        </div>
+                        <div class="h-px w-full bg-outline-variant/30"></div>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-[16px] font-bold text-on-surface">Push Notifications</h3>
+                                <p class="text-[13px] text-on-surface-variant">Dapatkan notifikasi langsung di perangkat Anda untuk peringatan kritis.</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" value="" class="sr-only peer" checked>
+                                <div class="w-11 h-6 bg-outline-variant/30 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
 
-
+                {{-- Danger Zone (Delete Account) --}}
+                <div class="bg-error-container/10 rounded-[24px] p-[24px] ambient-shadow-lg border border-error/20 hover:border-error/40 transition-colors duration-300">
+                    <h2 class="text-[24px] font-bold text-error mb-2">Delete Account</h2>
+                    <p class="text-[14px] text-on-surface-variant mb-6">Sekali Anda menghapus akun, semua data kebun dan pengaturan akan hilang selamanya. Tindakan ini tidak dapat dibatalkan.</p>
+                    <button class="bg-error text-white px-6 py-3 rounded-full text-[14px] font-bold hover:bg-[#93000a] active:scale-95 transition-all duration-300 shadow-sm">
+                        Hapus Akun Saya
+                    </button>
+                </div>
             </div>
         </div>
     </div>
