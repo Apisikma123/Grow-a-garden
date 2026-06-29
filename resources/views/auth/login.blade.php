@@ -134,6 +134,15 @@
             hiddenInput.checked = !hiddenInput.checked;
             // Dispatch change event to trigger CSS peer logic if needed, though Tailwind peer handles standard state changes
         });
+
+        // Show loading overlay on form submissions
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', () => {
+                if (window.GardenLoader) {
+                    GardenLoader.show('Signing you in...');
+                }
+            });
+        });
     });
 </script>
 @endpush

@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('splash');
 });
 
 Route::get('/dashboard', function () {
@@ -22,9 +22,13 @@ Route::get('/admin/plants', function () {
     return view('admin.plants');
 });
 
-Route::get('/admin/care-templates', function () {
-    return view('admin.care-templates');
-});
+use App\Http\Controllers\TemplateController;
+
+Route::get('/admin/care-templates', [TemplateController::class, 'index']);
+Route::post('/admin/care-templates', [TemplateController::class, 'store']);
+Route::put('/admin/care-templates/{template}', [TemplateController::class, 'update']);
+Route::post('/admin/care-templates/{template}/duplicate', [TemplateController::class, 'duplicate']);
+Route::delete('/admin/care-templates/{template}', [TemplateController::class, 'destroy']);
 
 Route::get('/admin/weather', function () {
     return view('admin.weather');

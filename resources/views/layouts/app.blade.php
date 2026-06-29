@@ -23,6 +23,9 @@
 <body class="bg-background text-on-background font-sans min-h-screen antialiased">
     @yield('content')
 
+    {{-- Global Loading Overlay (available on all pages via GardenLoader.show()/hide()) --}}
+    @include('components.loading-overlay')
+
     @stack('scripts')
 </body>
 </html>
