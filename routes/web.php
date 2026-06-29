@@ -14,6 +14,26 @@ Route::get('/admin/dashboard', function () {
     return view('admin.dashboard');
 });
 
+Route::get('/admin/users', function () {
+    return view('admin.users');
+});
+
+Route::get('/admin/plants', function () {
+    return view('admin.plants');
+});
+
+Route::get('/admin/care-templates', function () {
+    return view('admin.care-templates');
+});
+
+Route::get('/admin/weather', function () {
+    return view('admin.weather');
+});
+
+Route::get('/admin/settings', function () {
+    return view('admin.settings');
+});
+
 Route::get('/login', function () {
     return view('auth.login');
 });
