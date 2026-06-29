@@ -22,7 +22,14 @@
         </div>
 
         {{-- Form --}}
-        <form action="/dashboard" method="GET" class="flex flex-col gap-5">
+        <form action="{{ route('login.post') }}" method="POST" class="flex flex-col gap-5">
+            @csrf
+            
+            @if ($errors->any())
+                <div class="bg-error-container/20 text-error text-sm p-3 rounded-[12px] border border-error/30 mb-2 font-medium">
+                    {{ $errors->first() }}
+                </div>
+            @endif
             {{-- Email Input --}}
             <div class="flex flex-col gap-2">
                 <label for="email" class="text-sm font-semibold text-on-surface ml-1">Email Address</label>
@@ -92,12 +99,6 @@
                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google logo" class="w-5 h-5" />
                 Sign in with Google
             </button>
-            <form action="/admin/dashboard" method="GET" class="w-full">
-                <button type="submit" class="w-full bg-surface-container-high text-on-surface-variant rounded-full py-3 text-sm font-semibold hover:bg-surface-container-highest transition-all duration-200 flex items-center justify-center gap-2 border border-outline-variant/30">
-                    <span class="material-symbols-outlined text-[18px]">admin_panel_settings</span>
-                    Login as Admin (Demo)
-                </button>
-            </form>
         </div>
 
         {{-- Footer --}}
