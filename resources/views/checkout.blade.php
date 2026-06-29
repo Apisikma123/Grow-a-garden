@@ -36,7 +36,7 @@
     .toggle-checkbox:checked + .toggle-label:after { transform: translateX(100%); }
 </style>
 
-<div class="min-h-screen flex items-center justify-center p-4 md:p-8 font-['Poppins']">
+<div class="min-h-screen flex items-center justify-center p-4 md:p-8">
     
     <div class="w-full max-w-[1100px] flex flex-col md:flex-row rounded-[32px] overflow-hidden glass-card relative z-10 transition-colors duration-500" id="checkout-card">
         
@@ -47,9 +47,28 @@
             <div id="glow-2" class="absolute -top-24 -right-24 w-64 h-64 bg-[#059669] rounded-full mix-blend-multiply filter blur-3xl opacity-50 transition-colors duration-500"></div>
             
             <div class="relative z-10">
-                <a href="/#pricing" class="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors mb-10 font-medium text-sm">
+                @php
+                    $backUrl = '/#pricing';
+                    $backText = 'Back to Pricing';
+                    if (request()->query('from')) {
+                        $fromPath = request()->query('from');
+                        $backUrl = '/' . ltrim($fromPath, '/');
+                        
+                        // User-friendly text based on route
+                        if (str_contains($fromPath, 'garden-plots')) {
+                            $backText = 'Back to Garden Plots';
+                        } elseif (str_contains($fromPath, 'growth-calendar')) {
+                            $backText = 'Back to Calendar';
+                        } elseif (str_contains($fromPath, 'care-tasks')) {
+                            $backText = 'Back to Care Tasks';
+                        } else {
+                            $backText = 'Back to Dashboard';
+                        }
+                    }
+                @endphp
+                <a href="{{ $backUrl }}" class="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors mb-10 font-medium text-sm">
                     <span class="material-symbols-outlined text-[18px]">arrow_back</span>
-                    Back to Pricing
+                    {{ $backText }}
                 </a>
                 
                 <div id="plan-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-yellow-400/20 text-yellow-300 text-[11px] font-black uppercase tracking-widest mb-4 border border-yellow-400/30">

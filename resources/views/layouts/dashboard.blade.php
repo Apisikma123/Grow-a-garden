@@ -74,7 +74,7 @@
 
         {{-- Bottom: Add Plant + Profile --}}
         <div class="px-6 mt-auto">
-            <button class="w-full bg-primary text-on-primary rounded-full py-3 text-sm font-semibold hover:bg-primary/90 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 shadow-sm mb-4" id="btn-add-plant">
+            <button class="w-full bg-primary text-on-primary rounded-full py-3 text-sm font-semibold hover:bg-primary/90 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 shadow-sm mb-4" id="btn-add-plant" onclick="if(window.checkLimit && window.checkLimit('plants')){ alert('Plant added! (Demo)'); }">
                 <span class="material-symbols-outlined" style="font-size: 20px;">add</span>
                 Add New Plant
             </button>
@@ -117,13 +117,13 @@
 {{-- ============================================
      PRICING MODAL
      ============================================ --}}
-<div id="pricing-modal" class="fixed inset-0 z-[100] hidden">
-    {{-- Backdrop --}}
-    <div class="absolute inset-0 bg-surface/80 backdrop-blur-sm transition-opacity" onclick="document.getElementById('pricing-modal').classList.add('hidden')"></div>
+<div id="pricing-modal" class="fixed inset-0 z-[100] hidden overflow-y-auto">
+    {{-- Backdrop (Optimized for performance: removed backdrop-blur, used fixed bg) --}}
+    <div class="fixed inset-0 bg-slate-900/60 transition-opacity" onclick="document.getElementById('pricing-modal').classList.add('hidden')"></div>
     
     {{-- Modal Content --}}
-    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-[1200px] max-h-[95vh] overflow-y-auto px-4 py-8 pointer-events-none">
-        <div class="bg-surface-container-lowest rounded-3xl p-6 md:p-10 ambient-shadow-lg border border-outline-variant/30 pointer-events-auto relative">
+    <div class="min-h-screen px-4 py-8 flex items-center justify-center pointer-events-none">
+        <div class="w-full max-w-[1200px] bg-surface-container-lowest rounded-3xl p-6 md:p-10 ambient-shadow-lg border border-outline-variant/30 pointer-events-auto relative">
             
             {{-- Close Button --}}
             <button onclick="document.getElementById('pricing-modal').classList.add('hidden')" class="absolute top-6 right-6 w-10 h-10 bg-surface-container-high rounded-full flex items-center justify-center text-on-surface-variant hover:bg-error/10 hover:text-error transition-colors">
@@ -233,7 +233,7 @@
                         </div>
                     </div>
 
-                    <a href="/checkout?plan=subur" class="w-full text-center bg-yellow-400 text-yellow-900 font-bold py-3 rounded-xl hover:bg-yellow-300 transition-colors shadow-lg mb-2 text-[15px] block">Mulai 7-Day Free Trial</a>
+                    <a href="/checkout?plan=subur&from={{ urlencode(request()->path()) }}" class="w-full text-center bg-yellow-400 text-yellow-900 font-bold py-3 rounded-xl hover:bg-yellow-300 transition-colors shadow-lg mb-2 text-[15px] block">Mulai 7-Day Free Trial</a>
                     <p class="text-center text-[11px] text-white/70">Cancel anytime. Bebas risiko.</p>
                 </div>
 
@@ -284,7 +284,7 @@
                         </div>
                     </div>
 
-                    <a href="/checkout?plan=pro" class="w-full text-center bg-[#006c49] text-white font-bold py-3 rounded-xl hover:bg-[#005236] transition-colors shadow-sm relative z-10 block">Upgrade ke Pro</a>
+                    <a href="/checkout?plan=pro&from={{ urlencode(request()->path()) }}" class="w-full text-center bg-[#006c49] text-white font-bold py-3 rounded-xl hover:bg-[#005236] transition-colors shadow-sm relative z-10 block">Upgrade ke Pro</a>
                 </div>
 
             </div>
@@ -315,4 +315,26 @@
         </a>
     @endforeach
 </nav>
+<script>
+    window.AppState = {
+        plan: 'free',
+        usage: { gardens: 1, plots: 4, plants: 10 }
+    };
+
+    const PLAN_LIMITS = {
+        free: { gardens: 1, plots: 4, plants: 10 },
+        subur: { gardens: 10, plots: 50, plants: 100 },
+        pro: { gardens: Infinity, plots: Infinity, plants: Infinity }
+    };
+
+    window.checkLimit = function(resourceType) {
+        if (window.AppState.plan === 'pro') return true;
+        if (window.AppState.usage[resourceType] >= PLAN_LIMITS[window.AppState.plan][resourceType]) {
+            document.getElementById('pricing-modal').classList.remove('hidden');
+            return false;
+        }
+        window.AppState.usage[resourceType]++;
+        return true;
+    };
+</script>
 @endsection

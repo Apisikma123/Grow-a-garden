@@ -35,7 +35,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 
                 {{-- Rule 1: Rainy Season Mode --}}
-                <div class="bg-surface-container-lowest rounded-[20px] p-6 ambient-shadow border border-outline-variant/30 flex flex-col hover:ambient-shadow-lg transition-shadow">
+                <div class="searchable-item bg-surface-container-lowest rounded-[20px] p-6 ambient-shadow border border-outline-variant/30 flex flex-col hover:ambient-shadow-lg transition-shadow">
                     {{-- Top --}}
                     <div class="flex justify-between items-start mb-4">
                         <div class="w-12 h-12 rounded-xl bg-surface-container-low flex items-center justify-center">
@@ -65,7 +65,7 @@
                 </div>
 
                 {{-- Rule 2: Dry Season Surge --}}
-                <div class="bg-surface-container-lowest rounded-[20px] p-6 ambient-shadow border border-outline-variant/30 flex flex-col hover:ambient-shadow-lg transition-shadow">
+                <div class="searchable-item bg-surface-container-lowest rounded-[20px] p-6 ambient-shadow border border-outline-variant/30 flex flex-col hover:ambient-shadow-lg transition-shadow">
                     {{-- Top --}}
                     <div class="flex justify-between items-start mb-4">
                         <div class="w-12 h-12 rounded-xl bg-surface-container-low flex items-center justify-center">
@@ -106,7 +106,7 @@
             </div>
 
             {{-- Map Card --}}
-            <div class="bg-surface-container-lowest rounded-[20px] ambient-shadow border border-outline-variant/30 flex flex-col overflow-hidden">
+            <div class="searchable-item bg-surface-container-lowest rounded-[20px] ambient-shadow border border-outline-variant/30 flex flex-col overflow-hidden">
                 
                 {{-- Top Image (Topographic placeholder) --}}
                 <div class="h-32 w-full bg-[#d2d6cd] relative overflow-hidden">

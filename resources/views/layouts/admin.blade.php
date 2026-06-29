@@ -104,24 +104,17 @@
          ============================================ --}}
     <main class="flex-1 md:ml-64 p-5 md:p-8 overflow-y-auto no-scrollbar w-full min-h-screen flex flex-col">
         {{-- Top Header Bar --}}
+        @if(!request()->is('admin/settings') && !request()->is('admin/dashboard'))
         <header class="hidden md:flex justify-between items-center mb-8 gap-6">
             {{-- Search Bar --}}
             <div class="relative w-full max-w-[400px]">
                 <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
-                <input type="text" placeholder="Search users, plants, or activity..." class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-full pl-12 pr-4 py-2.5 text-[14px] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all ambient-shadow text-on-surface placeholder:text-on-surface-variant/60" />
-            </div>
-
-            {{-- Actions --}}
-            <div class="flex items-center gap-4">
-                <button class="relative text-on-surface-variant hover:text-on-surface transition-colors">
-                    <span class="material-symbols-outlined">notifications</span>
-                    <span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full ring-2 ring-surface"></span>
-                </button>
-                <button class="text-on-surface-variant hover:text-on-surface transition-colors">
-                    <span class="material-symbols-outlined">help</span>
-                </button>
+                <input type="text" id="admin-global-search" placeholder="Search users, plants, or activity..." class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-full pl-12 pr-4 py-2.5 text-[14px] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all ambient-shadow text-on-surface placeholder:text-on-surface-variant/60" />
             </div>
         </header>
+        @else
+        <div class="mb-8 hidden md:block"></div>
+        @endif
 
         @yield('admin-content')
     </main>
@@ -146,6 +139,22 @@
             closeBtn.addEventListener('click', () => {
                 sidebar.classList.add('hidden');
                 sidebar.classList.remove('flex');
+            });
+        }
+
+        // Global Search Feature
+        const searchInput = document.getElementById('admin-global-search');
+        if (searchInput) {
+            searchInput.addEventListener('input', function(e) {
+                const term = e.target.value.toLowerCase();
+                
+                // Find all searchable items (table rows or explicitly marked items)
+                const searchableElements = document.querySelectorAll('main tbody tr, main .searchable-item');
+                
+                searchableElements.forEach(el => {
+                    const text = el.textContent.toLowerCase();
+                    el.style.display = text.includes(term) ? '' : 'none';
+                });
             });
         }
     });

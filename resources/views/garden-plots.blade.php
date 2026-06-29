@@ -168,7 +168,7 @@
     }
 </style>
 
-<div id="dashboard-view" class="w-full min-h-screen bg-[#f8f9fa] font-['Poppins'] overflow-y-auto relative z-[99999]">
+<div id="dashboard-view" class="w-full min-h-screen bg-[#f8f9fa] font-sans overflow-y-auto relative z-10">
     <!-- Ambient Organic Background Glow -->
     <div class="absolute inset-0 pointer-events-none z-0 overflow-hidden">
         <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#006c49]/5 rounded-full blur-[120px]"></div>
@@ -228,7 +228,7 @@
     </div>
 </div>
 
-<div id="app-container" class="hidden flex w-full h-[100vh] font-['Poppins'] relative bg-[#f2f6f4] transition-all duration-300">
+<div id="app-container" class="hidden flex w-full h-[100vh] font-sans relative bg-[#f2f6f4] transition-all duration-300">
     
     {{-- Mobile Sidebar Backdrop --}}
     <div id="sidebar-backdrop" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[55] hidden md:hidden transition-opacity"></div>
@@ -576,10 +576,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const getStatusColors = (status) => {
         switch(status) {
-            case 'healthy': return { color: '#006c49', bg: '#6ffbbe', text: 'Healthy', border: '#006c49' }; 
-            case 'attention': return { color: '#b45309', bg: '#fef3c7', text: 'Needs Attention', border: '#f59e0b' }; 
-            case 'late': return { color: '#b91c1c', bg: '#fee2e2', text: 'Late Care', border: '#ef4444' }; 
-            case 'new': return { color: '#0369a1', bg: '#e0f2fe', text: 'Newly Planted', border: '#0ea5e9' }; 
+            case 'healthy': return { color: 'var(--color-status-healthy-text)', bg: 'var(--color-status-healthy-bg)', text: 'Healthy', border: 'var(--color-status-healthy)' }; 
+            case 'attention': return { color: 'var(--color-status-attention-text)', bg: 'var(--color-status-attention-bg)', text: 'Needs Attention', border: 'var(--color-status-attention)' }; 
+            case 'late': return { color: 'var(--color-status-late-text)', bg: 'var(--color-status-late-bg)', text: 'Late Care', border: 'var(--color-status-late)' }; 
+            case 'new': return { color: 'var(--color-status-new-text)', bg: 'var(--color-status-new-bg)', text: 'Newly Planted', border: 'var(--color-status-new)' }; 
             default: return { color: '#475569', bg: '#f1f5f9', text: 'Unknown', border: '#94a3b8' };
         }
     };
@@ -1411,6 +1411,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputHeight = document.getElementById('input-plot-height');
 
     btnSidebarAdd.addEventListener('click', () => {
+        if(window.checkLimit && !window.checkLimit('plots')) return;
         if(window.innerWidth < 768) toggleSidebar(false); // hide sidebar on mobile to show modal clearly
         modal.classList.remove('hidden');
         inputName.value = 'Plot ' + (state.zones.length + 1);
@@ -1607,6 +1608,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Create New Garden Logic
     document.getElementById('btn-create-garden').addEventListener('click', () => {
+        if(window.checkLimit && !window.checkLimit('gardens')) return;
         newGardenModal.classList.remove('hidden');
         document.getElementById('input-garden-name').value = '';
         document.getElementById('input-garden-location').value = '';
