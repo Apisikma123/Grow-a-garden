@@ -65,6 +65,8 @@ Route::middleware(['auth'])->group(function () {
     // API Routes for Gardens and Plots
     Route::get('/api/gardens', [\App\Http\Controllers\GardenController::class, 'index']);
     Route::post('/api/gardens', [\App\Http\Controllers\GardenController::class, 'store']);
+    Route::put('/api/gardens/{garden}', [\App\Http\Controllers\GardenController::class, 'update']);
+    Route::delete('/api/gardens/{garden}', [\App\Http\Controllers\GardenController::class, 'destroy']);
     Route::get('/api/gardens/{garden}/plots', [\App\Http\Controllers\GardenPlotController::class, 'index']);
     Route::post('/api/plots', [\App\Http\Controllers\GardenPlotController::class, 'store']);
     Route::put('/api/plots/{plot}', [\App\Http\Controllers\GardenPlotController::class, 'update']);

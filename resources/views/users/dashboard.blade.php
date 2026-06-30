@@ -12,16 +12,17 @@
                 @php
                     $hour = now()->format('H');
                     if ($hour < 11) {
-                        $greeting = 'Selamat pagi.';
+                        $greeting = 'Selamat pagi';
                     } elseif ($hour < 15) {
-                        $greeting = 'Selamat siang.';
+                        $greeting = 'Selamat siang';
                     } elseif ($hour < 18) {
-                        $greeting = 'Selamat sore.';
+                        $greeting = 'Selamat sore';
                     } else {
-                        $greeting = 'Selamat malam.';
+                        $greeting = 'Selamat malam';
                     }
+                    $userName = auth()->check() ? explode(' ', auth()->user()->name)[0] : 'Guest';
                 @endphp
-                <h1 class="text-[32px] md:text-[40px] font-bold text-on-surface tracking-tight leading-tight mb-2">{{ $greeting }}</h1>
+                <h1 class="text-[32px] md:text-[40px] font-bold text-on-surface tracking-tight leading-tight mb-2">{{ $greeting }}, {{ $userName }}!</h1>
                 <p class="text-[16px] text-on-surface-variant">Kebun Anda tumbuh dengan baik. Mari lihat apa yang perlu dirawat hari ini.</p>
             </div>
             
@@ -98,124 +99,6 @@
                 <div class="text-[36px] font-black text-on-surface leading-none mb-1">3</div>
                 <div class="text-[14px] text-on-surface font-medium text-center">Aktivitas Hari Ini</div>
             </a>
-        </div>
-
-        {{-- Map Row --}}
-        <div class="flex flex-col gap-[24px]">
-            
-            {{-- Garden Plots --}}
-            <div class="bg-surface rounded-[24px] p-[24px] md:p-[32px] ambient-shadow">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-                    <h3 class="text-[20px] font-bold text-on-surface">Plot Kebun</h3>
-                    <div class="flex flex-wrap gap-4 text-[12px] font-bold text-on-surface-variant">
-                        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-[var(--color-status-healthy)]"></span> Sehat</div>
-                        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-[var(--color-status-attention)]"></span> Perlu Perhatian</div>
-                        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-[var(--color-status-late)]"></span> Terlambat Dirawat</div>
-                        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-[var(--color-status-new)]"></span> Baru Ditanam</div>
-                    </div>
-                </div>
-                
-                <style>
-                    .dash-bg-grid {
-                        background-color: #f2f6f4;
-                        background-image: 
-                            linear-gradient(rgba(0, 108, 73, 0.05) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(0, 108, 73, 0.05) 1px, transparent 1px);
-                        background-size: 24px 24px;
-                        background-position: center center;
-                    }
-                    .dash-zone-box {
-                        position: absolute;
-                        border: 2px dashed;
-                        border-radius: 20px;
-                        background-color: rgba(255,255,255,0.95);
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
-                        justify-content: center;
-                        box-shadow: inset 0 0 0 2px rgba(255,255,255,0.6), 0 8px 24px rgba(0,0,0,0.04);
-                        transition: transform 0.3s ease;
-                    }
-                    .dash-zone-box:hover {
-                        transform: scale(1.02);
-                        z-index: 10;
-                    }
-                    .dash-zone-label {
-                        background-color: rgba(255,255,255,0.95);
-                        padding: 8px 16px;
-                        border-radius: 30px;
-                        box-shadow: 0 8px 24px rgba(0, 108, 73, 0.08), inset 0 0 0 1px rgba(255,255,255,1);
-                        display: flex;
-                        align-items: center;
-                        gap: 8px;
-                    }
-                </style>
-
-                <div class="dash-bg-grid rounded-[16px] w-full h-[240px] md:h-[300px] relative overflow-hidden border border-outline-variant/20 cursor-pointer group hover:border-primary/30 transition-colors" onclick="window.location.href='/garden-plots'">
-                    <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-white/20 backdrop-blur-[2px] z-20">
-                        <span class="bg-primary text-white px-6 py-2 rounded-full font-bold shadow-lg flex items-center gap-2">
-                            <span class="material-symbols-outlined">open_in_new</span>
-                            Buka Plot Kebun
-                        </span>
-                    </div>
-
-                    <div class="absolute w-[1000px] h-[600px] left-1/2 top-1/2 -translate-x-[40%] -translate-y-[45%] scale-[0.4] md:scale-[0.6]">
-                        @if(count($gardens) > 0 && count($gardens->first()->plots) > 0)
-                            @foreach($gardens->first()->plots as $plot)
-                                <div class="dash-zone-box" style="left: {{ $plot->pos_x ?? 100 }}px; top: {{ $plot->pos_y ?? 100 }}px; width: {{ $plot->width ?? 120 }}px; height: {{ $plot->length ?? 120 }}px; border-color: var(--color-primary);">
-                                    <div class="dash-zone-label" style="color: var(--color-primary);">
-                                        <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'wght' 600;">eco</span>
-                                        <span class="text-[14px] md:text-[15px] font-bold truncate tracking-tight">{{ $plot->name }}</span>
-                                    </div>
-                                </div>
-                            @endforeach
-                        @else
-                            <div class="absolute inset-0 flex items-center justify-center text-on-surface-variant/50 text-[18px] font-bold">
-                                Belum ada plot di kebun Anda
-                            </div>
-                        @endif
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        {{-- Upcoming Harvest Row --}}
-        <div class="bg-surface rounded-[24px] p-[32px] ambient-shadow mb-[24px]">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-[20px] font-bold text-on-surface">Panen Mendatang</h3>
-                <a href="/growth-calendar" class="text-[14px] font-bold text-primary hover:underline">Lihat Kalender</a>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {{-- Harvest Item --}}
-                <div class="bg-surface-container-low rounded-[20px] p-5 flex items-start gap-4">
-                    <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                        <span class="material-symbols-outlined text-[24px]">eco</span>
-                    </div>
-                    <div class="flex flex-col h-full w-full">
-                        <div class="text-[15px] font-bold text-on-surface leading-tight mb-1">Tomat Cherry</div>
-                        <div class="text-[13px] text-on-surface-variant mb-4">Plot A1</div>
-                        <div class="mt-auto flex items-center gap-1.5">
-                            <span class="material-symbols-outlined text-status-healthy text-[18px]">schedule</span>
-                            <span class="text-[13.5px] font-bold text-status-healthy">2 hari lagi</span>
-                        </div>
-                    </div>
-                </div>
-                {{-- Harvest Item --}}
-                <div class="bg-surface-container-low rounded-[20px] p-5 flex items-start gap-4">
-                    <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                        <span class="material-symbols-outlined text-[24px]">eco</span>
-                    </div>
-                    <div class="flex flex-col h-full w-full">
-                        <div class="text-[15px] font-bold text-on-surface leading-tight mb-1">Cabai Rawit</div>
-                        <div class="text-[13px] text-on-surface-variant mb-4">Plot B2</div>
-                        <div class="mt-auto flex items-center gap-1.5">
-                            <span class="material-symbols-outlined text-primary text-[18px]">schedule</span>
-                            <span class="text-[13.5px] font-bold text-primary">5 hari lagi</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
 
         {{-- Charts Row --}}
@@ -297,10 +180,45 @@
                     <div class="flex items-center gap-2"><span class="w-6 h-2 rounded-full bg-[#78a994]"></span> Memangkas</div>
                 </div>
             </div>
-
         </div>
 
-
+        {{-- Upcoming Harvest Row --}}
+        <div class="bg-surface rounded-[24px] p-[32px] ambient-shadow mb-[24px]">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-[20px] font-bold text-on-surface">Panen Mendatang</h3>
+                <a href="/growth-calendar" class="text-[14px] font-bold text-primary hover:underline">Lihat Kalender</a>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {{-- Harvest Item --}}
+                <div class="bg-surface-container-low rounded-[20px] p-5 flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                        <span class="material-symbols-outlined text-[24px]">eco</span>
+                    </div>
+                    <div class="flex flex-col h-full w-full">
+                        <div class="text-[15px] font-bold text-on-surface leading-tight mb-1">Tomat Cherry</div>
+                        <div class="text-[13px] text-on-surface-variant mb-4">Plot A1</div>
+                        <div class="mt-auto flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-status-healthy text-[18px]">schedule</span>
+                            <span class="text-[13.5px] font-bold text-status-healthy">2 hari lagi</span>
+                        </div>
+                    </div>
+                </div>
+                {{-- Harvest Item --}}
+                <div class="bg-surface-container-low rounded-[20px] p-5 flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                        <span class="material-symbols-outlined text-[24px]">eco</span>
+                    </div>
+                    <div class="flex flex-col h-full w-full">
+                        <div class="text-[15px] font-bold text-on-surface leading-tight mb-1">Cabai Rawit</div>
+                        <div class="text-[13px] text-on-surface-variant mb-4">Plot B2</div>
+                        <div class="mt-auto flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-primary text-[18px]">schedule</span>
+                            <span class="text-[13.5px] font-bold text-primary">5 hari lagi</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
 @endsection
@@ -430,7 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (detectBtn) {
         detectBtn.addEventListener('click', () => {
             if (!navigator.geolocation) {
-                alert('Browser Anda tidak mendukung Geolocation.');
+                Alert.toast.error('Browser Anda tidak mendukung Geolocation.');
                 return;
             }
 
@@ -486,7 +404,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         msg = 'Informasi lokasi tidak tersedia.';
                     else if (error.code === error.TIMEOUT)
                         msg = 'Waktu permintaan lokasi habis. Coba lagi.';
-                    alert(msg);
+                    Alert.modal.error('Gagal Mendeteksi', msg);
                 },
                 { enableHighAccuracy: true, timeout: 10000 }
             );

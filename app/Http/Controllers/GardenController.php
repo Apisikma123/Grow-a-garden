@@ -10,7 +10,19 @@ class GardenController extends Controller
 {
     public function index()
     {
-        $gardens = Garden::where('user_id', Auth::id())->withCount('plots')->get();
+        $gardens = Garden::where('user_id', Auth::id())->with('plots')->get();
+        
+        $gardens->transform(function ($garden) {
+            $garden->plots_count = $garden->plots->count();
+            $area = 0;
+            foreach ($garden->plots as $plot) {
+                $area += round(($plot->width * $plot->length) / 100);
+            }
+            $garden->calculated_area_m2 = $area;
+            unset($garden->plots); // Exclude plots from the JSON payload to keep it small
+            return $garden;
+        });
+
         return response()->json($gardens);
     }
 
@@ -43,5 +55,35 @@ class GardenController extends Controller
         ]);
 
         return response()->json($garden);
+    }
+
+    public function update(Request $request, Garden $garden)
+    {
+        if ($garden->user_id !== Auth::id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'location' => 'nullable|string|max:255',
+        ]);
+
+        $garden->update([
+            'name' => $request->name,
+            'location_name' => $request->location,
+        ]);
+
+        return response()->json($garden);
+    }
+
+    public function destroy(Garden $garden)
+    {
+        if ($garden->user_id !== Auth::id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $garden->delete();
+
+        return response()->json(['message' => 'Garden deleted successfully']);
     }
 }

@@ -228,6 +228,38 @@
     </div>
 </div>
 
+<!-- Modal for Edit Garden -->
+<div id="edit-garden-modal" class="fixed inset-0 z-[99999] hidden">
+    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-md transition-opacity" id="edit-garden-backdrop"></div>
+    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-[420px] p-4">
+        <div class="bg-white/95 backdrop-blur-xl rounded-[32px] p-8 premium-shadow-hover flex flex-col">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#006c49]/20 to-[#10b981]/20 text-primary flex items-center justify-center shrink-0 border border-primary/10">
+                    <span class="material-symbols-outlined text-[28px]">edit_document</span>
+                </div>
+                <h2 class="text-2xl font-black text-on-surface leading-tight">Edit<br><span class="text-primary">Detail Kebun</span></h2>
+            </div>
+            
+            <div class="space-y-4 max-h-[60vh] overflow-y-auto premium-scroll pr-2">
+                <div>
+                    <label class="block text-[13px] font-bold text-[#6c7a71] uppercase tracking-wider mb-2">Nama Kebun</label>
+                    <input type="text" id="input-edit-garden-name" class="w-full bg-[#f8f9fa] border border-[#e1e3e4] rounded-2xl px-5 py-4 focus:border-primary focus:ring-2 focus:ring-[#006c49]/20 focus:bg-white focus:outline-none text-[16px] text-on-surface font-medium transition-all" placeholder="e.g. Backyard Oasis">
+                </div>
+                <div>
+                    <label class="block text-[13px] font-bold text-[#6c7a71] uppercase tracking-wider mb-2">Lokasi / Zona</label>
+                    <input type="text" id="input-edit-garden-location" class="w-full bg-[#f8f9fa] border border-[#e1e3e4] rounded-2xl px-5 py-4 focus:border-primary focus:ring-2 focus:ring-[#006c49]/20 focus:bg-white focus:outline-none text-[16px] text-on-surface font-medium transition-all" placeholder="e.g. Zone 4b">
+                </div>
+            </div>
+            <div class="flex gap-4 mt-8">
+                <button id="btn-cancel-edit-garden" class="flex-1 py-4 text-[#6c7a71] font-bold rounded-2xl hover:bg-[#f3f4f5] transition-colors text-[16px]">Batal</button>
+                <button id="btn-confirm-edit-garden" class="flex-[1.5] py-4 bg-primary text-white font-bold rounded-2xl hover:bg-primary-container active:scale-95 transition-all shadow-[0_8px_24px_rgba(0,108,73,0.25)] text-[16px] flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-[20px]">save</span> Simpan
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="app-container" class="hidden flex w-full h-[100vh] font-sans relative bg-[#f2f6f4] transition-all duration-300">
     
     {{-- Mobile Sidebar Backdrop --}}
@@ -241,7 +273,13 @@
                 <button id="btn-back-to-dashboard" class="flex items-center gap-2 text-[#6c7a71] hover:text-on-surface font-bold text-[14px] mb-4 transition-colors group">
                     <span class="material-symbols-outlined text-[18px] group-hover:-translate-x-1 transition-transform">arrow_back</span> Kembali ke Kebun
                 </button>
-                <h1 id="canvas-garden-name" class="text-[32px] md:text-[36px] font-black text-on-surface leading-tight tracking-tight mb-1">Green Valley</h1>
+                <div class="flex items-center gap-3 mb-1">
+                    <h1 id="canvas-garden-name" class="text-[32px] md:text-[36px] font-black text-on-surface leading-tight tracking-tight">Green Valley</h1>
+                    <div class="flex gap-1">
+                        <button onclick="openEditGardenModal(state.currentGardenId)" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-[#6c7a71] hover:text-primary hover:bg-primary/10 transition-colors" title="Edit Kebun"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+                        <button onclick="deleteGardenAction(state.currentGardenId)" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-[#6c7a71] hover:text-error hover:bg-error/10 transition-colors" title="Hapus Kebun"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+                    </div>
+                </div>
                 <div class="flex items-center gap-2 text-[#3c4a42] text-[14px] font-semibold bg-[#F1F5F2] inline-flex px-3 py-1.5 rounded-full border border-[#e1e3e4]">
                     <span class="material-symbols-outlined text-[18px] text-primary">location_on</span>
                     <span><span id="canvas-garden-location">Zone 4b</span> • <span id="total-area-display" class="text-on-surface font-bold">0</span> m²</span>
@@ -301,6 +339,11 @@
             </button>
         </div>
 
+        <!-- Stop Drawing Button -->
+        <button id="btn-stop-draw" class="absolute top-24 md:top-28 left-1/2 -translate-x-1/2 bg-error text-white font-bold px-5 py-2.5 rounded-full shadow-lg cursor-pointer hidden items-center gap-2 z-30 transition-all hover:bg-[#93000a] active:scale-95 text-[14px]">
+            <span class="material-symbols-outlined text-[20px]">close</span> Berhenti Menggambar
+        </button>
+
         <!-- Empty State -->
         <div id="empty-state" class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none transition-opacity duration-500 z-0 px-4">
             <div class="w-24 h-24 md:w-28 md:h-28 bg-white rounded-full flex items-center justify-center mb-8 premium-shadow border border-white/60">
@@ -340,11 +383,6 @@
                 </div>
             </div>
 
-            <!-- Quick Stats -->
-            <div class="grid grid-cols-2 gap-3 mb-6" id="detail-quick-stats">
-                <!-- injected by JS -->
-            </div>
-
             <!-- Specs -->
             <div class="bg-white/60 backdrop-blur-md rounded-[24px] p-6 border border-white mb-6 shadow-[0_4px_24px_rgba(0,0,0,0.02)] space-y-4">
                 <div class="flex justify-between items-center">
@@ -373,32 +411,6 @@
                 <div class="flex justify-between items-center">
                     <span class="text-[14px] font-semibold text-[#6c7a71]">Perkiraan Panen</span>
                     <span class="text-[15px] font-bold text-on-surface">Aug 10 - Aug 25</span>
-                </div>
-            </div>
-
-            <!-- Progress -->
-            <div class="mb-6 px-2 bg-white/60 p-6 rounded-[24px] border border-white shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
-                <div class="flex justify-between text-[14px] font-bold mb-4">
-                    <span class="text-slate-500">Progres Tumbuh</span>
-                    <span class="text-primary text-[18px] font-black" id="detail-progress-text">45%</span>
-                </div>
-                <div class="h-4 bg-slate-100 rounded-full overflow-hidden shadow-inner">
-                    <div class="h-full bg-gradient-to-r from-[#006c49] to-[#10b981] rounded-full transition-all duration-1000 ease-out relative" style="width: 45%" id="detail-progress-bar">
-                        <div class="absolute inset-0 bg-white/20 w-full h-full" style="background-image: linear-gradient(45deg, rgba(255,255,255,.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.15) 75%, transparent 75%, transparent); background-size: 1rem 1rem;"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- To Do List -->
-            <div class="mb-8" id="detail-todos">
-                <!-- injected by JS -->
-            </div>
-
-            <!-- Log Aktivitas -->
-            <div class="mb-8">
-                <h4 class="text-[14px] font-bold text-on-surface mb-4">Log Aktivitas</h4>
-                <div class="relative pl-4 border-l-2 border-slate-200 space-y-5" id="detail-activity-log">
-                    <!-- injected by JS -->
                 </div>
             </div>
 
@@ -597,6 +609,16 @@ document.addEventListener('DOMContentLoaded', () => {
         canvasContainer.className = `flex-1 relative bg-grid overflow-hidden mode-${newMode}`;
         if(newMode !== 'select') selectZone(null);
         
+        // Show/hide stop drawing button
+        const btnStopDraw = document.getElementById('btn-stop-draw');
+        if(newMode === 'draw' || newMode === 'draw-poly') {
+            btnStopDraw.classList.remove('hidden');
+            btnStopDraw.classList.add('flex');
+        } else {
+            btnStopDraw.classList.add('hidden');
+            btnStopDraw.classList.remove('flex');
+        }
+        
         if (newMode !== 'draw-poly') {
             polyPoints = [];
             if(drawPolyPreview) drawPolyPreview.style.display = 'none';
@@ -753,11 +775,6 @@ document.addEventListener('DOMContentLoaded', () => {
         state.zones.forEach(zone => {
             const palette = getStatusColors(zone.status);
             
-            // Mock data for premium sidebar design
-            const moisture = zone.moisture || Math.floor(Math.random() * 40 + 40);
-            const sun = zone.sun || ['Full Sun', 'Part Shade', 'Full Shade'][Math.floor(Math.random() * 3)];
-            const todos = zone.todos || ['Menyiram', 'Memupuk', 'Memangkas', 'Panen'].sort(() => 0.5 - Math.random()).slice(0, 2);
-            
             const shadowPremium = `box-shadow: 0 4px 20px rgba(6, 95, 70, 0.05)`;
             const shadowHover = `box-shadow: 0 12px 32px rgba(6, 95, 70, 0.12)`;
             
@@ -768,33 +785,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 ? `border-color: var(--color-primary); ${shadowHover}` 
                 : `border-color: transparent; ${shadowPremium}`;
             
-            const statBg = 'bg-[#F1F5F2]';
-
             item.innerHTML = `
                 <div class="flex justify-between items-start mb-4">
                     <h3 class="font-bold text-on-surface text-[18px] leading-tight tracking-tight">${zone.name}</h3>
                     <div class="w-4 h-4 rounded-full shadow-sm flex-shrink-0 mt-0.5 border-2 border-white" style="background-color: ${palette.border}"></div>
-                </div>
-                
-                <div class="grid grid-cols-2 gap-3 mb-4">
-                    <div class="${statBg} rounded-[16px] p-3 flex flex-col justify-center items-start transition-colors group">
-                        <span class="text-[11px] font-semibold text-[#6c7a71] uppercase tracking-wider mb-1">Moisture</span>
-                        <div class="flex items-center gap-2 text-[14px] font-bold text-primary whitespace-nowrap w-full">
-                            <div class="w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-sm text-primary group-hover:scale-110 transition-transform shrink-0">
-                                <span class="material-symbols-outlined text-[14px]">water_drop</span>
-                            </div>
-                            <span class="truncate">${moisture}%</span>
-                        </div>
-                    </div>
-                    <div class="${statBg} rounded-[16px] p-3 flex flex-col justify-center items-start transition-colors group overflow-hidden">
-                        <span class="text-[11px] font-semibold text-[#6c7a71] uppercase tracking-wider mb-1">Sunlight</span>
-                        <div class="flex items-center gap-2 text-[14px] font-bold text-[#944a23] whitespace-nowrap w-full">
-                            <div class="w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-sm text-[#944a23] group-hover:scale-110 transition-transform shrink-0">
-                                <span class="material-symbols-outlined text-[14px]">light_mode</span>
-                            </div>
-                            <span class="truncate">${sun}</span>
-                        </div>
-                    </div>
                 </div>
                 
                 <div class="flex items-center justify-between text-[13px] font-semibold mb-5">
@@ -838,69 +832,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 statusEl.textContent = palette.text;
                 statusEl.style.color = palette.color;
                 statusEl.style.backgroundColor = palette.bg;
-
-                document.getElementById('detail-progress-text').textContent = (zone.progress || 0) + '%';
-                document.getElementById('detail-progress-bar').style.width = (zone.progress || 0) + '%';
-                
-                // Mock data for premium sidebar design
-                const moisture = zone.moisture || Math.floor(Math.random() * 40 + 40);
-                const sun = zone.sun || ['Full Sun', 'Part Shade', 'Full Shade'][Math.floor(Math.random() * 3)];
-                const todos = zone.todos || ['Menyiram', 'Memupuk', 'Memangkas', 'Panen'].sort(() => 0.5 - Math.random()).slice(0, 3);
-                
-                document.getElementById('detail-quick-stats').innerHTML = `
-                    <div class="bg-[#F1F5F2] rounded-[16px] p-3 flex flex-col justify-center items-start transition-colors group">
-                        <span class="text-[11px] font-semibold text-[#6c7a71] uppercase tracking-wider mb-1">Moisture</span>
-                        <div class="flex items-center gap-2 text-[14px] font-bold text-primary">
-                            <div class="w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-sm text-primary group-hover:scale-110 transition-transform">
-                                <span class="material-symbols-outlined text-[14px]">water_drop</span>
-                            </div>
-                            ${moisture}%
-                        </div>
-                    </div>
-                    <div class="bg-[#F1F5F2] rounded-[16px] p-3 flex flex-col justify-center items-start transition-colors group">
-                        <span class="text-[11px] font-semibold text-[#6c7a71] uppercase tracking-wider mb-1">Sunlight</span>
-                        <div class="flex items-center gap-2 text-[14px] font-bold text-[#944a23]">
-                            <div class="w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-sm text-[#944a23] group-hover:scale-110 transition-transform">
-                                <span class="material-symbols-outlined text-[14px]">light_mode</span>
-                            </div>
-                            ${sun}
-                        </div>
-                    </div>
-                `;
-
-                document.getElementById('detail-todos').innerHTML = `
-                    <h4 class="text-[14px] font-bold text-on-surface mb-3">Tugas hari ini</h4>
-                    <div class="flex flex-col gap-2.5">
-                        ${todos.map(todo => `
-                            <label class="flex items-center gap-3 cursor-pointer p-3 rounded-[16px] bg-white border border-[#e1e3e4] hover:border-[#bbcabf] transition-colors shadow-sm group">
-                                <div class="relative flex items-center justify-center w-5 h-5">
-                                    <input type="checkbox" class="peer appearance-none w-5 h-5 border-2 border-[#bbcabf] rounded-[6px] checked:bg-primary checked:border-primary transition-all cursor-pointer" onclick="event.stopPropagation()">
-                                    <span class="material-symbols-outlined text-white text-[14px] absolute pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity">check</span>
-                                </div>
-                                <span class="text-[14px] font-medium text-[#3c4a42] group-hover:text-on-surface transition-colors">${todo}</span>
-                            </label>
-                        `).join('')}
-                    </div>
-                `;
-
-                // Mock activity log
-                const activities = zone.activities || [
-                    { action: 'Disiram', time: '2 jam lalu', icon: 'water_drop', color: 'text-blue-500', bg: 'bg-blue-50' },
-                    { action: 'Diberi Pupuk', time: 'Kemarin', icon: 'science', color: 'text-purple-500', bg: 'bg-purple-50' },
-                    { action: 'Ditanam', time: '15 Mei 2024', icon: 'eco', color: 'text-primary', bg: 'bg-[#6ffbbe]/30' }
-                ];
-                
-                document.getElementById('detail-activity-log').innerHTML = activities.map(act => `
-                    <div class="relative">
-                        <div class="absolute -left-[27px] top-0 w-7 h-7 rounded-full ${act.bg} ${act.color} flex items-center justify-center border-2 border-white shadow-sm z-10">
-                            <span class="material-symbols-outlined text-[14px]">${act.icon}</span>
-                        </div>
-                        <div class="ml-2 bg-white rounded-xl p-3 border border-[#e1e3e4] shadow-sm relative top-[-4px]">
-                            <p class="text-[13px] font-bold text-on-surface leading-tight">${act.action}</p>
-                            <span class="text-[11px] font-semibold text-[#6c7a71] block mt-1">${act.time}</span>
-                        </div>
-                    </div>
-                `).join('');
 
                 rightSidebar.classList.remove('translate-x-full');
             }
@@ -1523,6 +1454,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    document.getElementById('btn-stop-draw').addEventListener('click', () => {
+        setMode('select');
+    });
+
     // Pilih Tanaman Logic
     const assignModal = document.getElementById('assign-plant-modal');
     document.getElementById('btn-assign-plant').addEventListener('click', () => {
@@ -1584,7 +1519,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="absolute inset-0 shadow-[inset_0_4px_24px_rgba(0,0,0,0.04)] pointer-events-none"></div>
                 </div>
                 <div class="flex-1 px-4">
-                    <h3 class="text-[26px] font-black text-on-surface mb-2 group-hover:text-primary transition-colors leading-tight">${garden.name}</h3>
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-[26px] font-black text-on-surface group-hover:text-primary transition-colors leading-tight">${garden.name}</h3>
+                        <div class="relative inline-block text-left" onclick="event.stopPropagation()">
+                            <button onclick="toggleGardenMenu(event, ${garden.id})" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-[#6c7a71] hover:text-primary hover:bg-primary/10 transition-colors shadow-sm focus:outline-none">
+                                <span class="material-symbols-outlined text-[18px]">more_vert</span>
+                            </button>
+                            <div id="garden-menu-${garden.id}" class="garden-card-menu hidden absolute right-0 mt-2 w-48 bg-white rounded-[16px] premium-shadow border border-slate-100 z-[60] overflow-hidden">
+                                <button onclick="openEditGardenModal(${garden.id})" class="w-full text-left px-4 py-3 text-[14px] font-bold text-slate-700 hover:bg-slate-50 hover:text-primary flex items-center gap-2 transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]">edit</span> Edit Kebun
+                                </button>
+                                <button onclick="deleteGardenAction(${garden.id})" class="w-full text-left px-4 py-3 text-[14px] font-bold text-slate-700 hover:bg-error/10 hover:text-error flex items-center gap-2 transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]">delete</span> Hapus Kebun
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                     <div class="flex items-center gap-2 text-[#6c7a71] text-[15px] font-medium mb-6">
                         <span class="material-symbols-outlined text-[18px] text-primary/70">location_on</span> ${garden.location}
                     </div>
@@ -1683,7 +1633,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
             
             if (!response.ok) {
-                alert(data.error || 'Failed to create garden');
+                Alert.modal.error('Gagal Membuat Kebun', data.error || 'Failed to create garden');
                 return;
             }
             
@@ -1691,7 +1641,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 id: data.id,
                 name: data.name,
                 location: data.location_name || 'Unknown Zone',
-                area: data.area_size_m2 || 0,
+                area: data.calculated_area_m2 || 0,
                 plots: 0
             });
             
@@ -1713,7 +1663,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 id: g.id,
                 name: g.name,
                 location: g.location_name || 'Unknown Zone',
-                area: g.area_size_m2 || 0,
+                area: g.calculated_area_m2 || 0,
                 plots: g.plots_count || 0
             }));
             renderDashboard();
@@ -1744,7 +1694,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             const data = await response.json();
             if (!response.ok) {
-                alert(data.error || 'Failed to save plot');
+                Alert.modal.error('Gagal Menyimpan', data.error || 'Failed to save plot');
                 return null;
             }
             if (window.AppState) window.AppState.usage.plots++;
@@ -1782,6 +1732,141 @@ document.addEventListener('DOMContentLoaded', () => {
             if (window.AppState) window.AppState.usage.plots--;
         } catch(e) { console.error(e); }
     }
+
+    // Edit Garden Logic
+    const editGardenModal = document.getElementById('edit-garden-modal');
+    const inputEditGardenName = document.getElementById('input-edit-garden-name');
+    const inputEditGardenLocation = document.getElementById('input-edit-garden-location');
+
+    // Global Garden Actions
+    window.openEditGardenModal = (gardenId) => {
+        const garden = state.gardens.find(g => g.id === gardenId);
+        if (garden) {
+            state.currentGardenId = gardenId;
+            inputEditGardenName.value = garden.name;
+            inputEditGardenLocation.value = garden.location;
+            editGardenModal.classList.remove('hidden');
+        }
+    };
+
+    window.toggleGardenMenu = (e, gardenId) => {
+        e.stopPropagation();
+        const menu = document.getElementById(`garden-menu-${gardenId}`);
+        document.querySelectorAll('.garden-card-menu').forEach(m => {
+            if (m.id !== `garden-menu-${gardenId}`) m.classList.add('hidden');
+        });
+        menu.classList.toggle('hidden');
+    };
+
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.garden-card-menu').forEach(m => m.classList.add('hidden'));
+    });
+
+    window.deleteGardenAction = async (gardenId) => {
+        const garden = state.gardens.find(g => g.id === gardenId);
+        if (!garden) return;
+
+        if (window.Alert) {
+            const confirmed = await Alert.modal.confirm(
+                'Hapus Kebun?', 
+                `Apakah Anda yakin ingin menghapus kebun "${garden.name}" beserta semua plot di dalamnya? Tindakan ini tidak dapat dibatalkan.`,
+                'Ya, Hapus Kebun',
+                true
+            );
+            if (!confirmed.isConfirmed) return;
+        } else {
+            if (!confirm(`Hapus kebun "${garden.name}"?`)) return;
+        }
+
+        try {
+            const response = await fetch(`/api/gardens/${gardenId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                }
+            });
+
+            if (!response.ok) {
+                const data = await response.json();
+                throw new Error(data.error || 'Gagal menghapus kebun');
+            }
+
+            state.gardens = state.gardens.filter(g => g.id !== gardenId);
+            
+            if (state.currentGardenId === gardenId) {
+                state.currentGardenId = null;
+                dashboardView.classList.remove('hidden');
+                dashboardView.classList.add('flex');
+                appContainer.classList.add('hidden');
+                appContainer.classList.remove('flex');
+            }
+            renderDashboard();
+
+            if (window.Alert) Alert.toast.success('Kebun berhasil dihapus');
+        } catch (error) {
+            if (window.Alert) Alert.modal.error('Gagal', error.message);
+        }
+    };
+
+    document.getElementById('btn-cancel-edit-garden').addEventListener('click', () => {
+        editGardenModal.classList.add('hidden');
+    });
+    
+    document.getElementById('edit-garden-backdrop').addEventListener('click', () => {
+        editGardenModal.classList.add('hidden');
+    });
+
+    document.getElementById('btn-confirm-edit-garden').addEventListener('click', async () => {
+        const name = inputEditGardenName.value.trim();
+        const location = inputEditGardenLocation.value.trim();
+        
+        if (!name) {
+            if (window.Alert) Alert.toast.error('Nama kebun harus diisi');
+            return;
+        }
+
+        try {
+            const btn = document.getElementById('btn-confirm-edit-garden');
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[20px]">sync</span> Menyimpan...';
+            btn.disabled = true;
+
+            const response = await fetch(`/api/gardens/${state.currentGardenId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({ name, location })
+            });
+
+            if (!response.ok) {
+                const data = await response.json();
+                throw new Error(data.error || 'Gagal menyimpan kebun');
+            }
+
+            // Update state
+            const garden = state.gardens.find(g => g.id === state.currentGardenId);
+            if (garden) {
+                garden.name = name;
+                garden.location = location;
+            }
+            
+            // Update UI
+            canvasGardenName.textContent = name;
+            canvasGardenLocation.textContent = location;
+            renderDashboard();
+
+            editGardenModal.classList.add('hidden');
+            if (window.Alert) Alert.toast.success('Kebun berhasil diperbarui!');
+        } catch (error) {
+            if (window.Alert) Alert.modal.error('Gagal', error.message);
+        } finally {
+            const btn = document.getElementById('btn-confirm-edit-garden');
+            btn.innerHTML = '<span class="material-symbols-outlined text-[20px]">save</span> Simpan';
+            btn.disabled = false;
+        }
+    });
 
 });
 </script>

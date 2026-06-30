@@ -13,7 +13,7 @@
             </div>
             <div class="bg-surface-container-high text-on-surface-variant px-5 py-2.5 rounded-full flex items-center gap-2 font-bold text-[14px] shadow-sm">
                 <span class="material-symbols-outlined text-[20px]">calendar_today</span>
-                Hari Ini, 24 Mei
+                Hari Ini, {{ \Carbon\Carbon::now()->locale('id')->isoFormat('D MMMM') }}
             </div>
         </div>
 
