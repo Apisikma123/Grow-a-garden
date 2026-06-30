@@ -18,8 +18,27 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'Free User',
+            'email' => 'free@example.com',
+            'role' => 'free',
+        ]);
+
+        User::factory()->create([
+            'name' => 'Pro User',
+            'email' => 'pro@example.com',
+            'role' => 'pro',
+        ]);
+
+        User::factory()->create([
+            'name' => 'Premium User',
+            'email' => 'premium@example.com',
+            'role' => 'premium',
+        ]);
+
+        User::factory()->create([
+            'name' => 'Admin User',
+            'email' => 'admin@example.com',
+            'role' => 'admin',
         ]);
 
         // ── Master Data Seeders ──

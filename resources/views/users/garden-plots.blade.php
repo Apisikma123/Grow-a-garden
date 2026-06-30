@@ -228,6 +228,40 @@
     </div>
 </div>
 
+<!-- Modal for Edit Garden -->
+<div id="edit-garden-modal" class="fixed inset-0 z-[99999] hidden">
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-md transition-opacity" id="edit-garden-backdrop"></div>
+    
+    <!-- Modal Content Centered -->
+    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-[420px] p-4">
+        <div class="bg-white/95 backdrop-blur-xl rounded-[32px] p-8 premium-shadow-hover flex flex-col">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#006c49]/20 to-[#10b981]/20 text-primary flex items-center justify-center shrink-0 border border-primary/10">
+                    <span class="material-symbols-outlined text-[28px]">edit</span>
+                </div>
+                <h2 class="text-2xl font-black text-on-surface leading-tight">Edit<br><span class="text-primary">Kebun</span></h2>
+            </div>
+            
+            <div class="space-y-4 max-h-[60vh] overflow-y-auto premium-scroll pr-2">
+                <div>
+                    <label class="block text-[13px] font-bold text-[#6c7a71] uppercase tracking-wider mb-2">Nama Kebun</label>
+                    <input type="text" id="edit-garden-name" class="w-full bg-[#f8f9fa] border border-[#e1e3e4] rounded-2xl px-5 py-4 focus:border-primary focus:ring-2 focus:ring-[#006c49]/20 focus:bg-white focus:outline-none text-[16px] text-on-surface font-medium transition-all" placeholder="e.g. Backyard Oasis">
+                </div>
+                <div>
+                    <label class="block text-[13px] font-bold text-[#6c7a71] uppercase tracking-wider mb-2">Lokasi / Zona</label>
+                    <input type="text" id="edit-garden-location" class="w-full bg-[#f8f9fa] border border-[#e1e3e4] rounded-2xl px-5 py-4 focus:border-primary focus:ring-2 focus:ring-[#006c49]/20 focus:bg-white focus:outline-none text-[16px] text-on-surface font-medium transition-all" placeholder="e.g. Zone 4b">
+                </div>
+            </div>
+            <div class="flex gap-4 mt-8">
+                <button id="btn-cancel-edit-garden" class="flex-1 py-4 text-[#6c7a71] font-bold rounded-2xl hover:bg-[#f3f4f5] transition-colors text-[16px]">Batal</button>
+                <button id="btn-confirm-edit-garden" class="flex-[1.5] py-4 bg-primary text-white font-bold rounded-2xl hover:bg-primary-container active:scale-95 transition-all shadow-[0_8px_24px_rgba(0,108,73,0.25)] text-[16px] flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-[20px]">save</span> Simpan
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 <div id="app-container" class="hidden flex w-full h-[100vh] font-sans relative bg-[#f2f6f4] transition-all duration-300">
     
     {{-- Mobile Sidebar Backdrop --}}
@@ -242,9 +276,17 @@
                     <span class="material-symbols-outlined text-[18px] group-hover:-translate-x-1 transition-transform">arrow_back</span> Kembali ke Kebun
                 </button>
                 <h1 id="canvas-garden-name" class="text-[32px] md:text-[36px] font-black text-on-surface leading-tight tracking-tight mb-1">Green Valley</h1>
-                <div class="flex items-center gap-2 text-[#3c4a42] text-[14px] font-semibold bg-[#F1F5F2] inline-flex px-3 py-1.5 rounded-full border border-[#e1e3e4]">
-                    <span class="material-symbols-outlined text-[18px] text-primary">location_on</span>
-                    <span><span id="canvas-garden-location">Zone 4b</span> • <span id="total-area-display" class="text-on-surface font-bold">0</span> m²</span>
+                <div class="flex items-center gap-2 mt-2">
+                    <div class="flex items-center gap-2 text-[#3c4a42] text-[14px] font-semibold bg-[#F1F5F2] inline-flex px-3 py-1.5 rounded-full border border-[#e1e3e4]">
+                        <span class="material-symbols-outlined text-[18px] text-primary">location_on</span>
+                        <span><span id="canvas-garden-location">Zone 4b</span> • <span id="total-area-display" class="text-on-surface font-bold">0</span> m²</span>
+                    </div>
+                    <button id="btn-edit-garden" class="w-8 h-8 rounded-full bg-white border border-[#e1e3e4] flex items-center justify-center text-[#6c7a71] hover:text-primary hover:border-primary transition-colors shadow-sm" title="Edit Kebun">
+                        <span class="material-symbols-outlined text-[16px]">edit</span>
+                    </button>
+                    <button id="btn-delete-garden" class="w-8 h-8 rounded-full bg-white border border-[#e1e3e4] flex items-center justify-center text-[#6c7a71] hover:text-red-500 hover:border-red-500 hover:bg-red-50 transition-colors shadow-sm" title="Hapus Kebun">
+                        <span class="material-symbols-outlined text-[16px]">delete</span>
+                    </button>
                 </div>
             </div>
             <button id="btn-close-sidebar" class="md:hidden w-10 h-10 bg-white rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 shadow-sm border border-slate-100">
@@ -1701,6 +1743,92 @@ document.addEventListener('DOMContentLoaded', () => {
             renderDashboard();
         } catch (error) {
             console.error("Error creating garden:", error);
+        }
+    });
+
+    // Edit Garden Logic
+    const editGardenModal = document.getElementById('edit-garden-modal');
+    document.getElementById('btn-edit-garden').addEventListener('click', () => {
+        const garden = state.gardens.find(g => g.id === state.currentGardenId);
+        if (!garden) return;
+        document.getElementById('edit-garden-name').value = garden.name;
+        document.getElementById('edit-garden-location').value = garden.location;
+        editGardenModal.classList.remove('hidden');
+    });
+
+    document.getElementById('btn-cancel-edit-garden').addEventListener('click', () => editGardenModal.classList.add('hidden'));
+    document.getElementById('edit-garden-backdrop').addEventListener('click', () => editGardenModal.classList.add('hidden'));
+
+    document.getElementById('btn-confirm-edit-garden').addEventListener('click', async () => {
+        const name = document.getElementById('edit-garden-name').value;
+        const location = document.getElementById('edit-garden-location').value;
+        
+        try {
+            const response = await fetch(`/api/gardens/${state.currentGardenId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ name, location })
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                alert(data.error || 'Gagal menyimpan perubahan');
+                return;
+            }
+            
+            // Update local state
+            const gardenIndex = state.gardens.findIndex(g => g.id === state.currentGardenId);
+            if (gardenIndex !== -1) {
+                state.gardens[gardenIndex].name = data.name;
+                state.gardens[gardenIndex].location = data.location_name || 'Unknown Zone';
+            }
+            
+            // Update UI
+            canvasGardenName.textContent = data.name;
+            canvasGardenLocation.textContent = data.location_name || 'Unknown Zone';
+            
+            editGardenModal.classList.add('hidden');
+        } catch (error) {
+            console.error("Error updating garden:", error);
+        }
+    });
+
+    // Delete Garden Logic
+    document.getElementById('btn-delete-garden').addEventListener('click', async () => {
+        if (!confirm('Apakah Anda yakin ingin menghapus kebun ini? Semua plot dan tanaman di dalamnya akan ikut terhapus secara permanen.')) return;
+        
+        try {
+            const response = await fetch(`/api/gardens/${state.currentGardenId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            });
+            
+            if (!response.ok) {
+                const data = await response.json();
+                alert(data.error || 'Gagal menghapus kebun');
+                return;
+            }
+            
+            // Decrement usage based on what's deleted
+            if (window.AppState) {
+                window.AppState.usage.gardens--;
+                const garden = state.gardens.find(g => g.id === state.currentGardenId);
+                if (garden) {
+                    window.AppState.usage.plots -= garden.plots;
+                }
+            }
+            
+            // Remove from local state
+            state.gardens = state.gardens.filter(g => g.id !== state.currentGardenId);
+            
+            // Back to dashboard
+            showDashboard();
+        } catch (error) {
+            console.error("Error deleting garden:", error);
         }
     });
 
