@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Sign Up — Grow a Garden')
+@section('title', 'Daftar — Grow a Garden')
 
 @section('content')
 <div class="min-h-screen flex items-center justify-center bg-surface px-5 py-12 relative overflow-hidden">
@@ -11,21 +11,36 @@
     </div>
 
     <div class="w-full max-w-[440px] bg-white rounded-[24px] p-8 md:p-10 ambient-shadow-lg relative z-10 border border-outline-variant/20 mt-10 md:mt-0">
+        {{-- Back Button --}}
+        <div class="mb-2 flex justify-start">
+            <a href="javascript:history.back()" class="inline-flex items-center gap-1.5 text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                Kembali
+            </a>
+        </div>
+
         {{-- Header --}}
         <div class="text-center mb-8">
-            <a href="/" class="inline-flex items-center gap-2 group mb-6">
-                <span class="material-symbols-outlined text-primary text-[32px] transition-transform duration-200 group-hover:scale-110">yard</span>
+            <a href="/" class="inline-flex items-center gap-3 group mb-6">
+                <img src="{{ asset('images/logo.jpg') }}" alt="Grow a Garden Logo" class="w-10 h-10 rounded-xl shadow-sm transition-transform duration-300 object-contain">
                 <span class="text-xl font-bold text-on-surface tracking-tight">Grow a Garden</span>
             </a>
-            <h1 class="text-[28px] font-bold text-on-surface mb-2">Create Account</h1>
-            <p class="text-sm text-on-surface-variant">Start your digital gardening journey today.</p>
+            <h1 class="text-[28px] font-bold text-on-surface mb-2">Buat Akun</h1>
+            <p class="text-sm text-on-surface-variant">Mulai perjalanan berkebun digital Anda hari ini.</p>
         </div>
 
         {{-- Form --}}
-        <form action="/dashboard" method="GET" class="flex flex-col gap-5">
+        <form action="{{ route('register.post') }}" method="POST" class="flex flex-col gap-5">
+            @csrf
+            
+            @if ($errors->any())
+                <div class="bg-error-container/20 text-error text-sm p-3 rounded-[12px] border border-error/30 mb-2 font-medium">
+                    {{ $errors->first() }}
+                </div>
+            @endif
             {{-- Name Input --}}
             <div class="flex flex-col gap-2">
-                <label for="name" class="text-sm font-semibold text-on-surface ml-1">Full Name</label>
+                <label for="name" class="text-sm font-semibold text-on-surface ml-1">Nama Lengkap</label>
                 <div class="relative">
                     <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant/70 text-[20px] pointer-events-none">person</span>
                     <input 
@@ -41,7 +56,7 @@
 
             {{-- Email Input --}}
             <div class="flex flex-col gap-2">
-                <label for="email" class="text-sm font-semibold text-on-surface ml-1">Email Address</label>
+                <label for="email" class="text-sm font-semibold text-on-surface ml-1">Alamat Email</label>
                 <div class="relative">
                     <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant/70 text-[20px] pointer-events-none">mail</span>
                     <input 
@@ -57,7 +72,7 @@
 
             {{-- Password Input --}}
             <div class="flex flex-col gap-2">
-                <label for="password" class="text-sm font-semibold text-on-surface ml-1">Password</label>
+                <label for="password" class="text-sm font-semibold text-on-surface ml-1">Kata Sandi</label>
                 <div class="relative">
                     <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant/70 text-[20px] pointer-events-none">lock</span>
                     <input 
@@ -76,7 +91,7 @@
 
             {{-- Confirm Password Input --}}
             <div class="flex flex-col gap-2">
-                <label for="password_confirmation" class="text-sm font-semibold text-on-surface ml-1">Confirm Password</label>
+                <label for="password_confirmation" class="text-sm font-semibold text-on-surface ml-1">Konfirmasi Kata Sandi</label>
                 <div class="relative">
                     <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant/70 text-[20px] pointer-events-none">lock</span>
                     <input 
@@ -95,15 +110,23 @@
 
             {{-- Submit Button --}}
             <button type="submit" class="w-full bg-primary text-on-primary rounded-full py-3.5 text-sm font-semibold hover:bg-primary/90 active:scale-[0.98] transition-all duration-200 mt-4 shadow-sm flex items-center justify-center gap-2">
-                Sign Up
+                Daftar
                 <span class="material-symbols-outlined text-[20px]">person_add</span>
             </button>
+            
+            {{-- Social Registration --}}
+            <div class="flex flex-col gap-3 mt-2">
+                <a href="/auth/google" class="w-full bg-white border-2 border-outline-variant/50 text-on-surface rounded-full py-3 text-sm font-semibold hover:bg-surface transition-all duration-200 flex items-center justify-center gap-3">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google logo" class="w-5 h-5" />
+                    Sign up with Google
+                </a>
+            </div>
         </form>
 
         {{-- Footer --}}
         <p class="text-center text-sm font-medium text-on-surface-variant mt-8">
-            Already have an account? 
-            <a href="/login" class="text-primary font-semibold hover:text-primary/80 transition-colors">Sign In</a>
+            Sudah punya akun? 
+            <a href="/login" class="text-primary font-semibold hover:text-primary/80 transition-colors">Masuk</a>
         </p>
     </div>
 </div>
