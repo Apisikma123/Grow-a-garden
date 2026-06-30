@@ -323,19 +323,22 @@
 </nav>
 <script>
     window.AppState = {
-        plan: 'free',
+        plan: '{{ Auth::check() ? Auth::user()->role : "free" }}',
         usage: { gardens: 1, plots: 4, plants: 10 }
     };
 
     const PLAN_LIMITS = {
         free: { gardens: 1, plots: 4, plants: 10 },
-        subur: { gardens: 10, plots: 50, plants: 100 },
-        pro: { gardens: Infinity, plots: Infinity, plants: Infinity }
+        pro: { gardens: 10, plots: 50, plants: 100 },
+        premium: { gardens: Infinity, plots: Infinity, plants: Infinity }
     };
 
     window.checkLimit = function(resourceType) {
-        if (window.AppState.plan === 'pro') return true;
-        if (window.AppState.usage[resourceType] >= PLAN_LIMITS[window.AppState.plan][resourceType]) {
+        if (window.AppState.plan === 'premium' || window.AppState.plan === 'admin') return true;
+        
+        let limit = PLAN_LIMITS[window.AppState.plan] ? PLAN_LIMITS[window.AppState.plan][resourceType] : PLAN_LIMITS['free'][resourceType];
+        
+        if (window.AppState.usage[resourceType] >= limit) {
             document.getElementById('pricing-modal').classList.remove('hidden');
             return false;
         }

@@ -216,6 +216,38 @@
                     </div>
                 </div>
 
+                {{-- Autopilot (Pro Feature) --}}
+                <div class="bg-surface rounded-[24px] p-[24px] ambient-shadow-lg border border-outline-variant/20 relative overflow-hidden">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-[18px] font-bold text-on-surface flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary">smart_toy</span> Autopilot
+                        </h3>
+                        @if(in_array(Auth::user()->role ?? 'free', ['pro', 'premium', 'admin']))
+                            <div class="w-10 h-6 bg-primary rounded-full relative cursor-pointer shadow-inner">
+                                <div class="w-4 h-4 bg-white rounded-full absolute right-1 top-1 shadow-sm"></div>
+                            </div>
+                        @else
+                            <div class="w-10 h-6 bg-outline-variant/50 rounded-full relative cursor-pointer" onclick="document.getElementById('pricing-modal').classList.remove('hidden')">
+                                <div class="w-4 h-4 bg-white rounded-full absolute left-1 top-1 shadow-sm flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-[10px] text-outline-variant">lock</span>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                    
+                    @if(in_array(Auth::user()->role ?? 'free', ['pro', 'premium', 'admin']))
+                        <p class="text-[13px] text-on-surface-variant font-medium">Asisten AI sedang menyusun jadwal harian Anda secara otomatis.</p>
+                        <div class="mt-4 flex items-center gap-2 text-[12px] font-bold text-primary bg-primary-container/30 px-3 py-1.5 rounded-lg inline-flex">
+                            <span class="material-symbols-outlined text-[16px]">check_circle</span> Aktif
+                        </div>
+                    @else
+                        <p class="text-[13px] text-on-surface-variant font-medium mb-4">Otomatisasi jadwal berdasarkan kebutuhan spesifik tiap tanaman.</p>
+                        <button onclick="document.getElementById('pricing-modal').classList.remove('hidden')" class="w-full bg-surface-container-high hover:bg-surface-container-highest text-primary font-bold py-2 rounded-xl text-[13px] transition-colors border border-primary/20 flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-[16px]">workspace_premium</span> Upgrade to Pro
+                        </button>
+                    @endif
+                </div>
+
                 {{-- Misi Mingguan Card --}}
                 <div class="bg-[#67b193] rounded-[24px] p-[24px] relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300 ambient-shadow-lg text-[#003823]">
                     <div class="mb-4 relative z-10">

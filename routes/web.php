@@ -14,14 +14,17 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('register
 Route::post('/register', [AuthController::class, 'registerProcess'])->name('register.post')->middleware('guest');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
+// Google OAuth Routes
+Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
+
 // Public or Guest routes added from HEAD
 Route::get('/forgot-password', function () {
     return view('auth.forgot-password');
 });
 
-Route::get('/otp', function () {
-    return view('auth.otp');
-});
+Route::get('/otp', [AuthController::class, 'showOtp'])->name('otp.show');
+Route::post('/otp', [AuthController::class, 'verifyOtp'])->name('otp.verify');
 
 Route::get('/checkout', function () {
     return view('checkout');

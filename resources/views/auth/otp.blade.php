@@ -22,11 +22,14 @@
                 <span class="material-symbols-outlined text-[32px] text-primary">mark_email_read</span>
             </div>
             <h1 class="text-[28px] font-bold text-on-surface mb-2">Check your email</h1>
-            <p class="text-sm text-on-surface-variant">We sent a verification code to<br><span class="font-bold text-on-surface">gardener@example.com</span></p>
+            <p class="text-sm text-on-surface-variant">We sent a verification code to<br><span class="font-bold text-on-surface">{{ $email ?? 'your email' }}</span></p>
         </div>
 
         {{-- Form --}}
-        <form action="/dashboard" method="GET" class="flex flex-col gap-8">
+        <form action="{{ route('otp.verify') }}" method="POST" class="flex flex-col gap-8" id="otp-form">
+            @csrf
+            <input type="hidden" name="otp" id="otp-hidden">
+            
             <div class="flex items-center justify-between gap-1 sm:gap-4 w-full" id="otp-inputs">
                 {{-- Group 1 --}}
                 <div class="flex flex-1 gap-1.5 sm:gap-2">
@@ -45,6 +48,10 @@
                 </div>
             </div>
 
+            @error('otp')
+                <p class="text-red-500 text-sm text-center -mt-4">{{ $message }}</p>
+            @enderror
+
             <button type="submit" class="w-full bg-primary text-on-primary rounded-full py-4 text-sm font-semibold hover:bg-primary/90 active:scale-[0.98] transition-all duration-200 shadow-sm flex items-center justify-center gap-2">
                 Verify Code
             </button>
@@ -53,7 +60,7 @@
         {{-- Footer --}}
         <p class="text-center text-sm font-medium text-on-surface-variant mt-8">
             Didn't receive the code? 
-            <a href="#" class="text-primary font-semibold hover:text-primary/80 transition-colors">Click to resend</a>
+            <a href="/login" class="text-primary font-semibold hover:text-primary/80 transition-colors">Back to Login</a>
         </p>
     </div>
 </div>
@@ -62,6 +69,8 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const inputs = document.querySelectorAll('#otp-inputs input');
+        const form = document.getElementById('otp-form');
+        const hiddenInput = document.getElementById('otp-hidden');
         
         inputs.forEach((input, index) => {
             input.addEventListener('input', (e) => {
@@ -83,6 +92,14 @@
                     }
                 }
             });
+        });
+
+        form.addEventListener('submit', (e) => {
+            let otpValue = '';
+            inputs.forEach(input => {
+                otpValue += input.value;
+            });
+            hiddenInput.value = otpValue;
         });
     });
 </script>

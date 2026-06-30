@@ -95,10 +95,10 @@
 
         {{-- Social Login --}}
         <div class="flex flex-col gap-3">
-            <button class="w-full bg-white border-2 border-outline-variant/50 text-on-surface rounded-full py-3 text-sm font-semibold hover:bg-surface transition-all duration-200 flex items-center justify-center gap-3">
+            <a href="/auth/google" class="w-full bg-white border-2 border-outline-variant/50 text-on-surface rounded-full py-3 text-sm font-semibold hover:bg-surface transition-all duration-200 flex items-center justify-center gap-3">
                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google logo" class="w-5 h-5" />
                 Sign in with Google
-            </button>
+            </a>
         </div>
 
         {{-- Footer --}}
