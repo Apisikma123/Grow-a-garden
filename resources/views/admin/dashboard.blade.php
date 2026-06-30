@@ -3,23 +3,23 @@
 @section('admin-content')
 <div class="flex flex-col gap-6">
 
-    {{-- Dashboard Overview Header --}}
+    {{-- Ringkasan Beranda Header --}}
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-2">
         <div>
-            <h1 class="text-[28px] font-bold text-on-surface tracking-tight mb-1">Dashboard Overview</h1>
-            <p class="text-[14px] text-on-surface-variant">Here's what's happening in the garden today.</p>
+            <h1 class="text-[28px] font-bold text-on-surface tracking-tight mb-1">Ringkasan Beranda</h1>
+            <p class="text-[14px] text-on-surface-variant">Berikut ringkasan aktivitas kebun hari ini.</p>
         </div>
         <button class="px-5 py-2 rounded-full border-2 border-secondary/40 text-secondary font-bold text-[14px] hover:bg-secondary/5 transition-colors">
-            Export Report
+            Ekspor Laporan
         </button>
     </div>
 
     {{-- Stats Row --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {{-- Total Users --}}
-        <div class="bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group">
+        {{-- Total Pengguna --}}
+        <a href="/admin/users" class="block bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group hover:-translate-y-1 hover:shadow-md transition-all">
             <div class="flex justify-between items-start mb-2 relative z-10">
-                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Total Users</div>
+                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Total Pengguna</div>
                 <div class="w-8 h-8 rounded-full bg-primary-container/30 text-primary-container flex items-center justify-center">
                     <span class="material-symbols-outlined text-[16px] text-primary">group</span>
                 </div>
@@ -27,15 +27,15 @@
             <div class="text-[32px] font-black text-on-surface leading-tight mb-2 relative z-10">24,592</div>
             <div class="flex items-center gap-1 text-[11px] text-primary font-bold relative z-10">
                 <span class="material-symbols-outlined text-[14px]">trending_up</span>
-                +12% this month
+                +12% bulan ini
             </div>
             <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-primary-container/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
-        </div>
+        </a>
 
-        {{-- Total Gardens --}}
-        <div class="bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group">
+        {{-- Total Kebun --}}
+        <a href="#" class="block bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group hover:-translate-y-1 hover:shadow-md transition-all">
             <div class="flex justify-between items-start mb-2 relative z-10">
-                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Total Gardens (Kebun)</div>
+                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Total Kebun</div>
                 <div class="w-8 h-8 rounded-full bg-tertiary-container/30 text-tertiary flex items-center justify-center">
                     <span class="material-symbols-outlined text-[16px]">yard</span>
                 </div>
@@ -43,15 +43,15 @@
             <div class="text-[32px] font-black text-on-surface leading-tight mb-2 relative z-10">18,204</div>
             <div class="flex items-center gap-1 text-[11px] text-tertiary font-bold relative z-10">
                 <span class="material-symbols-outlined text-[14px]">trending_up</span>
-                +8% this month
+                +8% bulan ini
             </div>
             <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-tertiary-container/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
-        </div>
+        </a>
 
         {{-- Total Active Plants --}}
-        <div class="bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group">
+        <a href="/admin/plants" class="block bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group hover:-translate-y-1 hover:shadow-md transition-all">
             <div class="flex justify-between items-start mb-2 relative z-10">
-                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Total Active Plants</div>
+                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Total Tanaman Aktif</div>
                 <div class="w-8 h-8 rounded-full bg-secondary-container/30 text-secondary flex items-center justify-center">
                     <span class="material-symbols-outlined text-[16px]">potted_plant</span>
                 </div>
@@ -62,12 +62,12 @@
                 +15% this month
             </div>
             <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-secondary-container/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
-        </div>
+        </a>
 
-        {{-- Today's Activities --}}
-        <div class="bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group">
+        {{-- Hari Ini's Activities --}}
+        <a href="#" class="block bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group hover:-translate-y-1 hover:shadow-md transition-all">
             <div class="flex justify-between items-start mb-2 relative z-10">
-                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Today's Activities</div>
+                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Hari Ini's Activities</div>
                 <div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
                     <span class="material-symbols-outlined text-[16px]">bolt</span>
                 </div>
@@ -78,7 +78,7 @@
                 +5% from yesterday
             </div>
             <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-primary/5 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
-        </div>
+        </a>
     </div>
 
     {{-- Charts Row --}}
@@ -114,23 +114,23 @@
                         <div class="w-full"></div>
                     </div>
 
-                    {{-- Mock Line using SVG --}}
-                    <svg class="absolute inset-0 w-full h-full z-10" preserveAspectRatio="none" viewBox="0 0 100 100">
+                    {{-- Mock Line using SVG (Optimized Aspect Ratio) --}}
+                    <svg class="absolute inset-0 w-full h-full z-10" preserveAspectRatio="none" viewBox="0 0 1000 250">
                         <defs>
                             <linearGradient id="gradientArea" x1="0%" y1="0%" x2="0%" y2="100%">
                                 <stop offset="0%" stop-color="#10b981" stop-opacity="0.3"></stop>
                                 <stop offset="100%" stop-color="#10b981" stop-opacity="0.05"></stop>
                             </linearGradient>
                         </defs>
-                        <path d="M 0 80 Q 20 60, 30 50 T 50 30 T 70 40 T 100 10 L 100 100 L 0 100 Z" fill="url(#gradientArea)"></path>
-                        <path d="M 0 80 Q 20 60, 30 50 T 50 30 T 70 40 T 100 10" fill="none" stroke="#006c49" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M 0 200 Q 200 150, 300 125 T 500 75 T 700 100 T 1000 25 L 1000 250 L 0 250 Z" fill="url(#gradientArea)"></path>
+                        <path d="M 0 200 Q 200 150, 300 125 T 500 75 T 700 100 T 1000 25" fill="none" stroke="#006c49" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
                         
                         {{-- Data points --}}
-                        <circle cx="0" cy="80" r="2" fill="white" stroke="#006c49" stroke-width="1"></circle>
-                        <circle cx="30" cy="50" r="2" fill="white" stroke="#006c49" stroke-width="1"></circle>
-                        <circle cx="50" cy="30" r="2" fill="white" stroke="#006c49" stroke-width="1"></circle>
-                        <circle cx="70" cy="40" r="2" fill="white" stroke="#006c49" stroke-width="1"></circle>
-                        <circle cx="100" cy="10" r="2" fill="white" stroke="#006c49" stroke-width="1"></circle>
+                        <circle cx="0" cy="200" r="6" fill="white" stroke="#006c49" stroke-width="3" vector-effect="non-scaling-stroke"></circle>
+                        <circle cx="300" cy="125" r="6" fill="white" stroke="#006c49" stroke-width="3" vector-effect="non-scaling-stroke"></circle>
+                        <circle cx="500" cy="75" r="6" fill="white" stroke="#006c49" stroke-width="3" vector-effect="non-scaling-stroke"></circle>
+                        <circle cx="700" cy="100" r="6" fill="white" stroke="#006c49" stroke-width="3" vector-effect="non-scaling-stroke"></circle>
+                        <circle cx="1000" cy="25" r="6" fill="white" stroke="#006c49" stroke-width="3" vector-effect="non-scaling-stroke"></circle>
                     </svg>
                 </div>
 
@@ -302,7 +302,7 @@
                         <td class="py-3 px-2">
                             <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#10b981]/10 text-[#10b981]">Verified</span>
                         </td>
-                        <td class="py-3 px-2 text-[12px] text-on-surface-variant text-right">10 mins ago</td>
+                        <td class="py-3 px-2 text-[12px] text-on-surface-variant text-right">10 menit yang lalu</td>
                     </tr>
 
                     {{-- Row 2 --}}

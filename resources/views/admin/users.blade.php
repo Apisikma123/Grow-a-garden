@@ -5,8 +5,8 @@
 
     {{-- Page Header --}}
     <div class="flex flex-col gap-1 mb-2">
-        <h1 class="text-[28px] font-bold text-on-surface tracking-tight">User Management</h1>
-        <p class="text-[14px] text-on-surface-variant">Oversee community members, manage access, and monitor engagement.</p>
+        <h1 class="text-[28px] font-bold text-on-surface tracking-tight">Manajemen Pengguna</h1>
+        <p class="text-[14px] text-on-surface-variant">Kelola anggota komunitas, atur akses, dan pantau keterlibatan.</p>
     </div>
 
     {{-- Main Container --}}
@@ -24,7 +24,7 @@
             {{-- Export Button --}}
             <button class="flex items-center gap-2 px-4 py-2 rounded-md border border-secondary text-secondary font-bold text-[13px] hover:bg-secondary/5 transition-colors">
                 <span class="material-symbols-outlined text-[18px]">download</span>
-                Export
+                Ekspor
             </button>
         </div>
 
@@ -33,11 +33,11 @@
             <table class="w-full min-w-[800px]">
                 <thead>
                     <tr class="bg-surface-container-lowest border-b border-outline-variant/20 text-left">
-                        <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase w-[35%]">User</th>
-                        <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">Role</th>
+                        <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase w-[35%]">Pengguna</th>
+                        <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">Peran</th>
                         <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">Plots</th>
                         <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">Status</th>
-                        <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase text-right">Actions</th>
+                        <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase text-right">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-outline-variant/10">
@@ -59,12 +59,12 @@
                             <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold bg-[#10b981] text-white">Community Lead</span>
                         </td>
                         <td class="py-4 px-6 text-[13px] text-on-surface-variant font-medium">
-                            12 Active
+                            12 Aktif
                         </td>
                         <td class="py-4 px-6">
                             <div class="flex items-center gap-2 text-[13px] font-bold text-on-surface">
                                 <div class="w-2 h-2 rounded-full bg-[#10b981]"></div>
-                                Active
+                                Aktif
                             </div>
                         </td>
                         <td class="py-4 px-6 text-right">
@@ -89,12 +89,12 @@
                             <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold bg-surface-container-highest text-on-surface-variant">Amateur</span>
                         </td>
                         <td class="py-4 px-6 text-[13px] text-on-surface-variant font-medium">
-                            2 Active
+                            2 Aktif
                         </td>
                         <td class="py-4 px-6">
                             <div class="flex items-center gap-2 text-[13px] font-bold text-on-surface">
                                 <div class="w-2 h-2 rounded-full bg-[#10b981]"></div>
-                                Active
+                                Aktif
                             </div>
                         </td>
                         <td class="py-4 px-6 text-right">
@@ -121,12 +121,12 @@
                             <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold bg-[#fd9e70]/20 text-[#944a23]">Pro</span>
                         </td>
                         <td class="py-4 px-6 text-[13px] text-on-surface-variant font-medium">
-                            8 Active
+                            8 Aktif
                         </td>
                         <td class="py-4 px-6">
                             <div class="flex items-center gap-2 text-[13px] font-bold text-on-surface-variant">
                                 <div class="w-2 h-2 rounded-full bg-outline-variant"></div>
-                                Inactive
+                                Tidak Aktif
                             </div>
                         </td>
                         <td class="py-4 px-6 text-right">
