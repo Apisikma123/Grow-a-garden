@@ -96,6 +96,26 @@
         const hiddenInput = document.getElementById('otp-hidden');
         
         inputs.forEach((input, index) => {
+            input.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const pastedData = (e.clipboardData || window.clipboardData).getData('text').replace(/[^0-9]/g, '');
+                if (!pastedData) return;
+
+                let currentIndex = index;
+                for (let i = 0; i < pastedData.length; i++) {
+                    if (currentIndex < inputs.length) {
+                        inputs[currentIndex].value = pastedData[i];
+                        currentIndex++;
+                    }
+                }
+                
+                if (currentIndex < inputs.length) {
+                    inputs[currentIndex].focus();
+                } else {
+                    inputs[inputs.length - 1].focus();
+                }
+            });
+
             input.addEventListener('input', (e) => {
                 // Allow only numbers
                 e.target.value = e.target.value.replace(/[^0-9]/g, '');
