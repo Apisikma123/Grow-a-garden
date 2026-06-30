@@ -13,8 +13,8 @@
     <div class="w-full max-w-[440px] bg-white rounded-[24px] p-8 md:p-10 ambient-shadow-lg relative z-10 border border-outline-variant/20 mt-10 md:mt-0">
         {{-- Header --}}
         <div class="text-center mb-8">
-            <a href="/" class="inline-flex items-center gap-2 group mb-6">
-                <span class="material-symbols-outlined text-primary text-[32px] transition-transform duration-200 group-hover:scale-110">yard</span>
+            <a href="/" class="inline-flex items-center gap-3 group mb-6">
+                <img src="{{ asset('images/logo.jpg') }}" alt="Grow a Garden Logo" class="w-10 h-10 rounded-xl shadow-sm transition-transform duration-300 object-contain">
                 <span class="text-xl font-bold text-on-surface tracking-tight">Grow a Garden</span>
             </a>
             <h1 class="text-[28px] font-bold text-on-surface mb-2">Create Account</h1>

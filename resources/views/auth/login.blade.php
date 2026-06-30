@@ -13,8 +13,8 @@
     <div class="w-full max-w-[440px] bg-white rounded-[24px] p-8 md:p-10 ambient-shadow-lg relative z-10 border border-outline-variant/20">
         {{-- Header --}}
         <div class="text-center mb-8">
-            <a href="/" class="inline-flex items-center gap-2 group mb-6">
-                <span class="material-symbols-outlined text-primary text-[32px] transition-transform duration-200 group-hover:scale-110">yard</span>
+            <a href="/" class="inline-flex items-center gap-3 group mb-6">
+                <img src="{{ asset('images/logo.jpg') }}" alt="Grow a Garden Logo" class="w-10 h-10 rounded-xl shadow-sm transition-transform duration-300 object-contain">
                 <span class="text-xl font-bold text-on-surface tracking-tight">Grow a Garden</span>
             </a>
             <h1 class="text-[28px] font-bold text-on-surface mb-2">Welcome Back</h1>
@@ -50,7 +50,7 @@
             <div class="flex flex-col gap-2">
                 <div class="flex items-center justify-between ml-1">
                     <label for="password" class="text-sm font-semibold text-on-surface">Password</label>
-                    <a href="#" class="text-xs font-semibold text-primary hover:text-primary/80 transition-colors">Forgot Password?</a>
+                    <a href="/forgot-password" class="text-xs font-semibold text-primary hover:text-primary/80 transition-colors">Forgot Password?</a>
                 </div>
                 <div class="relative">
                     <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant/70 text-[20px] pointer-events-none">lock</span>
@@ -95,7 +95,7 @@
 
         {{-- Social Login --}}
         <div class="flex flex-col gap-3">
-            <button class="w-full bg-white border-2 border-outline-variant/50 text-on-surface rounded-full py-3 text-sm font-semibold hover:bg-surface hover:border-outline-variant transition-all duration-200 flex items-center justify-center gap-3">
+            <button class="w-full bg-white border-2 border-outline-variant/50 text-on-surface rounded-full py-3 text-sm font-semibold hover:bg-surface transition-all duration-200 flex items-center justify-center gap-3">
                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google logo" class="w-5 h-5" />
                 Sign in with Google
             </button>

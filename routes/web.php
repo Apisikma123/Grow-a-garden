@@ -14,6 +14,19 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('register
 Route::post('/register', [AuthController::class, 'registerProcess'])->name('register.post')->middleware('guest');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
+// Public or Guest routes added from HEAD
+Route::get('/forgot-password', function () {
+    return view('auth.forgot-password');
+});
+
+Route::get('/otp', function () {
+    return view('auth.otp');
+});
+
+Route::get('/checkout', function () {
+    return view('checkout');
+});
+
 // Protected User Routes
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
@@ -34,6 +47,15 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/settings', function () {
         return view('settings');
+    });
+    
+    Route::get('/settings/password', function () {
+        return view('settings-password');
+    });
+
+    Route::post('/settings/password', function () {
+        // Implement password update logic here
+        return redirect('/settings');
     });
 });
 
@@ -62,4 +84,21 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/settings', function () {
         return view('admin.settings');
     });
+    
+    Route::get('/settings/password', function () {
+        return view('admin.settings-password');
+    });
+
+    Route::post('/settings/password', function () {
+        // Implement password update logic here
+        return redirect('/admin/settings');
+    });
+});
+
+// Error Pages Preview Route
+Route::get('/error-preview/{code}', function ($code) {
+    if (in_array($code, ['404', '500', '403', 'offline'])) {
+        return view("errors.$code");
+    }
+    abort(404);
 });
