@@ -107,12 +107,7 @@
                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google logo" class="w-5 h-5" />
                 Masuk dengan Google
             </a>
-            <form action="/admin/dashboard" method="GET" class="w-full">
-                <button type="submit" class="w-full bg-surface-container-high text-on-surface-variant rounded-full py-3 text-sm font-semibold hover:bg-surface-container-highest transition-all duration-200 flex items-center justify-center gap-2 border border-outline-variant/30">
-                    <span class="material-symbols-outlined text-[18px]">admin_panel_settings</span>
-                    Masuk sebagai Admin (Demo)
-                </button>
-            </form>
+
         </div>
 
         {{-- Footer --}}
