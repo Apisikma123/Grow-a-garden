@@ -25,6 +25,7 @@ Route::get('/forgot-password', function () {
 
 Route::get('/otp', [AuthController::class, 'showOtp'])->name('otp.show');
 Route::post('/otp', [AuthController::class, 'verifyOtp'])->name('otp.verify');
+Route::post('/otp/resend', [AuthController::class, 'resendOtp'])->name('otp.resend');
 
 Route::get('/checkout', function () {
     return view('users.checkout');
@@ -33,7 +34,8 @@ Route::get('/checkout', function () {
 // Protected User Routes
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
-        return view('users.dashboard');
+        $gardens = \App\Models\Garden::where('user_id', Auth::id())->with('plots')->get();
+        return view('users.dashboard', compact('gardens'));
     })->name('dashboard');
 
     Route::get('/garden-plots', function () {
@@ -60,6 +62,13 @@ Route::middleware(['auth'])->group(function () {
         // Implement password update logic here
         return redirect('/settings');
     });
+    // API Routes for Gardens and Plots
+    Route::get('/api/gardens', [\App\Http\Controllers\GardenController::class, 'index']);
+    Route::post('/api/gardens', [\App\Http\Controllers\GardenController::class, 'store']);
+    Route::get('/api/gardens/{garden}/plots', [\App\Http\Controllers\GardenPlotController::class, 'index']);
+    Route::post('/api/plots', [\App\Http\Controllers\GardenPlotController::class, 'store']);
+    Route::put('/api/plots/{plot}', [\App\Http\Controllers\GardenPlotController::class, 'update']);
+    Route::delete('/api/plots/{plot}', [\App\Http\Controllers\GardenPlotController::class, 'destroy']);
 });
 
 // Protected Admin Routes (We can add a custom 'admin' middleware later if needed)

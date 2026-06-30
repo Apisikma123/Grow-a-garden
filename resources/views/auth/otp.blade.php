@@ -65,11 +65,26 @@
             </button>
         </form>
 
+        {{-- Messages --}}
+        @if(session('status'))
+            <p class="text-green-600 text-sm font-semibold text-center mt-4">{{ session('status') }}</p>
+        @endif
+
         {{-- Footer --}}
-        <p class="text-center text-sm font-medium text-on-surface-variant mt-8">
-            Tidak menerima kode? 
-            <a href="/login" class="text-primary font-semibold hover:text-primary/80 transition-colors">Kembali ke Login</a>
-        </p>
+        <div class="text-center mt-8">
+            <p class="text-sm font-medium text-on-surface-variant mb-2">
+                Tidak menerima kode? 
+            </p>
+            <form action="{{ route('otp.resend') }}" method="POST" id="resend-form">
+                @csrf
+                <button type="submit" id="btn-resend" class="text-primary font-semibold transition-colors disabled:text-on-surface-variant/50 disabled:cursor-not-allowed" disabled>
+                    Kirim Ulang OTP <span id="resend-timer" class="font-normal">(60s)</span>
+                </button>
+            </form>
+            <p class="mt-4">
+                <a href="/login" class="text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors">Kembali ke Login</a>
+            </p>
+        </div>
     </div>
 </div>
 
@@ -108,6 +123,42 @@
                 otpValue += input.value;
             });
             hiddenInput.value = otpValue;
+        });
+
+        // Resend OTP Countdown Logic
+        const btnResend = document.getElementById('btn-resend');
+        const resendTimer = document.getElementById('resend-timer');
+        let timeLeft = 60;
+
+        // Check if there's a saved timestamp in localStorage
+        const storedTime = localStorage.getItem('otp_resend_time');
+        if (storedTime) {
+            const timePassed = Math.floor((Date.now() - parseInt(storedTime)) / 1000);
+            if (timePassed < 60) {
+                timeLeft = 60 - timePassed;
+            } else {
+                timeLeft = 0;
+            }
+        }
+
+        const updateTimer = () => {
+            if (timeLeft <= 0) {
+                btnResend.disabled = false;
+                resendTimer.textContent = '';
+                btnResend.classList.add('hover:text-primary/80');
+            } else {
+                btnResend.disabled = true;
+                resendTimer.textContent = `(${timeLeft}s)`;
+                btnResend.classList.remove('hover:text-primary/80');
+                timeLeft--;
+                setTimeout(updateTimer, 1000);
+            }
+        };
+        
+        updateTimer();
+
+        document.getElementById('resend-form').addEventListener('submit', () => {
+            localStorage.setItem('otp_resend_time', Date.now().toString());
         });
     });
 </script>

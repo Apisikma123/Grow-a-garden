@@ -320,7 +320,11 @@
 <script>
     window.AppState = {
         plan: '{{ Auth::check() ? Auth::user()->role : "free" }}',
-        usage: { gardens: 1, plots: 4, plants: 10 }
+        usage: { 
+            gardens: {{ Auth::check() ? \App\Models\Garden::where('user_id', Auth::id())->count() : 0 }}, 
+            plots: {{ Auth::check() ? \App\Models\GardenPlot::whereIn('garden_id', \App\Models\Garden::where('user_id', Auth::id())->pluck('id'))->count() : 0 }}, 
+            plants: {{ Auth::check() ? \App\Models\GardenPlot::whereIn('garden_id', \App\Models\Garden::where('user_id', Auth::id())->pluck('id'))->whereNotNull('plant_id')->count() : 0 }} 
+        }
     };
 
     const PLAN_LIMITS = {
@@ -338,7 +342,6 @@
             document.getElementById('pricing-modal').classList.remove('hidden');
             return false;
         }
-        window.AppState.usage[resourceType]++;
         return true;
     };
 </script>

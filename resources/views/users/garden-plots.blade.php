@@ -559,16 +559,8 @@ document.addEventListener('DOMContentLoaded', () => {
         pan: { x: 0, y: 0 },
         selectedZoneId: null,
         currentGardenId: null,
-        gardens: [
-            { id: 1, name: 'Green Valley', location: 'Zone 4b', area: 240, plots: 4 },
-            { id: 2, name: 'Backyard Oasis', location: 'Zone 5a', area: 120, plots: 2 },
-        ],
-        zones: [
-            { id: 1, name: 'Tomato Plot A1', plant: 'Tomato', status: 'healthy', x: 240, y: 144, w: 264, h: 168, cultivar: 'Roma', progress: 45, shape: 'rectangle' },
-            { id: 2, name: 'Chili Field B2', plant: 'Chili', status: 'attention', x: 552, y: 192, w: 216, h: 120, cultivar: 'Rawit', progress: 10, shape: 'rectangle' },
-            { id: 3, name: 'Carrot Patch C1', plant: 'Carrot', status: 'late', x: 240, y: 360, w: 384, h: 168, cultivar: 'Orange', progress: 80, shape: 'rectangle' },
-            { id: 4, name: 'Lettuce Bed D4', plant: 'Lettuce', status: 'new', x: 672, y: 360, w: 240, h: 168, cultivar: 'Iceberg', progress: 0, shape: 'rectangle' },
-        ]
+        gardens: [],
+        zones: []
     };
 
     const snap = (val) => Math.round(val / GRID_SIZE) * GRID_SIZE;
@@ -973,9 +965,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const testZone = { id: 'temp', x: minX, y: minY, w: w, h: h };
         if(!checkCollisionForZone(testZone)) {
-            const newId = Date.now();
-            state.zones.push({
-                id: newId,
+            const newZoneData = {
+                id: Date.now(),
                 name: 'Custom Plot ' + (state.zones.length + 1),
                 plant: 'Unknown',
                 cultivar: 'None',
@@ -984,13 +975,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 points: relativePoints,
                 x: minX, y: minY, w: w, h: h,
                 progress: 0
+            };
+            
+            savePlotToDB(newZoneData).then(dbData => {
+                if (dbData) {
+                    newZoneData.id = dbData.id;
+                    state.zones.push(newZoneData);
+                    
+                    // Update dashboard count
+                    const g = state.gardens.find(g => g.id === state.currentGardenId);
+                    if (g) g.plots = state.zones.length;
+                    
+                    setMode('select');
+                    selectZone(dbData.id);
+                    setTimeout(() => {
+                        const card = document.getElementById(`sidebar-card-${dbData.id}`);
+                        if(card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }, 50);
+                    render();
+                }
             });
-            setMode('select');
-            selectZone(newId);
-            setTimeout(() => {
-                const card = document.getElementById(`sidebar-card-${newId}`);
-                if(card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }, 50);
         } else {
             drawPolyLines.setAttribute('stroke', '#ef4444');
             drawPolyLines.setAttribute('fill', 'rgba(254,226,226, 0.5)');
@@ -1269,22 +1273,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const testZone = { id: 'temp', x, y, w, h };
             if(w >= GRID_SIZE && h >= GRID_SIZE && !checkCollisionForZone(testZone)) {
-                const newId = Date.now();
-                state.zones.push({
-                    id: newId,
+                const newZoneData = {
+                    id: Date.now(),
                     name: 'Drawn Plot ' + (state.zones.length + 1),
                     plant: 'Unknown',
                     cultivar: 'None',
                     status: 'new',
                     x: x, y: y, w: w, h: h,
                     progress: 0
+                };
+                
+                savePlotToDB(newZoneData).then(dbData => {
+                    if (dbData) {
+                        newZoneData.id = dbData.id;
+                        state.zones.push(newZoneData);
+                        
+                        // Update dashboard count
+                        const g = state.gardens.find(g => g.id === state.currentGardenId);
+                        if (g) g.plots = state.zones.length;
+                        
+                        setMode('select');
+                        selectZone(dbData.id);
+                        setTimeout(() => {
+                            const card = document.getElementById(`sidebar-card-${dbData.id}`);
+                            if(card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }, 50);
+                        render();
+                    }
                 });
-                setMode('select');
-                selectZone(newId);
-                setTimeout(() => {
-                    const card = document.getElementById(`sidebar-card-${newId}`);
-                    if(card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }, 50);
             }
         }
 
@@ -1294,6 +1310,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if(draggedZoneId) {
                 const box = document.getElementById(`zone-box-${draggedZoneId}`);
                 if(box) box.classList.remove('active-drag');
+                
+                const updatedZone = state.zones.find(z => z.id === draggedZoneId);
+                if (updatedZone) {
+                    updatePlotInDB(updatedZone);
+                }
             }
             render(); 
         }
@@ -1423,12 +1444,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const h = parseInt(inputHeight.value) || 144;
         
         modal.classList.add('hidden');
-        
         const safePos = findSafeSpot(w, h);
         
-        const newId = Date.now();
-        state.zones.push({
-            id: newId,
+        const newZoneData = {
+            id: Date.now(),
             name: name,
             plant: plant,
             cultivar: cultivar,
@@ -1436,16 +1455,28 @@ document.addEventListener('DOMContentLoaded', () => {
             status: 'new',
             x: safePos.x, y: safePos.y, w: w, h: h,
             progress: 0
+        };
+        
+        savePlotToDB(newZoneData).then(dbData => {
+            if (dbData) {
+                newZoneData.id = dbData.id;
+                state.zones.push(newZoneData);
+                
+                // Update dashboard count
+                const g = state.gardens.find(g => g.id === state.currentGardenId);
+                if (g) g.plots = state.zones.length;
+                
+                setMode('select');
+                selectZone(dbData.id);
+                render();
+                panToZone(newZoneData);
+                
+                setTimeout(() => {
+                    const card = document.getElementById(`sidebar-card-${dbData.id}`);
+                    if(card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            }
         });
-        
-        setMode('select');
-        selectZone(newId);
-        panToZone(state.zones[state.zones.length - 1]);
-        
-        setTimeout(() => {
-            const card = document.getElementById(`sidebar-card-${newId}`);
-            if(card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }, 100);
     });
 
     document.getElementById('btn-close-details').addEventListener('click', () => {
@@ -1479,7 +1510,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('btn-confirm-delete').addEventListener('click', () => {
         if (state.selectedZoneId) {
+            deletePlotFromDB(state.selectedZoneId);
             state.zones = state.zones.filter(z => z.id !== state.selectedZoneId);
+            
+            // Update dashboard count
+            const g = state.gardens.find(g => g.id === state.currentGardenId);
+            if (g) g.plots = state.zones.length;
+            
             selectZone(null);
             closeDeleteModal();
             render();
@@ -1566,7 +1603,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    window.openGarden = function(id) {
+    window.openGarden = async function(id) {
         state.currentGardenId = id;
         const garden = state.gardens.find(g => g.id === id);
         if (garden) {
@@ -1582,7 +1619,28 @@ document.addEventListener('DOMContentLoaded', () => {
         state.zoom = 1.0;
         state.pan = { x: 0, y: 0 };
         updateTransform();
-        render();
+        
+        // Fetch Plots
+        try {
+            const response = await fetch(`/api/gardens/${id}/plots`);
+            const data = await response.json();
+            state.zones = data.map(p => ({
+                id: p.id,
+                name: p.name,
+                plant: p.plant ? p.plant.name : 'Empty Plot',
+                status: 'new', // placeholder
+                x: p.pos_x || 100,
+                y: p.pos_y || 100,
+                w: p.width || 120,
+                h: p.length || 120,
+                cultivar: 'Unknown', // placeholder
+                progress: 0,
+                shape: p.shape
+            }));
+            render();
+        } catch (error) {
+            console.error("Failed to fetch plots", error);
+        }
     }
 
     function showDashboard() {
@@ -1609,25 +1667,121 @@ document.addEventListener('DOMContentLoaded', () => {
         newGardenModal.classList.add('hidden');
     });
 
-    document.getElementById('btn-confirm-garden-modal').addEventListener('click', () => {
+    document.getElementById('btn-confirm-garden-modal').addEventListener('click', async () => {
         const name = document.getElementById('input-garden-name').value || 'New Garden';
         const location = document.getElementById('input-garden-location').value || 'Unknown Zone';
         
-        const newGarden = {
-            id: Date.now(),
-            name: name,
-            location: location,
-            area: 0,
-            plots: 0
-        };
-        
-        state.gardens.push(newGarden);
-        newGardenModal.classList.add('hidden');
-        renderDashboard();
+        try {
+            const response = await fetch('/api/gardens', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ name: name, location: location })
+            });
+            const data = await response.json();
+            
+            if (!response.ok) {
+                alert(data.error || 'Failed to create garden');
+                return;
+            }
+            
+            state.gardens.push({
+                id: data.id,
+                name: data.name,
+                location: data.location_name || 'Unknown Zone',
+                area: data.area_size_m2 || 0,
+                plots: 0
+            });
+            
+            if (window.AppState) window.AppState.usage.gardens++;
+            
+            newGardenModal.classList.add('hidden');
+            renderDashboard();
+        } catch (error) {
+            console.error("Error creating garden:", error);
+        }
     });
 
     // Initialize Dashboard First
-    renderDashboard();
+    async function initDashboard() {
+        try {
+            const response = await fetch('/api/gardens');
+            const data = await response.json();
+            state.gardens = data.map(g => ({
+                id: g.id,
+                name: g.name,
+                location: g.location_name || 'Unknown Zone',
+                area: g.area_size_m2 || 0,
+                plots: g.plots_count || 0
+            }));
+            renderDashboard();
+        } catch (error) {
+            console.error("Failed to fetch gardens", error);
+        }
+    }
+
+    initDashboard();
+
+    async function savePlotToDB(zoneData) {
+        try {
+            const response = await fetch('/api/plots', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    garden_id: state.currentGardenId,
+                    name: zoneData.name,
+                    shape: zoneData.shape || 'rectangle',
+                    width: Math.round(zoneData.w),
+                    length: Math.round(zoneData.h),
+                    pos_x: Math.round(zoneData.x),
+                    pos_y: Math.round(zoneData.y)
+                })
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                alert(data.error || 'Failed to save plot');
+                return null;
+            }
+            if (window.AppState) window.AppState.usage.plots++;
+            return data;
+        } catch(e) { console.error(e); return null; }
+    }
+
+    async function updatePlotInDB(zoneData) {
+        try {
+            await fetch(`/api/plots/${zoneData.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    name: zoneData.name,
+                    width: Math.round(zoneData.w),
+                    length: Math.round(zoneData.h),
+                    pos_x: Math.round(zoneData.x),
+                    pos_y: Math.round(zoneData.y)
+                })
+            });
+        } catch(e) { console.error(e); }
+    }
+
+    async function deletePlotFromDB(plotId) {
+        try {
+            await fetch(`/api/plots/${plotId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            });
+            if (window.AppState) window.AppState.usage.plots--;
+        } catch(e) { console.error(e); }
+    }
 
 });
 </script>

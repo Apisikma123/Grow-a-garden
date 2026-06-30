@@ -80,8 +80,8 @@
             <a href="/garden-plots" class="bg-surface rounded-[24px] p-6 flex flex-col items-center justify-center ambient-shadow hover:-translate-y-1 hover:ambient-shadow-lg transition-all cursor-pointer">
                 <span class="material-symbols-outlined text-[#0f766e] text-[24px] mb-2">energy_savings_leaf</span>
                 <div class="flex items-baseline gap-2 mb-1">
-                    <span class="text-[36px] font-black text-on-surface leading-none">1</span>
-                    <span class="text-[16px] font-bold text-on-surface-variant">/ 16</span>
+                    <span class="text-[36px] font-black text-on-surface leading-none">{{ count($gardens) }}</span>
+                    <span class="text-[16px] font-bold text-on-surface-variant">/ {{ $gardens->sum(function($g) { return count($g->plots); }) }}</span>
                 </div>
                 <div class="text-[14px] text-on-surface font-medium text-center">Kebun / Plot</div>
             </a>
@@ -160,37 +160,20 @@
                     </div>
 
                     <div class="absolute w-[1000px] h-[600px] left-1/2 top-1/2 -translate-x-[40%] -translate-y-[45%] scale-[0.4] md:scale-[0.6]">
-                        <!-- Zone 1 -->
-                        <div class="dash-zone-box" style="left: 240px; top: 144px; width: 264px; height: 168px; border-color: var(--color-primary);">
-                            <div class="dash-zone-label" style="color: var(--color-primary);">
-                                <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'wght' 600;">eco</span>
-                                <span class="text-[14px] md:text-[15px] font-bold truncate tracking-tight">Tomat Plot A1</span>
+                        @if(count($gardens) > 0 && count($gardens->first()->plots) > 0)
+                            @foreach($gardens->first()->plots as $plot)
+                                <div class="dash-zone-box" style="left: {{ $plot->pos_x ?? 100 }}px; top: {{ $plot->pos_y ?? 100 }}px; width: {{ $plot->width ?? 120 }}px; height: {{ $plot->length ?? 120 }}px; border-color: var(--color-primary);">
+                                    <div class="dash-zone-label" style="color: var(--color-primary);">
+                                        <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'wght' 600;">eco</span>
+                                        <span class="text-[14px] md:text-[15px] font-bold truncate tracking-tight">{{ $plot->name }}</span>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @else
+                            <div class="absolute inset-0 flex items-center justify-center text-on-surface-variant/50 text-[18px] font-bold">
+                                Belum ada plot di kebun Anda
                             </div>
-                        </div>
-                        
-                        <!-- Zone 2 (Attention) -->
-                        <div class="dash-zone-box" style="left: 552px; top: 192px; width: 216px; height: 120px; border-color: #f59e0b;">
-                            <div class="dash-zone-label" style="color: #b45309;">
-                                <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'wght' 600;">eco</span>
-                                <span class="text-[14px] md:text-[15px] font-bold truncate tracking-tight">Cabai Plot B2</span>
-                            </div>
-                        </div>
-
-                        <!-- Zone 3 (Late Care) -->
-                        <div class="dash-zone-box" style="left: 240px; top: 360px; width: 384px; height: 168px; border-color: #ef4444;">
-                            <div class="dash-zone-label" style="color: #b91c1c;">
-                                <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'wght' 600;">eco</span>
-                                <span class="text-[14px] md:text-[15px] font-bold truncate tracking-tight">Wortel Plot C1</span>
-                            </div>
-                        </div>
-                        
-                        <!-- Zone 4 (Newly Planted) -->
-                        <div class="dash-zone-box" style="left: 672px; top: 360px; width: 240px; height: 168px; border-color: #0ea5e9;">
-                            <div class="dash-zone-label" style="color: #0369a1;">
-                                <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'wght' 600;">eco</span>
-                                <span class="text-[14px] md:text-[15px] font-bold truncate tracking-tight">Selada Plot D4</span>
-                            </div>
-                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
