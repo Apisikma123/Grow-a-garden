@@ -72,12 +72,8 @@
             </div>
         </div>
 
-        {{-- Bottom: Add Plant + Profile --}}
+        {{-- Bottom: Profile --}}
         <div class="px-6 mt-auto">
-            <button class="w-full bg-primary text-on-primary rounded-full py-3 text-sm font-semibold hover:bg-primary/90 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 shadow-sm mb-4" id="btn-add-plant" onclick="if(window.checkLimit && window.checkLimit('plants')){ alert('Plant added! (Demo)'); }">
-                <span class="material-symbols-outlined" style="font-size: 20px;">add</span>
-                Tambah Tanaman Baru
-            </button>
 
             {{-- Upgrade Ad Box (Kapitalis Style) --}}
             <div class="bg-gradient-to-br from-[#0f172a] to-[#1e293b] rounded-2xl p-4 flex flex-col relative overflow-hidden group shadow-lg mb-2">

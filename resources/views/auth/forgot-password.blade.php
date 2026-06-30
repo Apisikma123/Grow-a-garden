@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Forgot Password — Grow a Garden')
+@section('title', 'Lupa Kata Sandi — Grow a Garden')
 
 @section('content')
 <div class="min-h-screen flex items-center justify-center bg-surface px-5 py-12 relative overflow-hidden">
@@ -14,13 +14,13 @@
                 <img src="{{ asset('images/logo.jpg') }}" alt="Grow a Garden Logo" class="w-10 h-10 rounded-xl shadow-sm transition-transform duration-300 object-contain">
                 <span class="text-xl font-bold text-on-surface tracking-tight">Grow a Garden</span>
             </a>
-            <h1 class="text-[28px] font-bold text-on-surface mb-2">Reset Password</h1>
-            <p class="text-sm text-on-surface-variant">Enter your email address and we'll send you instructions to reset your password.</p>
+            <h1 class="text-[28px] font-bold text-on-surface mb-2">Atur Ulang Kata Sandi</h1>
+            <p class="text-sm text-on-surface-variant">Masukkan alamat email Anda dan kami akan mengirimkan instruksi untuk mengatur ulang kata sandi.</p>
         </div>
 
         <form action="/otp" method="GET" class="flex flex-col gap-5">
             <div class="flex flex-col gap-2">
-                <label for="email" class="text-sm font-semibold text-on-surface ml-1">Email Address</label>
+                <label for="email" class="text-sm font-semibold text-on-surface ml-1">Alamat Email</label>
                 <div class="relative">
                     <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant/70 text-[20px] pointer-events-none">mail</span>
                     <input 
@@ -35,14 +35,14 @@
             </div>
 
             <button type="submit" class="w-full bg-primary text-on-primary rounded-full py-3.5 text-sm font-semibold hover:bg-primary/90 active:scale-[0.98] transition-all duration-200 shadow-sm mt-2">
-                Send Reset Link
+                Kirim Link Reset
             </button>
         </form>
 
         @php
             $from = request()->query('from');
             $backLink = '/login';
-            $backText = 'Back to Login';
+            $backText = 'Kembali ke Login';
             
             if ($from === 'settings') {
                 $backLink = '/settings/password';

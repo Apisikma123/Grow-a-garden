@@ -6,12 +6,12 @@
     {{-- Page Header --}}
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-2">
         <div class="flex flex-col gap-1">
-            <h1 class="text-[28px] font-bold text-on-surface tracking-tight">Plant Master Catalog</h1>
-            <p class="text-[14px] text-on-surface-variant">Manage your global database of cultivable plants, including taxonomies, ideal conditions, and statuses.</p>
+            <h1 class="text-[28px] font-bold text-on-surface tracking-tight">Katalog Tanaman</h1>
+            <p class="text-[14px] text-on-surface-variant">Kelola database tanaman global termasuk taksonomi, kondisi ideal, dan status.</p>
         </div>
         <button class="flex items-center gap-2 bg-primary text-on-primary font-bold text-[14px] px-5 py-2.5 rounded-lg hover:bg-primary/90 active:scale-[0.98] transition-all shadow-sm shrink-0">
             <span class="material-symbols-outlined text-[18px]">add_circle</span>
-            New Plant Entry
+            Tambah Tanaman Baru
         </button>
     </div>
 
@@ -19,7 +19,7 @@
     <div class="flex flex-wrap items-center justify-between gap-4">
         <div class="flex flex-wrap items-center gap-2">
             <button class="px-5 py-2 rounded-lg bg-primary text-on-primary font-bold text-[13px] shadow-sm">
-                All Plants
+                Semua Tanaman
             </button>
             <button class="px-5 py-2 rounded-lg border border-outline-variant/40 text-on-surface-variant font-medium text-[13px] hover:bg-surface-container-lowest transition-colors bg-white">
                 Sayuran

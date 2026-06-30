@@ -27,33 +27,33 @@ Route::get('/otp', [AuthController::class, 'showOtp'])->name('otp.show');
 Route::post('/otp', [AuthController::class, 'verifyOtp'])->name('otp.verify');
 
 Route::get('/checkout', function () {
-    return view('checkout');
+    return view('users.checkout');
 });
 
 // Protected User Routes
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        return view('users.dashboard');
     })->name('dashboard');
 
     Route::get('/garden-plots', function () {
-        return view('garden-plots');
+        return view('users.garden-plots');
     });
 
     Route::get('/growth-calendar', function () {
-        return view('growth-calendar');
+        return view('users.growth-calendar');
     });
 
     Route::get('/care-tasks', function () {
-        return view('care-tasks');
+        return view('users.care-tasks');
     });
 
     Route::get('/settings', function () {
-        return view('settings');
+        return view('users.settings');
     });
     
     Route::get('/settings/password', function () {
-        return view('settings-password');
+        return view('users.settings-password');
     });
 
     Route::post('/settings/password', function () {
@@ -96,6 +96,17 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         // Implement password update logic here
         return redirect('/admin/settings');
     });
+});
+
+// Static Pages
+Route::get('/sitemap', function () {
+    return view('pages.sitemap');
+});
+Route::get('/privacy-policy', function () {
+    return view('pages.privacy');
+});
+Route::get('/terms', function () {
+    return view('pages.terms');
 });
 
 // Error Pages Preview Route

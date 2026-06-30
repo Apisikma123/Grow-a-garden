@@ -66,6 +66,36 @@
                 </div>
             </div>
 
+            {{-- Logs & Audits Box --}}
+            <div class="bg-surface rounded-[24px] p-[24px] ambient-shadow-lg border border-outline-variant/20 hover:shadow-xl transition-shadow duration-300">
+                <h2 class="text-[24px] font-bold text-on-surface mb-6">Logs & Audits</h2>
+                <div class="space-y-[16px]">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-[16px] font-bold text-on-surface">Error Logs</h3>
+                            <p class="text-[13px] text-on-surface-variant">View system errors and exceptions.</p>
+                        </div>
+                        <button class="bg-surface-container-high text-primary hover:bg-primary/10 border border-outline-variant rounded-full px-5 py-2 font-bold text-[14px] transition-all">View</button>
+                    </div>
+                    <div class="h-px w-full bg-outline-variant/30"></div>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-[16px] font-bold text-on-surface">Activity Logs</h3>
+                            <p class="text-[13px] text-on-surface-variant">Monitor actions performed by users and admins.</p>
+                        </div>
+                        <button class="bg-surface-container-high text-primary hover:bg-primary/10 border border-outline-variant rounded-full px-5 py-2 font-bold text-[14px] transition-all">View</button>
+                    </div>
+                    <div class="h-px w-full bg-outline-variant/30"></div>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-[16px] font-bold text-on-surface">Login Logs</h3>
+                            <p class="text-[13px] text-on-surface-variant">Track authentication events across the system.</p>
+                        </div>
+                        <button class="bg-surface-container-high text-primary hover:bg-primary/10 border border-outline-variant rounded-full px-5 py-2 font-bold text-[14px] transition-all">View</button>
+                    </div>
+                </div>
+            </div>
+
             {{-- Danger Zone (Delete Account) --}}
             <div class="bg-error-container/10 rounded-[24px] p-[24px] ambient-shadow-lg border border-error/20 hover:border-error/40 transition-colors duration-300">
                 <h2 class="text-[24px] font-bold text-error mb-2">Delete Account</h2>

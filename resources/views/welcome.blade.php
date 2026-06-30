@@ -88,12 +88,7 @@
     <div class="relative max-w-[1280px] mx-auto px-5 lg:px-8 py-12 md:py-16 lg:py-20">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
             {{-- Left: Text Content --}}
-            <div class="order-2 lg:order-1">
-                {{-- Badge --}}
-                <div class="inline-flex items-center gap-2 bg-surface-container-low text-on-surface-variant text-xs font-medium px-4 py-2 rounded-full mb-6 border border-outline-variant/50 scroll-trigger scroll-fade-up">
-                    <span class="material-symbols-outlined text-primary" style="font-size: 16px;">energy_savings_leaf</span>
-                    Smart Gardening App
-                </div>
+            <div class="order-2 lg:order-1 pt-6">
 
                 {{-- Headline --}}
                 <h1 class="text-[40px] md:text-[48px] lg:text-[52px] font-bold text-on-surface leading-[1.1] tracking-tight mb-5 scroll-trigger scroll-fade-up delay-100">
@@ -177,7 +172,7 @@
         </div>
 
         {{-- Feature Cards --}}
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
 
             {{-- Feature 1: Garden Canvas --}}
             <div class="bg-white rounded-3xl p-8 premium-shadow tactile-card group scroll-trigger scroll-fade-up delay-100 border border-white/60" id="feature-garden-canvas">
@@ -263,12 +258,6 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {{-- Left: Text --}}
             <div>
-                {{-- Badge --}}
-                <div class="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-semibold px-4 py-2 rounded-full mb-6 scroll-trigger scroll-fade-up">
-                    <span class="material-symbols-outlined" style="font-size: 16px;">auto_awesome</span>
-                    Smart Adaptation
-                </div>
-
                 <h2 class="text-[28px] md:text-[36px] font-bold text-on-surface tracking-tight mb-5 leading-tight scroll-trigger scroll-fade-up delay-100">
                     Beradaptasi dengan<br>Cuaca Sekitar
                 </h2>
@@ -285,7 +274,7 @@
 
             {{-- Right: Weather Card --}}
             <div class="flex justify-center lg:justify-end scroll-trigger scroll-fade-left delay-200">
-                <div class="bg-white rounded-3xl p-8 premium-shadow border border-white/60 max-w-[448px] w-full tactile-card">
+                <div class="bg-white rounded-3xl p-8 premium-shadow max-w-[448px] w-full tactile-card">
                     {{-- Card Header --}}
                     <div class="flex items-center justify-between mb-5">
                         <div class="flex items-center gap-3">
@@ -328,7 +317,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             
             {{-- Paket 1: Bibit --}}
-            <div class="bg-white rounded-3xl p-8 premium-shadow border border-white/60 flex flex-col tactile-card scroll-trigger scroll-fade-up delay-100">
+            <div class="bg-white rounded-3xl p-8 premium-shadow flex flex-col tactile-card scroll-trigger scroll-fade-up delay-100">
                 <h3 class="text-xl font-bold text-on-surface mb-2">Bibit <span class="text-xs font-semibold bg-surface-container-high px-2 py-1 rounded-full text-on-surface-variant ml-2">Gratis</span></h3>
                 <div class="flex items-baseline gap-1 mb-4">
                     <span class="text-[32px] font-black text-on-surface">Rp 0</span>
@@ -337,11 +326,11 @@
                 
                 <div class="space-y-4 flex-1 mb-8">
                     <div class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">check_circle</span>
+                        <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">check_circle</span>
                         <span class="text-sm text-on-surface">Maks. 1 Garden, 4 Plot & 10 Tanaman Aktif</span>
                     </div>
                     <div class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">check_circle</span>
+                        <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">check_circle</span>
                         <span class="text-sm text-on-surface">Akses ke Growth Calendar</span>
                     </div>
                     
@@ -362,7 +351,7 @@
                     </div>
                 </div>
 
-                <a href="/login" class="w-full block text-center border-2 border-outline-variant text-on-surface font-bold py-3 rounded-xl hover:border-[#006c49] hover:text-[#006c49] hover:shadow-sm active:scale-[0.98] transition-all duration-300">Daftar Gratis</a>
+                <a href="/login" class="w-full block text-center border-2 border-outline-variant text-on-surface font-bold py-3 rounded-xl hover:border-primary hover:text-primary hover:shadow-sm active:scale-[0.98] transition-all duration-300">Daftar Gratis</a>
             </div>
 
             {{-- Paket 2: Subur --}}
@@ -423,7 +412,7 @@
             </div>
 
             {{-- Paket 3: Panen Raya --}}
-            <div class="bg-white rounded-3xl p-8 premium-shadow border border-white/60 flex flex-col tactile-card relative overflow-hidden scroll-trigger scroll-fade-up delay-300">
+            <div class="bg-white rounded-3xl p-8 premium-shadow flex flex-col tactile-card relative overflow-hidden scroll-trigger scroll-fade-up delay-300">
                 <div class="absolute -right-6 -top-6 bg-primary/10 w-24 h-24 rounded-full"></div>
                 <h3 class="text-xl font-bold text-on-surface mb-2 relative z-10">Panen Raya <span class="text-xs font-semibold bg-primary-container text-on-primary-container px-2 py-1 rounded-full ml-2">Pro</span></h3>
                 
@@ -433,7 +422,7 @@
                         <div class="flex items-baseline gap-2">
                             <span class="text-[28px] font-black text-on-surface">Rp 799.000</span>
                         </div>
-                        <p class="text-xs font-bold text-[#006c49] mt-1 bg-primary/10 inline-block px-2 py-0.5 rounded">Hemat hampir 1 Juta Rupiah! (vs Rp 1.788k)</p>
+                        <p class="text-xs font-bold text-primary mt-1 bg-primary/10 inline-block px-2 py-0.5 rounded">Hemat hampir 1 Juta Rupiah! (vs Rp 1.788k)</p>
                     </div>
                     <div class="h-px bg-outline-variant/30 w-full my-2"></div>
                     <div>
@@ -449,27 +438,27 @@
                 
                 <div class="space-y-4 flex-1 mb-8 relative z-10">
                     <div class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">all_inclusive</span>
+                        <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">all_inclusive</span>
                         <span class="text-sm text-on-surface font-bold">Maks. 100 Garden, Unlimited Plot & Tanaman Aktif</span>
                     </div>
                     <div class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">check_circle</span>
+                        <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">check_circle</span>
                         <span class="text-sm text-on-surface">Seluruh fitur otomasi Paket Subur</span>
                     </div>
                     <div class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">history</span>
+                        <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">history</span>
                         <div class="flex flex-col">
                             <span class="text-sm text-on-surface font-bold">Activity Log Tanpa Batas</span>
                             <span class="text-xs text-on-surface-variant mt-0.5">Tracking tak terbatas untuk menyiram, memupuk, memangkas, dll.</span>
                         </div>
                     </div>
                     <div class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">groups</span>
+                        <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">groups</span>
                         <span class="text-sm text-on-surface font-medium">Ideal untuk Sekolah, Urban Farming besar & Komunitas</span>
                     </div>
                 </div>
 
-                <a href="/checkout?plan=pro" class="w-full block text-center bg-[#006c49] text-white font-bold py-3 rounded-xl hover:bg-[#005236] active:scale-[0.98] hover:shadow-lg transition-all duration-300 shadow-md relative z-10">Upgrade ke Pro</a>
+                <a href="/checkout?plan=pro" class="w-full block text-center bg-primary text-white font-bold py-3 rounded-xl hover:bg-primary-container active:scale-[0.98] hover:shadow-lg transition-all duration-300 shadow-md relative z-10">Upgrade ke Pro</a>
             </div>
 
         </div>
@@ -484,10 +473,9 @@
         <div class="text-sm font-bold text-on-surface italic">Grow a Garden</div>
 
         <nav class="flex items-center gap-6 text-xs font-medium text-on-surface-variant">
-            <a href="#" class="hover:text-primary transition-colors">Sitemap</a>
-            <a href="#" class="hover:text-primary transition-colors">Kebijakan Privasi</a>
-            <a href="#" class="hover:text-primary transition-colors">Syarat Layanan</a>
-            <a href="#" class="hover:text-primary transition-colors">Komunitas</a>
+            <a href="/sitemap" class="hover:text-primary transition-colors">Sitemap</a>
+            <a href="/privacy-policy" class="hover:text-primary transition-colors">Kebijakan Privasi</a>
+            <a href="/terms" class="hover:text-primary transition-colors">Syarat Layanan</a>
         </nav>
 
         <p class="text-xs text-on-surface-variant">&copy; {{ date('Y') }} Grow a Garden. All rights reserved.</p>
