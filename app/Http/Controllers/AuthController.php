@@ -117,9 +117,8 @@ class AuthController extends Controller
             $user = User::where('email', $googleUser->getEmail())->first();
 
             if ($user) {
-                // Existing User - Login via Google (No OTP required)
-                // Update Google ID if it was empty (e.g. they previously registered manually)
-                if (empty($user->google_id)) {
+                // User exists, update google_id if missing
+                if (!$user->google_id) {
                     $user->update(['google_id' => $googleUser->getId()]);
                 }
                 
@@ -137,12 +136,12 @@ class AuthController extends Controller
             } else {
                 // New User - Register via Google (OTP required)
                 $user = User::create([
-                    'email' => $googleUser->getEmail(),
                     'name' => $googleUser->getName(),
+                    'email' => $googleUser->getEmail(),
                     'google_id' => $googleUser->getId(),
-                    'password' => Hash::make(Str::random(16)), // Assign random password
+                    'password' => Hash::make(Str::random(16)),
                 ]);
-
+                
                 // Require OTP for Google Registration
                 return $this->sendOtp($user, true);
             }
