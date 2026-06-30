@@ -78,12 +78,12 @@
 
             {{-- Remember Me --}}
             <div class="flex items-center gap-3 mt-1 ml-1">
-                <div class="relative flex items-center">
+                <label class="relative flex items-center cursor-pointer">
                     <input type="checkbox" id="remember" name="remember" class="peer sr-only" />
-                    <div class="w-5 h-5 border-2 border-outline rounded flex items-center justify-center peer-checked:bg-primary peer-checked:border-primary transition-colors cursor-pointer text-white">
-                        <span class="material-symbols-outlined text-[16px] opacity-0 peer-checked:opacity-100 font-bold transition-opacity">check</span>
+                    <div class="w-5 h-5 border-2 border-outline-variant rounded flex items-center justify-center peer-checked:bg-primary peer-checked:border-primary transition-colors text-transparent peer-checked:text-white">
+                        <span class="material-symbols-outlined text-[16px] font-bold">check</span>
                     </div>
-                </div>
+                </label>
                 <label for="remember" class="text-sm font-medium text-on-surface-variant cursor-pointer select-none">Ingat saya selama 30 hari</label>
             </div>
 
@@ -107,12 +107,6 @@
                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google logo" class="w-5 h-5" />
                 Masuk dengan Google
             </a>
-            <form action="/admin/dashboard" method="GET" class="w-full">
-                <button type="submit" class="w-full bg-surface-container-high text-on-surface-variant rounded-full py-3 text-sm font-semibold hover:bg-surface-container-highest transition-all duration-200 flex items-center justify-center gap-2 border border-outline-variant/30">
-                    <span class="material-symbols-outlined text-[18px]">admin_panel_settings</span>
-                    Masuk sebagai Admin (Demo)
-                </button>
-            </form>
         </div>
 
         {{-- Footer --}}
@@ -139,16 +133,6 @@
                 icon.textContent = isPassword ? 'visibility' : 'visibility_off';
             });
         }
-        
-        // Make custom checkbox clickable
-        const checkboxLabel = document.querySelector('label[for="remember"]');
-        const customCheckbox = checkboxLabel.previousElementSibling.querySelector('.w-5');
-        const hiddenInput = document.getElementById('remember');
-        
-        customCheckbox.addEventListener('click', () => {
-            hiddenInput.checked = !hiddenInput.checked;
-            // Dispatch change event to trigger CSS peer logic if needed, though Tailwind peer handles standard state changes
-        });
     });
 </script>
 @endpush
