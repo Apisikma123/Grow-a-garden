@@ -21,7 +21,7 @@
                 <span class="material-symbols-outlined text-[24px]">notifications</span>
             </button>
             <a href="/settings" class="w-9 h-9 rounded-full bg-surface-container-highest flex items-center justify-center text-primary font-bold text-sm shadow-sm active:scale-95 transition-transform" aria-label="Profile and Settings">
-                GT
+                {{ strtoupper(substr(Auth::user()->name ?? 'GT', 0, 2)) }}
             </a>
         </div>
     </header>
@@ -93,10 +93,10 @@
             <div class="bg-surface rounded-[20px] p-2 flex items-center justify-between border border-outline-variant/30 ambient-shadow">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-outline-variant/20 flex items-center justify-center text-[#006c49] font-black text-[14px]">
-                        GT
+                        {{ strtoupper(substr(Auth::user()->name ?? 'GT', 0, 2)) }}
                     </div>
                     <div class="flex flex-col">
-                        <span class="text-[14px] font-bold text-on-surface leading-tight">Green Thumb</span>
+                        <span class="text-[14px] font-bold text-on-surface leading-tight truncate max-w-[120px]">{{ Auth::user()->name ?? 'Green Thumb' }}</span>
                         <span class="text-[11px] text-on-surface-variant font-medium">Profil & Pengaturan</span>
                     </div>
                 </div>
