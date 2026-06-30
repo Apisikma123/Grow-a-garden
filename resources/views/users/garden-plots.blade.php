@@ -924,6 +924,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         if(card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                     }, 50);
                     render();
+                    
+                    if (window.Alert) Alert.toast.success('Plot custom berhasil ditambahkan!');
                 }
             });
         } else {
@@ -1402,6 +1404,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 render();
                 panToZone(newZoneData);
                 
+                if (window.Alert) Alert.toast.success('Plot berhasil ditambahkan!');
+                
                 setTimeout(() => {
                     const card = document.getElementById(`sidebar-card-${dbData.id}`);
                     if(card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -1415,43 +1419,34 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Delete Confirmation Logic
-    const deleteModal = document.getElementById('delete-confirm-modal');
-    const deleteBackdrop = document.getElementById('delete-confirm-backdrop');
-    const deleteContent = document.getElementById('delete-confirm-content');
-    
-    function closeDeleteModal() {
-        deleteContent.classList.remove('scale-100');
-        deleteContent.classList.add('scale-95');
-        setTimeout(() => {
-            deleteModal.classList.add('hidden');
-        }, 150);
-    }
+    document.getElementById('btn-delete-zone').addEventListener('click', async () => {
+        if (!state.selectedZoneId) return;
+        const zone = state.zones.find(z => z.id === state.selectedZoneId);
+        if (!zone) return;
 
-    document.getElementById('btn-delete-zone').addEventListener('click', () => {
-        deleteModal.classList.remove('hidden');
-        // Trigger reflow for animation
-        void deleteContent.offsetWidth;
-        deleteContent.classList.remove('scale-95');
-        deleteContent.classList.add('scale-100');
-    });
-
-    document.getElementById('btn-cancel-delete').addEventListener('click', closeDeleteModal);
-    
-    deleteBackdrop.addEventListener('click', closeDeleteModal);
-
-    document.getElementById('btn-confirm-delete').addEventListener('click', () => {
-        if (state.selectedZoneId) {
-            deletePlotFromDB(state.selectedZoneId);
-            state.zones = state.zones.filter(z => z.id !== state.selectedZoneId);
-            
-            // Update dashboard count
-            const g = state.gardens.find(g => g.id === state.currentGardenId);
-            if (g) g.plots = state.zones.length;
-            
-            selectZone(null);
-            closeDeleteModal();
-            render();
+        if (window.Alert) {
+            const confirmed = await Alert.modal.confirm(
+                'Hapus Plot?',
+                `Apakah Anda yakin ingin menghapus plot "${zone.name}"?`,
+                'Ya, Hapus Plot',
+                true
+            );
+            if (!confirmed.isConfirmed) return;
+        } else {
+            if (!confirm(`Hapus plot "${zone.name}"?`)) return;
         }
+
+        deletePlotFromDB(state.selectedZoneId);
+        state.zones = state.zones.filter(z => z.id !== state.selectedZoneId);
+        
+        // Update dashboard count
+        const g = state.gardens.find(g => g.id === state.currentGardenId);
+        if (g) g.plots = state.zones.length;
+        
+        selectZone(null);
+        render();
+        
+        if (window.Alert) Alert.toast.success('Plot berhasil dihapus!');
     });
 
     document.getElementById('btn-stop-draw').addEventListener('click', () => {
