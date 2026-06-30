@@ -74,9 +74,9 @@
 
         {{-- Bottom: Add Plant + Profile --}}
         <div class="px-6 mt-auto">
-            <button class="w-full bg-primary text-on-primary rounded-full py-3 text-sm font-semibold hover:bg-primary/90 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 shadow-sm mb-4" id="btn-add-plant" onclick="if(window.checkLimit && window.checkLimit('plants')){ alert('Plant added! (Demo)'); }">
-                <span class="material-symbols-outlined" style="font-size: 20px;">add</span>
-                Tambah Tanaman Baru
+            <button class="w-full bg-primary text-on-primary rounded-full py-3 px-4 text-sm font-semibold hover:bg-primary/90 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 shadow-sm mb-4" id="btn-add-plant" onclick="if(window.checkLimit && window.checkLimit('plants')){ alert('Plant added! (Demo)'); }">
+                <span class="material-symbols-outlined shrink-0" style="font-size: 20px;">add</span>
+                <span class="truncate">Tambah Tanaman Baru</span>
             </button>
 
             {{-- Upgrade Ad Box (Kapitalis Style) --}}

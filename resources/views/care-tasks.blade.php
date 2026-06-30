@@ -81,7 +81,7 @@
 
                 <div class="space-y-[16px] pt-2">
                     {{-- Task 1: Tinggi Prioritas Pending --}}
-                    <div class="bg-surface rounded-[24px] p-[20px] flex items-center justify-between ambient-shadow hover:ambient-shadow-lg hover:-translate-y-0.5 transition-all duration-300 border border-outline-variant/20">
+                    <div class="bg-surface rounded-[24px] p-[20px] flex items-center justify-between ambient-shadow hover:ambient-shadow-lg hover:-translate-y-0.5 transition-all duration-300">
                         <div class="flex items-center gap-4">
                             <div class="w-14 h-14 rounded-[16px] bg-[#ecfdf5] text-[#059669] flex items-center justify-center shadow-sm">
                                 <span class="material-symbols-outlined text-[28px]">water_drop</span>
@@ -107,7 +107,7 @@
                     </div>
 
                     {{-- Task 2: Selesai --}}
-                    <div class="bg-surface rounded-[24px] p-[20px] flex items-center justify-between ambient-shadow border border-outline-variant/20 opacity-80">
+                    <div class="bg-surface rounded-[24px] p-[20px] flex items-center justify-between ambient-shadow opacity-80">
                         <div class="flex items-center gap-4">
                             <div class="w-14 h-14 rounded-[16px] bg-surface-container-highest text-on-surface-variant flex items-center justify-center shadow-sm">
                                 <span class="material-symbols-outlined text-[28px]">science</span>
@@ -132,7 +132,7 @@
                     </div>
 
                     {{-- Task 3: Tinggi Prioritas Pending --}}
-                    <div class="bg-surface rounded-[24px] p-[20px] flex items-center justify-between ambient-shadow hover:ambient-shadow-lg hover:-translate-y-0.5 transition-all duration-300 border border-outline-variant/20">
+                    <div class="bg-surface rounded-[24px] p-[20px] flex items-center justify-between ambient-shadow hover:ambient-shadow-lg hover:-translate-y-0.5 transition-all duration-300">
                         <div class="flex items-center gap-4">
                             <div class="w-14 h-14 rounded-[16px] bg-[#fff7ed] text-[#ea580c] flex items-center justify-center shadow-sm">
                                 <span class="material-symbols-outlined text-[28px]">bug_report</span>
@@ -158,7 +158,7 @@
                     </div>
 
                     {{-- Task 4: Skipped --}}
-                    <div class="bg-surface rounded-[24px] p-[20px] flex items-center justify-between ambient-shadow border border-outline-variant/20 opacity-60">
+                    <div class="bg-surface rounded-[24px] p-[20px] flex items-center justify-between ambient-shadow opacity-60">
                         <div class="flex items-center gap-4">
                             <div class="w-14 h-14 rounded-[16px] bg-surface-container-highest text-on-surface-variant flex items-center justify-center shadow-sm">
                                 <span class="material-symbols-outlined text-[28px]">visibility</span>
@@ -189,7 +189,7 @@
             <div class="lg:col-span-1 flex flex-col gap-[24px]">
                 
                 {{-- Plot Terpopuler Card --}}
-                <div class="bg-surface rounded-[24px] p-[24px] ambient-shadow-lg border border-outline-variant/20">
+                <div class="bg-surface rounded-[24px] p-[24px] ambient-shadow-lg">
                     <h3 class="text-[18px] font-bold text-on-surface mb-4">Plot Terpopuler</h3>
                     
                     <div class="relative h-[140px] rounded-[16px] overflow-hidden mb-4 shadow-sm group cursor-pointer">
@@ -208,7 +208,7 @@
                         </div>
                         <div class="flex items-center justify-between p-3.5 bg-surface-container-lowest rounded-[16px] border border-outline-variant/30">
                             <div class="flex items-center gap-3">
-                                <span class="material-symbols-outlined text-[#f59e0b] text-[20px]">light_mode</span>
+                                <span class="material-symbols-outlined text-status-attention text-[20px]">light_mode</span>
                                 <span class="text-[14px] font-bold text-on-surface-variant">Paparan Sinar</span>
                             </div>
                             <span class="text-[16px] font-bold text-[#ea580c]">6 jam</span>

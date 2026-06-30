@@ -116,7 +116,7 @@
     #canvas-container.mode-draw-poly .zone-box { pointer-events: none; }
 
     .toolbar-btn.active {
-        background-color: #006c49;
+        background-color: var(--color-primary);
         color: white;
         box-shadow: 0 4px 12px rgba(0, 108, 73, 0.3);
     }
@@ -171,17 +171,17 @@
 <div id="dashboard-view" class="w-full min-h-screen bg-[#f8f9fa] font-sans overflow-y-auto relative z-10">
     <!-- Ambient Organic Background Glow -->
     <div class="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-        <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#006c49]/5 rounded-full blur-[120px]"></div>
-        <div class="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-[#10b981]/5 rounded-full blur-[140px]"></div>
+        <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/5 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-status-healthy/5 rounded-full blur-[140px]"></div>
     </div>
     
     <div class="max-w-[1280px] mx-auto px-6 py-12 md:py-20 relative z-10">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-6">
             <div>
-                <h1 class="text-[40px] md:text-[56px] font-black text-[#191c1d] tracking-tight leading-none mb-3">Kebunku</h1>
+                <h1 class="text-[40px] md:text-[56px] font-black text-on-surface tracking-tight leading-none mb-3">Kebunku</h1>
                 <p class="text-[18px] text-[#6c7a71] font-medium">Pilih zona tanam untuk mengelola plot dan tugas</p>
             </div>
-            <button id="btn-create-garden" class="bg-[#006c49] text-white px-8 py-4 rounded-full font-bold text-[16px] hover:bg-[#005236] transition-all shadow-[0_8px_24px_rgba(0,108,73,0.25)] hover:shadow-[0_12px_32px_rgba(0,108,73,0.35)] flex items-center gap-3 transform hover:-translate-y-1">
+            <button id="btn-create-garden" class="bg-primary text-white px-8 py-4 rounded-full font-bold text-[16px] hover:bg-primary-container transition-all shadow-[0_8px_24px_rgba(0,108,73,0.25)] hover:shadow-[0_12px_32px_rgba(0,108,73,0.35)] flex items-center gap-3 transform hover:-translate-y-1">
                 <span class="material-symbols-outlined text-[24px]">add</span>
                 Buat Kebun Baru
             </button>
@@ -199,27 +199,27 @@
         
         <!-- Modal Content Centered -->
         <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-[420px] p-4">
-            <div class="bg-white/95 backdrop-blur-xl rounded-[32px] p-8 premium-shadow-hover border border-white flex flex-col">
+            <div class="bg-white/95 backdrop-blur-xl rounded-[32px] p-8 premium-shadow-hover flex flex-col">
                 <div class="flex items-center gap-4 mb-8">
-                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#006c49]/20 to-[#10b981]/20 text-[#006c49] flex items-center justify-center shrink-0 border border-[#006c49]/10">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#006c49]/20 to-[#10b981]/20 text-primary flex items-center justify-center shrink-0 border border-primary/10">
                         <span class="material-symbols-outlined text-[28px]">park</span>
                     </div>
-                    <h2 class="text-2xl font-black text-[#191c1d] leading-tight">Buat<br><span class="text-[#006c49]">New Garden</span></h2>
+                    <h2 class="text-2xl font-black text-on-surface leading-tight">Buat<br><span class="text-primary">New Garden</span></h2>
                 </div>
                 
                 <div class="space-y-4 max-h-[60vh] overflow-y-auto premium-scroll pr-2">
                     <div>
                         <label class="block text-[13px] font-bold text-[#6c7a71] uppercase tracking-wider mb-2">Nama Kebun</label>
-                        <input type="text" id="input-garden-name" class="w-full bg-[#f8f9fa] border border-[#e1e3e4] rounded-2xl px-5 py-4 focus:border-[#006c49] focus:ring-2 focus:ring-[#006c49]/20 focus:bg-white focus:outline-none text-[16px] text-[#191c1d] font-medium transition-all" placeholder="e.g. Backyard Oasis">
+                        <input type="text" id="input-garden-name" class="w-full bg-[#f8f9fa] border border-[#e1e3e4] rounded-2xl px-5 py-4 focus:border-primary focus:ring-2 focus:ring-[#006c49]/20 focus:bg-white focus:outline-none text-[16px] text-on-surface font-medium transition-all" placeholder="e.g. Backyard Oasis">
                     </div>
                     <div>
                         <label class="block text-[13px] font-bold text-[#6c7a71] uppercase tracking-wider mb-2">Lokasi / Zona</label>
-                        <input type="text" id="input-garden-location" class="w-full bg-[#f8f9fa] border border-[#e1e3e4] rounded-2xl px-5 py-4 focus:border-[#006c49] focus:ring-2 focus:ring-[#006c49]/20 focus:bg-white focus:outline-none text-[16px] text-[#191c1d] font-medium transition-all" placeholder="e.g. Zone 4b">
+                        <input type="text" id="input-garden-location" class="w-full bg-[#f8f9fa] border border-[#e1e3e4] rounded-2xl px-5 py-4 focus:border-primary focus:ring-2 focus:ring-[#006c49]/20 focus:bg-white focus:outline-none text-[16px] text-on-surface font-medium transition-all" placeholder="e.g. Zone 4b">
                     </div>
                 </div>
                 <div class="flex gap-4 mt-8">
                     <button id="btn-cancel-garden-modal" class="flex-1 py-4 text-[#6c7a71] font-bold rounded-2xl hover:bg-[#f3f4f5] transition-colors text-[16px]">Batal</button>
-                    <button id="btn-confirm-garden-modal" class="flex-[1.5] py-4 bg-[#006c49] text-white font-bold rounded-2xl hover:bg-[#005236] active:scale-95 transition-all shadow-[0_8px_24px_rgba(0,108,73,0.25)] text-[16px] flex items-center justify-center gap-2">
+                    <button id="btn-confirm-garden-modal" class="flex-[1.5] py-4 bg-primary text-white font-bold rounded-2xl hover:bg-primary-container active:scale-95 transition-all shadow-[0_8px_24px_rgba(0,108,73,0.25)] text-[16px] flex items-center justify-center gap-2">
                         <span class="material-symbols-outlined text-[20px]">done</span> Buat Kebun
                     </button>
                 </div>
@@ -238,13 +238,13 @@
         
         <div class="p-8 pb-4 flex justify-between items-start relative z-10">
             <div>
-                <button id="btn-back-to-dashboard" class="flex items-center gap-2 text-[#6c7a71] hover:text-[#191c1d] font-bold text-[14px] mb-4 transition-colors group">
+                <button id="btn-back-to-dashboard" class="flex items-center gap-2 text-[#6c7a71] hover:text-on-surface font-bold text-[14px] mb-4 transition-colors group">
                     <span class="material-symbols-outlined text-[18px] group-hover:-translate-x-1 transition-transform">arrow_back</span> Kembali ke Kebun
                 </button>
-                <h1 id="canvas-garden-name" class="text-[32px] md:text-[36px] font-black text-[#191c1d] leading-tight tracking-tight mb-1">Green Valley</h1>
+                <h1 id="canvas-garden-name" class="text-[32px] md:text-[36px] font-black text-on-surface leading-tight tracking-tight mb-1">Green Valley</h1>
                 <div class="flex items-center gap-2 text-[#3c4a42] text-[14px] font-semibold bg-[#F1F5F2] inline-flex px-3 py-1.5 rounded-full border border-[#e1e3e4]">
-                    <span class="material-symbols-outlined text-[18px] text-[#006c49]">location_on</span>
-                    <span><span id="canvas-garden-location">Zone 4b</span> • <span id="total-area-display" class="text-[#191c1d] font-bold">0</span> m²</span>
+                    <span class="material-symbols-outlined text-[18px] text-primary">location_on</span>
+                    <span><span id="canvas-garden-location">Zone 4b</span> • <span id="total-area-display" class="text-on-surface font-bold">0</span> m²</span>
                 </div>
             </div>
             <button id="btn-close-sidebar" class="md:hidden w-10 h-10 bg-white rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 shadow-sm border border-slate-100">
@@ -263,7 +263,7 @@
         </div>
 
         <div class="p-8 relative z-10 bg-gradient-to-t from-white/90 to-white/0 pt-12">
-            <button id="btn-sidebar-add" class="w-full bg-[#006c49] text-white rounded-2xl py-4 font-bold text-[16px] hover:bg-[#005236] active:scale-95 transition-all shadow-[0_8px_24px_rgba(0,108,73,0.25)] flex items-center justify-center gap-2 group">
+            <button id="btn-sidebar-add" class="w-full bg-primary text-white rounded-2xl py-4 font-bold text-[16px] hover:bg-primary-container active:scale-95 transition-all shadow-[0_8px_24px_rgba(0,108,73,0.25)] flex items-center justify-center gap-2 group">
                 <span class="material-symbols-outlined text-[22px] group-hover:rotate-90 transition-transform duration-300">add</span>
                 New Plot
             </button>
@@ -279,7 +279,7 @@
         <!-- Premium Glass Toolbar -->
         <div class="absolute top-6 md:top-8 left-1/2 -translate-x-1/2 bg-white/70 backdrop-blur-2xl rounded-full premium-shadow border border-white/80 p-2 flex items-center gap-1 md:gap-2 z-30 overflow-x-auto max-w-[90vw] no-scrollbar">
             <!-- Mobile Menu Toggle -->
-            <button id="btn-mobile-menu" class="md:hidden w-11 h-11 rounded-full text-[#006c49] bg-white shadow-sm flex items-center justify-center transition-transform active:scale-90 font-bold mr-1 shrink-0">
+            <button id="btn-mobile-menu" class="md:hidden w-11 h-11 rounded-full text-primary bg-white shadow-sm flex items-center justify-center transition-transform active:scale-90 font-bold mr-1 shrink-0">
                 <span class="material-symbols-outlined text-[22px]">menu_open</span>
             </button>
             <div class="md:hidden w-px h-8 bg-slate-200 mx-1 shrink-0"></div>
@@ -296,7 +296,7 @@
             
             <div class="hidden md:block w-px h-8 bg-slate-200 mx-2 shrink-0"></div>
             
-            <button id="btn-fullscreen" class="hidden md:flex w-11 h-11 rounded-full text-[#006c49] hover:bg-[#006c49]/10 items-center justify-center transition-all font-bold shrink-0" title="Toggle Fullscreen">
+            <button id="btn-fullscreen" class="hidden md:flex w-11 h-11 rounded-full text-primary hover:bg-primary/10 items-center justify-center transition-all font-bold shrink-0" title="Toggle Fullscreen">
                 <span class="material-symbols-outlined text-[22px]" id="icon-fullscreen">fullscreen</span>
             </button>
         </div>
@@ -304,7 +304,7 @@
         <!-- Empty State -->
         <div id="empty-state" class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none transition-opacity duration-500 z-0 px-4">
             <div class="w-24 h-24 md:w-28 md:h-28 bg-white rounded-full flex items-center justify-center mb-8 premium-shadow border border-white/60">
-                <span class="material-symbols-outlined text-[48px] md:text-[56px] text-[#006c49]">yard</span>
+                <span class="material-symbols-outlined text-[48px] md:text-[56px] text-primary">yard</span>
             </div>
             <p class="text-[18px] md:text-[22px] text-slate-700 font-semibold text-center bg-white/70 backdrop-blur-xl px-8 py-5 rounded-3xl premium-shadow border border-white/60">Canvas is empty.<br><span class="text-slate-500 text-[15px] font-medium">Add your first planting zone to begin.</span></p>
         </div>
@@ -335,7 +335,7 @@
                     <span class="material-symbols-outlined text-[36px]" id="detail-icon" style="font-variation-settings: 'wght' 600;">eco</span>
                 </div>
                 <div>
-                    <h3 class="text-[28px] font-black text-[#191c1d] leading-tight mb-2 tracking-tight" id="detail-name">Zone Name</h3>
+                    <h3 class="text-[28px] font-black text-on-surface leading-tight mb-2 tracking-tight" id="detail-name">Zone Name</h3>
                     <span id="detail-status" class="text-[12px] font-bold px-3 py-1.5 rounded-full inline-flex items-center shadow-sm">Status</span>
                 </div>
             </div>
@@ -349,30 +349,30 @@
             <div class="bg-white/60 backdrop-blur-md rounded-[24px] p-6 border border-white mb-6 shadow-[0_4px_24px_rgba(0,0,0,0.02)] space-y-4">
                 <div class="flex justify-between items-center">
                     <span class="text-[14px] font-semibold text-[#6c7a71]">Plant</span>
-                    <span class="text-[15px] font-bold text-[#191c1d] flex items-center gap-2">
+                    <span class="text-[15px] font-bold text-on-surface flex items-center gap-2">
                         <span id="detail-plant">Unknown</span>
-                        <button id="btn-assign-plant" class="w-6 h-6 rounded-full bg-[#f1f5f2] border border-[#e1e3e4] flex items-center justify-center text-[#3c4a42] hover:bg-[#e1e3e4] hover:text-[#191c1d] transition-colors" title="Change Plant"><span class="material-symbols-outlined text-[14px]">edit</span></button>
+                        <button id="btn-assign-plant" class="w-6 h-6 rounded-full bg-[#f1f5f2] border border-[#e1e3e4] flex items-center justify-center text-[#3c4a42] hover:bg-[#e1e3e4] hover:text-on-surface transition-colors" title="Change Plant"><span class="material-symbols-outlined text-[14px]">edit</span></button>
                     </span>
                 </div>
                 <div class="flex justify-between items-center">
                     <span class="text-[14px] font-semibold text-[#6c7a71]">Quantity</span>
-                    <span class="text-[15px] font-bold text-[#191c1d]" id="detail-qty">0</span>
+                    <span class="text-[15px] font-bold text-on-surface" id="detail-qty">0</span>
                 </div>
                 <div class="flex justify-between items-center">
                     <span class="text-[14px] font-semibold text-[#6c7a71]">Cultivar</span>
-                    <span class="text-[15px] font-bold text-[#191c1d]" id="detail-cultivar">Unknown</span>
+                    <span class="text-[15px] font-bold text-on-surface" id="detail-cultivar">Unknown</span>
                 </div>
                 <div class="flex justify-between items-center">
                     <span class="text-[14px] font-semibold text-[#6c7a71]">Dimension</span>
-                    <span class="text-[14px] font-bold text-[#006c49] bg-[#006c49]/10 px-3 py-1 rounded-full" id="detail-area">0 m²</span>
+                    <span class="text-[14px] font-bold text-primary bg-primary/10 px-3 py-1 rounded-full" id="detail-area">0 m²</span>
                 </div>
                 <div class="flex justify-between items-center">
                     <span class="text-[14px] font-semibold text-[#6c7a71]">Tanggal Tanam</span>
-                    <span class="text-[15px] font-bold text-[#191c1d]">May 15, 2024</span>
+                    <span class="text-[15px] font-bold text-on-surface">May 15, 2024</span>
                 </div>
                 <div class="flex justify-between items-center">
                     <span class="text-[14px] font-semibold text-[#6c7a71]">Perkiraan Panen</span>
-                    <span class="text-[15px] font-bold text-[#191c1d]">Aug 10 - Aug 25</span>
+                    <span class="text-[15px] font-bold text-on-surface">Aug 10 - Aug 25</span>
                 </div>
             </div>
 
@@ -380,7 +380,7 @@
             <div class="mb-6 px-2 bg-white/60 p-6 rounded-[24px] border border-white shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
                 <div class="flex justify-between text-[14px] font-bold mb-4">
                     <span class="text-slate-500">Progres Tumbuh</span>
-                    <span class="text-[#006c49] text-[18px] font-black" id="detail-progress-text">45%</span>
+                    <span class="text-primary text-[18px] font-black" id="detail-progress-text">45%</span>
                 </div>
                 <div class="h-4 bg-slate-100 rounded-full overflow-hidden shadow-inner">
                     <div class="h-full bg-gradient-to-r from-[#006c49] to-[#10b981] rounded-full transition-all duration-1000 ease-out relative" style="width: 45%" id="detail-progress-bar">
@@ -396,7 +396,7 @@
 
             <!-- Log Aktivitas -->
             <div class="mb-8">
-                <h4 class="text-[14px] font-bold text-[#191c1d] mb-4">Log Aktivitas</h4>
+                <h4 class="text-[14px] font-bold text-on-surface mb-4">Log Aktivitas</h4>
                 <div class="relative pl-4 border-l-2 border-slate-200 space-y-5" id="detail-activity-log">
                     <!-- injected by JS -->
                 </div>
@@ -421,12 +421,12 @@
         
         <!-- Modal Content Centered -->
         <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-[400px] p-4 z-10" id="delete-confirm-wrapper">
-            <div class="bg-white/95 backdrop-blur-xl rounded-[32px] p-8 premium-shadow-hover border border-white flex flex-col transform transition-transform scale-95 duration-200" id="delete-confirm-content">
+            <div class="bg-white/95 backdrop-blur-xl rounded-[32px] p-8 premium-shadow-hover flex flex-col transform transition-transform scale-95 duration-200" id="delete-confirm-content">
                 <div class="flex items-center gap-4 mb-6">
                     <div class="w-14 h-14 rounded-2xl bg-[#ffdad6]/50 text-[#ba1a1a] flex items-center justify-center shrink-0 border border-[#ffdad6]">
                         <span class="material-symbols-outlined text-[28px]">delete</span>
                     </div>
-                    <h3 class="text-[24px] font-black text-[#191c1d] leading-tight">Delete Plot?</h3>
+                    <h3 class="text-[24px] font-black text-on-surface leading-tight">Delete Plot?</h3>
                 </div>
                 
                 <p class="text-[15px] font-medium text-[#6c7a71] mb-8 leading-relaxed">Are you sure you want to delete this plot? This action cannot be undone and you will lose all planted data.</p>
@@ -446,30 +446,30 @@
         
         <!-- Modal Content Centered -->
         <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-[420px] p-4">
-            <div class="bg-white/95 backdrop-blur-xl rounded-[32px] p-8 premium-shadow-hover border border-white flex flex-col">
+            <div class="bg-white/95 backdrop-blur-xl rounded-[32px] p-8 premium-shadow-hover flex flex-col">
                 <div class="flex items-center gap-4 mb-8">
-                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#006c49]/20 to-[#10b981]/20 text-[#006c49] flex items-center justify-center shrink-0 border border-[#006c49]/10">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#006c49]/20 to-[#10b981]/20 text-primary flex items-center justify-center shrink-0 border border-primary/10">
                         <span class="material-symbols-outlined text-[28px]">add_location_alt</span>
                     </div>
-                    <h2 class="text-2xl font-black text-slate-800 leading-tight">Buat<br><span class="text-[#006c49]">New Plot</span></h2>
+                    <h2 class="text-2xl font-black text-slate-800 leading-tight">Buat<br><span class="text-primary">New Plot</span></h2>
                 </div>
                 
                 <div class="space-y-4 max-h-[60vh] overflow-y-auto premium-scroll pr-2">
                     <div>
                         <label class="block text-[13px] font-bold text-slate-500 uppercase tracking-wider mb-2">Plot Name</label>
-                        <input type="text" id="input-plot-name" class="w-full bg-slate-50/50 border border-slate-200 rounded-2xl px-5 py-4 focus:border-[#006c49] focus:ring-2 focus:ring-[#006c49]/20 focus:bg-white focus:outline-none text-[16px] text-slate-800 font-medium transition-all" placeholder="e.g. Tomato Plot A1">
+                        <input type="text" id="input-plot-name" class="w-full bg-slate-50/50 border border-slate-200 rounded-2xl px-5 py-4 focus:border-primary focus:ring-2 focus:ring-[#006c49]/20 focus:bg-white focus:outline-none text-[16px] text-slate-800 font-medium transition-all" placeholder="e.g. Tomato Plot A1">
                     </div>
                     <div>
                         <label class="block text-[13px] font-bold text-slate-500 uppercase tracking-wider mb-2">Plant Type</label>
-                        <input type="text" id="input-plot-plant" class="w-full bg-slate-50/50 border border-slate-200 rounded-2xl px-5 py-4 focus:border-[#006c49] focus:ring-2 focus:ring-[#006c49]/20 focus:bg-white focus:outline-none text-[16px] text-slate-800 font-medium transition-all" placeholder="e.g. Tomato">
+                        <input type="text" id="input-plot-plant" class="w-full bg-slate-50/50 border border-slate-200 rounded-2xl px-5 py-4 focus:border-primary focus:ring-2 focus:ring-[#006c49]/20 focus:bg-white focus:outline-none text-[16px] text-slate-800 font-medium transition-all" placeholder="e.g. Tomato">
                     </div>
                     <div>
                         <label class="block text-[13px] font-bold text-slate-500 uppercase tracking-wider mb-2">Cultivar (Optional)</label>
-                        <input type="text" id="input-plot-cultivar" class="w-full bg-slate-50/50 border border-slate-200 rounded-2xl px-5 py-4 focus:border-[#006c49] focus:ring-2 focus:ring-[#006c49]/20 focus:bg-white focus:outline-none text-[16px] text-slate-800 font-medium transition-all" placeholder="e.g. Roma">
+                        <input type="text" id="input-plot-cultivar" class="w-full bg-slate-50/50 border border-slate-200 rounded-2xl px-5 py-4 focus:border-primary focus:ring-2 focus:ring-[#006c49]/20 focus:bg-white focus:outline-none text-[16px] text-slate-800 font-medium transition-all" placeholder="e.g. Roma">
                     </div>
                     <div>
                         <label class="block text-[13px] font-bold text-slate-500 uppercase tracking-wider mb-2">Shape</label>
-                        <select id="input-plot-shape" class="w-full bg-slate-50/50 border border-slate-200 rounded-2xl px-5 py-4 focus:border-[#006c49] focus:ring-2 focus:ring-[#006c49]/20 focus:bg-white focus:outline-none text-[16px] text-slate-800 font-medium transition-all appearance-none cursor-pointer">
+                        <select id="input-plot-shape" class="w-full bg-slate-50/50 border border-slate-200 rounded-2xl px-5 py-4 focus:border-primary focus:ring-2 focus:ring-[#006c49]/20 focus:bg-white focus:outline-none text-[16px] text-slate-800 font-medium transition-all appearance-none cursor-pointer">
                             <option value="rectangle">Rectangle (Bedengan)</option>
                             <option value="circle">Circle (Pot/Drum)</option>
                             <option value="hexagon">Hexagon (Raised Bed)</option>
@@ -478,17 +478,17 @@
                     <div class="flex gap-4">
                         <div class="flex-1">
                             <label class="block text-[13px] font-bold text-slate-500 uppercase tracking-wider mb-2">Width (cm)</label>
-                            <input type="number" id="input-plot-width" value="240" class="w-full bg-slate-50/50 border border-slate-200 rounded-2xl px-5 py-4 focus:border-[#006c49] focus:ring-2 focus:ring-[#006c49]/20 focus:bg-white focus:outline-none text-[16px] text-slate-800 font-medium transition-all">
+                            <input type="number" id="input-plot-width" value="240" class="w-full bg-slate-50/50 border border-slate-200 rounded-2xl px-5 py-4 focus:border-primary focus:ring-2 focus:ring-[#006c49]/20 focus:bg-white focus:outline-none text-[16px] text-slate-800 font-medium transition-all">
                         </div>
                         <div class="flex-1">
                             <label class="block text-[13px] font-bold text-slate-500 uppercase tracking-wider mb-2">Length (cm)</label>
-                            <input type="number" id="input-plot-height" value="144" class="w-full bg-slate-50/50 border border-slate-200 rounded-2xl px-5 py-4 focus:border-[#006c49] focus:ring-2 focus:ring-[#006c49]/20 focus:bg-white focus:outline-none text-[16px] text-slate-800 font-medium transition-all">
+                            <input type="number" id="input-plot-height" value="144" class="w-full bg-slate-50/50 border border-slate-200 rounded-2xl px-5 py-4 focus:border-primary focus:ring-2 focus:ring-[#006c49]/20 focus:bg-white focus:outline-none text-[16px] text-slate-800 font-medium transition-all">
                         </div>
                     </div>
                 </div>
                 <div class="flex gap-4 mt-8">
                     <button id="btn-cancel-modal" class="flex-1 py-4 text-slate-500 font-bold rounded-2xl hover:bg-slate-100 transition-colors text-[16px]">Batal</button>
-                    <button id="btn-confirm-modal" class="flex-[1.5] py-4 bg-[#006c49] text-white font-bold rounded-2xl hover:bg-[#005236] active:scale-95 transition-all shadow-[0_8px_24px_rgba(0,108,73,0.25)] text-[16px] flex items-center justify-center gap-2">
+                    <button id="btn-confirm-modal" class="flex-[1.5] py-4 bg-primary text-white font-bold rounded-2xl hover:bg-primary-container active:scale-95 transition-all shadow-[0_8px_24px_rgba(0,108,73,0.25)] text-[16px] flex items-center justify-center gap-2">
                         <span class="material-symbols-outlined text-[20px]">done</span> Buat Plot
                     </button>
                 </div>
@@ -500,18 +500,18 @@
     <div id="assign-plant-modal" class="fixed inset-0 z-[99999] hidden">
         <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-md transition-opacity" id="assign-plant-backdrop"></div>
         <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-[420px] p-4 z-10">
-            <div class="bg-white/95 backdrop-blur-xl rounded-[32px] p-8 premium-shadow-hover border border-white flex flex-col">
+            <div class="bg-white/95 backdrop-blur-xl rounded-[32px] p-8 premium-shadow-hover flex flex-col">
                 <div class="flex items-center gap-4 mb-6">
-                    <div class="w-12 h-12 rounded-2xl bg-[#6ffbbe]/20 text-[#006c49] flex items-center justify-center shrink-0 border border-[#006c49]/10">
+                    <div class="w-12 h-12 rounded-2xl bg-[#6ffbbe]/20 text-primary flex items-center justify-center shrink-0 border border-primary/10">
                         <span class="material-symbols-outlined text-[24px]">local_florist</span>
                     </div>
-                    <h3 class="text-[20px] font-black text-[#191c1d] leading-tight">Pilih Tanaman</h3>
+                    <h3 class="text-[20px] font-black text-on-surface leading-tight">Pilih Tanaman</h3>
                 </div>
                 
                 <div class="space-y-4 mb-8">
                     <div>
                         <label class="block text-[13px] font-bold text-[#6c7a71] uppercase tracking-wider mb-2">Plant Type</label>
-                        <select id="input-assign-plant" class="w-full bg-[#f8f9fa] border border-[#e1e3e4] rounded-2xl px-5 py-4 focus:border-[#006c49] focus:ring-2 focus:ring-[#006c49]/20 focus:bg-white focus:outline-none text-[16px] text-[#191c1d] font-medium transition-all appearance-none cursor-pointer">
+                        <select id="input-assign-plant" class="w-full bg-[#f8f9fa] border border-[#e1e3e4] rounded-2xl px-5 py-4 focus:border-primary focus:ring-2 focus:ring-[#006c49]/20 focus:bg-white focus:outline-none text-[16px] text-on-surface font-medium transition-all appearance-none cursor-pointer">
                             <option value="Tomato">Tomato</option>
                             <option value="Chili">Chili</option>
                             <option value="Carrot">Carrot</option>
@@ -521,13 +521,13 @@
                     </div>
                     <div>
                         <label class="block text-[13px] font-bold text-[#6c7a71] uppercase tracking-wider mb-2">Quantity (estimated)</label>
-                        <input type="number" id="input-assign-qty" class="w-full bg-[#f8f9fa] border border-[#e1e3e4] rounded-2xl px-5 py-4 focus:border-[#006c49] focus:ring-2 focus:ring-[#006c49]/20 focus:bg-white focus:outline-none text-[16px] text-[#191c1d] font-medium transition-all" value="12">
+                        <input type="number" id="input-assign-qty" class="w-full bg-[#f8f9fa] border border-[#e1e3e4] rounded-2xl px-5 py-4 focus:border-primary focus:ring-2 focus:ring-[#006c49]/20 focus:bg-white focus:outline-none text-[16px] text-on-surface font-medium transition-all" value="12">
                     </div>
                 </div>
                 
                 <div class="flex gap-4">
                     <button id="btn-cancel-assign" class="flex-1 py-3.5 px-4 rounded-xl font-bold text-[#3c4a42] bg-[#f3f4f5] hover:bg-[#e7e8e9] transition-colors">Batal</button>
-                    <button id="btn-confirm-assign" class="flex-[1.5] py-3.5 px-4 rounded-xl font-bold text-white bg-[#006c49] hover:bg-[#005236] transition-colors shadow-sm">Save Changes</button>
+                    <button id="btn-confirm-assign" class="flex-[1.5] py-3.5 px-4 rounded-xl font-bold text-white bg-primary hover:bg-primary-container transition-colors shadow-sm">Save Changes</button>
                 </div>
             </div>
         </div>
@@ -594,10 +594,10 @@ document.addEventListener('DOMContentLoaded', () => {
         state.mode = newMode;
         toolbarBtns.forEach(btn => {
             if(btn.dataset.mode === newMode) {
-                btn.classList.add('active', 'bg-[#006c49]', 'text-white', 'shadow-[0_4px_12px_rgba(0,108,73,0.3)]');
+                btn.classList.add('active', 'bg-primary', 'text-white', 'shadow-[0_4px_12px_rgba(0,108,73,0.3)]');
                 btn.classList.remove('text-slate-500', 'hover:bg-white/50');
             } else {
-                btn.classList.remove('active', 'bg-[#006c49]', 'text-white', 'shadow-[0_4px_12px_rgba(0,108,73,0.3)]');
+                btn.classList.remove('active', 'bg-primary', 'text-white', 'shadow-[0_4px_12px_rgba(0,108,73,0.3)]');
                 btn.classList.add('text-slate-500', 'hover:bg-white/50');
             }
         });
@@ -773,22 +773,22 @@ document.addEventListener('DOMContentLoaded', () => {
             item.id = `sidebar-card-${zone.id}`;
             item.className = `bg-white rounded-[24px] p-5 border-2 transition-all cursor-pointer hover:-translate-y-1 duration-300 relative overflow-hidden flex-shrink-0`;
             item.style = state.selectedZoneId === zone.id 
-                ? `border-color: #006c49; ${shadowHover}` 
+                ? `border-color: var(--color-primary); ${shadowHover}` 
                 : `border-color: transparent; ${shadowPremium}`;
             
             const statBg = 'bg-[#F1F5F2]';
 
             item.innerHTML = `
                 <div class="flex justify-between items-start mb-4">
-                    <h3 class="font-bold text-[#191c1d] text-[18px] leading-tight tracking-tight">${zone.name}</h3>
+                    <h3 class="font-bold text-on-surface text-[18px] leading-tight tracking-tight">${zone.name}</h3>
                     <div class="w-4 h-4 rounded-full shadow-sm flex-shrink-0 mt-0.5 border-2 border-white" style="background-color: ${palette.border}"></div>
                 </div>
                 
                 <div class="grid grid-cols-2 gap-3 mb-4">
                     <div class="${statBg} rounded-[16px] p-3 flex flex-col justify-center items-start transition-colors group">
                         <span class="text-[11px] font-semibold text-[#6c7a71] uppercase tracking-wider mb-1">Moisture</span>
-                        <div class="flex items-center gap-2 text-[14px] font-bold text-[#006c49] whitespace-nowrap w-full">
-                            <div class="w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-sm text-[#006c49] group-hover:scale-110 transition-transform shrink-0">
+                        <div class="flex items-center gap-2 text-[14px] font-bold text-primary whitespace-nowrap w-full">
+                            <div class="w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-sm text-primary group-hover:scale-110 transition-transform shrink-0">
                                 <span class="material-symbols-outlined text-[14px]">water_drop</span>
                             </div>
                             <span class="truncate">${moisture}%</span>
@@ -809,7 +809,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="flex items-center gap-1.5 text-[#3c4a42] bg-white px-3 py-1.5 rounded-full border border-[#e1e3e4] shadow-sm">
                         <span class="material-symbols-outlined text-[16px]">square_foot</span> ${getArea(zone.w, zone.h)} m²
                     </div>
-                    <div class="flex items-center gap-1.5 bg-[#006c49] text-white px-3 py-1.5 rounded-full shadow-sm">
+                    <div class="flex items-center gap-1.5 bg-primary text-white px-3 py-1.5 rounded-full shadow-sm">
                         <span class="material-symbols-outlined text-[16px]">eco</span>
                         <span>Ditanam</span>
                     </div>
@@ -858,8 +858,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('detail-quick-stats').innerHTML = `
                     <div class="bg-[#F1F5F2] rounded-[16px] p-3 flex flex-col justify-center items-start transition-colors group">
                         <span class="text-[11px] font-semibold text-[#6c7a71] uppercase tracking-wider mb-1">Moisture</span>
-                        <div class="flex items-center gap-2 text-[14px] font-bold text-[#006c49]">
-                            <div class="w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-sm text-[#006c49] group-hover:scale-110 transition-transform">
+                        <div class="flex items-center gap-2 text-[14px] font-bold text-primary">
+                            <div class="w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-sm text-primary group-hover:scale-110 transition-transform">
                                 <span class="material-symbols-outlined text-[14px]">water_drop</span>
                             </div>
                             ${moisture}%
@@ -877,15 +877,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
 
                 document.getElementById('detail-todos').innerHTML = `
-                    <h4 class="text-[14px] font-bold text-[#191c1d] mb-3">Tugas hari ini</h4>
+                    <h4 class="text-[14px] font-bold text-on-surface mb-3">Tugas hari ini</h4>
                     <div class="flex flex-col gap-2.5">
                         ${todos.map(todo => `
                             <label class="flex items-center gap-3 cursor-pointer p-3 rounded-[16px] bg-white border border-[#e1e3e4] hover:border-[#bbcabf] transition-colors shadow-sm group">
                                 <div class="relative flex items-center justify-center w-5 h-5">
-                                    <input type="checkbox" class="peer appearance-none w-5 h-5 border-2 border-[#bbcabf] rounded-[6px] checked:bg-[#006c49] checked:border-[#006c49] transition-all cursor-pointer" onclick="event.stopPropagation()">
+                                    <input type="checkbox" class="peer appearance-none w-5 h-5 border-2 border-[#bbcabf] rounded-[6px] checked:bg-primary checked:border-primary transition-all cursor-pointer" onclick="event.stopPropagation()">
                                     <span class="material-symbols-outlined text-white text-[14px] absolute pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity">check</span>
                                 </div>
-                                <span class="text-[14px] font-medium text-[#3c4a42] group-hover:text-[#191c1d] transition-colors">${todo}</span>
+                                <span class="text-[14px] font-medium text-[#3c4a42] group-hover:text-on-surface transition-colors">${todo}</span>
                             </label>
                         `).join('')}
                     </div>
@@ -895,7 +895,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const activities = zone.activities || [
                     { action: 'Disiram', time: '2 jam lalu', icon: 'water_drop', color: 'text-blue-500', bg: 'bg-blue-50' },
                     { action: 'Diberi Pupuk', time: 'Kemarin', icon: 'science', color: 'text-purple-500', bg: 'bg-purple-50' },
-                    { action: 'Ditanam', time: '15 Mei 2024', icon: 'eco', color: 'text-[#006c49]', bg: 'bg-[#6ffbbe]/30' }
+                    { action: 'Ditanam', time: '15 Mei 2024', icon: 'eco', color: 'text-primary', bg: 'bg-[#6ffbbe]/30' }
                 ];
                 
                 document.getElementById('detail-activity-log').innerHTML = activities.map(act => `
@@ -904,7 +904,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="material-symbols-outlined text-[14px]">${act.icon}</span>
                         </div>
                         <div class="ml-2 bg-white rounded-xl p-3 border border-[#e1e3e4] shadow-sm relative top-[-4px]">
-                            <p class="text-[13px] font-bold text-[#191c1d] leading-tight">${act.action}</p>
+                            <p class="text-[13px] font-bold text-on-surface leading-tight">${act.action}</p>
                             <span class="text-[11px] font-semibold text-[#6c7a71] block mt-1">${act.time}</span>
                         </div>
                     </div>
@@ -1510,9 +1510,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!z.activities) z.activities = [
                 { action: 'Disiram', time: '2 jam lalu', icon: 'water_drop', color: 'text-blue-500', bg: 'bg-blue-50' },
                 { action: 'Diberi Pupuk', time: 'Kemarin', icon: 'science', color: 'text-purple-500', bg: 'bg-purple-50' },
-                { action: 'Ditanam', time: '15 Mei 2024', icon: 'eco', color: 'text-[#006c49]', bg: 'bg-[#6ffbbe]/30' }
+                { action: 'Ditanam', time: '15 Mei 2024', icon: 'eco', color: 'text-primary', bg: 'bg-[#6ffbbe]/30' }
             ];
-            z.activities.unshift({ action: `Changed plant to ${z.plant}`, time: 'Just now', icon: 'local_florist', color: 'text-[#006c49]', bg: 'bg-[#6ffbbe]/30' });
+            z.activities.unshift({ action: `Changed plant to ${z.plant}`, time: 'Just now', icon: 'local_florist', color: 'text-primary', bg: 'bg-[#6ffbbe]/30' });
             
             render();
             // Re-trigger selectZone to update sidebar details immediately
@@ -1541,20 +1541,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="w-full h-48 rounded-[24px] bg-[#f1f5f2] mb-6 overflow-hidden relative">
                     <!-- Lush placeholder background -->
                     <div class="absolute inset-0 bg-gradient-to-br from-[#006c49]/10 to-[#10b981]/5 flex items-center justify-center transform group-hover:scale-105 transition-transform duration-700">
-                        <span class="material-symbols-outlined text-[64px] text-[#006c49]/20 group-hover:rotate-6 transition-transform duration-500">nature</span>
+                        <span class="material-symbols-outlined text-[64px] text-primary/20 group-hover:rotate-6 transition-transform duration-500">nature</span>
                     </div>
                     <!-- Soft inner shadow to mimic depth -->
                     <div class="absolute inset-0 shadow-[inset_0_4px_24px_rgba(0,0,0,0.04)] pointer-events-none"></div>
                 </div>
                 <div class="flex-1 px-4">
-                    <h3 class="text-[26px] font-black text-[#191c1d] mb-2 group-hover:text-[#006c49] transition-colors leading-tight">${garden.name}</h3>
+                    <h3 class="text-[26px] font-black text-on-surface mb-2 group-hover:text-primary transition-colors leading-tight">${garden.name}</h3>
                     <div class="flex items-center gap-2 text-[#6c7a71] text-[15px] font-medium mb-6">
-                        <span class="material-symbols-outlined text-[18px] text-[#006c49]/70">location_on</span> ${garden.location}
+                        <span class="material-symbols-outlined text-[18px] text-primary/70">location_on</span> ${garden.location}
                     </div>
                 </div>
                 <div class="pt-5 pb-3 px-4 border-t border-[#f1f5f2] flex justify-between items-center text-[14px] font-bold text-[#3c4a42]">
                     <div class="flex items-center gap-2 bg-[#f8f9fa] px-4 py-2 rounded-full shadow-sm">
-                        <span class="material-symbols-outlined text-[18px] text-[#006c49]">grid_view</span> ${garden.plots} Plots
+                        <span class="material-symbols-outlined text-[18px] text-primary">grid_view</span> ${garden.plots} Plots
                     </div>
                     <div class="flex items-center gap-2 bg-[#f8f9fa] px-4 py-2 rounded-full text-[#6c7a71] shadow-sm">
                         <span class="material-symbols-outlined text-[18px]">straighten</span> ${garden.area} m²
