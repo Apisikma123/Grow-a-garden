@@ -1,12 +1,12 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Settings — Grow a Garden')
-@section('description', 'Manage your account, profile, and subscription settings.')
+@section('title', 'Pengaturan — Grow a Garden')
+@section('description', 'Kelola akun, profil, dan pengaturan langganan Anda.')
 
 @section('dashboard-content')
     <div class="flex flex-col gap-[24px] pb-10">
         <div>
-            <h1 class="text-[32px] md:text-[48px] font-bold text-on-surface tracking-tight leading-tight mb-2">Settings</h1>
+            <h1 class="text-[32px] md:text-[48px] font-bold text-on-surface tracking-tight leading-tight mb-2">Pengaturan</h1>
             <p class="text-[16px] text-on-surface-variant leading-[24px]">Kelola preferensi akun dan paket langganan Anda.</p>
         </div>
 
@@ -16,7 +16,7 @@
                 
                 {{-- Profile Settings Box --}}
                 <div class="bg-surface rounded-[24px] p-[24px] ambient-shadow-lg border border-outline-variant/20 hover:shadow-xl transition-shadow duration-300">
-                    <h2 class="text-[24px] font-bold text-on-surface mb-6">Profile Settings</h2>
+                    <h2 class="text-[24px] font-bold text-on-surface mb-6">Pengaturan Profil</h2>
                     <div class="flex flex-col md:flex-row gap-[32px]">
                         <div class="flex flex-col items-center gap-4">
                             <div class="relative group cursor-pointer">

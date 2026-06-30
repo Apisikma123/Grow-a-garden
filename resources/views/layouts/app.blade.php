@@ -9,7 +9,7 @@
     <meta name="description" content="@yield('description', 'Kelola kebun rumahan, urban farming, atau hidroponik dengan pemetaan cerdas dan kalender pertumbuhan otomatis.')" />
     <link rel="icon" type="image/jpeg" href="{{ asset('images/logo.jpg') }}" />
 
-    {{-- Google Fonts: Be Vietnam Pro + Material Symbols --}}
+    {{-- Google Fonts: Poppins + Material Symbols --}}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Verify OTP — Grow a Garden')
+@section('title', 'Verifikasi OTP — Grow a Garden')
 
 @section('content')
 <div class="min-h-screen flex items-center justify-center bg-surface px-5 py-12 relative overflow-hidden">
@@ -11,6 +11,14 @@
     </div>
 
     <div class="w-full max-w-[500px] bg-white rounded-[24px] p-6 sm:p-8 md:p-10 ambient-shadow-lg relative z-10 border border-outline-variant/20">
+        {{-- Back Button --}}
+        <div class="mb-2 flex justify-start">
+            <a href="javascript:history.back()" class="inline-flex items-center gap-1.5 text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                Kembali
+            </a>
+        </div>
+
         {{-- Header --}}
         <div class="text-center mb-10">
             <a href="/" class="inline-flex items-center gap-3 group mb-8">
@@ -21,8 +29,8 @@
             <div class="w-16 h-16 bg-primary-container/30 text-primary-container-on rounded-full flex items-center justify-center mx-auto mb-6">
                 <span class="material-symbols-outlined text-[32px] text-primary">mark_email_read</span>
             </div>
-            <h1 class="text-[28px] font-bold text-on-surface mb-2">Check your email</h1>
-            <p class="text-sm text-on-surface-variant">We sent a verification code to<br><span class="font-bold text-on-surface">gardener@example.com</span></p>
+            <h1 class="text-[28px] font-bold text-on-surface mb-2">Cek email Anda</h1>
+            <p class="text-sm text-on-surface-variant">Kami telah mengirim kode verifikasi ke<br><span class="font-bold text-on-surface">gardener@example.com</span></p>
         </div>
 
         {{-- Form --}}
@@ -46,14 +54,14 @@
             </div>
 
             <button type="submit" class="w-full bg-primary text-on-primary rounded-full py-4 text-sm font-semibold hover:bg-primary/90 active:scale-[0.98] transition-all duration-200 shadow-sm flex items-center justify-center gap-2">
-                Verify Code
+                Verifikasi Kode
             </button>
         </form>
 
         {{-- Footer --}}
         <p class="text-center text-sm font-medium text-on-surface-variant mt-8">
-            Didn't receive the code? 
-            <a href="#" class="text-primary font-semibold hover:text-primary/80 transition-colors">Click to resend</a>
+            Tidak menerima kode? 
+            <a href="#" class="text-primary font-semibold hover:text-primary/80 transition-colors">Kirim ulang</a>
         </p>
     </div>
 </div>

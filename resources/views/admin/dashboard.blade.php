@@ -7,10 +7,10 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-2">
         <div>
             <h1 class="text-[28px] font-bold text-on-surface tracking-tight mb-1">Ringkasan Beranda</h1>
-            <p class="text-[14px] text-on-surface-variant">Here's what's happening in the garden today.</p>
+            <p class="text-[14px] text-on-surface-variant">Berikut ringkasan aktivitas kebun hari ini.</p>
         </div>
         <button class="px-5 py-2 rounded-full border-2 border-secondary/40 text-secondary font-bold text-[14px] hover:bg-secondary/5 transition-colors">
-            Export Report
+            Ekspor Laporan
         </button>
     </div>
 
@@ -27,7 +27,7 @@
             <div class="text-[32px] font-black text-on-surface leading-tight mb-2 relative z-10">24,592</div>
             <div class="flex items-center gap-1 text-[11px] text-primary font-bold relative z-10">
                 <span class="material-symbols-outlined text-[14px]">trending_up</span>
-                +12% this month
+                +12% bulan ini
             </div>
             <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-primary-container/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
         </a>
@@ -35,7 +35,7 @@
         {{-- Total Kebun --}}
         <a href="#" class="block bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group hover:-translate-y-1 hover:shadow-md transition-all">
             <div class="flex justify-between items-start mb-2 relative z-10">
-                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Total Kebun (Kebun)</div>
+                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Total Kebun</div>
                 <div class="w-8 h-8 rounded-full bg-tertiary-container/30 text-tertiary flex items-center justify-center">
                     <span class="material-symbols-outlined text-[16px]">yard</span>
                 </div>
@@ -43,7 +43,7 @@
             <div class="text-[32px] font-black text-on-surface leading-tight mb-2 relative z-10">18,204</div>
             <div class="flex items-center gap-1 text-[11px] text-tertiary font-bold relative z-10">
                 <span class="material-symbols-outlined text-[14px]">trending_up</span>
-                +8% this month
+                +8% bulan ini
             </div>
             <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-tertiary-container/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
         </a>
@@ -51,7 +51,7 @@
         {{-- Total Active Plants --}}
         <a href="/admin/plants" class="block bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group hover:-translate-y-1 hover:shadow-md transition-all">
             <div class="flex justify-between items-start mb-2 relative z-10">
-                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Total Active Plants</div>
+                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Total Tanaman Aktif</div>
                 <div class="w-8 h-8 rounded-full bg-secondary-container/30 text-secondary flex items-center justify-center">
                     <span class="material-symbols-outlined text-[16px]">potted_plant</span>
                 </div>

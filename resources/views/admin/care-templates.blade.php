@@ -6,17 +6,17 @@
     {{-- Page Header --}}
     <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-2">
         <div class="flex flex-col gap-2">
-            <h1 class="text-[32px] font-black text-on-surface tracking-tight">Growth Templates</h1>
-            <p class="text-[15px] text-on-surface-variant max-w-[600px] leading-relaxed">Configure automated lifecycles and milestone alerts for botanical precision.</p>
+            <h1 class="text-[32px] font-black text-on-surface tracking-tight">Template Pertumbuhan</h1>
+            <p class="text-[15px] text-on-surface-variant max-w-[600px] leading-relaxed">Konfigurasi siklus hidup otomatis dan notifikasi milestone untuk presisi botani.</p>
         </div>
         <div class="flex gap-3 shrink-0">
             <button class="flex items-center gap-2 bg-white border border-outline-variant/30 text-on-surface font-bold text-[13px] px-5 py-2.5 rounded-full hover:bg-surface-container-lowest transition-all shadow-sm">
                 <span class="material-symbols-outlined text-[18px] text-[#10b981]">filter_list</span>
-                Filter View
+                Filter Tampilan
             </button>
             <button class="flex items-center gap-2 bg-white border border-outline-variant/30 text-on-surface font-bold text-[13px] px-5 py-2.5 rounded-full hover:bg-surface-container-lowest transition-all shadow-sm">
                 <span class="material-symbols-outlined text-[18px] text-[#10b981]">sort</span>
-                Sort
+                Urutkan
             </button>
         </div>
     </div>

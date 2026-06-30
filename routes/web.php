@@ -7,7 +7,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('users.dashboard');
 });
 
 Route::get('/admin/dashboard', function () {
@@ -60,27 +60,27 @@ Route::get('/otp', function () {
 });
 
 Route::get('/checkout', function () {
-    return view('checkout');
+    return view('users.checkout');
 });
 
 Route::get('/garden-plots', function () {
-    return view('garden-plots');
+    return view('users.garden-plots');
 });
 
 Route::get('/growth-calendar', function () {
-    return view('growth-calendar');
+    return view('users.growth-calendar');
 });
 
 Route::get('/care-tasks', function () {
-    return view('care-tasks');
+    return view('users.care-tasks');
 });
 
 Route::get('/settings', function () {
-    return view('settings');
+    return view('users.settings');
 });
 
 Route::get('/settings/password', function () {
-    return view('settings-password');
+    return view('users.settings-password');
 });
 
 Route::post('/settings/password', function () {
@@ -92,6 +92,17 @@ Route::post('/logout', function () {
     // Implement logout logic here
     return redirect('/');
 });
+// Static Pages
+Route::get('/sitemap', function () {
+    return view('pages.sitemap');
+});
+Route::get('/privacy-policy', function () {
+    return view('pages.privacy');
+});
+Route::get('/terms', function () {
+    return view('pages.terms');
+});
+
 // Error Pages Preview Route
 Route::get('/error-preview/{code}', function ($code) {
     if (in_array($code, ['404', '500', '403', 'offline'])) {

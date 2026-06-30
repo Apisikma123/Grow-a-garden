@@ -164,7 +164,7 @@
                         <div class="dash-zone-box" style="left: 240px; top: 144px; width: 264px; height: 168px; border-color: var(--color-primary);">
                             <div class="dash-zone-label" style="color: var(--color-primary);">
                                 <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'wght' 600;">eco</span>
-                                <span class="text-[14px] md:text-[15px] font-bold truncate tracking-tight">Tomato Plot A1</span>
+                                <span class="text-[14px] md:text-[15px] font-bold truncate tracking-tight">Tomat Plot A1</span>
                             </div>
                         </div>
                         
@@ -172,7 +172,7 @@
                         <div class="dash-zone-box" style="left: 552px; top: 192px; width: 216px; height: 120px; border-color: #f59e0b;">
                             <div class="dash-zone-label" style="color: #b45309;">
                                 <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'wght' 600;">eco</span>
-                                <span class="text-[14px] md:text-[15px] font-bold truncate tracking-tight">Chili Field B2</span>
+                                <span class="text-[14px] md:text-[15px] font-bold truncate tracking-tight">Cabai Plot B2</span>
                             </div>
                         </div>
 
@@ -180,7 +180,7 @@
                         <div class="dash-zone-box" style="left: 240px; top: 360px; width: 384px; height: 168px; border-color: #ef4444;">
                             <div class="dash-zone-label" style="color: #b91c1c;">
                                 <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'wght' 600;">eco</span>
-                                <span class="text-[14px] md:text-[15px] font-bold truncate tracking-tight">Carrot Patch C1</span>
+                                <span class="text-[14px] md:text-[15px] font-bold truncate tracking-tight">Wortel Plot C1</span>
                             </div>
                         </div>
                         
@@ -188,7 +188,7 @@
                         <div class="dash-zone-box" style="left: 672px; top: 360px; width: 240px; height: 168px; border-color: #0ea5e9;">
                             <div class="dash-zone-label" style="color: #0369a1;">
                                 <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'wght' 600;">eco</span>
-                                <span class="text-[14px] md:text-[15px] font-bold truncate tracking-tight">Lettuce Bed D4</span>
+                                <span class="text-[14px] md:text-[15px] font-bold truncate tracking-tight">Selada Plot D4</span>
                             </div>
                         </div>
                     </div>

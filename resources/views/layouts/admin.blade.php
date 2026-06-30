@@ -44,10 +44,11 @@
             @php
                 $navItems = [
                     ['route' => 'admin.dashboard', 'label' => 'Beranda', 'icon' => 'dashboard', 'url' => '/admin/dashboard'],
-                    ['route' => 'admin.users', 'label' => 'User Management', 'icon' => 'group', 'url' => '/admin/users'],
-                    ['route' => 'admin.plants', 'label' => 'Plant Database', 'icon' => 'local_florist', 'url' => '/admin/plants'],
+                    ['route' => 'admin.users', 'label' => 'Manajemen Pengguna', 'icon' => 'group', 'url' => '/admin/users'],
+                    ['route' => 'admin.plants', 'label' => 'Database Tanaman', 'icon' => 'local_florist', 'url' => '/admin/plants'],
                     ['route' => 'admin.care-templates', 'label' => 'Template Perawatan', 'icon' => 'assignment', 'url' => '/admin/care-templates'],
-                    ['route' => 'admin.weather', 'label' => 'Cuaca Rules', 'icon' => 'partly_cloudy_day', 'url' => '/admin/weather'],
+                    ['route' => 'admin.weather', 'label' => 'Aturan Cuaca', 'icon' => 'partly_cloudy_day', 'url' => '/admin/weather'],
+                    ['route' => 'admin.settings', 'label' => 'Pengaturan', 'icon' => 'settings', 'url' => '/admin/settings'],
                 ];
                 $currentRoute = request()->path();
             @endphp

@@ -473,10 +473,9 @@
         <div class="text-sm font-bold text-on-surface italic">Grow a Garden</div>
 
         <nav class="flex items-center gap-6 text-xs font-medium text-on-surface-variant">
-            <a href="#" class="hover:text-primary transition-colors">Sitemap</a>
-            <a href="#" class="hover:text-primary transition-colors">Kebijakan Privasi</a>
-            <a href="#" class="hover:text-primary transition-colors">Syarat Layanan</a>
-            <a href="#" class="hover:text-primary transition-colors">Komunitas</a>
+            <a href="/sitemap" class="hover:text-primary transition-colors">Sitemap</a>
+            <a href="/privacy-policy" class="hover:text-primary transition-colors">Kebijakan Privasi</a>
+            <a href="/terms" class="hover:text-primary transition-colors">Syarat Layanan</a>
         </nav>
 
         <p class="text-xs text-on-surface-variant">&copy; {{ date('Y') }} Grow a Garden. All rights reserved.</p>

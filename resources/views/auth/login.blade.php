@@ -11,21 +11,29 @@
     </div>
 
     <div class="w-full max-w-[440px] bg-white rounded-[24px] p-8 md:p-10 ambient-shadow-lg relative z-10 border border-outline-variant/20">
+        {{-- Back Button --}}
+        <div class="mb-2 flex justify-start">
+            <a href="javascript:history.back()" class="inline-flex items-center gap-1.5 text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                Kembali
+            </a>
+        </div>
+
         {{-- Header --}}
         <div class="text-center mb-8">
             <a href="/" class="inline-flex items-center gap-3 group mb-6">
                 <img src="{{ asset('images/logo.jpg') }}" alt="Grow a Garden Logo" class="w-10 h-10 rounded-xl shadow-sm transition-transform duration-300 object-contain">
                 <span class="text-xl font-bold text-on-surface tracking-tight">Grow a Garden</span>
             </a>
-            <h1 class="text-[28px] font-bold text-on-surface mb-2">Welcome Back</h1>
-            <p class="text-sm text-on-surface-variant">Sign in to check on your plants and garden map.</p>
+            <h1 class="text-[28px] font-bold text-on-surface mb-2">Selamat Datang Kembali</h1>
+            <p class="text-sm text-on-surface-variant">Masuk untuk memeriksa tanaman dan peta kebun Anda.</p>
         </div>
 
         {{-- Form --}}
         <form action="/otp" method="GET" class="flex flex-col gap-5">
             {{-- Email Input --}}
             <div class="flex flex-col gap-2">
-                <label for="email" class="text-sm font-semibold text-on-surface ml-1">Email Address</label>
+                <label for="email" class="text-sm font-semibold text-on-surface ml-1">Alamat Email</label>
                 <div class="relative">
                     <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant/70 text-[20px] pointer-events-none">mail</span>
                     <input 
@@ -42,8 +50,8 @@
             {{-- Password Input --}}
             <div class="flex flex-col gap-2">
                 <div class="flex items-center justify-between ml-1">
-                    <label for="password" class="text-sm font-semibold text-on-surface">Password</label>
-                    <a href="/forgot-password" class="text-xs font-semibold text-primary hover:text-primary/80 transition-colors">Forgot Password?</a>
+                    <label for="password" class="text-sm font-semibold text-on-surface">Kata Sandi</label>
+                    <a href="/forgot-password" class="text-xs font-semibold text-primary hover:text-primary/80 transition-colors">Lupa Kata Sandi?</a>
                 </div>
                 <div class="relative">
                     <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant/70 text-[20px] pointer-events-none">lock</span>
@@ -69,12 +77,12 @@
                         <span class="material-symbols-outlined text-[16px] opacity-0 peer-checked:opacity-100 font-bold transition-opacity">check</span>
                     </div>
                 </div>
-                <label for="remember" class="text-sm font-medium text-on-surface-variant cursor-pointer select-none">Remember me for 30 days</label>
+                <label for="remember" class="text-sm font-medium text-on-surface-variant cursor-pointer select-none">Ingat saya selama 30 hari</label>
             </div>
 
             {{-- Submit Button --}}
             <button type="submit" class="w-full bg-primary text-on-primary rounded-full py-3.5 text-sm font-semibold hover:bg-primary/90 active:scale-[0.98] transition-all duration-200 mt-2 shadow-sm flex items-center justify-center gap-2">
-                Sign In
+                Masuk
                 <span class="material-symbols-outlined text-[20px]">login</span>
             </button>
         </form>
@@ -82,7 +90,7 @@
         {{-- Divider --}}
         <div class="flex items-center gap-4 my-8">
             <div class="flex-1 h-px bg-outline-variant/30"></div>
-            <span class="text-xs font-medium text-on-surface-variant">OR</span>
+            <span class="text-xs font-medium text-on-surface-variant">ATAU</span>
             <div class="flex-1 h-px bg-outline-variant/30"></div>
         </div>
 
@@ -90,20 +98,20 @@
         <div class="flex flex-col gap-3">
             <button class="w-full bg-white border-2 border-outline-variant/50 text-on-surface rounded-full py-3 text-sm font-semibold hover:bg-surface transition-all duration-200 flex items-center justify-center gap-3">
                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google logo" class="w-5 h-5" />
-                Sign in with Google
+                Masuk dengan Google
             </button>
             <form action="/admin/dashboard" method="GET" class="w-full">
                 <button type="submit" class="w-full bg-surface-container-high text-on-surface-variant rounded-full py-3 text-sm font-semibold hover:bg-surface-container-highest transition-all duration-200 flex items-center justify-center gap-2 border border-outline-variant/30">
                     <span class="material-symbols-outlined text-[18px]">admin_panel_settings</span>
-                    Login as Admin (Demo)
+                    Masuk sebagai Admin (Demo)
                 </button>
             </form>
         </div>
 
         {{-- Footer --}}
         <p class="text-center text-sm font-medium text-on-surface-variant mt-8">
-            Don't have an account? 
-            <a href="/register" class="text-primary font-semibold hover:text-primary/80 transition-colors">Sign Up</a>
+            Belum punya akun? 
+            <a href="/register" class="text-primary font-semibold hover:text-primary/80 transition-colors">Daftar</a>
         </p>
     </div>
 </div>

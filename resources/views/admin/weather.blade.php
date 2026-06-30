@@ -7,11 +7,11 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-2">
         <div class="flex flex-col gap-1">
             <h1 class="text-[32px] font-bold text-on-surface tracking-tight">Aturan Cuaca Engine</h1>
-            <p class="text-[14px] text-on-surface-variant">Automated watering adjustments based on macro climate conditions.</p>
+            <p class="text-[14px] text-on-surface-variant">Penyesuaian penyiraman otomatis berdasarkan kondisi iklim makro.</p>
         </div>
         <button class="flex items-center gap-2 bg-[#006c49] text-white font-bold text-[14px] px-5 py-2.5 rounded-full hover:bg-[#005236] active:scale-[0.98] transition-all shadow-sm shrink-0">
             <span class="material-symbols-outlined text-[18px]">add</span>
-            Create Rule
+            Buat Aturan
         </button>
     </div>
 
@@ -24,10 +24,10 @@
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-outlined text-on-surface-variant">tune</span>
-                    <h2 class="text-[18px] font-bold text-on-surface">Aktif Adjustment Rules</h2>
+                    <h2 class="text-[18px] font-bold text-on-surface">Aturan Adjustment Aktif</h2>
                 </div>
                 <div class="px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant text-[11px] font-bold">
-                    3 Rules Running
+                    3 Aturan Berjalan
                 </div>
             </div>
 

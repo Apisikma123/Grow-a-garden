@@ -6,7 +6,7 @@
     {{-- Page Header --}}
     <div class="flex flex-col gap-1 mb-2">
         <h1 class="text-[28px] font-bold text-on-surface tracking-tight">Manajemen Pengguna</h1>
-        <p class="text-[14px] text-on-surface-variant">Oversee community members, manage access, and monitor engagement.</p>
+        <p class="text-[14px] text-on-surface-variant">Kelola anggota komunitas, atur akses, dan pantau keterlibatan.</p>
     </div>
 
     {{-- Main Container --}}
@@ -24,7 +24,7 @@
             {{-- Export Button --}}
             <button class="flex items-center gap-2 px-4 py-2 rounded-md border border-secondary text-secondary font-bold text-[13px] hover:bg-secondary/5 transition-colors">
                 <span class="material-symbols-outlined text-[18px]">download</span>
-                Export
+                Ekspor
             </button>
         </div>
 
