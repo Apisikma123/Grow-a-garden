@@ -9,7 +9,7 @@
         {{-- Header Section --}}
         <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <div>
-                <h1 class="text-[32px] md:text-[40px] font-bold text-[#1e293b] tracking-tight leading-tight mb-2">Good morning.</h1>
+                <h1 class="text-[32px] md:text-[40px] font-bold text-[#1e293b] tracking-tight leading-tight mb-2">Hi Petani Urban</h1>
                 <p class="text-[16px] text-on-surface-variant">Your garden is thriving. Let's see what needs tending today.</p>
             </div>
             
