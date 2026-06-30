@@ -32,15 +32,15 @@
                         <div class="flex-1 space-y-[16px]">
                             <div class="group">
                                 <label class="block text-[14px] font-bold text-on-surface mb-2 group-focus-within:text-primary transition-colors">Nama Lengkap</label>
-                                <input type="text" value="Petani Urban" class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+                                <input type="text" value="{{ Auth::user()->name }}" class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
                             </div>
                             <div class="group">
                                 <label class="block text-[14px] font-bold text-on-surface mb-2 group-focus-within:text-primary transition-colors">Alamat Email</label>
-                                <input type="email" value="petani@urbanfarming.com" class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+                                <input type="email" value="{{ Auth::user()->email }}" class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" readonly>
                             </div>
                             <div class="group">
                                 <label class="block text-[14px] font-bold text-on-surface mb-2 group-focus-within:text-primary transition-colors">Nomor Telepon</label>
-                                <input type="tel" value="081234567890" placeholder="08xxxxxxxxxx" class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+                                <input type="tel" value="" placeholder="08xxxxxxxxxx" class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
                             </div>
                             <div class="group">
                                 <label class="block text-[14px] font-bold text-on-surface mb-2 group-focus-within:text-primary transition-colors">Lokasi Kebun (Weather Adjustment)</label>
@@ -106,7 +106,7 @@
                                 <label class="block text-[14px] font-bold text-on-surface mb-2">Role Akun</label>
                                 <div class="flex items-center gap-2 mt-1">
                                     <span class="bg-primary-container text-on-primary-container px-3 py-1.5 rounded-full text-[13px] font-bold tracking-wide">
-                                        Free User
+                                        {{ ucfirst(Auth::user()->role ?? 'Free User') }}
                                     </span>
                                 </div>
                             </div>
@@ -206,12 +206,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="pt-2">
-                            <button class="w-full flex items-center justify-center gap-2 bg-surface-container-high text-error hover:bg-error/10 border border-error/20 rounded-full px-6 py-3 font-bold text-[14px] transition-all">
-                                <span class="material-symbols-outlined text-[20px]">logout</span>
-                                Logout dari Semua Perangkat
-                            </button>
-                        </div>
+                            <form action="{{ route('logout') }}" method="POST" class="w-full">
+                                @csrf
+                                <button type="submit" class="w-full flex items-center justify-center gap-2 bg-surface-container-high text-error hover:bg-error/10 border border-error/20 rounded-full px-6 py-3 font-bold text-[14px] transition-all">
+                                    <span class="material-symbols-outlined text-[20px]">logout</span>
+                                    Logout dari Semua Perangkat
+                                </button>
+                            </form>
                     </div>
                 </div>
 
