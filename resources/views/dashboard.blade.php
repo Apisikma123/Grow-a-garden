@@ -9,21 +9,67 @@
         {{-- Header Section --}}
         <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <div>
-                <h1 class="text-[32px] md:text-[40px] font-bold text-on-surface tracking-tight leading-tight mb-2">Selamat pagi.</h1>
+                @php
+                    $hour = now()->format('H');
+                    if ($hour < 11) {
+                        $greeting = 'Selamat pagi.';
+                    } elseif ($hour < 15) {
+                        $greeting = 'Selamat siang.';
+                    } elseif ($hour < 18) {
+                        $greeting = 'Selamat sore.';
+                    } else {
+                        $greeting = 'Selamat malam.';
+                    }
+                @endphp
+                <h1 class="text-[32px] md:text-[40px] font-bold text-on-surface tracking-tight leading-tight mb-2">{{ $greeting }}</h1>
                 <p class="text-[16px] text-on-surface-variant">Kebun Anda tumbuh dengan baik. Mari lihat apa yang perlu dirawat hari ini.</p>
             </div>
             
-            {{-- Weather Widget --}}
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-surface-container-lowest rounded-full flex items-center justify-center ambient-shadow shrink-0">
-                    <span class="material-symbols-outlined text-[24px] text-primary">rainy</span>
-                </div>
-                <div class="max-w-[220px]">
-                    <h3 class="font-bold text-[16px] text-on-surface mb-0.5">Berawan / Hujan</h3>
-                    <div class="flex items-center gap-1 text-primary text-[10px] font-bold uppercase tracking-wider mb-1">
-                        <span class="material-symbols-outlined text-[14px]">auto_awesome</span> Adaptasi Pintar
+            {{-- Weather Widget (Dynamic) --}}
+            <div id="weather-widget" class="flex items-center gap-4 transition-all duration-500">
+                {{-- Default: Ask Location State --}}
+                <div id="weather-ask" class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-surface-container-lowest rounded-full flex items-center justify-center ambient-shadow shrink-0">
+                        <span class="material-symbols-outlined text-[24px] text-on-surface-variant">location_off</span>
                     </div>
-                    <p class="text-[11px] text-on-surface-variant leading-tight">Frekuensi penyiraman dikurangi 20% hari ini karena perkiraan hujan.</p>
+                    <div class="max-w-[260px]">
+                        <h3 class="font-bold text-[14px] text-on-surface mb-1">Aktifkan Lokasi Kebun</h3>
+                        <p class="text-[11px] text-on-surface-variant leading-tight mb-2">Deteksi lokasi untuk penyesuaian cuaca otomatis pada jadwal penyiraman.</p>
+                        <button type="button" id="dash-detect-location" class="bg-primary text-on-primary text-[12px] font-bold px-4 py-1.5 rounded-full flex items-center justify-center gap-1.5 hover:bg-primary/90 active:scale-95 transition-all shadow-sm overflow-hidden">
+                            <span class="material-symbols-outlined text-[16px] shrink-0">my_location</span>
+                            <span class="truncate">Deteksi Lokasi</span>
+                        </button>
+                    </div>
+                </div>
+
+                {{-- Loading State --}}
+                <div id="weather-loading" class="hidden flex items-center gap-3">
+                    <div class="w-12 h-12 bg-surface-container-lowest rounded-full flex items-center justify-center ambient-shadow shrink-0">
+                        <span class="material-symbols-outlined text-[24px] text-primary animate-spin">sync</span>
+                    </div>
+                    <div class="max-w-[220px]">
+                        <h3 class="font-bold text-[14px] text-on-surface mb-0.5">Mendeteksi lokasi...</h3>
+                        <p class="text-[11px] text-on-surface-variant leading-tight">Sedang mencari koordinat dan data cuaca regional Anda.</p>
+                    </div>
+                </div>
+
+                {{-- Active Weather State --}}
+                <div id="weather-active" class="hidden flex items-start sm:items-center gap-[12px]">
+                    <div class="w-12 h-12 bg-surface-container-lowest rounded-full flex items-center justify-center ambient-shadow shrink-0 mt-1 sm:mt-0">
+                        <span class="material-symbols-outlined text-[24px] text-primary" id="weather-icon">rainy</span>
+                    </div>
+                    <div class="flex-1 max-w-[280px] py-1">
+                        <h3 class="font-bold text-[16px] text-on-surface whitespace-nowrap mb-0.5" id="weather-title">Berawan / Hujan</h3>
+                        <div class="flex items-center gap-1 text-on-surface-variant text-[12px] mb-2.5">
+                            <span class="material-symbols-outlined text-[14px] shrink-0">location_on</span>
+                            <span id="weather-location" class="truncate">Lokasi</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 text-primary text-[10px] font-bold uppercase tracking-[0.08em] mb-1.5 leading-none">
+                            <span class="material-symbols-outlined text-[14px] leading-none shrink-0">auto_awesome</span> 
+                            <span class="pt-0.5">Adaptasi Pintar</span>
+                        </div>
+                        <p class="text-[12px] text-[#4a4a4a] leading-relaxed" id="weather-desc">Frekuensi penyiraman dikurangi 20% hari ini karena perkiraan hujan.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -154,40 +200,36 @@
         {{-- Upcoming Harvest Row --}}
         <div class="bg-surface rounded-[24px] p-[32px] ambient-shadow mb-[24px]">
             <div class="flex items-center justify-between mb-6">
-                <h3 class="text-[20px] font-bold text-on-surface">Panen Mendatang (Upcoming Harvest)</h3>
+                <h3 class="text-[20px] font-bold text-on-surface">Panen Mendatang</h3>
                 <a href="/growth-calendar" class="text-[14px] font-bold text-primary hover:underline">Lihat Kalender</a>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {{-- Harvest Item --}}
-                <div class="bg-surface-container-low rounded-[16px] p-4 flex flex-col gap-3">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                            <span class="material-symbols-outlined">shopping_basket</span>
-                        </div>
-                        <div>
-                            <div class="text-[14px] font-bold text-on-surface">Tomat Cherry</div>
-                            <div class="text-[12px] text-on-surface-variant">Plot A1</div>
-                        </div>
+                <div class="bg-surface-container-low rounded-[20px] p-5 flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                        <span class="material-symbols-outlined text-[24px]">eco</span>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <span class="material-symbols-outlined text-status-healthy text-[16px]">schedule</span>
-                        <span class="text-[13px] font-bold text-status-healthy">2 hari lagi</span>
+                    <div class="flex flex-col h-full w-full">
+                        <div class="text-[15px] font-bold text-on-surface leading-tight mb-1">Tomat Cherry</div>
+                        <div class="text-[13px] text-on-surface-variant mb-4">Plot A1</div>
+                        <div class="mt-auto flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-status-healthy text-[18px]">schedule</span>
+                            <span class="text-[13.5px] font-bold text-status-healthy">2 hari lagi</span>
+                        </div>
                     </div>
                 </div>
                 {{-- Harvest Item --}}
-                <div class="bg-surface-container-low rounded-[16px] p-4 flex flex-col gap-3">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                            <span class="material-symbols-outlined">shopping_basket</span>
-                        </div>
-                        <div>
-                            <div class="text-[14px] font-bold text-on-surface">Cabai Rawit</div>
-                            <div class="text-[12px] text-on-surface-variant">Field B2</div>
-                        </div>
+                <div class="bg-surface-container-low rounded-[20px] p-5 flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                        <span class="material-symbols-outlined text-[24px]">eco</span>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary text-[16px]">schedule</span>
-                        <span class="text-[13px] font-bold text-primary">5 hari lagi</span>
+                    <div class="flex flex-col h-full w-full">
+                        <div class="text-[15px] font-bold text-on-surface leading-tight mb-1">Cabai Rawit</div>
+                        <div class="text-[13px] text-on-surface-variant mb-4">Plot B2</div>
+                        <div class="mt-auto flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-primary text-[18px]">schedule</span>
+                            <span class="text-[13.5px] font-bold text-primary">5 hari lagi</span>
+                        </div>
                     </div>
                 </div>
             </div>

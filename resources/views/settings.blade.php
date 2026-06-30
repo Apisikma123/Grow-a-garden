@@ -43,6 +43,66 @@
                                 <input type="tel" value="081234567890" placeholder="08xxxxxxxxxx" class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
                             </div>
                             <div class="group">
+                                <label class="block text-[14px] font-bold text-on-surface mb-2 group-focus-within:text-primary transition-colors">Lokasi Kebun (Weather Adjustment)</label>
+                                <div class="flex gap-2">
+                                    <div class="relative flex-1">
+                                        <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant/70 text-[20px] pointer-events-none">location_on</span>
+                                        <input type="text" id="garden-location" placeholder="Pilih atau deteksi lokasi..." class="w-full surface-recessed border border-outline-variant rounded-[12px] pl-11 pr-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" readonly>
+                                    </div>
+                                    <button type="button" id="btn-detect-location" class="bg-surface-container-high text-primary hover:bg-primary/10 border border-outline-variant rounded-[12px] px-4 flex items-center justify-center gap-1.5 transition-all duration-300 font-bold text-[14px] whitespace-nowrap active:scale-95">
+                                        <span class="material-symbols-outlined text-[20px]" id="detect-icon">my_location</span>
+                                        Deteksi
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="group">
+                                <label class="block text-[14px] font-bold text-on-surface mb-2 group-focus-within:text-primary transition-colors">Pilih Provinsi Manual (Alternatif)</label>
+                                <select id="manual-province" class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+                                    <option value="">-- Pilih Provinsi --</option>
+                                    <option value="Aceh">Aceh</option>
+                                    <option value="Sumatera Utara">Sumatera Utara</option>
+                                    <option value="Sumatera Barat">Sumatera Barat</option>
+                                    <option value="Riau">Riau</option>
+                                    <option value="Kepulauan Riau">Kepulauan Riau</option>
+                                    <option value="Jambi">Jambi</option>
+                                    <option value="Sumatera Selatan">Sumatera Selatan</option>
+                                    <option value="Bangka Belitung">Bangka Belitung</option>
+                                    <option value="Bengkulu">Bengkulu</option>
+                                    <option value="Lampung">Lampung</option>
+                                    <option value="DKI Jakarta">DKI Jakarta</option>
+                                    <option value="Jawa Barat">Jawa Barat</option>
+                                    <option value="Banten">Banten</option>
+                                    <option value="Jawa Tengah">Jawa Tengah</option>
+                                    <option value="DI Yogyakarta">DI Yogyakarta</option>
+                                    <option value="Jawa Timur">Jawa Timur</option>
+                                    <option value="Bali">Bali</option>
+                                    <option value="Nusa Tenggara Barat">Nusa Tenggara Barat</option>
+                                    <option value="Nusa Tenggara Timur">Nusa Tenggara Timur</option>
+                                    <option value="Kalimantan Barat">Kalimantan Barat</option>
+                                    <option value="Kalimantan Tengah">Kalimantan Tengah</option>
+                                    <option value="Kalimantan Selatan">Kalimantan Selatan</option>
+                                    <option value="Kalimantan Timur">Kalimantan Timur</option>
+                                    <option value="Kalimantan Utara">Kalimantan Utara</option>
+                                    <option value="Sulawesi Utara">Sulawesi Utara</option>
+                                    <option value="Gorontalo">Gorontalo</option>
+                                    <option value="Sulawesi Tengah">Sulawesi Tengah</option>
+                                    <option value="Sulawesi Barat">Sulawesi Barat</option>
+                                    <option value="Sulawesi Selatan">Sulawesi Selatan</option>
+                                    <option value="Sulawesi Tenggara">Sulawesi Tenggara</option>
+                                    <option value="Maluku">Maluku</option>
+                                    <option value="Maluku Utara">Maluku Utara</option>
+                                    <option value="Papua Barat">Papua Barat</option>
+                                    <option value="Papua">Papua</option>
+                                </select>
+                            </div>
+                            <div class="group">
+                                <label class="block text-[14px] font-bold text-on-surface mb-2 group-focus-within:text-primary transition-colors">Bahasa / Language</label>
+                                <select id="app-language" class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+                                    <option value="id">Bahasa Indonesia</option>
+                                    <option value="en">English</option>
+                                </select>
+                            </div>
+                            <div class="group">
                                 <label class="block text-[14px] font-bold text-on-surface mb-2">Role Akun</label>
                                 <div class="flex items-center gap-2 mt-1">
                                     <span class="bg-primary-container text-on-primary-container px-3 py-1.5 rounded-full text-[13px] font-bold tracking-wide">
@@ -95,6 +155,80 @@
                         </div>
                     </div>
                 </div>
+
+                {{-- Security & Privacy Box --}}
+                <div class="bg-surface rounded-[24px] p-[24px] ambient-shadow-lg border border-outline-variant/20 hover:shadow-xl transition-shadow duration-300">
+                    <h2 class="text-[24px] font-bold text-on-surface mb-6">Security & Privacy</h2>
+                    <div class="space-y-[20px]">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-[16px] font-bold text-on-surface">Pengaturan Privasi</h3>
+                                <p class="text-[13px] text-on-surface-variant">Kelola siapa saja yang bisa melihat kebun dan aktivitas Anda.</p>
+                            </div>
+                            <button class="bg-surface-container-high text-primary hover:bg-primary/10 border border-outline-variant rounded-full px-5 py-2 font-bold text-[14px] transition-all">Kelola</button>
+                        </div>
+                        <div class="h-px w-full bg-outline-variant/30"></div>
+                        <div class="flex flex-col gap-2">
+                            <h3 class="text-[16px] font-bold text-on-surface">Riwayat Login</h3>
+                            <div class="bg-surface-container-low rounded-[16px] p-4 border border-outline-variant/20 space-y-3">
+                                <!-- Laptop/Computer -->
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center gap-3">
+                                        <span class="material-symbols-outlined text-on-surface-variant">computer</span>
+                                        <div>
+                                            <p class="text-[14px] font-bold text-on-surface">Computer/Laptop</p>
+                                            <p class="text-[12px] text-on-surface-variant">Jakarta, Indonesia &bull; Sedang aktif</p>
+                                        </div>
+                                    </div>
+                                    <span class="bg-primary-container text-on-primary-container px-2 py-1 rounded text-[11px] font-bold">Saat ini</span>
+                                </div>
+                                <div class="h-px w-full bg-outline-variant/20"></div>
+                                <!-- Tablet -->
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center gap-3">
+                                        <span class="material-symbols-outlined text-on-surface-variant">tablet_mac</span>
+                                        <div>
+                                            <p class="text-[14px] font-bold text-on-surface">Tablet</p>
+                                            <p class="text-[12px] text-on-surface-variant">Bandung, Indonesia &bull; 1 hari yang lalu</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="h-px w-full bg-outline-variant/20"></div>
+                                <!-- Mobile -->
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center gap-3">
+                                        <span class="material-symbols-outlined text-on-surface-variant">smartphone</span>
+                                        <div>
+                                            <p class="text-[14px] font-bold text-on-surface">Mobile</p>
+                                            <p class="text-[12px] text-on-surface-variant">Jakarta, Indonesia &bull; 3 hari yang lalu</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-2">
+                            <button class="w-full flex items-center justify-center gap-2 bg-surface-container-high text-error hover:bg-error/10 border border-error/20 rounded-full px-6 py-3 font-bold text-[14px] transition-all">
+                                <span class="material-symbols-outlined text-[20px]">logout</span>
+                                Logout dari Semua Perangkat
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- {{-- Help & Support Box --}}
+                <div class="bg-surface rounded-[24px] p-[24px] ambient-shadow-lg border border-outline-variant/20 hover:shadow-xl transition-shadow duration-300">
+                    <h2 class="text-[24px] font-bold text-on-surface mb-6">Help & Support</h2>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-[16px] font-bold text-on-surface">Customer Service</h3>
+                            <p class="text-[13px] text-on-surface-variant">Butuh bantuan? Tim support kami siap membantu Anda 24/7.</p>
+                        </div>
+                        <button class="bg-primary text-on-primary hover:shadow-lg hover:-translate-y-0.5 rounded-full px-5 py-2 font-bold text-[14px] flex items-center gap-2 transition-all active:scale-95">
+                            <span class="material-symbols-outlined text-[18px]">support_agent</span>
+                            Hubungi CS
+                        </button>
+                    </div>
+                </div> -->
 
                 {{-- Danger Zone (Delete Account) --}}
                 <div class="bg-error-container/10 rounded-[24px] p-[24px] ambient-shadow-lg border border-error/20 hover:border-error/40 transition-colors duration-300">
