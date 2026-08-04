@@ -25,12 +25,12 @@
                     <div class="w-12 h-12 bg-[#16a34a] rounded-[16px] flex items-center justify-center text-white shadow-sm">
                         <span class="material-symbols-outlined text-[24px]">task_alt</span>
                     </div>
-                    <div class="text-[28px] font-bold text-[#166534]">12/18</div>
+                    <div class="text-[28px] font-bold text-[#166534]">{{ $totalCompleted }}/{{ $totalTasks }}</div>
                 </div>
                 <div class="relative z-10">
                     <h3 class="text-[16px] font-bold text-[#166534] mb-3">Tugas Selesai</h3>
                     <div class="w-full bg-[#bbf7d0] h-[6px] rounded-full overflow-hidden">
-                        <div class="bg-[#166534] h-full rounded-full" style="width: 66%;"></div>
+                        <div class="bg-[#166534] h-full rounded-full" style="width: {{ $totalTasks > 0 ? ($totalCompleted/$totalTasks)*100 : 0 }}%;"></div>
                     </div>
                 </div>
             </div>
@@ -41,7 +41,7 @@
                     <div class="w-12 h-12 bg-[#f97316] rounded-[16px] flex items-center justify-center text-white shadow-sm">
                         <span class="material-symbols-outlined text-[24px]">priority_high</span>
                     </div>
-                    <div class="text-[28px] font-bold text-[#9a3412]">3</div>
+                    <div class="text-[28px] font-bold text-[#9a3412]">{{ $highPriorityCount }}</div>
                 </div>
                 <div class="relative z-10">
                     <h3 class="text-[16px] font-bold text-[#9a3412] mb-1">Prioritas Tinggi</h3>
@@ -53,8 +53,8 @@
             <div class="bg-surface-container-low rounded-[24px] p-[24px] flex justify-between relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300 border border-outline-variant/30">
                 <div class="relative z-10 max-w-[160px]">
                     <div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Saran Hari Ini</div>
-                    <h3 class="text-[18px] font-bold text-on-surface leading-tight mb-2">Waktunya Pemupukan</h3>
-                    <p class="text-[12px] text-on-surface-variant font-medium">Tanaman Tomat butuh nitrogen.</p>
+                    <h3 class="text-[18px] font-bold text-on-surface leading-tight mb-2">Periksa Kebun</h3>
+                    <p class="text-[12px] text-on-surface-variant font-medium">Luangkan waktu 10 menit untuk observasi.</p>
                 </div>
                 <div class="relative z-10 mt-auto">
                     <div class="w-14 h-14 bg-[#d1fae5] rounded-full flex items-center justify-center text-[#059669] shadow-sm">
@@ -74,113 +74,131 @@
                     <h2 class="text-[20px] font-bold text-on-surface">Daftar Tugas Harian</h2>
                     <div class="flex gap-2">
                         <button class="bg-[#047857] text-white px-4 py-1.5 rounded-full text-[13px] font-bold shadow-sm">Semua</button>
-                        <button class="text-on-surface-variant hover:bg-surface-container-high px-4 py-1.5 rounded-full text-[13px] font-bold transition-colors">Penting</button>
-                        <button class="text-on-surface-variant hover:bg-surface-container-high px-4 py-1.5 rounded-full text-[13px] font-bold transition-colors">Tertunda</button>
                     </div>
                 </div>
 
                 <div class="space-y-[16px] pt-2">
-                    {{-- Task 1: Tinggi Prioritas Pending --}}
-                    <div class="bg-surface rounded-[24px] p-[20px] flex items-center justify-between ambient-shadow hover:ambient-shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+                    
+                    @if(session('success'))
+                        <div class="bg-[#dcfce7] text-[#166534] px-4 py-3 rounded-xl text-sm font-bold border border-[#bbf7d0]">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+                    @if(session('info'))
+                        <div class="bg-surface-container-high text-on-surface px-4 py-3 rounded-xl text-sm font-bold">
+                            {{ session('info') }}
+                        </div>
+                    @endif
+
+                    @forelse($pendingTasks as $task)
+                    <div class="bg-surface rounded-[24px] p-[20px] flex flex-col sm:flex-row items-start sm:items-center justify-between ambient-shadow hover:ambient-shadow-lg hover:-translate-y-0.5 transition-all duration-300 gap-4 sm:gap-0">
                         <div class="flex items-center gap-4">
-                            <div class="w-14 h-14 rounded-[16px] bg-[#ecfdf5] text-[#059669] flex items-center justify-center shadow-sm">
-                                <span class="material-symbols-outlined text-[28px]">water_drop</span>
+                            @php
+                                $bgClass = 'bg-[#ecfdf5]';
+                                $textClass = 'text-[#059669]';
+                                $icon = 'eco';
+                                
+                                if($task->eventType && str_contains(strtolower($task->eventType->code), 'water')) {
+                                    $icon = 'water_drop';
+                                } elseif($task->eventType && str_contains(strtolower($task->eventType->code), 'pest')) {
+                                    $bgClass = 'bg-[#fff7ed]';
+                                    $textClass = 'text-[#ea580c]';
+                                    $icon = 'bug_report';
+                                }
+                            @endphp
+                            <div class="w-14 h-14 rounded-[16px] {{ $bgClass }} {{ $textClass }} flex items-center justify-center shadow-sm shrink-0">
+                                <span class="material-symbols-outlined text-[28px]">{{ $icon }}</span>
                             </div>
                             <div>
                                 <div class="flex items-center gap-2 mb-0.5">
-                                    <h3 class="text-[18px] font-bold text-on-surface">Penyiraman Rutin</h3>
-                                    <span class="bg-[var(--color-status-late-bg)] text-[var(--color-status-late-text)] text-[10px] font-bold px-2 py-0.5 rounded-[4px]">HIGH</span>
+                                    <h3 class="text-[18px] font-bold text-on-surface">{{ $task->eventType->label ?? $task->message ?? 'Tugas Perawatan' }}</h3>
+                                    
+                                    @if($task->priority == 'HIGH' || $task->priority == 'CRITICAL')
+                                    <span class="bg-[var(--color-status-late-bg)] text-[var(--color-status-late-text)] text-[10px] font-bold px-2 py-0.5 rounded-[4px]">{{ $task->priority }}</span>
+                                    @elseif($task->priority == 'MEDIUM')
+                                    <span class="bg-surface-container-high text-on-surface-variant text-[10px] font-bold px-2 py-0.5 rounded-[4px]">{{ $task->priority }}</span>
+                                    @else
+                                    <span class="bg-surface-container text-on-surface-variant text-[10px] font-bold px-2 py-0.5 rounded-[4px]">{{ $task->priority ?? 'LOW' }}</span>
+                                    @endif
                                 </div>
-                                <p class="text-[13px] text-on-surface-variant font-medium">Plot A1: Lidah Buaya & Basil</p>
+                                <p class="text-[13px] text-on-surface-variant font-medium">{{ $task->plant->garden->name ?? 'Kebun' }}: {{ $task->plant->plantTemplate->name_id }}</p>
                             </div>
                         </div>
-                        <div class="flex items-center gap-6">
+                        <div class="flex items-center gap-6 w-full sm:w-auto justify-end">
                             <div class="text-right hidden sm:block">
                                 <div class="text-[13px] font-bold text-[#dc2626]">Pending</div>
-                                <div class="text-[11px] text-on-surface-variant">Selesai Jam 09:00</div>
+                                <div class="text-[11px] text-on-surface-variant">{{ $task->scheduled_date->isoFormat('D MMM') }}</div>
                             </div>
                             <div class="flex items-center gap-2">
-                                <button class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-[#059669] hover:bg-[#d1fae5] transition-colors"><span class="material-symbols-outlined">check</span></button>
-                                <button class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors"><span class="material-symbols-outlined">fast_forward</span></button>
+                                <form action="{{ route('care-tasks.complete', $task->id) }}" method="POST" class="inline">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-[#059669] hover:bg-[#d1fae5] transition-colors" title="Tandai Selesai"><span class="material-symbols-outlined">check</span></button>
+                                </form>
+                                <form action="{{ route('care-tasks.skip', $task->id) }}" method="POST" class="inline">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors" title="Lewati / Skip"><span class="material-symbols-outlined">fast_forward</span></button>
+                                </form>
                             </div>
                         </div>
                     </div>
+                    @empty
+                    <div class="bg-surface rounded-[24px] p-8 text-center text-on-surface-variant">
+                        <span class="material-symbols-outlined text-[48px] mb-2 opacity-50">done_all</span>
+                        <p class="font-bold">Yeay! Semua tugas hari ini sudah selesai.</p>
+                    </div>
+                    @endforelse
 
-                    {{-- Task 2: Selesai --}}
+                    {{-- Menampilkan 3 Tugas Terakhir Selesai --}}
+                    @foreach($completedTasks->take(3) as $task)
                     <div class="bg-surface rounded-[24px] p-[20px] flex items-center justify-between ambient-shadow opacity-80">
                         <div class="flex items-center gap-4">
                             <div class="w-14 h-14 rounded-[16px] bg-surface-container-highest text-on-surface-variant flex items-center justify-center shadow-sm">
-                                <span class="material-symbols-outlined text-[28px]">science</span>
+                                <span class="material-symbols-outlined text-[28px]">done</span>
                             </div>
                             <div>
                                 <div class="flex items-center gap-2 mb-0.5">
-                                    <h3 class="text-[18px] font-bold text-on-surface line-through decoration-outline-variant">Pemupukan Organik</h3>
-                                    <span class="bg-surface-container-high text-on-surface-variant text-[10px] font-bold px-2 py-0.5 rounded-[4px]">MEDIUM</span>
+                                    <h3 class="text-[18px] font-bold text-on-surface line-through decoration-outline-variant">{{ $task->eventType->label ?? $task->message ?? 'Tugas Perawatan' }}</h3>
                                 </div>
-                                <p class="text-[13px] text-outline font-medium">Plot B3: Tomat Cherry</p>
+                                <p class="text-[13px] text-outline font-medium">{{ $task->plant->plantTemplate->name_id }}</p>
                             </div>
                         </div>
                         <div class="flex items-center gap-6">
                             <div class="text-right hidden sm:block">
                                 <div class="text-[13px] font-bold text-[#059669]">Done</div>
-                                <div class="text-[11px] text-outline">07:30 AM</div>
+                                <div class="text-[11px] text-outline">{{ $task->completed_at ? $task->completed_at->format('H:i') : '' }}</div>
                             </div>
                             <div class="flex items-center gap-2">
                                 <div class="w-10 h-10 rounded-full bg-[#059669] flex items-center justify-center text-white shadow-sm"><span class="material-symbols-outlined">check_circle</span></div>
                             </div>
                         </div>
                     </div>
+                    @endforeach
 
-                    {{-- Task 3: Tinggi Prioritas Pending --}}
-                    <div class="bg-surface rounded-[24px] p-[20px] flex items-center justify-between ambient-shadow hover:ambient-shadow-lg hover:-translate-y-0.5 transition-all duration-300">
-                        <div class="flex items-center gap-4">
-                            <div class="w-14 h-14 rounded-[16px] bg-[#fff7ed] text-[#ea580c] flex items-center justify-center shadow-sm">
-                                <span class="material-symbols-outlined text-[28px]">bug_report</span>
-                            </div>
-                            <div>
-                                <div class="flex items-center gap-2 mb-0.5">
-                                    <h3 class="text-[18px] font-bold text-on-surface">Pengendalian Hama</h3>
-                                    <span class="bg-[var(--color-status-late-bg)] text-[var(--color-status-late-text)] text-[10px] font-bold px-2 py-0.5 rounded-[4px]">HIGH</span>
-                                </div>
-                                <p class="text-[13px] text-on-surface-variant font-medium">Plot C2: Mawar Merah</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-6">
-                            <div class="text-right hidden sm:block">
-                                <div class="text-[13px] font-bold text-[#dc2626]">Pending</div>
-                                <div class="text-[11px] text-on-surface-variant">Mendesak</div>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <button class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-[#059669] hover:bg-[#d1fae5] transition-colors"><span class="material-symbols-outlined">check</span></button>
-                                <button class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors"><span class="material-symbols-outlined">fast_forward</span></button>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- Task 4: Skipped --}}
+                    @foreach($skippedTasks->take(2) as $task)
                     <div class="bg-surface rounded-[24px] p-[20px] flex items-center justify-between ambient-shadow opacity-60">
                         <div class="flex items-center gap-4">
                             <div class="w-14 h-14 rounded-[16px] bg-surface-container-highest text-on-surface-variant flex items-center justify-center shadow-sm">
-                                <span class="material-symbols-outlined text-[28px]">visibility</span>
+                                <span class="material-symbols-outlined text-[28px]">visibility_off</span>
                             </div>
                             <div>
                                 <div class="flex items-center gap-2 mb-0.5">
-                                    <h3 class="text-[18px] font-bold text-on-surface">Pemeriksaan Kesehatan</h3>
-                                    <span class="bg-surface-container-high text-on-surface-variant text-[10px] font-bold px-2 py-0.5 rounded-[4px]">LOW</span>
+                                    <h3 class="text-[18px] font-bold text-on-surface">{{ $task->eventType->label ?? $task->message ?? 'Tugas Perawatan' }}</h3>
                                 </div>
-                                <p class="text-[13px] text-outline font-medium">Plot A2: Sayuran Hijau</p>
+                                <p class="text-[13px] text-outline font-medium">{{ $task->plant->plantTemplate->name_id }}</p>
                             </div>
                         </div>
                         <div class="flex items-center gap-6">
                             <div class="text-right hidden sm:block">
                                 <div class="text-[13px] font-bold text-on-surface-variant">Skip</div>
-                                <div class="text-[11px] text-outline">Dijadwal ulang</div>
                             </div>
                             <div class="flex items-center gap-2">
                                 <div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-outline"><span class="material-symbols-outlined">block</span></div>
                             </div>
                         </div>
                     </div>
+                    @endforeach
 
                 </div>
             </div>
@@ -190,12 +208,14 @@
                 
                 {{-- Plot Terpopuler Card --}}
                 <div class="bg-surface rounded-[24px] p-[24px] ambient-shadow-lg">
-                    <h3 class="text-[18px] font-bold text-on-surface mb-4">Plot Terpopuler</h3>
+                    <h3 class="text-[18px] font-bold text-on-surface mb-4">Plot Utama Anda</h3>
                     
+                    @php $firstGarden = Auth::user() ? Auth::user()->gardens()->first() : null; @endphp
+                    @if($firstGarden)
                     <div class="relative h-[140px] rounded-[16px] overflow-hidden mb-4 shadow-sm group cursor-pointer">
-                        <img src="https://images.unsplash.com/photo-1615811361523-6bd03d7748e7?w=400&h=200&fit=crop&q=80" alt="Basil" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <img src="https://images.unsplash.com/photo-1615811361523-6bd03d7748e7?w=400&h=200&fit=crop&q=80" alt="Garden" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                        <div class="absolute bottom-4 left-4 text-white font-bold text-[16px]">Plot A1: Kebun Herbal</div>
+                        <div class="absolute bottom-4 left-4 text-white font-bold text-[16px]">{{ $firstGarden->name }}</div>
                     </div>
 
                     <div class="space-y-3">
@@ -214,6 +234,9 @@
                             <span class="text-[16px] font-bold text-[#ea580c]">6 jam</span>
                         </div>
                     </div>
+                    @else
+                    <p class="text-[14px] text-on-surface-variant">Belum ada kebun. Tambahkan kebun untuk memantau metrik plot.</p>
+                    @endif
                 </div>
 
                 {{-- Autopilot (Pro Feature) --}}

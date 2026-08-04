@@ -42,13 +42,11 @@ Route::middleware(['auth'])->group(function () {
         return view('users.gardens');
     })->name('gardens');
 
-    Route::get('/growth-calendar', function () {
-        return view('users.growth-calendar');
-    });
+    Route::get('/growth-calendar', [\App\Http\Controllers\GrowthCalendarController::class, 'index'])->name('growth-calendar');
 
-    Route::get('/care-tasks', function () {
-        return view('users.care-tasks');
-    });
+    Route::get('/care-tasks', [\App\Http\Controllers\CareTaskController::class, 'index'])->name('care-tasks');
+    Route::patch('/care-tasks/{event}/complete', [\App\Http\Controllers\CareTaskController::class, 'complete'])->name('care-tasks.complete');
+    Route::patch('/care-tasks/{event}/skip', [\App\Http\Controllers\CareTaskController::class, 'skip'])->name('care-tasks.skip');
 
     Route::get('/settings', function () {
         return view('users.settings');
