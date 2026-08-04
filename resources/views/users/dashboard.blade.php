@@ -77,14 +77,13 @@
 
         {{-- Stats Row --}}
         <div class="grid grid-cols-1 md:grid-cols-3 gap-[16px]">
-            {{-- Card 1: Gardens & Plots --}}
-            <a href="/garden-plots" class="bg-surface rounded-[24px] p-6 flex flex-col items-center justify-center ambient-shadow hover:-translate-y-1 hover:ambient-shadow-lg transition-all cursor-pointer">
+            {{-- Card 1: Gardens --}}
+            <a href="/gardens" class="bg-surface rounded-[24px] p-6 flex flex-col items-center justify-center ambient-shadow hover:-translate-y-1 hover:ambient-shadow-lg transition-all cursor-pointer">
                 <span class="material-symbols-outlined text-[#0f766e] text-[24px] mb-2">energy_savings_leaf</span>
                 <div class="flex items-baseline gap-2 mb-1">
                     <span class="text-[36px] font-black text-on-surface leading-none">{{ count($gardens) }}</span>
-                    <span class="text-[16px] font-bold text-on-surface-variant">/ {{ $gardens->sum(function($g) { return count($g->plots); }) }}</span>
                 </div>
-                <div class="text-[14px] text-on-surface font-medium text-center">Kebun / Plot</div>
+                <div class="text-[14px] text-on-surface font-medium text-center">Kebun</div>
             </a>
             {{-- Card 2: Active Plants --}}
             <a href="/growth-calendar" class="bg-surface rounded-[24px] p-6 flex flex-col items-center justify-center ambient-shadow hover:-translate-y-1 hover:ambient-shadow-lg transition-all cursor-pointer">

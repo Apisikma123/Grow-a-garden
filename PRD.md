@@ -29,7 +29,6 @@ Menampilkan:
 
 * Total kebun
 * Total tanaman aktif
-* Jumlah plot
 * Aktivitas hari ini
 
 ### Jadwal Hari Ini
@@ -44,56 +43,13 @@ Tanaman yang mendekati panen.
 
 ---
 
-## 2. Garden Map ⭐
-
-Fitur utama pembeda.
-
-### Input
-
-* Nama kebun
-* Panjang
-* Lebar
-
-### Grid System
-
-Contoh:
-
-A1 A2 A3 A4
-
-B1 B2 B3 B4
-
-C1 C2 C3 C4
-
-### Plot
-
-Setiap plot memiliki:
-
-* kode
-* tanaman
-* jumlah tanaman
-* tanggal tanam
-* status
-
-### Warna Plot
-
-Hijau = sehat
-
-Kuning = perlu perhatian
-
-Merah = terlambat perawatan
-
-Biru = baru ditanam
-
----
-
-## 3. Plant Management
+## 2. Plant Management
 
 Tambah tanaman:
 
 * komoditas
 * varietas
 * jumlah
-* lokasi plot
 * tanggal tanam
 
 Informasi tanaman:
@@ -359,8 +315,6 @@ users
 
 gardens
 
-garden_plots
-
 plants
 
 plant_instances
@@ -441,8 +395,6 @@ Tampilkan reminder
 
 ✅ Dashboard
 
-✅ Garden Map ⭐
-
 ✅ Plant Management
 
 ✅ Growth Calendar ⭐
@@ -469,7 +421,6 @@ Tampilkan reminder
 * Export PDF
 * Multi Garden
 * Family Sharing
-* QR Plot
 * Harvest Statistics
 * Backup Cloud
 
@@ -477,12 +428,10 @@ Tampilkan reminder
 
 # Unique Selling Point
 
-1. Garden Map seperti game farming.
+1. Growth Calendar otomatis.
 
-2. Growth Calendar otomatis.
+2. Reminder mengikuti fase pertumbuhan.
 
-3. Reminder mengikuti fase pertumbuhan.
+3. Rule engine berbasis template tanaman.
 
-4. Rule engine berbasis template tanaman.
-
-5. Mendukung seluruh komoditas Indonesia tanpa perangkat IoT.
+4. Mendukung seluruh komoditas Indonesia tanpa perangkat IoT.

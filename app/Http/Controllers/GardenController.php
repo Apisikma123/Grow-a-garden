@@ -10,18 +10,7 @@ class GardenController extends Controller
 {
     public function index()
     {
-        $gardens = Garden::where('user_id', Auth::id())->with('plots')->get();
-        
-        $gardens->transform(function ($garden) {
-            $garden->plots_count = $garden->plots->count();
-            $area = 0;
-            foreach ($garden->plots as $plot) {
-                $area += round(($plot->width * $plot->length) / 100);
-            }
-            $garden->calculated_area_m2 = $area;
-            unset($garden->plots); // Exclude plots from the JSON payload to keep it small
-            return $garden;
-        });
+        $gardens = Garden::where('user_id', Auth::id())->get();
 
         return response()->json($gardens);
     }
