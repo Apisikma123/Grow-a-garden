@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class EventTypeCatalog extends Model
+class EventType extends Model
 {
     protected $table = 'event_type_catalog';
 
