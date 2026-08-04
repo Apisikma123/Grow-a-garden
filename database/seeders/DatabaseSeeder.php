@@ -21,5 +21,15 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+
+        // ── Master Data Seeders ──
+        $this->call([
+            PlantCategorySeeder::class,
+            PlantTemplateSeeder::class,
+            PlantTemplateOrganismSeeder::class,
+            EventTypeCatalogSeeder::class,
+            WeatherRuleSeeder::class,
+            ActivityWeatherRuleSeeder::class,
+        ]);
     }
 }
