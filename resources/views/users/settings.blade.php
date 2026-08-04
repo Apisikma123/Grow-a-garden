@@ -290,7 +290,7 @@
         // Handle location detection
         detectBtn.addEventListener('click', () => {
             if (!navigator.geolocation) {
-                alert('Geolocation is not supported by your browser.');
+                Alert.toast.error('Browser Anda tidak mendukung Geolocation.');
                 return;
             }
 
@@ -366,7 +366,7 @@
                     } else if (error.code === error.TIMEOUT) {
                         errMsg = 'Waktu permintaan lokasi habis.';
                     }
-                    alert(errMsg);
+                    Alert.modal.error('Gagal Mendeteksi', errMsg);
                 },
                 { enableHighAccuracy: true, timeout: 8000 }
             );

@@ -25,6 +25,7 @@ Route::get('/forgot-password', function () {
 
 Route::get('/otp', [AuthController::class, 'showOtp'])->name('otp.show');
 Route::post('/otp', [AuthController::class, 'verifyOtp'])->name('otp.verify');
+Route::post('/otp/resend', [AuthController::class, 'resendOtp'])->name('otp.resend');
 
 Route::get('/checkout', function () {
     return view('users.checkout');
@@ -33,20 +34,19 @@ Route::get('/checkout', function () {
 // Protected User Routes
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
-        return view('users.dashboard');
+        $gardens = \App\Models\Garden::where('user_id', Auth::id())->get();
+        return view('users.dashboard', compact('gardens'));
     })->name('dashboard');
 
-    Route::get('/garden-plots', function () {
-        return view('users.garden-plots');
-    });
+    Route::get('/gardens', function () {
+        return view('users.gardens');
+    })->name('gardens');
 
-    Route::get('/growth-calendar', function () {
-        return view('users.growth-calendar');
-    });
+    Route::get('/growth-calendar', [\App\Http\Controllers\GrowthCalendarController::class, 'index'])->name('growth-calendar');
 
-    Route::get('/care-tasks', function () {
-        return view('users.care-tasks');
-    });
+    Route::get('/care-tasks', [\App\Http\Controllers\CareTaskController::class, 'index'])->name('care-tasks');
+    Route::patch('/care-tasks/{event}/complete', [\App\Http\Controllers\CareTaskController::class, 'complete'])->name('care-tasks.complete');
+    Route::patch('/care-tasks/{event}/skip', [\App\Http\Controllers\CareTaskController::class, 'skip'])->name('care-tasks.skip');
 
     Route::get('/settings', function () {
         return view('users.settings');
@@ -60,6 +60,21 @@ Route::middleware(['auth'])->group(function () {
         // Implement password update logic here
         return redirect('/settings');
     });
+
+    // API Routes for Gardens
+    Route::get('/api/gardens', [\App\Http\Controllers\GardenController::class, 'index']);
+    Route::post('/api/gardens', [\App\Http\Controllers\GardenController::class, 'store']);
+    Route::put('/api/gardens/{garden}', [\App\Http\Controllers\GardenController::class, 'update']);
+    Route::delete('/api/gardens/{garden}', [\App\Http\Controllers\GardenController::class, 'destroy']);
+
+    // API Routes for Plants
+    Route::get('/api/gardens/{garden}/plants', [\App\Http\Controllers\PlantController::class, 'index']);
+    Route::post('/api/gardens/{garden}/plants', [\App\Http\Controllers\PlantController::class, 'store']);
+    Route::delete('/api/plants/{plant}', [\App\Http\Controllers\PlantController::class, 'destroy']);
+
+    // API Routes for Plant Templates
+    Route::get('/api/plant-templates', [\App\Http\Controllers\PlantTemplateController::class, 'index']);
+
 });
 
 // Protected Admin Routes (We can add a custom 'admin' middleware later if needed)

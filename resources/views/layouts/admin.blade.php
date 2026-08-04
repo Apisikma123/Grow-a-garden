@@ -76,11 +76,6 @@
 
         {{-- Bottom Area --}}
         <div class="px-5 mt-auto flex flex-col gap-4">
-            {{-- Action Button --}}
-            <a href="/admin/plants" class="w-full flex items-center justify-center gap-2 bg-[#006c49] text-white px-4 py-3.5 rounded-full hover:bg-[#005236] transition-colors shadow-sm font-bold text-[15px]">
-                <span class="material-symbols-outlined text-[20px]">add</span>
-                Add New Plant
-            </a>
 
             {{-- Profile & Pengaturan Box --}}
             <div class="bg-surface-container-low border border-outline-variant/30 rounded-[24px] p-3 flex items-center justify-between shadow-sm">

@@ -43,7 +43,7 @@
             @php
                 $navItems = [
                     ['route' => 'dashboard', 'label' => 'Beranda', 'icon' => 'dashboard', 'url' => '/dashboard'],
-                    ['route' => 'garden-plots', 'label' => 'Plot Kebun', 'icon' => 'potted_plant', 'url' => '/garden-plots'],
+                    ['route' => 'gardens', 'label' => 'Kebun Saya', 'icon' => 'yard', 'url' => '/gardens'],
                     ['route' => 'growth-calendar', 'label' => 'Kalender Tanam', 'icon' => 'calendar_month', 'url' => '/growth-calendar'],
                     ['route' => 'care-tasks', 'label' => 'Tugas Perawatan', 'icon' => 'water_drop', 'url' => '/care-tasks'],
                 ];
@@ -84,7 +84,7 @@
                     <span class="material-symbols-outlined text-yellow-400 text-[18px]">verified</span>
                     <span class="text-[12px] font-black text-white tracking-widest uppercase">Go Premium</span>
                 </div>
-                <p class="text-[11px] text-slate-300 font-medium mb-3 leading-snug z-10">Unlock unlimited plots, plants, and smart weather adjustments.</p>
+                <p class="text-[11px] text-slate-300 font-medium mb-3 leading-snug z-10">Unlock unlimited gardens, plants, and smart weather adjustments.</p>
                 <button type="button" onclick="document.getElementById('pricing-modal').classList.remove('hidden')" class="w-full text-center bg-yellow-400 text-yellow-900 font-bold text-[13px] py-2 rounded-xl hover:bg-yellow-300 transition-colors z-10 shadow-sm cursor-pointer">
                     Upgrade Now
                 </button>
@@ -155,7 +155,7 @@
                     <div class="space-y-4 flex-1 mb-6">
                         <div class="flex items-start gap-3">
                             <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">check_circle</span>
-                            <span class="text-sm text-on-surface">Maks. 1 Garden, 4 Plot & 10 Tanaman Aktif</span>
+                            <span class="text-sm text-on-surface">Maks. 1 Garden & 10 Tanaman Aktif</span>
                         </div>
                         <div class="flex items-start gap-3">
                             <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">check_circle</span>
@@ -213,7 +213,7 @@
                     <div class="space-y-4 flex-1 mb-6 mt-2">
                         <div class="flex items-start gap-3">
                             <span class="material-symbols-outlined text-yellow-400 text-[20px] mt-0.5">check_circle</span>
-                            <span class="text-sm text-white font-medium">Maks. 10 Garden, 50 Plot & 100 Tanaman Aktif</span>
+                            <span class="text-sm text-white font-medium">Maks. 10 Garden & 100 Tanaman Aktif</span>
                         </div>
                         <div class="flex items-start gap-3">
                             <span class="material-symbols-outlined text-yellow-400 text-[20px] mt-0.5">smart_toy</span>
@@ -267,7 +267,7 @@
                     <div class="space-y-4 flex-1 mb-6 relative z-10">
                         <div class="flex items-start gap-3">
                             <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">all_inclusive</span>
-                            <span class="text-sm text-on-surface font-bold">Maks. 100 Garden, Unlimited Plot & Tanaman</span>
+                            <span class="text-sm text-on-surface font-bold">Maks. 100 Garden & Unlimited Tanaman</span>
                         </div>
                         <div class="flex items-start gap-3">
                             <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">check_circle</span>
@@ -301,7 +301,7 @@
     @php
         $bnavItems = [
             ['route' => 'dashboard', 'label' => 'Beranda', 'icon' => 'home', 'url' => '/dashboard'],
-            ['route' => 'garden-plots', 'label' => 'Plot', 'icon' => 'potted_plant', 'url' => '/garden-plots'],
+            ['route' => 'gardens', 'label' => 'Kebun', 'icon' => 'yard', 'url' => '/gardens'],
             ['route' => 'growth-calendar', 'label' => 'Kalender', 'icon' => 'event_note', 'url' => '/growth-calendar'],
             ['route' => 'care-tasks', 'label' => 'Tugas', 'icon' => 'checklist', 'url' => '/care-tasks'],
         ];
@@ -320,13 +320,16 @@
 <script>
     window.AppState = {
         plan: '{{ Auth::check() ? Auth::user()->role : "free" }}',
-        usage: { gardens: 1, plots: 4, plants: 10 }
+        usage: { 
+            gardens: {{ Auth::check() ? \App\Models\Garden::where('user_id', Auth::id())->count() : 0 }}, 
+            plants: {{ Auth::check() ? \App\Models\Plant::whereIn('garden_id', \App\Models\Garden::where('user_id', Auth::id())->pluck('id'))->count() : 0 }} 
+        }
     };
 
     const PLAN_LIMITS = {
-        free: { gardens: 1, plots: 4, plants: 10 },
-        pro: { gardens: 10, plots: 50, plants: 100 },
-        premium: { gardens: Infinity, plots: Infinity, plants: Infinity }
+        free: { gardens: 1, plants: 10 },
+        pro: { gardens: 10, plants: 100 },
+        premium: { gardens: Infinity, plants: Infinity }
     };
 
     window.checkLimit = function(resourceType) {
@@ -338,7 +341,6 @@
             document.getElementById('pricing-modal').classList.remove('hidden');
             return false;
         }
-        window.AppState.usage[resourceType]++;
         return true;
     };
 </script>

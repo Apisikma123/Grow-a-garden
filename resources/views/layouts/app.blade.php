@@ -24,6 +24,11 @@
     @yield('content')
 
     @include('components.loading-overlay')
+
+    {{-- SweetAlert2 for Alerts & Toasts --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('js/alerts.js') }}"></script>
+
     @stack('scripts')
 </body>
 </html>

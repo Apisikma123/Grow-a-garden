@@ -114,26 +114,37 @@ class AuthController extends Controller
             $httpClient = new \GuzzleHttp\Client(['verify' => false]);
             $googleUser = Socialite::driver('google')->setHttpClient($httpClient)->stateless()->user();
             
-            $user = User::updateOrCreate(
-                ['email' => $googleUser->getEmail()],
-                [
-                    'name' => $googleUser->getName(),
-                    'google_id' => $googleUser->getId(),
-                    'password' => Hash::make(Str::random(16)), // Assign random password
-                ]
-            );
-            
-            // Check if device is already trusted
-            if ($request->cookie('trusted_device_user_' . $user->id)) {
-                Auth::login($user, true); // Google is implicitly remembered
-                
-                if ($user->role === 'admin') {
-                    return redirect()->intended('/admin/dashboard');
-                }
-                return redirect()->intended('/dashboard');
-            }
+            $user = User::where('email', $googleUser->getEmail())->first();
 
-            return $this->sendOtp($user, true); // Assume remember me for Google
+            if ($user) {
+                // User exists, update google_id if missing
+                if (!$user->google_id) {
+                    $user->update(['google_id' => $googleUser->getId()]);
+                }
+                
+                Auth::login($user, true); // Google is implicitly remembered
+                $request->session()->regenerate();
+                
+                $response = ($user->role === 'admin') 
+                            ? redirect()->intended('/admin/dashboard') 
+                            : redirect()->intended('/dashboard');
+                            
+                // Trust this device for 30 days (43200 minutes)
+                $response->cookie('trusted_device_user_' . $user->id, true, 43200);
+
+                return $response;
+            } else {
+                // New User - Register via Google (OTP required)
+                $user = User::create([
+                    'name' => $googleUser->getName(),
+                    'email' => $googleUser->getEmail(),
+                    'google_id' => $googleUser->getId(),
+                    'password' => Hash::make(Str::random(16)),
+                ]);
+                
+                // Require OTP for Google Registration
+                return $this->sendOtp($user, true);
+            }
             
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Google Login Error: ' . $e->getMessage());
@@ -154,9 +165,36 @@ class AuthController extends Controller
 
         \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\OtpMail($otp));
 
-        session(['otp_user_id' => $user->id, 'otp_remember' => $remember]);
+        session([
+            'otp_user_id' => $user->id, 
+            'otp_remember' => $remember,
+            'last_otp_requested_at' => now()->timestamp
+        ]);
 
         return redirect('/otp');
+    }
+
+    /**
+     * Resend OTP.
+     */
+    public function resendOtp()
+    {
+        if (!session()->has('otp_user_id')) {
+            return redirect('/login');
+        }
+
+        $lastRequestedAt = session('last_otp_requested_at', 0);
+        if (now()->timestamp - $lastRequestedAt < 60) {
+            return back()->withErrors(['otp' => 'Tunggu 1 menit sebelum meminta kode baru.']);
+        }
+
+        $user = User::find(session('otp_user_id'));
+        if (!$user) {
+            return redirect('/login');
+        }
+
+        // Send OTP again (this inherently overwrites the old OTP)
+        return $this->sendOtp($user, session('otp_remember', false))->with('status', 'Kode OTP baru telah dikirim.');
     }
 
     /**
