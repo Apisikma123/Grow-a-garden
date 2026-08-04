@@ -29,18 +29,27 @@
                             </div>
                             <button class="text-primary text-[14px] font-bold hover:opacity-80 transition-opacity">Ganti Foto</button>
                         </div>
-                        <div class="flex-1 space-y-[16px]">
+                        <form action="/profile" method="POST" class="flex-1 space-y-[16px]">
+                            @csrf
+                            @method('PATCH')
+                            @if (session('status') === 'Profile updated successfully.')
+                                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-[12px] mb-4">
+                                    Profil berhasil diperbarui.
+                                </div>
+                            @endif
                             <div class="group">
                                 <label class="block text-[14px] font-bold text-on-surface mb-2 group-focus-within:text-primary transition-colors">Nama Lengkap</label>
-                                <input type="text" value="{{ Auth::user()->name }}" class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+                                <input type="text" name="name" value="{{ old('name', Auth::user()->name) }}" class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+                                @error('name') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                             </div>
                             <div class="group">
                                 <label class="block text-[14px] font-bold text-on-surface mb-2 group-focus-within:text-primary transition-colors">Alamat Email</label>
-                                <input type="email" value="{{ Auth::user()->email }}" class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" readonly>
+                                <input type="email" value="{{ Auth::user()->email }}" class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all bg-gray-100" readonly>
                             </div>
                             <div class="group">
                                 <label class="block text-[14px] font-bold text-on-surface mb-2 group-focus-within:text-primary transition-colors">Nomor Telepon</label>
-                                <input type="tel" value="" placeholder="08xxxxxxxxxx" class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+                                <input type="tel" name="phone" value="{{ old('phone', Auth::user()->phone ?? '') }}" placeholder="08xxxxxxxxxx" class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+                                @error('phone') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                             </div>
                             <div class="group">
                                 <label class="block text-[14px] font-bold text-on-surface mb-2 group-focus-within:text-primary transition-colors">Lokasi Kebun (Weather Adjustment)</label>
@@ -120,11 +129,11 @@
                                 </div>
                             </div>
                             <div class="pt-2">
-                                <button class="bg-primary text-on-primary px-6 py-3 rounded-full text-[14px] font-bold hover:-translate-y-0.5 hover:shadow-lg active:scale-95 transition-all duration-300">
+                                <button type="submit" class="bg-primary text-on-primary px-6 py-3 rounded-full text-[14px] font-bold hover:-translate-y-0.5 hover:shadow-lg active:scale-95 transition-all duration-300">
                                     Simpan Perubahan
                                 </button>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
 

@@ -25,12 +25,12 @@
                     <div class="w-12 h-12 bg-[#16a34a] rounded-[16px] flex items-center justify-center text-white shadow-sm">
                         <span class="material-symbols-outlined text-[24px]">task_alt</span>
                     </div>
-                    <div class="text-[28px] font-bold text-[#166534]">12/18</div>
+                    <div class="text-[28px] font-bold text-[#166534]">{{ $completedTasks->count() }}/{{ $allTasks->count() }}</div>
                 </div>
                 <div class="relative z-10">
                     <h3 class="text-[16px] font-bold text-[#166534] mb-3">Tugas Selesai</h3>
                     <div class="w-full bg-[#bbf7d0] h-[6px] rounded-full overflow-hidden">
-                        <div class="bg-[#166534] h-full rounded-full" style="width: 66%;"></div>
+                        <div class="bg-[#166534] h-full rounded-full" style="width: {{ $allTasks->count() > 0 ? ($completedTasks->count() / $allTasks->count()) * 100 : 0 }}%;"></div>
                     </div>
                 </div>
             </div>
@@ -41,7 +41,7 @@
                     <div class="w-12 h-12 bg-[#f97316] rounded-[16px] flex items-center justify-center text-white shadow-sm">
                         <span class="material-symbols-outlined text-[24px]">priority_high</span>
                     </div>
-                    <div class="text-[28px] font-bold text-[#9a3412]">3</div>
+                    <div class="text-[28px] font-bold text-[#9a3412]">{{ $highPriorityCount }}</div>
                 </div>
                 <div class="relative z-10">
                     <h3 class="text-[16px] font-bold text-[#9a3412] mb-1">Prioritas Tinggi</h3>
@@ -53,8 +53,13 @@
             <div class="bg-surface-container-low rounded-[24px] p-[24px] flex justify-between relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300 border border-outline-variant/30">
                 <div class="relative z-10 max-w-[160px]">
                     <div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Saran Hari Ini</div>
-                    <h3 class="text-[18px] font-bold text-on-surface leading-tight mb-2">Waktunya Pemupukan</h3>
-                    <p class="text-[12px] text-on-surface-variant font-medium">Tanaman Tomat butuh nitrogen.</p>
+                    @if($pendingTasks->count() > 0)
+                        <h3 class="text-[18px] font-bold text-on-surface leading-tight mb-2">{{ $pendingTasks->first()->eventType->label ?? 'Perawatan' }}</h3>
+                        <p class="text-[12px] text-on-surface-variant font-medium">Tanaman {{ $pendingTasks->first()->plant->plantTemplate->name_id ?? '' }} butuh perhatian.</p>
+                    @else
+                        <h3 class="text-[18px] font-bold text-on-surface leading-tight mb-2">Semua Selesai</h3>
+                        <p class="text-[12px] text-on-surface-variant font-medium">Kebun Anda sudah terawat dengan baik hari ini.</p>
+                    @endif
                 </div>
                 <div class="relative z-10 mt-auto">
                     <div class="w-14 h-14 bg-[#d1fae5] rounded-full flex items-center justify-center text-[#059669] shadow-sm">
@@ -76,112 +81,50 @@
                         <button class="bg-[#047857] text-white px-4 py-1.5 rounded-full text-[13px] font-bold shadow-sm">Semua</button>
                         <button class="text-on-surface-variant hover:bg-surface-container-high px-4 py-1.5 rounded-full text-[13px] font-bold transition-colors">Penting</button>
                         <button class="text-on-surface-variant hover:bg-surface-container-high px-4 py-1.5 rounded-full text-[13px] font-bold transition-colors">Tertunda</button>
-                    </div>
                 </div>
-
-                <div class="space-y-[16px] pt-2">
-                    {{-- Task 1: Tinggi Prioritas Pending --}}
-                    <div class="bg-surface rounded-[24px] p-[20px] flex items-center justify-between ambient-shadow hover:ambient-shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+                
+                <div class="space-y-[16px]">
+                    @forelse($pendingTasks as $task)
+                    <div class="bg-surface rounded-[20px] p-[20px] ambient-shadow border border-outline-variant/20 hover:border-primary/30 transition-colors flex items-center justify-between group">
                         <div class="flex items-center gap-4">
-                            <div class="w-14 h-14 rounded-[16px] bg-[#ecfdf5] text-[#059669] flex items-center justify-center shadow-sm">
-                                <span class="material-symbols-outlined text-[28px]">water_drop</span>
+                            <div class="w-12 h-12 rounded-[14px] bg-primary-container flex items-center justify-center text-on-primary-container">
+                                <span class="material-symbols-outlined text-[24px]">
+                                    @if(str_contains($task->eventType->label ?? '', 'Air') || str_contains($task->eventType->label ?? '', 'Siram')) water_drop
+                                    @elseif(str_contains($task->eventType->label ?? '', 'Pupuk')) compost
+                                    @else eco @endif
+                                </span>
                             </div>
                             <div>
                                 <div class="flex items-center gap-2 mb-0.5">
-                                    <h3 class="text-[18px] font-bold text-on-surface">Penyiraman Rutin</h3>
-                                    <span class="bg-[var(--color-status-late-bg)] text-[var(--color-status-late-text)] text-[10px] font-bold px-2 py-0.5 rounded-[4px]">HIGH</span>
+                                    <h3 class="text-[18px] font-bold text-on-surface">{{ $task->eventType->label ?? 'Perawatan' }}</h3>
+                                    @if($task->priority === 'CRITICAL' || $task->priority === 'HIGH')
+                                        <span class="bg-error/10 text-error text-[10px] font-bold px-2 py-0.5 rounded-[4px]">{{ $task->priority }}</span>
+                                    @else
+                                        <span class="bg-surface-container-high text-on-surface-variant text-[10px] font-bold px-2 py-0.5 rounded-[4px]">{{ $task->priority ?? 'NORMAL' }}</span>
+                                    @endif
                                 </div>
-                                <p class="text-[13px] text-on-surface-variant font-medium">Plot A1: Lidah Buaya & Basil</p>
+                                <p class="text-[13px] text-on-surface-variant font-medium">{{ $task->plant->garden->name ?? '' }} - {{ $task->plant->plantTemplate->name_id ?? '' }}</p>
                             </div>
                         </div>
                         <div class="flex items-center gap-6">
                             <div class="text-right hidden sm:block">
-                                <div class="text-[13px] font-bold text-[#dc2626]">Pending</div>
-                                <div class="text-[11px] text-on-surface-variant">Selesai Jam 09:00</div>
+                                <div class="text-[13px] font-bold text-on-surface-variant">Hari ini</div>
+                                <div class="text-[11px] text-error font-medium">{{ $task->status === 'MISSED' ? 'Terlewat' : 'Harus diselesaikan' }}</div>
                             </div>
-                            <div class="flex items-center gap-2">
-                                <button class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-[#059669] hover:bg-[#d1fae5] transition-colors"><span class="material-symbols-outlined">check</span></button>
-                                <button class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors"><span class="material-symbols-outlined">fast_forward</span></button>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- Task 2: Selesai --}}
-                    <div class="bg-surface rounded-[24px] p-[20px] flex items-center justify-between ambient-shadow opacity-80">
-                        <div class="flex items-center gap-4">
-                            <div class="w-14 h-14 rounded-[16px] bg-surface-container-highest text-on-surface-variant flex items-center justify-center shadow-sm">
-                                <span class="material-symbols-outlined text-[28px]">science</span>
-                            </div>
-                            <div>
-                                <div class="flex items-center gap-2 mb-0.5">
-                                    <h3 class="text-[18px] font-bold text-on-surface line-through decoration-outline-variant">Pemupukan Organik</h3>
-                                    <span class="bg-surface-container-high text-on-surface-variant text-[10px] font-bold px-2 py-0.5 rounded-[4px]">MEDIUM</span>
-                                </div>
-                                <p class="text-[13px] text-outline font-medium">Plot B3: Tomat Cherry</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-6">
-                            <div class="text-right hidden sm:block">
-                                <div class="text-[13px] font-bold text-[#059669]">Done</div>
-                                <div class="text-[11px] text-outline">07:30 AM</div>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <div class="w-10 h-10 rounded-full bg-[#059669] flex items-center justify-center text-white shadow-sm"><span class="material-symbols-outlined">check_circle</span></div>
+                            <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button class="w-10 h-10 rounded-full bg-surface-container-high hover:bg-[#dcfce7] hover:text-[#166534] flex items-center justify-center text-on-surface-variant transition-colors"><span class="material-symbols-outlined">check</span></button>
+                                <button class="w-10 h-10 rounded-full bg-surface-container-high hover:bg-surface-container-highest flex items-center justify-center text-on-surface-variant transition-colors"><span class="material-symbols-outlined">more_vert</span></button>
                             </div>
                         </div>
                     </div>
-
-                    {{-- Task 3: Tinggi Prioritas Pending --}}
-                    <div class="bg-surface rounded-[24px] p-[20px] flex items-center justify-between ambient-shadow hover:ambient-shadow-lg hover:-translate-y-0.5 transition-all duration-300">
-                        <div class="flex items-center gap-4">
-                            <div class="w-14 h-14 rounded-[16px] bg-[#fff7ed] text-[#ea580c] flex items-center justify-center shadow-sm">
-                                <span class="material-symbols-outlined text-[28px]">bug_report</span>
-                            </div>
-                            <div>
-                                <div class="flex items-center gap-2 mb-0.5">
-                                    <h3 class="text-[18px] font-bold text-on-surface">Pengendalian Hama</h3>
-                                    <span class="bg-[var(--color-status-late-bg)] text-[var(--color-status-late-text)] text-[10px] font-bold px-2 py-0.5 rounded-[4px]">HIGH</span>
-                                </div>
-                                <p class="text-[13px] text-on-surface-variant font-medium">Plot C2: Mawar Merah</p>
-                            </div>
+                    @empty
+                    <div class="text-center py-10 bg-surface rounded-[20px] border border-outline-variant/20 border-dashed">
+                        <div class="w-16 h-16 rounded-full bg-surface-container-high flex items-center justify-center mx-auto mb-3">
+                            <span class="material-symbols-outlined text-[32px] text-on-surface-variant">done_all</span>
                         </div>
-                        <div class="flex items-center gap-6">
-                            <div class="text-right hidden sm:block">
-                                <div class="text-[13px] font-bold text-[#dc2626]">Pending</div>
-                                <div class="text-[11px] text-on-surface-variant">Mendesak</div>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <button class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-[#059669] hover:bg-[#d1fae5] transition-colors"><span class="material-symbols-outlined">check</span></button>
-                                <button class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors"><span class="material-symbols-outlined">fast_forward</span></button>
-                            </div>
-                        </div>
+                        <p class="text-on-surface-variant font-medium text-[14px]">Tidak ada tugas perawatan yang tertunda.</p>
                     </div>
-
-                    {{-- Task 4: Skipped --}}
-                    <div class="bg-surface rounded-[24px] p-[20px] flex items-center justify-between ambient-shadow opacity-60">
-                        <div class="flex items-center gap-4">
-                            <div class="w-14 h-14 rounded-[16px] bg-surface-container-highest text-on-surface-variant flex items-center justify-center shadow-sm">
-                                <span class="material-symbols-outlined text-[28px]">visibility</span>
-                            </div>
-                            <div>
-                                <div class="flex items-center gap-2 mb-0.5">
-                                    <h3 class="text-[18px] font-bold text-on-surface">Pemeriksaan Kesehatan</h3>
-                                    <span class="bg-surface-container-high text-on-surface-variant text-[10px] font-bold px-2 py-0.5 rounded-[4px]">LOW</span>
-                                </div>
-                                <p class="text-[13px] text-outline font-medium">Plot A2: Sayuran Hijau</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-6">
-                            <div class="text-right hidden sm:block">
-                                <div class="text-[13px] font-bold text-on-surface-variant">Skip</div>
-                                <div class="text-[11px] text-outline">Dijadwal ulang</div>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-outline"><span class="material-symbols-outlined">block</span></div>
-                            </div>
-                        </div>
-                    </div>
-
+                    @endforelse
                 </div>
             </div>
 

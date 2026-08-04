@@ -88,14 +88,14 @@
             {{-- Card 2: Active Plants --}}
             <a href="/growth-calendar" class="bg-surface rounded-[24px] p-6 flex flex-col items-center justify-center ambient-shadow hover:-translate-y-1 hover:ambient-shadow-lg transition-all cursor-pointer">
                 <span class="material-symbols-outlined text-status-healthy text-[24px] mb-2">potted_plant</span>
-                <div class="text-[36px] font-black text-on-surface leading-none mb-1">12</div>
+                <div class="text-[36px] font-black text-on-surface leading-none mb-1">{{ $activePlants }}</div>
                 <div class="text-[14px] text-on-surface font-medium text-center">Tanaman Aktif</div>
             </a>
 
             {{-- Card 4 --}}
             <a href="/care-tasks" class="bg-surface rounded-[24px] p-6 flex flex-col items-center justify-center ambient-shadow hover:-translate-y-1 hover:ambient-shadow-lg transition-all cursor-pointer">
                 <span class="material-symbols-outlined text-[#f97316] text-[24px] mb-2">task_alt</span>
-                <div class="text-[36px] font-black text-on-surface leading-none mb-1">3</div>
+                <div class="text-[36px] font-black text-on-surface leading-none mb-1">{{ $todayTasks->count() }}</div>
                 <div class="text-[14px] text-on-surface font-medium text-center">Aktivitas Hari Ini</div>
             </a>
         </div>
@@ -188,34 +188,29 @@
                 <a href="/growth-calendar" class="text-[14px] font-bold text-primary hover:underline">Lihat Kalender</a>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                @forelse($upcomingHarvests as $plant)
                 {{-- Harvest Item --}}
                 <div class="bg-surface-container-low rounded-[20px] p-5 flex items-start gap-4">
                     <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
                         <span class="material-symbols-outlined text-[24px]">eco</span>
                     </div>
                     <div class="flex flex-col h-full w-full">
-                        <div class="text-[15px] font-bold text-on-surface leading-tight mb-1">Tomat Cherry</div>
-                        <div class="text-[13px] text-on-surface-variant mb-4">Plot A1</div>
+                        <div class="text-[15px] font-bold text-on-surface leading-tight mb-1">{{ $plant->plantTemplate->name_id ?? 'Unknown' }}</div>
+                        <div class="text-[13px] text-on-surface-variant mb-4">{{ $plant->garden->name ?? 'Kebun' }}</div>
                         <div class="mt-auto flex items-center gap-1.5">
                             <span class="material-symbols-outlined text-status-healthy text-[18px]">schedule</span>
-                            <span class="text-[13.5px] font-bold text-status-healthy">2 hari lagi</span>
+                            <span class="text-[13.5px] font-bold text-status-healthy">{{ $plant->estimated_harvest_days === 0 ? 'Hari ini' : $plant->estimated_harvest_days . ' hari lagi' }}</span>
                         </div>
                     </div>
                 </div>
-                {{-- Harvest Item --}}
-                <div class="bg-surface-container-low rounded-[20px] p-5 flex items-start gap-4">
-                    <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                        <span class="material-symbols-outlined text-[24px]">eco</span>
+                @empty
+                <div class="col-span-full text-center py-10">
+                    <div class="w-16 h-16 rounded-full bg-surface-container-high flex items-center justify-center mx-auto mb-3">
+                        <span class="material-symbols-outlined text-[32px] text-on-surface-variant">eco</span>
                     </div>
-                    <div class="flex flex-col h-full w-full">
-                        <div class="text-[15px] font-bold text-on-surface leading-tight mb-1">Cabai Rawit</div>
-                        <div class="text-[13px] text-on-surface-variant mb-4">Plot B2</div>
-                        <div class="mt-auto flex items-center gap-1.5">
-                            <span class="material-symbols-outlined text-primary text-[18px]">schedule</span>
-                            <span class="text-[13.5px] font-bold text-primary">5 hari lagi</span>
-                        </div>
-                    </div>
+                    <p class="text-on-surface-variant">Belum ada tanaman yang mendekati masa panen.</p>
                 </div>
+                @endforelse
             </div>
         </div>
 

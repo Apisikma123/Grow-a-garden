@@ -58,28 +58,27 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-outline-variant/10">
-                    
-                    {{-- Row 1: Heirloom Tomat --}}
+                    @forelse($plantTemplates as $template)
                     <tr class="hover:bg-surface-container-lowest/50 transition-colors">
                         <td class="py-4 px-6">
                             <div class="w-12 h-12 rounded-xl overflow-hidden bg-surface-container-high border border-outline-variant/20">
-                                <img src="https://images.unsplash.com/photo-1592841200221-a6898f307baa?w=150&h=150&fit=crop" class="w-full h-full object-cover" alt="Tomat">
+                                <img src="{{ $template->icon_url ?? 'https://images.unsplash.com/photo-1592841200221-a6898f307baa?w=150&h=150&fit=crop' }}" class="w-full h-full object-cover" alt="{{ $template->name_id }}">
                             </div>
                         </td>
                         <td class="py-4 px-6">
-                            <div class="text-[14px] font-bold text-on-surface mb-0.5">Heirloom Tomat</div>
-                            <div class="text-[12px] italic text-on-surface-variant">Solanum lycopersicum</div>
+                            <div class="text-[14px] font-bold text-on-surface mb-0.5">{{ $template->name_id }}</div>
+                            <div class="text-[12px] italic text-on-surface-variant">{{ $template->latin_name ?? 'Unknown' }}</div>
                         </td>
                         <td class="py-4 px-6">
                             <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-outline-variant/30 bg-surface text-[11px] font-semibold text-on-surface-variant">
                                 <span class="material-symbols-outlined text-[14px] text-on-surface-variant">eco</span>
-                                Vegetable
+                                {{ $template->category->name ?? 'Uncategorized' }}
                             </span>
                         </td>
                         <td class="py-4 px-6">
                             <div class="flex items-center gap-2">
-                                <div class="w-3.5 h-3.5 rounded-full bg-[#E53A3A] shadow-sm"></div>
-                                <span class="text-[10px] font-bold text-on-surface-variant tracking-wider">#E53A3A</span>
+                                <div class="w-3.5 h-3.5 rounded-full shadow-sm" style="background-color: {{ $template->color_hex ?? '#006c49' }}"></div>
+                                <span class="text-[10px] font-bold text-on-surface-variant tracking-wider">{{ $template->color_hex ?? '#006c49' }}</span>
                             </div>
                         </td>
                         <td class="py-4 px-6">
@@ -99,130 +98,13 @@
                             </div>
                         </td>
                     </tr>
-
-                    {{-- Row 2: Sweet Selasih --}}
-                    <tr class="hover:bg-surface-container-lowest/50 transition-colors">
-                        <td class="py-4 px-6">
-                            <div class="w-12 h-12 rounded-xl overflow-hidden bg-surface-container-high border border-outline-variant/20">
-                                <img src="https://images.unsplash.com/photo-1615486171448-4fdcf58611eb?w=150&h=150&fit=crop" class="w-full h-full object-cover" alt="Selasih">
-                            </div>
-                        </td>
-                        <td class="py-4 px-6">
-                            <div class="text-[14px] font-bold text-on-surface mb-0.5">Sweet Selasih</div>
-                            <div class="text-[12px] italic text-on-surface-variant">Ocimum basilicum</div>
-                        </td>
-                        <td class="py-4 px-6">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-outline-variant/30 bg-surface text-[11px] font-semibold text-on-surface-variant">
-                                <span class="material-symbols-outlined text-[14px] text-on-surface-variant">spa</span>
-                                Herb
-                            </span>
-                        </td>
-                        <td class="py-4 px-6">
-                            <div class="flex items-center gap-2">
-                                <div class="w-3.5 h-3.5 rounded-full bg-[#10b981] shadow-sm"></div>
-                                <span class="text-[10px] font-bold text-on-surface-variant tracking-wider">#10B981</span>
-                            </div>
-                        </td>
-                        <td class="py-4 px-6">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold bg-[#10b981]/10 text-[#006c49]">
-                                <div class="w-1.5 h-1.5 rounded-full bg-[#006c49]"></div>
-                                Active
-                            </span>
-                        </td>
-                        <td class="py-4 px-6 text-right">
-                            <div class="flex items-center justify-end gap-1">
-                                <button class="p-2 text-on-surface-variant hover:text-primary hover:bg-primary/5 rounded-lg transition-colors">
-                                    <span class="material-symbols-outlined text-[18px]">edit</span>
-                                </button>
-                                <button class="p-2 text-on-surface-variant hover:text-error hover:bg-error/5 rounded-lg transition-colors">
-                                    <span class="material-symbols-outlined text-[18px]">delete</span>
-                                </button>
-                            </div>
+                    @empty
+                    <tr>
+                        <td colspan="6" class="py-8 text-center text-on-surface-variant">
+                            Belum ada tanaman di katalog.
                         </td>
                     </tr>
-
-                    {{-- Row 3: Bell Pepper --}}
-                    <tr class="hover:bg-surface-container-lowest/50 transition-colors">
-                        <td class="py-4 px-6">
-                            <div class="w-12 h-12 rounded-xl overflow-hidden bg-surface-container-high border border-outline-variant/20 opacity-60 grayscale">
-                                <img src="https://images.unsplash.com/photo-1563514995963-3f114c000fc5?w=150&h=150&fit=crop" class="w-full h-full object-cover" alt="Bell Pepper">
-                            </div>
-                        </td>
-                        <td class="py-4 px-6">
-                            <div class="text-[14px] font-bold text-on-surface-variant opacity-70 mb-0.5">Bell Pepper</div>
-                            <div class="text-[12px] italic text-on-surface-variant opacity-60">Capsicum annuum</div>
-                        </td>
-                        <td class="py-4 px-6 opacity-70">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-outline-variant/30 bg-surface text-[11px] font-semibold text-on-surface-variant">
-                                <span class="material-symbols-outlined text-[14px] text-on-surface-variant">eco</span>
-                                Vegetable
-                            </span>
-                        </td>
-                        <td class="py-4 px-6 opacity-70">
-                            <div class="flex items-center gap-2">
-                                <div class="w-3.5 h-3.5 rounded-full bg-[#9ca3af] shadow-sm"></div>
-                                <span class="text-[10px] font-bold text-on-surface-variant tracking-wider">#9CA3AF</span>
-                            </div>
-                        </td>
-                        <td class="py-4 px-6">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold bg-surface-container-highest text-on-surface-variant">
-                                <div class="w-1.5 h-1.5 rounded-full bg-outline-variant"></div>
-                                Inactive
-                            </span>
-                        </td>
-                        <td class="py-4 px-6 text-right">
-                            <div class="flex items-center justify-end gap-1">
-                                <button class="p-2 text-on-surface-variant hover:text-primary hover:bg-primary/5 rounded-lg transition-colors">
-                                    <span class="material-symbols-outlined text-[18px]">edit</span>
-                                </button>
-                                <button class="p-2 text-on-surface-variant hover:text-error hover:bg-error/5 rounded-lg transition-colors">
-                                    <span class="material-symbols-outlined text-[18px]">delete</span>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    {{-- Row 4: Wortel --}}
-                    <tr class="hover:bg-surface-container-lowest/50 transition-colors">
-                        <td class="py-4 px-6">
-                            <div class="w-12 h-12 rounded-xl overflow-hidden bg-surface-container-high border border-outline-variant/20">
-                                <img src="https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=150&h=150&fit=crop" class="w-full h-full object-cover" alt="Wortel">
-                            </div>
-                        </td>
-                        <td class="py-4 px-6">
-                            <div class="text-[14px] font-bold text-on-surface mb-0.5">Wortel</div>
-                            <div class="text-[12px] italic text-on-surface-variant">Daucus carota</div>
-                        </td>
-                        <td class="py-4 px-6">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-outline-variant/30 bg-surface text-[11px] font-semibold text-on-surface-variant">
-                                <span class="material-symbols-outlined text-[14px] text-on-surface-variant">eco</span>
-                                Vegetable
-                            </span>
-                        </td>
-                        <td class="py-4 px-6">
-                            <div class="flex items-center gap-2">
-                                <div class="w-3.5 h-3.5 rounded-full bg-[#f59e0b] shadow-sm"></div>
-                                <span class="text-[10px] font-bold text-on-surface-variant tracking-wider">#F59E0B</span>
-                            </div>
-                        </td>
-                        <td class="py-4 px-6">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold bg-[#10b981]/10 text-[#006c49]">
-                                <div class="w-1.5 h-1.5 rounded-full bg-[#006c49]"></div>
-                                Active
-                            </span>
-                        </td>
-                        <td class="py-4 px-6 text-right">
-                            <div class="flex items-center justify-end gap-1">
-                                <button class="p-2 text-on-surface-variant hover:text-primary hover:bg-primary/5 rounded-lg transition-colors">
-                                    <span class="material-symbols-outlined text-[18px]">edit</span>
-                                </button>
-                                <button class="p-2 text-on-surface-variant hover:text-error hover:bg-error/5 rounded-lg transition-colors">
-                                    <span class="material-symbols-outlined text-[18px]">delete</span>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
+                    @endforelse
                 </tbody>
             </table>
         </div>
