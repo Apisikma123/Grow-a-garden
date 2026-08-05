@@ -434,4 +434,4 @@ Tampilkan reminder
 
 3. Rule engine berbasis template tanaman.
 
-4. Mendukung seluruh komoditas Indonesia tanpa perangkat IoT.
+4. Mendukung seluruh komoditas Indonesia tanpa perangkat IoT.   

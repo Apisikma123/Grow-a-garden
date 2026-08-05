@@ -16,28 +16,33 @@
         </div>
 
         <div class="max-w-[700px] w-full ml-[52px]">
-            <div class="bg-surface rounded-[24px] p-8 ambient-shadow-lg border border-outline-variant/20">
-                <form action="/profile/password" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    @csrf
-                    @method('PATCH')
-                    
-                    @if (session('status') === 'Password updated successfully.')
-                        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-[12px] md:col-span-2">
-                            Password berhasil diperbarui.
-                        </div>
-                    @endif
+            @if(session('success'))
+                <div class="bg-[#dcfce7] text-[#166534] px-4 py-3 rounded-xl text-sm font-bold border border-[#bbf7d0] mb-4">
+                    {{ session('success') }}
+                </div>
+            @endif
 
+            @if($errors->any())
+                <div class="bg-[#fee2e2] text-[#991b1b] px-4 py-3 rounded-xl text-sm font-bold border border-[#fecaca] mb-4">
+                    <ul class="list-disc ml-5">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <div class="bg-surface rounded-[24px] p-8 ambient-shadow-lg border border-outline-variant/20">
+                <form action="{{ route('settings.password.update') }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    @csrf
+                    
                     {{-- Password Lama --}}
                     <div class="flex flex-col gap-2 md:col-span-2">
                         <label class="text-[14px] font-bold text-on-surface ml-1 group-focus-within:text-primary transition-colors">Password Lama</label>
                         <div class="relative group">
                             <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/50 text-[20px] pointer-events-none group-focus-within:text-primary transition-colors">key</span>
-                            <input type="password" name="current_password" placeholder="Masukkan password saat ini" required
+                            <input type="password" name="old_password" placeholder="Masukkan password saat ini" required
                                 class="w-full bg-[#F1F5F2] border border-outline-variant rounded-[12px] pl-12 pr-4 py-3.5 text-[15px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-on-surface-variant/50">
-                        </div>
-                        @error('current_password', 'updatePassword') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                        <div class="flex justify-end mt-1">
-                            <a href="/forgot-password?from=settings" class="text-primary text-[13px] font-bold hover:underline">Lupa Password?</a>
                         </div>
                     </div>
 
@@ -48,10 +53,9 @@
                         <label class="text-[14px] font-bold text-on-surface ml-1 group-focus-within:text-primary transition-colors">Password Baru</label>
                         <div class="relative group">
                             <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/50 text-[20px] pointer-events-none group-focus-within:text-primary transition-colors">lock</span>
-                            <input type="password" name="password" placeholder="Minimal 8 karakter" required
+                            <input type="password" name="new_password" placeholder="Minimal 8 karakter" required minlength="8"
                                 class="w-full bg-[#F1F5F2] border border-outline-variant rounded-[12px] pl-12 pr-4 py-3.5 text-[15px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-on-surface-variant/50">
                         </div>
-                        @error('password', 'updatePassword') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                     </div>
 
                     {{-- Konfirmasi Password Baru --}}
@@ -59,7 +63,7 @@
                         <label class="text-[14px] font-bold text-on-surface ml-1 group-focus-within:text-primary transition-colors">Konfirmasi Password Baru</label>
                         <div class="relative group">
                             <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/50 text-[20px] pointer-events-none group-focus-within:text-primary transition-colors">lock</span>
-                            <input type="password" name="password_confirmation" placeholder="Ketik ulang password baru" required
+                            <input type="password" name="new_password_confirmation" placeholder="Ketik ulang password baru" required minlength="8"
                                 class="w-full bg-[#F1F5F2] border border-outline-variant rounded-[12px] pl-12 pr-4 py-3.5 text-[15px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-on-surface-variant/50">
                         </div>
                     </div>

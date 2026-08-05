@@ -30,12 +30,13 @@ class GardenController extends Controller
             if ($gardenCount >= 1) {
                 return response()->json(['error' => 'Batas Paket Free: Maksimal 1 Kebun.'], 403);
             }
-        } else if ($user->role === 'subur') {
+        } else if ($user->role === 'pro') {
             $gardenCount = Garden::where('user_id', $user->id)->count();
             if ($gardenCount >= 10) {
-                return response()->json(['error' => 'Batas Paket Subur: Maksimal 10 Kebun.'], 403);
+                return response()->json(['error' => 'Batas Paket Pro: Maksimal 10 Kebun.'], 403);
             }
         }
+        // premium users have unlimited gardens
 
         $garden = Garden::create([
             'user_id' => $user->id,
@@ -72,7 +73,6 @@ class GardenController extends Controller
         }
 
         $garden->delete();
-
-        return response()->json(['message' => 'Garden deleted successfully']);
+        return response()->json(['success' => true, 'message' => 'Garden deleted successfully']);
     }
 }
