@@ -35,7 +35,33 @@ Route::get('/checkout', function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
         $gardens = \App\Models\Garden::where('user_id', Auth::id())->get();
-        return view('users.dashboard', compact('gardens'));
+        $gardenIds = $gardens->pluck('id');
+
+        $activePlants = \App\Models\Plant::whereIn('garden_id', $gardenIds)
+                            ->where('status', 'ACTIVE')
+                            ->count();
+
+        // Upcoming harvests (sort by estimated harvest days)
+        $plants = \App\Models\Plant::whereIn('garden_id', $gardenIds)
+                    ->where('status', 'ACTIVE')
+                    ->with(['plantTemplate', 'garden'])
+                    ->get();
+
+        $upcomingHarvests = $plants->filter(function ($plant) {
+            return $plant->estimated_harvest_days !== null && $plant->estimated_harvest_days <= 14;
+        })->sortBy('estimated_harvest_days')->take(4);
+
+        $plantIds = $plants->pluck('id');
+        
+        $todayTasks = \App\Models\Event::whereIn('plant_id', $plantIds)
+            ->whereHas('eventType', function ($q) {
+                $q->where('category', 'MAINTENANCE');
+            })
+            ->where('scheduled_date', '<=', now()->toDateString())
+            ->where('status', 'PENDING')
+            ->get();
+        
+        return view('users.dashboard', compact('gardens', 'activePlants', 'upcomingHarvests', 'todayTasks'));
     })->name('dashboard');
 
     Route::get('/gardens', function () {

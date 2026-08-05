@@ -104,13 +104,9 @@
     --radius-full: 9999px;
 }
 
+/* Removed text-wrap globally to fix flexbox collapse bugs */
 @layer base {
-    h1, h2, h3 {
-        text-wrap: balance;
-    }
-    p, li {
-        text-wrap: pretty;
-    }
+    /* Safe base styles can go here */
 }
 
 /* ============================================
