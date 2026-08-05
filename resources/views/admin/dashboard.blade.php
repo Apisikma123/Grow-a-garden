@@ -51,12 +51,12 @@
         {{-- Total Active Plants --}}
         <a href="/admin/plants" class="block bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group hover:-translate-y-1 hover:shadow-md transition-all">
             <div class="flex justify-between items-start mb-2 relative z-10">
-                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Total Plots</div>
+                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Total Plants</div>
                 <div class="w-8 h-8 rounded-full bg-secondary-container/30 text-secondary flex items-center justify-center">
                     <span class="material-symbols-outlined text-[16px]">grid_view</span>
                 </div>
             </div>
-            <div class="text-[32px] font-black text-on-surface leading-tight mb-2 relative z-10">{{ number_format($totalPlots) }}</div>
+            <div class="text-[32px] font-black text-on-surface leading-tight mb-2 relative z-10">{{ number_format($totalPlants) }}</div>
             <div class="flex items-center gap-1 text-[11px] text-secondary font-bold relative z-10">
                 <span class="material-symbols-outlined text-[14px]">trending_up</span>
                 +15% this month

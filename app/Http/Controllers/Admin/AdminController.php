@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Models\User;
 use App\Models\Garden;
-use App\Models\GardenPlot;
+use App\Models\Plant;
 
 class AdminController extends Controller
 {
@@ -15,10 +15,10 @@ class AdminController extends Controller
     {
         $totalUsers = User::count();
         $totalGardens = Garden::count();
-        $totalPlots = GardenPlot::count();
+        $totalPlants = Plant::count();
         $premiumUsers = User::whereIn('role', ['pro', 'premium'])->count();
 
-        return view('admin.dashboard', compact('totalUsers', 'totalGardens', 'totalPlots', 'premiumUsers'));
+        return view('admin.dashboard', compact('totalUsers', 'totalGardens', 'totalPlants', 'premiumUsers'));
     }
 
     public function users()
