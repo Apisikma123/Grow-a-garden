@@ -23,11 +23,17 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'phone',
         'password',
         'role',
         'google_id',
         'otp_code',
         'otp_expires_at',
+        'avatar',
+        'province',
+        'language',
+        'email_notifications',
+        'push_notifications',
     ];
 
     /**

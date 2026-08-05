@@ -48,18 +48,13 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/care-tasks/{event}/complete', [\App\Http\Controllers\CareTaskController::class, 'complete'])->name('care-tasks.complete');
     Route::patch('/care-tasks/{event}/skip', [\App\Http\Controllers\CareTaskController::class, 'skip'])->name('care-tasks.skip');
 
-    Route::get('/settings', function () {
-        return view('users.settings');
-    });
+    Route::get('/settings', [\App\Http\Controllers\SettingsController::class, 'index'])->name('settings');
+    Route::post('/settings/profile', [\App\Http\Controllers\SettingsController::class, 'updateProfile'])->name('settings.profile');
+    Route::post('/settings/notifications', [\App\Http\Controllers\SettingsController::class, 'updateNotifications'])->name('settings.notifications');
+    Route::delete('/settings/account', [\App\Http\Controllers\SettingsController::class, 'destroyAccount'])->name('settings.account.destroy');
     
-    Route::get('/settings/password', function () {
-        return view('users.settings-password');
-    });
-
-    Route::post('/settings/password', function () {
-        // Implement password update logic here
-        return redirect('/settings');
-    });
+    Route::get('/settings/password', [\App\Http\Controllers\SettingsController::class, 'showPassword'])->name('settings.password');
+    Route::post('/settings/password', [\App\Http\Controllers\SettingsController::class, 'updatePassword'])->name('settings.password.update');
 
     // API Routes for Gardens
     Route::get('/api/gardens', [\App\Http\Controllers\GardenController::class, 'index']);
