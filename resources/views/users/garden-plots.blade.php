@@ -230,7 +230,10 @@
 
 <!-- Modal for Edit Garden -->
 <div id="edit-garden-modal" class="fixed inset-0 z-[99999] hidden">
+    <!-- Backdrop -->
     <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-md transition-opacity" id="edit-garden-backdrop"></div>
+    
+    <!-- Modal Content Centered -->
     <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-[420px] p-4">
         <div class="bg-white/95 backdrop-blur-xl rounded-[32px] p-8 premium-shadow-hover flex flex-col">
             <div class="flex items-center gap-4 mb-8">
@@ -1653,6 +1656,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Error creating garden:", error);
         }
     });
+
 
     // Initialize Dashboard First
     async function initDashboard() {
