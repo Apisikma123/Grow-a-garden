@@ -2,17 +2,19 @@
 // We use SweetAlert2 for both Modals and Toasts since the project is Vanilla JS (Blade).
 // It has been styled to match the DESIGN.md (Vercel/Linear aesthetics, rounded corners, soft shadows).
 
+const defaultCustomClass = {
+    popup: 'bg-surface border border-outline-variant/30 rounded-[24px] shadow-[0_12px_40px_-12px_rgba(0,0,0,0.1)] backdrop-blur-sm',
+    title: 'text-[24px] font-bold text-on-surface font-sans tracking-tight mb-2',
+    htmlContainer: 'text-[16px] text-on-surface-variant font-sans',
+    confirmButton: 'bg-primary text-on-primary px-6 py-3 rounded-full text-[14px] font-bold hover:bg-primary/90 active:scale-95 transition-all shadow-sm',
+    cancelButton: 'bg-surface-container-high text-on-surface px-6 py-3 rounded-full text-[14px] font-bold hover:bg-surface-container-highest active:scale-95 transition-all',
+    actions: 'mt-6 gap-3',
+    icon: 'border-0', // Remove borders from default icons
+    closeButton: 'text-on-surface-variant hover:text-error transition-colors focus:outline-none'
+};
+
 const modernSwal = Swal.mixin({
-    customClass: {
-        popup: 'bg-surface border border-outline-variant/30 rounded-[24px] shadow-[0_12px_40px_-12px_rgba(0,0,0,0.1)] backdrop-blur-sm',
-        title: 'text-[24px] font-bold text-on-surface font-sans tracking-tight mb-2',
-        htmlContainer: 'text-[16px] text-on-surface-variant font-sans',
-        confirmButton: 'bg-primary text-on-primary px-6 py-3 rounded-full text-[14px] font-bold hover:bg-primary/90 active:scale-95 transition-all shadow-sm',
-        cancelButton: 'bg-surface-container-high text-on-surface px-6 py-3 rounded-full text-[14px] font-bold hover:bg-surface-container-highest active:scale-95 transition-all',
-        actions: 'mt-6 gap-3',
-        icon: 'border-0', // Remove borders from default icons
-        closeButton: 'text-on-surface-variant hover:text-error transition-colors focus:outline-none'
-    },
+    customClass: defaultCustomClass,
     buttonsStyling: false,
     showCloseButton: true
 });
@@ -80,20 +82,21 @@ window.Alert = {
             });
         },
         confirm: (title, text, confirmText = 'Ya, Lanjutkan', isDanger = false) => {
-            return modernSwal.fire({
+            const options = {
                 icon: 'warning',
                 title: title,
                 text: text,
                 showCancelButton: true,
                 confirmButtonText: confirmText,
-                cancelButtonText: 'Batal',
-                customClass: {
-                    ...modernSwal.params.customClass,
-                    confirmButton: isDanger 
-                        ? 'bg-error text-white px-6 py-3 rounded-full text-[14px] font-bold hover:bg-[#93000a] active:scale-95 transition-all shadow-sm'
-                        : modernSwal.params.customClass.confirmButton
-                }
-            });
+                cancelButtonText: 'Batal'
+            };
+            if (isDanger) {
+                options.customClass = {
+                    ...defaultCustomClass,
+                    confirmButton: 'bg-error text-white px-6 py-3 rounded-full text-[14px] font-bold hover:bg-[#93000a] active:scale-95 transition-all shadow-sm'
+                };
+            }
+            return modernSwal.fire(options);
         }
     }
 };

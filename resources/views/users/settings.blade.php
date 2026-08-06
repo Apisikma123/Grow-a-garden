@@ -191,7 +191,7 @@
                 <div class="bg-error-container/10 rounded-[24px] p-[24px] ambient-shadow-lg border border-error/20 hover:border-error/40 transition-colors duration-300">
                     <h2 class="text-[24px] font-bold text-error mb-2">Delete Account</h2>
                     <p class="text-[14px] text-on-surface-variant mb-6">Sekali Anda menghapus akun, semua data kebun dan pengaturan akan hilang selamanya. Tindakan ini tidak dapat dibatalkan.</p>
-                    <form action="{{ route('settings.account.destroy') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus akun Anda selamanya? Tindakan ini tidak dapat dibatalkan.');">
+                    <form id="delete-account-form" action="{{ route('settings.account.destroy') }}" method="POST">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="bg-error text-white px-6 py-3 rounded-full text-[14px] font-bold hover:bg-[#93000a] active:scale-95 transition-all duration-300 shadow-sm">
@@ -207,6 +207,19 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        const deleteAccountForm = document.getElementById('delete-account-form');
+        if (deleteAccountForm) {
+            deleteAccountForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                Alert.modal.confirm('Hapus Akun', 'Apakah Anda yakin ingin menghapus akun Anda selamanya? Tindakan ini tidak dapat dibatalkan.', 'Ya, Hapus Akun', true)
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            this.submit();
+                        }
+                    });
+            });
+        }
+        
         const locationInput = document.getElementById('garden-location');
         const manualProvince = document.getElementById('manual-province');
         const hiddenProvince = document.getElementById('hidden-province');

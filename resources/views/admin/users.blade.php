@@ -158,7 +158,8 @@
     }
 
     async function deleteUser(userId) {
-        if (!confirm('Apakah Anda yakin ingin menghapus akun ini? Aksi ini tidak dapat dibatalkan.')) return;
+        const result = await Alert.modal.confirm('Hapus Akun Pengguna?', 'Apakah Anda yakin ingin menghapus akun ini? Aksi ini tidak dapat dibatalkan.', 'Ya, Hapus', true);
+        if (!result.isConfirmed) return;
         
         try {
             const response = await fetch(`/api/admin/users/${userId}`, {
@@ -169,13 +170,15 @@
             });
             
             if (response.ok) {
-                window.location.reload();
+                Alert.toast.success('Akun berhasil dihapus');
+                setTimeout(() => window.location.reload(), 1000);
             } else {
-                alert('Gagal menghapus pengguna');
+                const data = await response.json();
+                Alert.modal.error('Gagal', data.error || 'Failed to delete user');
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('Terjadi kesalahan saat menghapus');
+            Alert.modal.error('Error', 'An error occurred');
         }
     }
 </script>
