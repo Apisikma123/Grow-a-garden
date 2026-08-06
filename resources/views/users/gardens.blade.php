@@ -552,7 +552,8 @@ window.GardenApp = (() => {
     // ── Delete Garden ──
     async function deleteCurrentGarden() {
         if (!selectedGardenId) return;
-        if (!confirm('Hapus kebun ini beserta seluruh tanamannya?')) return;
+        const result = await Alert.modal.confirm('Hapus Kebun?', 'Hapus kebun ini beserta seluruh tanamannya?', 'Ya, Hapus', true);
+        if (!result.isConfirmed) return;
 
         try {
             await api(`/api/gardens/${selectedGardenId}`, { method: 'DELETE' });
@@ -560,8 +561,9 @@ window.GardenApp = (() => {
             selectedGardenId = null;
             renderGardens();
             if (window.AppState) window.AppState.usage.gardens--;
+            Alert.toast.success('Kebun berhasil dihapus');
         } catch (e) {
-            alert(e.message);
+            Alert.modal.error('Gagal menghapus kebun', e.message);
         }
     }
 
@@ -805,15 +807,17 @@ window.GardenApp = (() => {
 
     async function deleteCurrentPlant() {
         if (!currentPlantDetail) return;
-        if (!confirm('Hapus tanaman ini?')) return;
+        const result = await Alert.modal.confirm('Hapus Tanaman?', 'Hapus tanaman ini dari kebun Anda?', 'Ya, Hapus', true);
+        if (!result.isConfirmed) return;
 
         try {
             await api(`/api/plants/${currentPlantDetail.id}`, { method: 'DELETE' });
             closePlantDetail();
             await loadPlants(selectedGardenId);
             if (window.AppState) window.AppState.usage.plants--;
+            Alert.toast.success('Tanaman berhasil dihapus');
         } catch (e) {
-            alert(e.message);
+            Alert.modal.error('Gagal menghapus tanaman', e.message);
         }
     }
 
