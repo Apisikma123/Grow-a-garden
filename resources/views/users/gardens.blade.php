@@ -27,11 +27,11 @@
     </div>
 
     {{-- Empty State --}}
-    <div id="gardens-empty" class="hidden flex flex-col items-center justify-center py-20 gap-6">
+    <div id="gardens-empty" class="hidden flex-col items-center justify-center py-20 gap-6 w-full">
         <div class="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center">
             <span class="material-symbols-outlined text-[48px] text-primary">yard</span>
         </div>
-        <div class="text-center max-w-sm">
+        <div class="text-center max-w-sm w-full px-4 mx-auto" style="min-width: 300px; text-wrap: normal;">
             <h3 class="text-[20px] font-bold text-on-surface mb-2">Belum ada kebun</h3>
             <p class="text-[14px] text-on-surface-variant leading-relaxed">Mulai dengan membuat kebun pertama Anda, lalu tambahkan tanaman dari katalog kami.</p>
         </div>
@@ -122,8 +122,8 @@
      ============================================ --}}
 <div id="add-garden-modal" class="fixed inset-0 z-[100] hidden">
     <div class="fixed inset-0 bg-slate-900/60 transition-opacity" onclick="GardenApp.closeAddGardenModal()"></div>
-    <div class="min-h-screen px-4 py-8 flex items-center justify-center pointer-events-none">
-        <div class="w-full max-w-md bg-surface-container-lowest rounded-3xl p-8 ambient-shadow-lg border border-outline-variant/30 pointer-events-auto relative">
+    <div class="w-full min-h-screen px-4 py-8 flex items-center justify-center pointer-events-none">
+        <div class="w-full max-w-md bg-surface-container-lowest rounded-3xl p-8 ambient-shadow-lg border border-outline-variant/30 pointer-events-auto relative" style="min-width: 350px; text-wrap: normal;">
             <button onclick="GardenApp.closeAddGardenModal()" class="absolute top-5 right-5 w-9 h-9 bg-surface-container-high rounded-full flex items-center justify-center text-on-surface-variant hover:bg-error/10 hover:text-error transition-colors">
                 <span class="material-symbols-outlined text-[20px]">close</span>
             </button>
@@ -153,7 +153,7 @@
 <div id="add-plant-modal" class="fixed inset-0 z-[100] hidden">
     <div class="fixed inset-0 bg-slate-900/60 transition-opacity" onclick="GardenApp.closeAddPlantModal()"></div>
     <div class="min-h-screen px-4 py-8 flex items-center justify-center pointer-events-none">
-        <div class="w-full max-w-2xl bg-surface-container-lowest rounded-3xl p-8 ambient-shadow-lg border border-outline-variant/30 pointer-events-auto relative max-h-[90vh] flex flex-col">
+        <div class="w-full max-w-2xl bg-surface-container-lowest rounded-3xl p-8 ambient-shadow-lg border border-outline-variant/30 pointer-events-auto relative max-h-[90vh] flex flex-col" style="min-width: 350px; text-wrap: normal;">
             <button onclick="GardenApp.closeAddPlantModal()" class="absolute top-5 right-5 w-9 h-9 bg-surface-container-high rounded-full flex items-center justify-center text-on-surface-variant hover:bg-error/10 hover:text-error transition-colors z-10">
                 <span class="material-symbols-outlined text-[20px]">close</span>
             </button>
@@ -209,8 +209,8 @@
      ============================================ --}}
 <div id="plant-detail-modal" class="fixed inset-0 z-[100] hidden">
     <div class="fixed inset-0 bg-slate-900/60 transition-opacity" onclick="GardenApp.closePlantDetail()"></div>
-    <div class="min-h-screen px-4 py-8 flex items-center justify-center pointer-events-none">
-        <div class="w-full max-w-lg bg-surface-container-lowest rounded-3xl p-8 ambient-shadow-lg border border-outline-variant/30 pointer-events-auto relative">
+    <div class="w-full min-h-screen px-4 py-8 flex items-center justify-center pointer-events-none">
+        <div class="w-full max-w-lg max-h-[90vh] overflow-y-auto bg-surface-container-lowest rounded-3xl p-8 ambient-shadow-lg border border-outline-variant/30 pointer-events-auto relative" style="min-width: 350px; text-wrap: normal;">
             <button onclick="GardenApp.closePlantDetail()" class="absolute top-5 right-5 w-9 h-9 bg-surface-container-high rounded-full flex items-center justify-center text-on-surface-variant hover:bg-error/10 hover:text-error transition-colors">
                 <span class="material-symbols-outlined text-[20px]">close</span>
             </button>
@@ -307,7 +307,7 @@
 
 @push('scripts')
 <script>
-const GardenApp = (() => {
+window.GardenApp = (() => {
     let gardens = [];
     let selectedGardenId = null;
     let plants = [];
@@ -516,7 +516,6 @@ const GardenApp = (() => {
 
     // ── Add Garden ──
     function openAddGardenModal() {
-        if (!window.checkLimit('gardens')) return;
         document.getElementById('add-garden-modal').classList.remove('hidden');
         document.getElementById('add-garden-form').reset();
     }
@@ -553,7 +552,8 @@ const GardenApp = (() => {
     // ── Delete Garden ──
     async function deleteCurrentGarden() {
         if (!selectedGardenId) return;
-        if (!confirm('Hapus kebun ini beserta seluruh tanamannya?')) return;
+        const result = await Alert.modal.confirm('Hapus Kebun?', 'Hapus kebun ini beserta seluruh tanamannya?', 'Ya, Hapus', true);
+        if (!result.isConfirmed) return;
 
         try {
             await api(`/api/gardens/${selectedGardenId}`, { method: 'DELETE' });
@@ -561,14 +561,15 @@ const GardenApp = (() => {
             selectedGardenId = null;
             renderGardens();
             if (window.AppState) window.AppState.usage.gardens--;
+            Alert.toast.success('Kebun berhasil dihapus');
         } catch (e) {
-            alert(e.message);
+            Alert.modal.error('Gagal menghapus kebun', e.message);
         }
     }
 
     // ── Add Plant ──
     async function openAddPlantModal() {
-        if (!window.checkLimit('plants')) return;
+        if (!selectedGardenId) return;
         document.getElementById('add-plant-modal').classList.remove('hidden');
         document.getElementById('template-search').value = '';
         deselectTemplate();
@@ -806,15 +807,17 @@ const GardenApp = (() => {
 
     async function deleteCurrentPlant() {
         if (!currentPlantDetail) return;
-        if (!confirm('Hapus tanaman ini?')) return;
+        const result = await Alert.modal.confirm('Hapus Tanaman?', 'Hapus tanaman ini dari kebun Anda?', 'Ya, Hapus', true);
+        if (!result.isConfirmed) return;
 
         try {
             await api(`/api/plants/${currentPlantDetail.id}`, { method: 'DELETE' });
             closePlantDetail();
             await loadPlants(selectedGardenId);
             if (window.AppState) window.AppState.usage.plants--;
+            Alert.toast.success('Tanaman berhasil dihapus');
         } catch (e) {
-            alert(e.message);
+            Alert.modal.error('Gagal menghapus tanaman', e.message);
         }
     }
 

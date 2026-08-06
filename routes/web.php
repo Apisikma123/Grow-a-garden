@@ -28,14 +28,43 @@ Route::post('/otp', [AuthController::class, 'verifyOtp'])->name('otp.verify');
 Route::post('/otp/resend', [AuthController::class, 'resendOtp'])->name('otp.resend');
 
 Route::get('/checkout', function () {
+    if (!Auth::check()) {
+        return redirect()->route('login');
+    }
     return view('users.checkout');
-});
+})->middleware('auth');
 
 // Protected User Routes
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
         $gardens = \App\Models\Garden::where('user_id', Auth::id())->get();
-        return view('users.dashboard', compact('gardens'));
+        $gardenIds = $gardens->pluck('id');
+
+        $activePlants = \App\Models\Plant::whereIn('garden_id', $gardenIds)
+                            ->where('status', 'ACTIVE')
+                            ->count();
+
+        // Upcoming harvests (sort by estimated harvest days)
+        $plants = \App\Models\Plant::whereIn('garden_id', $gardenIds)
+                    ->where('status', 'ACTIVE')
+                    ->with(['plantTemplate', 'garden'])
+                    ->get();
+
+        $upcomingHarvests = $plants->filter(function ($plant) {
+            return $plant->estimated_harvest_days !== null && $plant->estimated_harvest_days <= 14;
+        })->sortBy('estimated_harvest_days')->take(4);
+
+        $plantIds = $plants->pluck('id');
+        
+        $todayTasks = \App\Models\Event::whereIn('plant_id', $plantIds)
+            ->whereHas('eventType', function ($q) {
+                $q->where('category', 'MAINTENANCE');
+            })
+            ->where('scheduled_date', '<=', now()->toDateString())
+            ->where('status', 'PENDING')
+            ->get();
+        
+        return view('users.dashboard', compact('gardens', 'activePlants', 'upcomingHarvests', 'todayTasks'));
     })->name('dashboard');
 
     Route::get('/gardens', function () {
@@ -65,9 +94,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/api/gardens/{garden}/plants', [\App\Http\Controllers\PlantController::class, 'index']);
     Route::post('/api/gardens/{garden}/plants', [\App\Http\Controllers\PlantController::class, 'store']);
     Route::delete('/api/plants/{plant}', [\App\Http\Controllers\PlantController::class, 'destroy']);
+    
+    // Web route for Plants
+    Route::put('/plants/{plant}', [\App\Http\Controllers\PlantController::class, 'update'])->name('plants.update');
 
     // API Routes for Plant Templates
     Route::get('/api/plant-templates', [\App\Http\Controllers\PlantTemplateController::class, 'index']);
+
+    // Subscription API Routes
+    Route::post('/api/subscribe', [\App\Http\Controllers\SubscriptionController::class, 'subscribe']);
+    Route::post('/api/cancel-subscription', [\App\Http\Controllers\SubscriptionController::class, 'cancel']);
+    Route::get('/api/subscription-status', [\App\Http\Controllers\SubscriptionController::class, 'status']);
 
     // Admin API Routes
     Route::middleware(['admin'])->group(function () {

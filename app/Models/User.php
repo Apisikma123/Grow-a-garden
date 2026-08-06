@@ -80,4 +80,79 @@ class User extends Authenticatable
             ->withPivot('awarded_at')
             ->withTimestamps();
     }
+
+    // ── Plan Helper Methods ──
+
+    /**
+     * Get the user's active subscription.
+     */
+    public function activeSubscription()
+    {
+        return $this->subscriptions()
+            ->where('status', 'active')
+            ->where('valid_until', '>', now())
+            ->latest()
+            ->first();
+    }
+
+    /**
+     * Get human-readable plan name.
+     */
+    public function planName(): string
+    {
+        return match ($this->role) {
+            'pro' => 'Subur',
+            'premium' => 'Panen Raya',
+            default => 'Bibit',
+        };
+    }
+
+    /**
+     * Maximum gardens allowed for this user's plan.
+     */
+    public function maxGardens(): int
+    {
+        return match ($this->role) {
+            'pro' => 10,
+            'premium' => 100,
+            default => 1,
+        };
+    }
+
+    /**
+     * Maximum plants allowed for this user's plan.
+     * Returns PHP_INT_MAX for unlimited.
+     */
+    public function maxPlants(): int
+    {
+        return match ($this->role) {
+            'pro' => 100,
+            'premium' => PHP_INT_MAX,
+            default => 10,
+        };
+    }
+
+    /**
+     * Whether this user can use the Autopilot feature (auto care task generation).
+     */
+    public function canUseAutopilot(): bool
+    {
+        return in_array($this->role, ['pro', 'premium', 'admin']);
+    }
+
+    /**
+     * Whether this user can use Weather Adjustment.
+     */
+    public function canUseWeatherAdjustment(): bool
+    {
+        return in_array($this->role, ['pro', 'premium', 'admin']);
+    }
+
+    /**
+     * Whether this user has unlimited activity log.
+     */
+    public function hasUnlimitedActivityLog(): bool
+    {
+        return in_array($this->role, ['premium', 'admin']);
+    }
 }

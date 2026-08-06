@@ -51,9 +51,9 @@
         {{-- Total Active Plants --}}
         <a href="/admin/plants" class="block bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group hover:-translate-y-1 hover:shadow-md transition-all">
             <div class="flex justify-between items-start mb-2 relative z-10">
-                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Total Plants</div>
+                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Total Tanaman Aktif</div>
                 <div class="w-8 h-8 rounded-full bg-secondary-container/30 text-secondary flex items-center justify-center">
-                    <span class="material-symbols-outlined text-[16px]">grid_view</span>
+                    <span class="material-symbols-outlined text-[16px]">potted_plant</span>
                 </div>
             </div>
             <div class="text-[32px] font-black text-on-surface leading-tight mb-2 relative z-10">{{ number_format($totalPlants) }}</div>
@@ -64,18 +64,18 @@
             <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-secondary-container/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
         </a>
 
-        {{-- Hari Ini's Activities --}}
+        {{-- Panen Berhasil --}}
         <a href="#" class="block bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group hover:-translate-y-1 hover:shadow-md transition-all">
             <div class="flex justify-between items-start mb-2 relative z-10">
-                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Total Premium Users</div>
+                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Panen Berhasil</div>
                 <div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-                    <span class="material-symbols-outlined text-[16px]">stars</span>
+                    <span class="material-symbols-outlined text-[16px]">shopping_basket</span>
                 </div>
             </div>
-            <div class="text-[32px] font-black text-on-surface leading-tight mb-2 relative z-10">{{ number_format($premiumUsers) }}</div>
+            <div class="text-[32px] font-black text-on-surface leading-tight mb-2 relative z-10">{{ number_format($successfulHarvests) }}</div>
             <div class="flex items-center gap-1 text-[11px] text-primary font-bold relative z-10">
-                <span class="material-symbols-outlined text-[14px]">trending_up</span>
-                +5% from yesterday
+                <span class="material-symbols-outlined text-[14px]">eco</span>
+                Total panen pengguna
             </div>
             <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-primary/5 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
         </a>
@@ -330,7 +330,7 @@
                                 <div class="w-8 h-8 rounded-full bg-outline-variant/30 text-on-surface font-bold text-[12px] flex items-center justify-center">M</div>
                                 <div>
                                     <div class="text-[13px] font-bold text-on-surface">New Garden Registration</div>
-                                    <div class="text-[11px] text-on-surface-variant">Community Plot #402, Portland</div>
+                                    <div class="text-[11px] text-on-surface-variant">Community Garden #402, Portland</div>
                                 </div>
                             </div>
                         </td>

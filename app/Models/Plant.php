@@ -39,4 +39,47 @@ class Plant extends Model
     {
         return $this->hasMany(Event::class);
     }
+
+    public function getHstAttribute(): int
+    {
+        if (!$this->planted_date) return 0;
+        return (int) now()->diffInDays($this->planted_date);
+    }
+
+    public function getStageNameAttribute(): string
+    {
+        $hst = $this->hst;
+        $template = $this->plantTemplate;
+
+        if (!$template) return 'SEED';
+
+        if ($template->harvest_start_day && $hst >= $template->harvest_start_day) {
+            return 'HARVEST';
+        }
+        if ($template->fruiting_day && $hst >= $template->fruiting_day) {
+            return 'FRUITING';
+        }
+        if ($template->flowering_day && $hst >= $template->flowering_day) {
+            return 'FLOWERING';
+        }
+        if ($template->vegetative_day && $hst >= $template->vegetative_day) {
+            return 'VEGETATIVE';
+        }
+        if ($template->seedling_day && $hst >= $template->seedling_day) {
+            return 'SEEDLING';
+        }
+        if ($template->germination_day && $hst >= $template->germination_day) {
+            return 'GERMINATION';
+        }
+
+        return 'SEED';
+    }
+
+    public function getEstimatedHarvestDaysAttribute(): ?int
+    {
+        $template = $this->plantTemplate;
+        if (!$template || !$template->harvest_start_day) return null;
+        
+        return max(0, $template->harvest_start_day - $this->hst);
+    }
 }

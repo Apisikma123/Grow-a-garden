@@ -115,7 +115,7 @@ spacing:
 
 The brand personality is nurturing, intelligent, and organic. It bridges the gap between high-tech "smart" automation and the tactile, grounded experience of gardening. The UI should evoke a sense of calm productivity, making the user feel like a capable steward of their environment rather than a data analyst.
 
-The design style is **Modern Organic**. It utilizes soft, generous whitespace and a clean, systematic layout inherited from Minimalism, but softens the edges with high-radius corners and natural color transitions. The interface should feel "breathable," avoiding dense clusters of information in favor of card-based modularity that mimics garden plots. Subtle photographic textures and illustrative accents provide the "farming game" warmth requested, ensuring the app feels like a hobbyist's companion.
+The design style is **Modern Organic**. It utilizes soft, generous whitespace and a clean, systematic layout inherited from Minimalism, but softens the edges with high-radius corners and natural color transitions. The interface should feel "breathable," avoiding dense clusters of information in favor of card-based modularity that mimics garden beds. Subtle photographic textures and illustrative accents provide the "farming game" warmth requested, ensuring the app feels like a hobbyist's companion.
 
 ## Colors
 
@@ -134,7 +134,7 @@ Headlines are set with tight letter-spacing and bold weights to convey authority
 The layout follows a **Fluid Grid** model with a soft 8px spacing system. 
 - **Mobile:** 4-column grid with 16px margins. Content is primarily stacked in vertical cards.
 - **Tablet:** 8-column grid with 24px margins. Introduction of side-by-side card layouts for garden metrics.
-- **Desktop:** 12-column grid with a maximum container width of 1280px. Sidebar navigation is fixed, while the main stage utilizes a "masonry" style layout for different garden plots.
+- **Desktop:** 12-column grid with a maximum container width of 1280px. Sidebar navigation is fixed, while the main stage utilizes a "masonry" style layout for different gardens.
 
 Internal component padding should be generous (min 16px) to maintain the "airy" feel of a nature-inspired app. Components should use `lg` (24px) or `xl` (32px) gaps to prevent the UI from feeling cluttered.
 
@@ -160,7 +160,7 @@ Interactive elements like buttons and input fields should feel soft to the touch
 - **Secondary:** Earthy Brown border (2px) with Earthy Brown text. Clear background.
 - **Tertiary/Ghost:** Emerald Green text, no border. Used for "Cancel" or "Learn More".
 
-### Cards (Garden Plots)
+### Cards (Gardens)
 - White background, 16px padding, 24px corner radius.
 - Must include a slot for a high-quality plant image at the top with a bottom-clip radius.
 - Progress bars for water/sun levels should use rounded caps and thick 8px tracks.

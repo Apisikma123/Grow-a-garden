@@ -22,7 +22,7 @@
             <p>Fitur <em>Weather Adjustment</em> memerlukan akses lokasi sekadar untuk memberikan peringatan penyesuaian curah hujan. Koordinat ini tidak kami bagikan ke pihak ketiga dan hanya digunakan untuk mengoptimalkan jadwal penyiraman kebun Anda.</p>
             
             <h3 class="text-lg font-bold text-on-surface mt-8 mb-2">2. Data Pertumbuhan Tanaman</h3>
-            <p>Data seperti <em>Growth Calendar</em> dan plot kebun disimpan dengan aman. Kami dapat menggunakan data agregat secara anonim (seperti komoditas populer atau rata-rata masa panen) untuk meningkatkan kualitas fitur aplikasi bagi seluruh komunitas.</p>
+            <p>Data seperti <em>Growth Calendar</em> dan data kebun disimpan dengan aman. Kami dapat menggunakan data agregat secara anonim (seperti komoditas populer atau rata-rata masa panen) untuk meningkatkan kualitas fitur aplikasi bagi seluruh komunitas.</p>
 
             <h3 class="text-lg font-bold text-on-surface mt-8 mb-2">3. Komunikasi</h3>
             <p>Kami akan mengirimkan notifikasi <em>Care Reminder</em> melalui email atau notifikasi in-app. Anda dapat mengatur preferensi ini kapan saja di menu Pengaturan.</p>

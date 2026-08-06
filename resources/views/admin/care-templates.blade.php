@@ -268,7 +268,8 @@
     }
 
     async function deleteTemplate(id) {
-        if (!confirm('Peringatan: Menghapus template ini akan menghapus data dari Katalog Tanaman juga. Lanjutkan?')) return;
+        const result = await Alert.modal.confirm('Peringatan Penghapusan', 'Menghapus template ini akan menghapus data dari Katalog Tanaman juga. Lanjutkan?', 'Ya, Hapus', true);
+        if (!result.isConfirmed) return;
         
         try {
             const res = await fetch(`/api/admin/plants/${id}`, {
@@ -278,13 +279,14 @@
                 }
             });
             if (res.ok) {
-                window.location.reload();
+                Alert.toast.success('Template berhasil dihapus');
+                setTimeout(() => window.location.reload(), 1000);
             } else {
-                alert('Gagal menghapus template.');
+                Alert.modal.error('Gagal', 'Gagal menghapus template.');
             }
         } catch (e) {
             console.error(e);
-            alert('Terjadi kesalahan.');
+            Alert.modal.error('Error', 'Terjadi kesalahan saat menghapus.');
         }
     }
 </script>

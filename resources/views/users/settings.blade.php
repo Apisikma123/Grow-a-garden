@@ -129,6 +129,118 @@
                     </form>
                 </div>
 
+                {{-- Subscription / Langganan Box --}}
+                <div class="bg-surface rounded-[24px] p-[24px] ambient-shadow-lg border border-outline-variant/20 hover:shadow-xl transition-shadow duration-300">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-[24px] font-bold text-on-surface">Paket Langganan</h2>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-black uppercase tracking-wider
+                            {{ Auth::user()->role === 'premium' ? 'bg-[#3b82f6]/10 text-[#3b82f6] border border-[#3b82f6]/20' : 
+                               (Auth::user()->role === 'pro' ? 'bg-primary/10 text-primary border border-primary/20' : 
+                               'bg-surface-container-high text-on-surface-variant border border-outline-variant/30') }}">
+                            <span class="material-symbols-outlined text-[14px]">
+                                {{ Auth::user()->role === 'premium' ? 'workspace_premium' : (Auth::user()->role === 'pro' ? 'star' : 'eco') }}
+                            </span>
+                            {{ Auth::user()->planName() }}
+                        </span>
+                    </div>
+
+                    {{-- Current Plan Card --}}
+                    <div class="rounded-2xl p-5 mb-5 border
+                        {{ Auth::user()->role === 'free' ? 'bg-surface-container-low border-outline-variant/20' : 
+                           (Auth::user()->role === 'premium' ? 'bg-gradient-to-r from-[#0f172a] to-[#1e293b] border-[#3b82f6]/30 text-white' : 
+                           'bg-gradient-to-r from-[#004d34] to-[#006c49] border-primary/30 text-white') }}">
+                        
+                        <div class="flex items-start justify-between mb-4">
+                            <div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="material-symbols-outlined text-[24px] {{ Auth::user()->role === 'free' ? 'text-on-surface-variant' : 'text-yellow-400' }}">
+                                        {{ Auth::user()->role === 'premium' ? 'workspace_premium' : (Auth::user()->role === 'pro' ? 'star' : 'eco') }}
+                                    </span>
+                                    <h3 class="text-[18px] font-black {{ Auth::user()->role === 'free' ? 'text-on-surface' : '' }}">
+                                        {{ Auth::user()->planName() }}
+                                    </h3>
+                                </div>
+                                <p class="text-[13px] {{ Auth::user()->role === 'free' ? 'text-on-surface-variant' : 'text-white/70' }}">
+                                    @if(Auth::user()->role === 'free')
+                                        Paket gratis dengan fitur dasar.
+                                    @elseif(Auth::user()->role === 'pro')
+                                        Autopilot aktif · Weather Adjustment aktif
+                                    @else
+                                        Unlimited · Semua fitur premium
+                                    @endif
+                                </p>
+                            </div>
+
+                            @if(Auth::user()->role === 'free')
+                                <span class="text-[20px] font-black text-on-surface">Gratis</span>
+                            @endif
+                        </div>
+
+                        {{-- Plan Limits --}}
+                        <div class="grid grid-cols-3 gap-3 mb-4">
+                            <div class="rounded-xl p-3 text-center {{ Auth::user()->role === 'free' ? 'bg-surface-container-high' : 'bg-white/10' }}">
+                                <div class="text-[18px] font-black {{ Auth::user()->role === 'free' ? 'text-on-surface' : '' }}">{{ Auth::user()->maxGardens() }}</div>
+                                <div class="text-[10px] font-bold uppercase tracking-wider {{ Auth::user()->role === 'free' ? 'text-on-surface-variant' : 'text-white/60' }}">Maks Kebun</div>
+                            </div>
+                            <div class="rounded-xl p-3 text-center {{ Auth::user()->role === 'free' ? 'bg-surface-container-high' : 'bg-white/10' }}">
+                                <div class="text-[18px] font-black {{ Auth::user()->role === 'free' ? 'text-on-surface' : '' }}">{{ Auth::user()->maxPlants() === PHP_INT_MAX ? '∞' : Auth::user()->maxPlants() }}</div>
+                                <div class="text-[10px] font-bold uppercase tracking-wider {{ Auth::user()->role === 'free' ? 'text-on-surface-variant' : 'text-white/60' }}">Maks Tanaman</div>
+                            </div>
+                            <div class="rounded-xl p-3 text-center {{ Auth::user()->role === 'free' ? 'bg-surface-container-high' : 'bg-white/10' }}">
+                                <div class="text-[18px] font-black {{ Auth::user()->role === 'free' ? 'text-on-surface' : '' }}">
+                                    <span class="material-symbols-outlined text-[18px] {{ Auth::user()->canUseAutopilot() ? (Auth::user()->role === 'free' ? 'text-primary' : 'text-yellow-400') : 'text-on-surface-variant' }}">
+                                        {{ Auth::user()->canUseAutopilot() ? 'check_circle' : 'cancel' }}
+                                    </span>
+                                </div>
+                                <div class="text-[10px] font-bold uppercase tracking-wider {{ Auth::user()->role === 'free' ? 'text-on-surface-variant' : 'text-white/60' }}">Autopilot</div>
+                            </div>
+                        </div>
+
+                        {{-- Subscription Info (if active) --}}
+                        @php $activeSub = Auth::user()->activeSubscription(); @endphp
+                        @if($activeSub)
+                            <div class="flex items-center justify-between text-[12px] {{ Auth::user()->role === 'free' ? 'text-on-surface-variant' : 'text-white/70' }} border-t {{ Auth::user()->role === 'free' ? 'border-outline-variant/20' : 'border-white/10' }} pt-3">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="material-symbols-outlined text-[14px]">calendar_today</span>
+                                    Berlaku sampai: <strong class="{{ Auth::user()->role === 'free' ? 'text-on-surface' : 'text-white' }}">{{ $activeSub->valid_until->format('d M Y') }}</strong>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="material-symbols-outlined text-[14px]">autorenew</span>
+                                    {{ ucfirst($activeSub->billing_cycle) }}
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+
+                    {{-- Action Buttons --}}
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        @if(Auth::user()->role === 'free')
+                            <a href="/checkout?plan=subur" class="flex-1 flex items-center justify-center gap-2 bg-primary text-on-primary font-bold py-3 rounded-xl hover:bg-primary/90 active:scale-[0.98] transition-all shadow-sm text-[14px]">
+                                <span class="material-symbols-outlined text-[18px]">rocket_launch</span>
+                                Upgrade ke Subur
+                            </a>
+                            <a href="/checkout?plan=pro" class="flex-1 flex items-center justify-center gap-2 bg-slate-800 text-white font-bold py-3 rounded-xl hover:bg-slate-700 active:scale-[0.98] transition-all shadow-sm text-[14px]">
+                                <span class="material-symbols-outlined text-[18px]">workspace_premium</span>
+                                Upgrade ke Panen Raya
+                            </a>
+                        @elseif(Auth::user()->role === 'pro')
+                            <a href="/checkout?plan=pro" class="flex-1 flex items-center justify-center gap-2 bg-slate-800 text-white font-bold py-3 rounded-xl hover:bg-slate-700 active:scale-[0.98] transition-all shadow-sm text-[14px]">
+                                <span class="material-symbols-outlined text-[18px]">upgrade</span>
+                                Upgrade ke Panen Raya
+                            </a>
+                            <button type="button" id="btn-cancel-sub" class="flex-1 flex items-center justify-center gap-2 border-2 border-error/30 text-error font-bold py-3 rounded-xl hover:bg-error/5 active:scale-[0.98] transition-all text-[14px]">
+                                <span class="material-symbols-outlined text-[18px]">cancel</span>
+                                Batalkan Langganan
+                            </button>
+                        @else
+                            <button type="button" id="btn-cancel-sub" class="flex-1 flex items-center justify-center gap-2 border-2 border-error/30 text-error font-bold py-3 rounded-xl hover:bg-error/5 active:scale-[0.98] transition-all text-[14px]">
+                                <span class="material-symbols-outlined text-[18px]">cancel</span>
+                                Batalkan Langganan
+                            </button>
+                        @endif
+                    </div>
+                </div>
+
                 {{-- Notifications Settings Box --}}
                 <div class="bg-surface rounded-[24px] p-[24px] ambient-shadow-lg border border-outline-variant/20 hover:shadow-xl transition-shadow duration-300">
                     <h2 class="text-[24px] font-bold text-on-surface mb-6">Notifications</h2>
@@ -191,7 +303,7 @@
                 <div class="bg-error-container/10 rounded-[24px] p-[24px] ambient-shadow-lg border border-error/20 hover:border-error/40 transition-colors duration-300">
                     <h2 class="text-[24px] font-bold text-error mb-2">Delete Account</h2>
                     <p class="text-[14px] text-on-surface-variant mb-6">Sekali Anda menghapus akun, semua data kebun dan pengaturan akan hilang selamanya. Tindakan ini tidak dapat dibatalkan.</p>
-                    <form action="{{ route('settings.account.destroy') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus akun Anda selamanya? Tindakan ini tidak dapat dibatalkan.');">
+                    <form id="delete-account-form" action="{{ route('settings.account.destroy') }}" method="POST">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="bg-error text-white px-6 py-3 rounded-full text-[14px] font-bold hover:bg-[#93000a] active:scale-95 transition-all duration-300 shadow-sm">
@@ -207,6 +319,19 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        const deleteAccountForm = document.getElementById('delete-account-form');
+        if (deleteAccountForm) {
+            deleteAccountForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                Alert.modal.confirm('Hapus Akun', 'Apakah Anda yakin ingin menghapus akun Anda selamanya? Tindakan ini tidak dapat dibatalkan.', 'Ya, Hapus Akun', true)
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            this.submit();
+                        }
+                    });
+            });
+        }
+        
         const locationInput = document.getElementById('garden-location');
         const manualProvince = document.getElementById('manual-province');
         const hiddenProvince = document.getElementById('hidden-province');
@@ -351,6 +476,52 @@
         if (pushToggle) {
             pushToggle.addEventListener('change', function() {
                 updateNotifications({ push_notifications: this.checked ? 1 : 0 });
+            });
+        }
+
+        // Cancel Subscription Handler
+        const cancelBtn = document.getElementById('btn-cancel-sub');
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', async () => {
+                if (!confirm('Apakah Anda yakin ingin membatalkan langganan? Anda akan kembali ke Paket Bibit (Gratis) dan kehilangan akses ke fitur Autopilot dan Weather Adjustment.')) {
+                    return;
+                }
+
+                cancelBtn.disabled = true;
+                cancelBtn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span> Membatalkan...';
+
+                try {
+                    const response = await fetch('/api/cancel-subscription', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json',
+                        },
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        if (window.Alert) {
+                            window.Alert.toast.success(data.message);
+                        } else {
+                            alert(data.message);
+                        }
+                        // Reload page to reflect changes
+                        setTimeout(() => window.location.reload(), 1000);
+                    } else {
+                        throw new Error(data.message || 'Gagal membatalkan langganan');
+                    }
+                } catch (error) {
+                    cancelBtn.disabled = false;
+                    cancelBtn.innerHTML = '<span class="material-symbols-outlined text-[18px]">cancel</span> Batalkan Langganan';
+                    if (window.Alert) {
+                        window.Alert.toast.error(error.message);
+                    } else {
+                        alert('Error: ' + error.message);
+                    }
+                }
             });
         }
     });

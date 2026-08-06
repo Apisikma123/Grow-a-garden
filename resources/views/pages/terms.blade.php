@@ -20,7 +20,7 @@
             
             <h3 class="text-lg font-bold text-on-surface mt-8 mb-2">1. Ketentuan Paket Langganan</h3>
             <ul class="list-disc pl-5 space-y-2 mt-2">
-                <li><strong>Paket Bibit (Gratis):</strong> Pengguna dapat memetakan maksimal 1 kebun dengan batasan 4 plot dan 10 tanaman aktif.</li>
+                <li><strong>Paket Bibit (Gratis):</strong> Pengguna dapat memetakan maksimal 1 kebun dengan batasan 10 tanaman aktif.</li>
                 <li><strong>Paket Subur:</strong> Pengguna dapat menikmati fitur Asisten Autopilot, otomatisasi <em>Care Template</em>, serta penyesuaian cuaca. Cocok untuk pekebun hobi.</li>
                 <li><strong>Paket Panen Raya (Pro):</strong> Memberikan skala tak terbatas untuk kebutuhan komunitas atau <em>urban farming</em> skala besar.</li>
             </ul>

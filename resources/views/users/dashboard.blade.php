@@ -26,50 +26,74 @@
                 <p class="text-[16px] text-on-surface-variant">Kebun Anda tumbuh dengan baik. Mari lihat apa yang perlu dirawat hari ini.</p>
             </div>
             
-            {{-- Weather Widget (Dynamic) --}}
-            <div id="weather-widget" class="flex items-center gap-4 transition-all duration-500">
+            {{-- Weather Widget (Dynamic - Premium Card Style) --}}
+            <div id="weather-widget" class="bg-white rounded-3xl p-6 md:p-8 premium-shadow max-w-[480px] w-full transition-all duration-500 shrink-0">
+                
                 {{-- Default: Ask Location State --}}
-                <div id="weather-ask" class="flex items-center gap-3">
-                    <div class="w-12 h-12 bg-surface-container-lowest rounded-full flex items-center justify-center ambient-shadow shrink-0">
-                        <span class="material-symbols-outlined text-[24px] text-on-surface-variant">location_off</span>
+                <div id="weather-ask" class="flex flex-col gap-4">
+                    <div class="flex items-center justify-between mb-2 border-b border-outline-variant/30 pb-4">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-on-surface-variant" style="font-size: 24px;">location_off</span>
+                            <span class="text-sm font-bold text-on-surface">Adaptasi Pintar Aktif?</span>
+                        </div>
+                        <span class="text-[11px] font-semibold text-on-surface-variant bg-surface-container-high px-3 py-1 rounded-full">Offline</span>
                     </div>
-                    <div class="max-w-[260px]">
-                        <h3 class="font-bold text-[14px] text-on-surface mb-1">Aktifkan Lokasi Kebun</h3>
-                        <p class="text-[11px] text-on-surface-variant leading-tight mb-2">Deteksi lokasi untuk penyesuaian cuaca otomatis pada jadwal penyiraman.</p>
-                        <button type="button" id="dash-detect-location" class="bg-primary text-on-primary text-[12px] font-bold px-4 py-1.5 rounded-full flex items-center justify-center gap-1.5 hover:bg-primary/90 active:scale-95 transition-all shadow-sm overflow-hidden">
-                            <span class="material-symbols-outlined text-[16px] shrink-0">my_location</span>
-                            <span class="truncate">Deteksi Lokasi</span>
+                    <div class="bg-surface-container-low rounded-xl p-4">
+                        <h3 class="font-bold text-[14px] text-on-surface mb-2">Aktifkan Lokasi Kebun</h3>
+                        <p class="text-sm text-on-surface-variant leading-relaxed mb-4">
+                            Deteksi lokasi untuk penyesuaian cuaca otomatis pada jadwal penyiraman harian.
+                        </p>
+                        <button type="button" id="dash-detect-location" class="w-full bg-primary text-on-primary text-sm font-bold py-2.5 rounded-xl hover:bg-primary-container hover:text-on-primary-container active:scale-[0.98] transition-all shadow-sm flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-[18px]">my_location</span>
+                            Deteksi Lokasi
                         </button>
                     </div>
                 </div>
 
                 {{-- Loading State --}}
-                <div id="weather-loading" class="hidden flex items-center gap-3">
-                    <div class="w-12 h-12 bg-surface-container-lowest rounded-full flex items-center justify-center ambient-shadow shrink-0">
-                        <span class="material-symbols-outlined text-[24px] text-primary animate-spin">sync</span>
+                <div id="weather-loading" class="hidden flex flex-col gap-4">
+                    <div class="flex items-center justify-between mb-2 border-b border-outline-variant/30 pb-4">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary animate-spin" style="font-size: 24px;">sync</span>
+                            <span class="text-sm font-bold text-on-surface">Mendeteksi...</span>
+                        </div>
                     </div>
-                    <div class="max-w-[220px]">
-                        <h3 class="font-bold text-[14px] text-on-surface mb-0.5">Mendeteksi lokasi...</h3>
-                        <p class="text-[11px] text-on-surface-variant leading-tight">Sedang mencari koordinat dan data cuaca regional Anda.</p>
+                    <div class="bg-surface-container-low rounded-xl p-4 flex flex-col items-center text-center justify-center min-h-[140px]">
+                        <h3 class="font-bold text-[14px] text-on-surface mb-2">Mencari Koordinat</h3>
+                        <p class="text-sm text-on-surface-variant leading-relaxed">
+                            Sedang mencari data cuaca regional Anda.
+                        </p>
                     </div>
                 </div>
 
                 {{-- Active Weather State --}}
-                <div id="weather-active" class="hidden flex items-start sm:items-center gap-[12px]">
-                    <div class="w-12 h-12 bg-surface-container-lowest rounded-full flex items-center justify-center ambient-shadow shrink-0 mt-1 sm:mt-0">
-                        <span class="material-symbols-outlined text-[24px] text-primary" id="weather-icon">rainy</span>
+                <div id="weather-active" class="hidden flex flex-col w-full">
+                    {{-- Card Header --}}
+                    <div class="flex items-center justify-between mb-5">
+                        <div class="flex items-center gap-2 sm:gap-3">
+                            <span class="material-symbols-outlined text-on-surface-variant hidden sm:inline-block" style="font-size: 22px;" id="weather-icon-1">cloud</span>
+                            <span class="material-symbols-outlined text-on-surface-variant hidden sm:inline-block" style="font-size: 22px;" id="weather-icon-2">water_drop</span>
+                            <span class="material-symbols-outlined text-on-surface-variant" style="font-size: 22px;" id="weather-icon-main">thermostat</span>
+                            <span class="text-sm font-bold text-on-surface truncate" id="weather-title">Prediksi Cuaca: Hujan</span>
+                        </div>
+                        <span class="text-[11px] font-semibold px-3 py-1 rounded-full whitespace-nowrap" id="weather-badge">Hujan Ringan</span>
                     </div>
-                    <div class="flex-1 max-w-[280px] py-1">
-                        <h3 class="font-bold text-[16px] text-on-surface whitespace-nowrap mb-0.5" id="weather-title">Berawan / Hujan</h3>
-                        <div class="flex items-center gap-1 text-on-surface-variant text-[12px] mb-2.5">
-                            <span class="material-symbols-outlined text-[14px] shrink-0">location_on</span>
-                            <span id="weather-location" class="truncate">Lokasi</span>
+
+                    {{-- Card Body --}}
+                    <div class="bg-surface-container-low rounded-xl p-4 flex items-start gap-3">
+                        <span class="material-symbols-outlined text-primary flex-shrink-0 mt-0.5" style="font-size: 20px;">info</span>
+                        <div>
+                            <div class="flex items-center gap-1.5 text-[11px] font-bold text-primary uppercase tracking-wider mb-1">
+                                <span class="material-symbols-outlined text-[14px]">auto_awesome</span> Adaptasi Pintar
+                            </div>
+                            <p class="text-[13px] text-on-surface-variant leading-relaxed mb-3" id="weather-desc">
+                                Jadwal penyiraman otomatis ditunda hari ini karena curah hujan yang cukup.
+                            </p>
+                            <div class="flex items-center gap-1.5 text-[11px] text-on-surface-variant/80 border-t border-outline-variant/30 pt-3">
+                                <span class="material-symbols-outlined text-[14px]">location_on</span>
+                                <span id="weather-location" class="truncate">Lokasi</span>
+                            </div>
                         </div>
-                        <div class="flex items-center gap-1.5 text-primary text-[10px] font-bold uppercase tracking-[0.08em] mb-1.5 leading-none">
-                            <span class="material-symbols-outlined text-[14px] leading-none shrink-0">auto_awesome</span> 
-                            <span class="pt-0.5">Adaptasi Pintar</span>
-                        </div>
-                        <p class="text-[12px] text-[#4a4a4a] leading-relaxed" id="weather-desc">Frekuensi penyiraman dikurangi 20% hari ini karena perkiraan hujan.</p>
                     </div>
                 </div>
             </div>
@@ -88,14 +112,14 @@
             {{-- Card 2: Active Plants --}}
             <a href="/growth-calendar" class="bg-surface rounded-[24px] p-6 flex flex-col items-center justify-center ambient-shadow hover:-translate-y-1 hover:ambient-shadow-lg transition-all cursor-pointer">
                 <span class="material-symbols-outlined text-status-healthy text-[24px] mb-2">potted_plant</span>
-                <div class="text-[36px] font-black text-on-surface leading-none mb-1">12</div>
+                <div class="text-[36px] font-black text-on-surface leading-none mb-1">{{ $activePlants }}</div>
                 <div class="text-[14px] text-on-surface font-medium text-center">Tanaman Aktif</div>
             </a>
 
             {{-- Card 4 --}}
             <a href="/care-tasks" class="bg-surface rounded-[24px] p-6 flex flex-col items-center justify-center ambient-shadow hover:-translate-y-1 hover:ambient-shadow-lg transition-all cursor-pointer">
                 <span class="material-symbols-outlined text-[#f97316] text-[24px] mb-2">task_alt</span>
-                <div class="text-[36px] font-black text-on-surface leading-none mb-1">3</div>
+                <div class="text-[36px] font-black text-on-surface leading-none mb-1">{{ $todayTasks->count() }}</div>
                 <div class="text-[14px] text-on-surface font-medium text-center">Aktivitas Hari Ini</div>
             </a>
         </div>
@@ -188,34 +212,29 @@
                 <a href="/growth-calendar" class="text-[14px] font-bold text-primary hover:underline">Lihat Kalender</a>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                @forelse($upcomingHarvests as $plant)
                 {{-- Harvest Item --}}
                 <div class="bg-surface-container-low rounded-[20px] p-5 flex items-start gap-4">
                     <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
                         <span class="material-symbols-outlined text-[24px]">eco</span>
                     </div>
                     <div class="flex flex-col h-full w-full">
-                        <div class="text-[15px] font-bold text-on-surface leading-tight mb-1">Tomat Cherry</div>
-                        <div class="text-[13px] text-on-surface-variant mb-4">Plot A1</div>
+                        <div class="text-[15px] font-bold text-on-surface leading-tight mb-1">{{ $plant->plantTemplate->name_id ?? 'Unknown' }}</div>
+                        <div class="text-[13px] text-on-surface-variant mb-4">{{ $plant->garden->name ?? 'Kebun' }}</div>
                         <div class="mt-auto flex items-center gap-1.5">
                             <span class="material-symbols-outlined text-status-healthy text-[18px]">schedule</span>
-                            <span class="text-[13.5px] font-bold text-status-healthy">2 hari lagi</span>
+                            <span class="text-[13.5px] font-bold text-status-healthy">{{ $plant->estimated_harvest_days === 0 ? 'Hari ini' : $plant->estimated_harvest_days . ' hari lagi' }}</span>
                         </div>
                     </div>
                 </div>
-                {{-- Harvest Item --}}
-                <div class="bg-surface-container-low rounded-[20px] p-5 flex items-start gap-4">
-                    <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                        <span class="material-symbols-outlined text-[24px]">eco</span>
+                @empty
+                <div class="col-span-full text-center py-10">
+                    <div class="w-16 h-16 rounded-full bg-surface-container-high flex items-center justify-center mx-auto mb-3">
+                        <span class="material-symbols-outlined text-[32px] text-on-surface-variant">eco</span>
                     </div>
-                    <div class="flex flex-col h-full w-full">
-                        <div class="text-[15px] font-bold text-on-surface leading-tight mb-1">Cabai Rawit</div>
-                        <div class="text-[13px] text-on-surface-variant mb-4">Plot B2</div>
-                        <div class="mt-auto flex items-center gap-1.5">
-                            <span class="material-symbols-outlined text-primary text-[18px]">schedule</span>
-                            <span class="text-[13.5px] font-bold text-primary">5 hari lagi</span>
-                        </div>
-                    </div>
+                    <p class="text-on-surface-variant">Belum ada tanaman yang mendekati masa panen.</p>
                 </div>
+                @endforelse
             </div>
         </div>
 
@@ -285,15 +304,23 @@ document.addEventListener('DOMContentLoaded', () => {
             case 'rainy':
                 return {
                     icon: 'rainy',
-                    title: 'Musim Hujan',
+                    icons: ['cloud', 'water_drop'],
+                    title: 'Cuaca: Hujan',
+                    badge: 'Hujan Tinggi',
+                    badgeBg: 'bg-primary-container',
+                    badgeText: 'text-on-primary-container',
                     desc: 'Frekuensi penyiraman dikurangi 30% karena curah hujan tinggi di wilayah Anda.',
                     modifier: '-30%',
                     color: '#006c49'
                 };
             case 'dry':
                 return {
-                    icon: 'sunny',
-                    title: 'Musim Kemarau',
+                    icon: 'thermostat',
+                    icons: ['sunny', 'wb_sunny'],
+                    title: 'Cuaca: Kemarau',
+                    badge: 'Suhu Tinggi',
+                    badgeBg: 'bg-orange-100',
+                    badgeText: 'text-orange-800',
                     desc: 'Frekuensi penyiraman ditambah 50% untuk mengkompensasi penguapan tinggi.',
                     modifier: '+50%',
                     color: '#944a23'
@@ -301,7 +328,11 @@ document.addEventListener('DOMContentLoaded', () => {
             default:
                 return {
                     icon: 'partly_cloudy_day',
-                    title: 'Cuaca Normal',
+                    icons: ['cloud', 'wb_sunny'],
+                    title: 'Cuaca: Normal',
+                    badge: 'Normal',
+                    badgeBg: 'bg-surface-container-highest',
+                    badgeText: 'text-on-surface-variant',
                     desc: 'Kondisi cuaca normal. Jadwal penyiraman berjalan sesuai standar.',
                     modifier: '0%',
                     color: '#006c49'
@@ -321,11 +352,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const season = getSeason(province);
         const config = getWeatherConfig(season);
 
-        document.getElementById('weather-icon').textContent = config.icon;
+        document.getElementById('weather-icon-main').textContent = config.icon;
+        document.getElementById('weather-icon-1').textContent = config.icons[0];
+        document.getElementById('weather-icon-2').textContent = config.icons[1];
         document.getElementById('weather-title').textContent = config.title;
         document.getElementById('weather-desc').textContent = config.desc;
         document.getElementById('weather-location').textContent = locationData.formatted || province;
-        document.getElementById('weather-icon').style.color = config.color;
+        
+        const badge = document.getElementById('weather-badge');
+        badge.textContent = config.badge;
+        badge.className = `text-[11px] font-semibold px-3 py-1 rounded-full whitespace-nowrap ${config.badgeBg} ${config.badgeText}`;
 
         showWeatherState('active');
     }

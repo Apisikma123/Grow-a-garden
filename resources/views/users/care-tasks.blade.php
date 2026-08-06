@@ -206,9 +206,9 @@
             {{-- Right Column: Sidebar (Takes up 1 column) --}}
             <div class="lg:col-span-1 flex flex-col gap-[24px]">
                 
-                {{-- Plot Terpopuler Card --}}
-                <div class="bg-surface rounded-[24px] p-[24px] ambient-shadow-lg">
-                    <h3 class="text-[18px] font-bold text-on-surface mb-4">Plot Utama Anda</h3>
+                {{-- Kebun Terpopuler Card --}}
+                <div class="bg-surface-container-low rounded-3xl p-6 ambient-shadow border border-outline-variant/30 flex flex-col h-full hover:border-primary/30 transition-all group">
+                    <h3 class="text-[18px] font-bold text-on-surface mb-4">Kebun Utama Anda</h3>
                     
                     @php $firstGarden = Auth::user() ? Auth::user()->gardens()->first() : null; @endphp
                     @if($firstGarden)
@@ -235,7 +235,7 @@
                         </div>
                     </div>
                     @else
-                    <p class="text-[14px] text-on-surface-variant">Belum ada kebun. Tambahkan kebun untuk memantau metrik plot.</p>
+                    <p class="text-[14px] text-on-surface-variant">Belum ada kebun. Tambahkan kebun untuk memantau metrik kebun.</p>
                     @endif
                 </div>
 

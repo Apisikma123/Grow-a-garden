@@ -69,12 +69,15 @@ class PlantController extends Controller
 
         $user = Auth::user();
 
-        // Enforce plant limits
+        // Enforce plant limits based on user's plan
         $plantCount = Plant::whereIn('garden_id', Garden::where('user_id', $user->id)->pluck('id'))->count();
-        if ($user->role === 'free' && $plantCount >= 10) {
-            return response()->json(['error' => 'Batas Paket Free: Maksimal 10 Tanaman.'], 403);
-        } elseif ($user->role === 'subur' && $plantCount >= 100) {
-            return response()->json(['error' => 'Batas Paket Subur: Maksimal 100 Tanaman.'], 403);
+        $maxPlants = $user->maxPlants();
+        if ($plantCount >= $maxPlants) {
+            return response()->json([
+                'error' => "Batas Paket {$user->planName()}: Maksimal {$maxPlants} Tanaman. Upgrade untuk menambah kapasitas.",
+                'limit_reached' => true,
+                'current_plan' => $user->planName(),
+            ], 403);
         }
 
         $plant = Plant::create([
@@ -86,6 +89,12 @@ class PlantController extends Controller
         ]);
 
         $plant->load('plantTemplate.category');
+
+        // 🔥 Autopilot: auto-generate care tasks if user has autopilot access
+        if ($user->canUseAutopilot()) {
+            $autopilot = new \App\Services\AutopilotService();
+            $autopilot->generateForPlant($plant);
+        }
 
         return response()->json($plant, 201);
     }
@@ -99,6 +108,27 @@ class PlantController extends Controller
         $plant->delete();
 
         return response()->json(['success' => true]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $plant = Plant::whereHas('garden', function ($q) {
+            $q->where('user_id', Auth::id());
+        })->findOrFail($id);
+
+        $request->validate([
+            'planted_date' => 'required|date',
+        ]);
+
+        $plant->update([
+            'planted_date' => $request->planted_date,
+        ]);
+
+        if ($request->wantsJson()) {
+            return response()->json($plant);
+        }
+
+        return back()->with('success', 'Jadwal tanam berhasil diperbarui.');
     }
 
     private function calculateStage(int $hst, ?PlantTemplate $template): string
