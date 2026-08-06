@@ -35,7 +35,7 @@
                     <tr class="bg-surface-container-lowest border-b border-outline-variant/20 text-left">
                         <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase w-[35%]">Pengguna</th>
                         <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">Peran</th>
-                        <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">Plots</th>
+                        <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">Kebun</th>
                         <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">Status</th>
                         <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase text-right">Aksi</th>
                     </tr>

@@ -29,7 +29,7 @@
                 <h2 class="text-xl font-bold text-primary mb-4 border-b border-outline-variant/30 pb-2">Aplikasi Pengguna</h2>
                 <ul class="list-disc pl-5 space-y-2 text-on-surface-variant">
                     <li><a href="/dashboard" class="hover:text-primary transition-colors">Dashboard (Ringkasan Kebun & Jadwal)</a></li>
-                    <li><a href="/garden-plots" class="hover:text-primary transition-colors">Garden Map & Plot Management</a></li>
+
                     <li><a href="/growth-calendar" class="hover:text-primary transition-colors">Growth Calendar</a></li>
                     <li><a href="/care-tasks" class="hover:text-primary transition-colors">Care Reminder</a></li>
                     <li><a href="/settings" class="hover:text-primary transition-colors">Pengaturan Profil</a></li>

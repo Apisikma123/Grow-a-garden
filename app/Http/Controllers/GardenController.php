@@ -24,19 +24,16 @@ class GardenController extends Controller
 
         $user = Auth::user();
 
-        // Enforce Limits
-        if ($user->role === 'free') {
-            $gardenCount = Garden::where('user_id', $user->id)->count();
-            if ($gardenCount >= 1) {
-                return response()->json(['error' => 'Batas Paket Free: Maksimal 1 Kebun.'], 403);
-            }
-        } else if ($user->role === 'pro') {
-            $gardenCount = Garden::where('user_id', $user->id)->count();
-            if ($gardenCount >= 10) {
-                return response()->json(['error' => 'Batas Paket Pro: Maksimal 10 Kebun.'], 403);
-            }
+        // Enforce garden limits based on user's plan
+        $gardenCount = Garden::where('user_id', $user->id)->count();
+        $maxGardens = $user->maxGardens();
+        if ($gardenCount >= $maxGardens) {
+            return response()->json([
+                'error' => "Batas Paket {$user->planName()}: Maksimal {$maxGardens} Kebun. Upgrade untuk menambah kapasitas.",
+                'limit_reached' => true,
+                'current_plan' => $user->planName(),
+            ], 403);
         }
-        // premium users have unlimited gardens
 
         $garden = Garden::create([
             'user_id' => $user->id,

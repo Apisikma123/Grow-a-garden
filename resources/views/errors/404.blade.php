@@ -10,7 +10,7 @@
 </svg>
 @endsection
 
-@section('headline', 'Looks like you\'ve wandered into an empty plot.')
+@section('headline', 'Looks like you\'ve wandered into an empty garden.')
 
 @section('message', 'We can\'t seem to find the page you\'re looking for. The seeds might not have been planted here yet, or the page was uprooted.')
 

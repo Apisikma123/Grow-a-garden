@@ -338,7 +338,7 @@
                 <div class="space-y-4 flex-1 mb-8">
                     <div class="flex items-start gap-3">
                         <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">check_circle</span>
-                        <span class="text-sm text-on-surface">Maks. 1 Garden, 4 Plot & 10 Tanaman Aktif</span>
+                        <span class="text-sm text-on-surface">Maks. 1 Kebun & 10 Tanaman Aktif</span>
                     </div>
                     <div class="flex items-start gap-3">
                         <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">check_circle</span>
@@ -396,7 +396,7 @@
                 <div class="space-y-4 flex-1 mb-8 mt-2">
                     <div class="flex items-start gap-3">
                         <span class="material-symbols-outlined text-yellow-400 text-[20px] mt-0.5">check_circle</span>
-                        <span class="text-sm text-white font-medium">Maks. 10 Garden, 50 Plot & 100 Tanaman Aktif</span>
+                        <span class="text-sm text-white font-medium">Maks. 10 Kebun & 100 Tanaman Aktif</span>
                     </div>
                     <div class="flex items-start gap-3">
                         <span class="material-symbols-outlined text-yellow-400 text-[20px] mt-0.5">smart_toy</span>
@@ -450,7 +450,7 @@
                 <div class="space-y-4 flex-1 mb-8 relative z-10">
                     <div class="flex items-start gap-3">
                         <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">all_inclusive</span>
-                        <span class="text-sm text-on-surface font-bold">Maks. 100 Garden, Unlimited Plot & Tanaman Aktif</span>
+                        <span class="text-sm text-on-surface font-bold">Maks. 100 Kebun & Tanaman Aktif Tak Terbatas</span>
                     </div>
                     <div class="flex items-start gap-3">
                         <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">check_circle</span>

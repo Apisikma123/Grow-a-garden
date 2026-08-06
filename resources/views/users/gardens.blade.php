@@ -210,7 +210,7 @@
 <div id="plant-detail-modal" class="fixed inset-0 z-[100] hidden">
     <div class="fixed inset-0 bg-slate-900/60 transition-opacity" onclick="GardenApp.closePlantDetail()"></div>
     <div class="w-full min-h-screen px-4 py-8 flex items-center justify-center pointer-events-none">
-        <div class="w-full max-w-lg bg-surface-container-lowest rounded-3xl p-8 ambient-shadow-lg border border-outline-variant/30 pointer-events-auto relative" style="min-width: 350px; text-wrap: normal;">
+        <div class="w-full max-w-lg max-h-[90vh] overflow-y-auto bg-surface-container-lowest rounded-3xl p-8 ambient-shadow-lg border border-outline-variant/30 pointer-events-auto relative" style="min-width: 350px; text-wrap: normal;">
             <button onclick="GardenApp.closePlantDetail()" class="absolute top-5 right-5 w-9 h-9 bg-surface-container-high rounded-full flex items-center justify-center text-on-surface-variant hover:bg-error/10 hover:text-error transition-colors">
                 <span class="material-symbols-outlined text-[20px]">close</span>
             </button>

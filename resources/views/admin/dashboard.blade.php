@@ -330,7 +330,7 @@
                                 <div class="w-8 h-8 rounded-full bg-outline-variant/30 text-on-surface font-bold text-[12px] flex items-center justify-center">M</div>
                                 <div>
                                     <div class="text-[13px] font-bold text-on-surface">New Garden Registration</div>
-                                    <div class="text-[11px] text-on-surface-variant">Community Plot #402, Portland</div>
+                                    <div class="text-[11px] text-on-surface-variant">Community Garden #402, Portland</div>
                                 </div>
                             </div>
                         </td>

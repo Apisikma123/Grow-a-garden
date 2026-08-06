@@ -12,7 +12,7 @@
 
 @section('headline', 'Private Garden Area.')
 
-@section('message', 'You don\'t have the right permissions to access this specific garden plot or settings page. Please log in with the correct account.')
+@section('message', 'You don\'t have the right permissions to access this specific garden or settings page. Please log in with the correct account.')
 
 @section('actions')
 <a href="javascript:history.back()" class="bg-[#006c49] text-white px-8 py-4 rounded-[16px] font-semibold shadow-lg shadow-[#006c49]/20 hover:bg-[#005236] transition-all active:scale-95 w-full sm:w-auto text-center inline-flex items-center justify-center gap-2">

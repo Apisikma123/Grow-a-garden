@@ -28,8 +28,11 @@ Route::post('/otp', [AuthController::class, 'verifyOtp'])->name('otp.verify');
 Route::post('/otp/resend', [AuthController::class, 'resendOtp'])->name('otp.resend');
 
 Route::get('/checkout', function () {
+    if (!Auth::check()) {
+        return redirect()->route('login');
+    }
     return view('users.checkout');
-});
+})->middleware('auth');
 
 // Protected User Routes
 Route::middleware(['auth'])->group(function () {
@@ -97,6 +100,11 @@ Route::middleware(['auth'])->group(function () {
 
     // API Routes for Plant Templates
     Route::get('/api/plant-templates', [\App\Http\Controllers\PlantTemplateController::class, 'index']);
+
+    // Subscription API Routes
+    Route::post('/api/subscribe', [\App\Http\Controllers\SubscriptionController::class, 'subscribe']);
+    Route::post('/api/cancel-subscription', [\App\Http\Controllers\SubscriptionController::class, 'cancel']);
+    Route::get('/api/subscription-status', [\App\Http\Controllers\SubscriptionController::class, 'status']);
 
     // Admin API Routes
     Route::middleware(['admin'])->group(function () {
