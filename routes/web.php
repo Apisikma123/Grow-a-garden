@@ -91,6 +91,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/api/gardens/{garden}/plants', [\App\Http\Controllers\PlantController::class, 'index']);
     Route::post('/api/gardens/{garden}/plants', [\App\Http\Controllers\PlantController::class, 'store']);
     Route::delete('/api/plants/{plant}', [\App\Http\Controllers\PlantController::class, 'destroy']);
+    
+    // Web route for Plants
+    Route::put('/plants/{plant}', [\App\Http\Controllers\PlantController::class, 'update'])->name('plants.update');
 
     // API Routes for Plant Templates
     Route::get('/api/plant-templates', [\App\Http\Controllers\PlantTemplateController::class, 'index']);

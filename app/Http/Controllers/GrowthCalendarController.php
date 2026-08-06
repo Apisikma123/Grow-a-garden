@@ -38,23 +38,25 @@ class GrowthCalendarController extends Controller
 
         $otherPlants = $plants->where('id', '!=', $mainPlant->id);
 
+        // Calculate current HST as integer
+        $currentHst = (int) floor(Carbon::parse($mainPlant->planted_date)->diffInDays(now(), false));
+
         // Generate timeline
-        $timeline = $this->generateTimeline($mainPlant);
+        $timeline = $this->generateTimeline($mainPlant, $currentHst);
 
         return view('users.growth-calendar', [
             'mainPlant' => $mainPlant,
             'otherPlants' => $otherPlants,
-            'timeline' => $timeline
+            'timeline' => $timeline,
+            'currentHst' => $currentHst
         ]);
     }
 
-    private function generateTimeline($plant)
+    private function generateTimeline($plant, $currentHst)
     {
         $template = $plant->plantTemplate;
         $plantedDate = Carbon::parse($plant->planted_date);
-        $today = Carbon::now();
-        $currentHst = $plantedDate->diffInDays($today, false); // can be negative if future
-
+        
         $stages = [
             ['key' => 'SEED', 'label' => 'Tanam', 'day' => 0, 'desc' => 'Benih disemai.'],
             ['key' => 'GERMINATION', 'label' => 'Germinasi', 'day' => $template->germination_day, 'desc' => 'Tunas pertama muncul.'],

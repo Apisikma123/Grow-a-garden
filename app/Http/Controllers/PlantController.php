@@ -101,6 +101,27 @@ class PlantController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function update(Request $request, $id)
+    {
+        $plant = Plant::whereHas('garden', function ($q) {
+            $q->where('user_id', Auth::id());
+        })->findOrFail($id);
+
+        $request->validate([
+            'planted_date' => 'required|date',
+        ]);
+
+        $plant->update([
+            'planted_date' => $request->planted_date,
+        ]);
+
+        if ($request->wantsJson()) {
+            return response()->json($plant);
+        }
+
+        return back()->with('success', 'Jadwal tanam berhasil diperbarui.');
+    }
+
     private function calculateStage(int $hst, ?PlantTemplate $template): string
     {
         if (!$template) return 'SEED';

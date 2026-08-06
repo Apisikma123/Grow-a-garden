@@ -41,12 +41,12 @@
                             <h2 class="text-[28px] md:text-[32px] font-black text-on-surface leading-tight mb-3 tracking-tight">{{ collect($timeline)->where('status', 'active')->first()['label'] ?? 'Panen' }} {{ $mainPlant->plantTemplate->name_id }}</h2>
                             <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
                                 <span class="bg-primary/10 text-primary px-3 py-1.5 rounded-full text-[12px] font-bold tracking-wider uppercase border border-primary/20 shadow-sm backdrop-blur-md">Fase {{ collect($timeline)->where('status', 'active')->first()['label'] ?? 'Panen' }}</span>
-                                <span class="bg-[#944a23]/10 text-[#944a23] px-3 py-1.5 rounded-full text-[12px] font-bold tracking-wider uppercase border border-[#944a23]/20 shadow-sm backdrop-blur-md">HST {{ \Carbon\Carbon::parse($mainPlant->planted_date)->diffInDays(now()) }} / {{ $mainPlant->plantTemplate->harvest_start_day }}</span>
+                                <span class="bg-[#944a23]/10 text-[#944a23] px-3 py-1.5 rounded-full text-[12px] font-bold tracking-wider uppercase border border-[#944a23]/20 shadow-sm backdrop-blur-md">HST {{ max(0, $currentHst) }} / {{ $mainPlant->plantTemplate->harvest_start_day }}</span>
                             </div>
                         </div>
                     </div>
                     
-                    <button class="w-full md:w-auto bg-white border border-outline-variant/30 text-on-surface-variant font-bold px-6 py-3.5 rounded-full hover:bg-surface hover:text-primary hover:border-primary/30 hover:shadow-[0_4px_12px_rgba(0,108,73,0.05)] active:scale-95 transition-all flex items-center justify-center gap-2 shadow-sm relative z-10">
+                    <button onclick="document.getElementById('edit-jadwal-modal').classList.remove('hidden')" class="w-full md:w-auto bg-white border border-outline-variant/30 text-on-surface-variant font-bold px-6 py-3.5 rounded-full hover:bg-surface hover:text-primary hover:border-primary/30 hover:shadow-[0_4px_12px_rgba(0,108,73,0.05)] active:scale-95 transition-all flex items-center justify-center gap-2 shadow-sm relative z-10">
                         <span class="material-symbols-outlined text-[20px]">calendar_month</span> Edit Jadwal
                     </button>
                 </div>
@@ -198,4 +198,35 @@
             </div>
         </div>
     </div>
+
+    @if($mainPlant)
+    {{-- Edit Jadwal Modal --}}
+    <div id="edit-jadwal-modal" class="fixed inset-0 z-[100] hidden overflow-y-auto">
+        <div class="fixed inset-0 bg-slate-900/60 transition-opacity" onclick="document.getElementById('edit-jadwal-modal').classList.add('hidden')"></div>
+        <div class="min-h-screen w-full px-4 py-8 flex items-center justify-center pointer-events-none">
+            <div class="w-[90vw] max-w-[420px] bg-white rounded-3xl p-6 md:p-8 ambient-shadow-lg border border-outline-variant/30 pointer-events-auto relative shrink-0">
+                <button type="button" onclick="document.getElementById('edit-jadwal-modal').classList.add('hidden')" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface-variant hover:bg-error/10 hover:text-error transition-colors">
+                    <span class="material-symbols-outlined text-[24px]">close</span>
+                </button>
+                
+                <h3 class="text-[24px] font-bold text-on-surface mb-2">Edit Jadwal Tanam</h3>
+                <p class="text-[14px] text-on-surface-variant mb-6">Ubah tanggal tanam untuk tanaman {{ $mainPlant->plantTemplate->name_id }} Anda.</p>
+                
+                <form action="{{ route('plants.update', $mainPlant->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="mb-6">
+                        <label for="planted_date" class="block text-sm font-bold text-on-surface mb-2">Tanggal Tanam</label>
+                        <input type="date" id="planted_date" name="planted_date" value="{{ \Carbon\Carbon::parse($mainPlant->planted_date)->format('Y-m-d') }}" class="w-full bg-surface-container-lowest border border-outline-variant/50 rounded-xl px-4 py-3 text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" required>
+                    </div>
+                    
+                    <div class="flex gap-3 justify-end">
+                        <button type="button" onclick="document.getElementById('edit-jadwal-modal').classList.add('hidden')" class="px-6 py-2.5 rounded-full font-bold text-on-surface-variant hover:bg-surface-container-high transition-colors">Batal</button>
+                        <button type="submit" class="px-6 py-2.5 rounded-full font-bold bg-primary text-white shadow-sm hover:bg-[#005236] transition-colors">Simpan Perubahan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endif
 @endsection
