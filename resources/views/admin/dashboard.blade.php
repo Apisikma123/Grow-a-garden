@@ -160,36 +160,24 @@
                 </div>
 
                 {{-- Bars --}}
-                <div class="flex items-center gap-3 relative z-10">
-                    <div class="w-14 text-[11px] font-bold text-on-surface text-right">Tomat</div>
+                @foreach($popularPlants as $index => $plantStats)
+                @php
+                    // Hitung persentase lebar bar (maksimal dari tanaman paling populer)
+                    $maxTotal = $popularPlants->max('total');
+                    $width = $maxTotal > 0 ? ($plantStats->total / $maxTotal) * 100 : 0;
+                    
+                    // Warna berdasarkan index
+                    $colors = ['bg-[#006c49]', 'bg-[#10b981]', 'bg-secondary-container', 'bg-tertiary-container', 'bg-inverse-primary'];
+                    $color = $colors[$index % count($colors)];
+                @endphp
+                <div class="flex items-center gap-3 relative z-10" title="Total: {{ $plantStats->total }}">
+                    <div class="w-14 text-[11px] font-bold text-on-surface text-right truncate">{{ $plantStats->plantTemplate->name_id ?? 'Unknown' }}</div>
                     <div class="flex-1 h-4">
-                        <div class="h-full bg-[#006c49] rounded-r-md" style="width: 85%;"></div>
+                        <div class="h-full {{ $color }} rounded-r-md" style="width: {{ $width }}%;"></div>
                     </div>
+                    <div class="text-[10px] text-on-surface-variant font-bold">{{ $plantStats->total }}</div>
                 </div>
-                <div class="flex items-center gap-3 relative z-10">
-                    <div class="w-14 text-[11px] font-bold text-on-surface text-right">Cabai</div>
-                    <div class="flex-1 h-4">
-                        <div class="h-full bg-[#10b981] rounded-r-md" style="width: 65%;"></div>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 relative z-10">
-                    <div class="w-14 text-[11px] font-bold text-on-surface text-right">Bayam</div>
-                    <div class="flex-1 h-4">
-                        <div class="h-full bg-secondary-container rounded-r-md" style="width: 50%;"></div>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 relative z-10">
-                    <div class="w-14 text-[11px] font-bold text-on-surface text-right">Kangkung</div>
-                    <div class="flex-1 h-4">
-                        <div class="h-full bg-tertiary-container rounded-r-md" style="width: 40%;"></div>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 relative z-10">
-                    <div class="w-14 text-[11px] font-bold text-on-surface text-right">Sawi</div>
-                    <div class="flex-1 h-4">
-                        <div class="h-full bg-inverse-primary rounded-r-md" style="width: 30%;"></div>
-                    </div>
-                </div>
+                @endforeach
             </div>
             
             <div class="flex justify-between pl-16 pt-2 text-[10px] text-on-surface-variant font-medium">
@@ -207,49 +195,31 @@
             <h3 class="text-[18px] font-bold text-on-surface mb-6">Aktivitas Terbanyak</h3>
             
             <div class="flex flex-col justify-center gap-5 flex-1">
-                {{-- Item 1 --}}
+                @forelse($topActivities as $index => $activityStats)
+                @php
+                    $percentage = $totalCompletedEvents > 0 ? round(($activityStats->total / $totalCompletedEvents) * 100) : 0;
+                    
+                    // Style config
+                    $styles = [
+                        ['text' => 'text-primary', 'bg' => 'bg-primary'],
+                        ['text' => 'text-primary-container', 'bg' => 'bg-primary-container'],
+                        ['text' => 'text-secondary', 'bg' => 'bg-secondary'],
+                        ['text' => 'text-outline-variant', 'bg' => 'bg-outline-variant'],
+                    ];
+                    $style = $styles[$index % count($styles)];
+                @endphp
                 <div>
                     <div class="flex justify-between text-[13px] font-bold text-on-surface mb-2">
-                        <span>Menyiram Tanaman</span>
-                        <span class="text-primary">45%</span>
+                        <span>{{ $activityStats->eventType->name ?? 'Aktivitas' }}</span>
+                        <span class="{{ $style['text'] }}">{{ $percentage }}%</span>
                     </div>
                     <div class="w-full h-2.5 bg-surface-container-high rounded-full overflow-hidden">
-                        <div class="h-full bg-primary rounded-full" style="width: 45%;"></div>
+                        <div class="h-full {{ $style['bg'] }} rounded-full" style="width: {{ $percentage }}%;"></div>
                     </div>
                 </div>
-
-                {{-- Item 2 --}}
-                <div>
-                    <div class="flex justify-between text-[13px] font-bold text-on-surface mb-2">
-                        <span>Memberi Pupuk</span>
-                        <span class="text-primary-container">30%</span>
-                    </div>
-                    <div class="w-full h-2.5 bg-surface-container-high rounded-full overflow-hidden">
-                        <div class="h-full bg-primary-container rounded-full" style="width: 30%;"></div>
-                    </div>
-                </div>
-
-                {{-- Item 3 --}}
-                <div>
-                    <div class="flex justify-between text-[13px] font-bold text-on-surface mb-2">
-                        <span>Memanen</span>
-                        <span class="text-secondary">15%</span>
-                    </div>
-                    <div class="w-full h-2.5 bg-surface-container-high rounded-full overflow-hidden">
-                        <div class="h-full bg-secondary rounded-full" style="width: 15%;"></div>
-                    </div>
-                </div>
-
-                {{-- Item 4 --}}
-                <div>
-                    <div class="flex justify-between text-[13px] font-bold text-on-surface mb-2">
-                        <span>Lainnya</span>
-                        <span class="text-outline-variant">10%</span>
-                    </div>
-                    <div class="w-full h-2.5 bg-surface-container-high rounded-full overflow-hidden">
-                        <div class="h-full bg-outline-variant rounded-full" style="width: 10%;"></div>
-                    </div>
-                </div>
+                @empty
+                <div class="text-[13px] text-on-surface-variant text-center my-auto">Belum ada aktivitas selesai.</div>
+                @endforelse
             </div>
         </div>
 
@@ -258,12 +228,12 @@
             <h3 class="text-[18px] font-bold text-on-surface mb-6 w-full text-left">Rata-rata Umur Panen</h3>
             
             <div class="flex-1 flex flex-col items-center justify-center">
-                <div class="text-[64px] font-black text-primary leading-none mb-2">42</div>
+                <div class="text-[64px] font-black text-primary leading-none mb-2">{{ $avgHarvestAge }}</div>
                 <div class="text-[20px] font-bold text-on-surface mb-4">Hari</div>
                 
                 <div class="flex items-center gap-1 text-[12px] text-primary font-bold">
-                    <span class="material-symbols-outlined text-[16px]">trending_down</span>
-                    - 2 hari dari bulan lalu
+                    <span class="material-symbols-outlined text-[16px]">info</span>
+                    Rata-rata estimasi panen seluruh tanaman
                 </div>
             </div>
         </div>
@@ -287,59 +257,45 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-outline-variant/10">
-                    {{-- Row 1 --}}
+                    @forelse($todayActivities as $event)
                     <tr class="hover:bg-surface-container-lowest/50 transition-colors">
                         <td class="py-3 px-2">
                             <div class="flex items-center gap-3">
-                                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop" class="w-8 h-8 rounded-full object-cover">
+                                @php
+                                    $initial = substr($event->plant->garden->user->name ?? 'U', 0, 1);
+                                @endphp
+                                <div class="w-8 h-8 rounded-full bg-primary-container/30 text-primary-container font-bold text-[12px] flex items-center justify-center shrink-0">
+                                    {{ strtoupper($initial) }}
+                                </div>
                                 <div>
-                                    <div class="text-[13px] font-bold text-on-surface">Sarah J. logged a harvest</div>
-                                    <div class="text-[11px] text-on-surface-variant">Heirloom Tomatoes - 2.5kg</div>
+                                    <div class="text-[13px] font-bold text-on-surface truncate max-w-[200px]">{{ $event->plant->garden->user->name ?? 'User' }}</div>
+                                    <div class="text-[11px] text-on-surface-variant truncate max-w-[200px]">{{ $event->plant->plantTemplate->name_id ?? 'Tanaman' }} ({{ $event->plant->garden->name ?? 'Kebun' }})</div>
                                 </div>
                             </div>
                         </td>
-                        <td class="py-3 px-2 text-[13px] text-on-surface-variant">Milestone</td>
-                        <td class="py-3 px-2">
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#10b981]/10 text-[#10b981]">Verified</span>
+                        <td class="py-3 px-2 text-[13px] text-on-surface-variant">
+                            {{ $event->eventType->name ?? 'Aktivitas' }}
                         </td>
-                        <td class="py-3 px-2 text-[12px] text-on-surface-variant text-right">10 menit yang lalu</td>
+                        <td class="py-3 px-2">
+                            @if($event->status === 'COMPLETED')
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#10b981]/10 text-[#10b981]">{{ $event->status }}</span>
+                            @elseif($event->status === 'SKIPPED')
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-orange-100 text-orange-800">{{ $event->status }}</span>
+                            @else
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-surface-container-highest text-on-surface-variant">{{ $event->status }}</span>
+                            @endif
+                        </td>
+                        <td class="py-3 px-2 text-[12px] text-on-surface-variant text-right">
+                            {{ $event->updated_at->diffForHumans() }}
+                        </td>
                     </tr>
-
-                    {{-- Row 2 --}}
-                    <tr class="hover:bg-surface-container-lowest/50 transition-colors">
-                        <td class="py-3 px-2">
-                            <div class="flex items-center gap-3">
-                                <img src="https://images.unsplash.com/photo-1491841550275-ad7854e35ca6?w=100&h=100&fit=crop" class="w-8 h-8 rounded-full object-cover">
-                                <div>
-                                    <div class="text-[13px] font-bold text-on-surface">UrbanRoots created a post</div>
-                                    <div class="text-[11px] text-on-surface-variant">"Tips for balcony composting"</div>
-                                </div>
-                            </div>
+                    @empty
+                    <tr>
+                        <td colspan="4" class="py-6 text-center text-[13px] text-on-surface-variant">
+                            Belum ada aktivitas tercatat hari ini.
                         </td>
-                        <td class="py-3 px-2 text-[13px] text-on-surface-variant">Community Post</td>
-                        <td class="py-3 px-2">
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-secondary-container/30 text-on-secondary-container">Trending</span>
-                        </td>
-                        <td class="py-3 px-2 text-[12px] text-on-surface-variant text-right">1 hr ago</td>
                     </tr>
-
-                    {{-- Row 3 --}}
-                    <tr class="hover:bg-surface-container-lowest/50 transition-colors">
-                        <td class="py-3 px-2">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-outline-variant/30 text-on-surface font-bold text-[12px] flex items-center justify-center">M</div>
-                                <div>
-                                    <div class="text-[13px] font-bold text-on-surface">New Garden Registration</div>
-                                    <div class="text-[11px] text-on-surface-variant">Community Garden #402, Portland</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="py-3 px-2 text-[13px] text-on-surface-variant">System</td>
-                        <td class="py-3 px-2">
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#10b981]/10 text-[#10b981]">Active</span>
-                        </td>
-                        <td class="py-3 px-2 text-[12px] text-on-surface-variant text-right">2 hrs ago</td>
-                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

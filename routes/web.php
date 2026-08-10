@@ -185,6 +185,14 @@ Route::middleware(['auth'])->group(function () {
         }
         unset($dayData);
 
+        // 3. Active Alerts
+        $activeAlerts = \Illuminate\Support\Facades\DB::table('alerts')
+            ->whereIn('garden_id', $gardenIds)
+            ->where('status', 'ACTIVE')
+            ->orderBy('severity', 'asc')
+            ->orderBy('triggered_at', 'desc')
+            ->get();
+
         return view('users.dashboard', compact(
             'gardens', 
             'activePlants', 
@@ -193,7 +201,8 @@ Route::middleware(['auth'])->group(function () {
             'plantDistribution', 
             'conicGradient', 
             'weeklyDays', 
-            'weeklyTotals'
+            'weeklyTotals',
+            'activeAlerts'
         ));
     })->name('dashboard');
 
@@ -267,9 +276,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::delete('/badges/{badge}', [\App\Http\Controllers\Admin\AdminController::class, 'destroyBadge'])->name('admin.badges.destroy');
     Route::post('/badges/award', [\App\Http\Controllers\Admin\AdminController::class, 'awardBadgeToUser'])->name('admin.badges.award');
 
-    Route::get('/weather', function () {
-        return view('admin.weather');
-    });
+    Route::get('/weather', [\App\Http\Controllers\Admin\AdminController::class, 'weather'])->name('admin.weather');
+    Route::post('/weather/rules', [\App\Http\Controllers\Admin\AdminController::class, 'storeWeatherRule'])->name('admin.weather.rules.store');
+    Route::put('/weather/rules/{weatherRule}', [\App\Http\Controllers\Admin\AdminController::class, 'updateWeatherRule'])->name('admin.weather.rules.update');
+    Route::delete('/weather/rules/{weatherRule}', [\App\Http\Controllers\Admin\AdminController::class, 'destroyWeatherRule'])->name('admin.weather.rules.destroy');
+    
+    Route::post('/weather/activity-rules', [\App\Http\Controllers\Admin\AdminController::class, 'storeActivityRule'])->name('admin.weather.activity.store');
+    Route::put('/weather/activity-rules/{activityRule}', [\App\Http\Controllers\Admin\AdminController::class, 'updateActivityRule'])->name('admin.weather.activity.update');
+    Route::delete('/weather/activity-rules/{activityRule}', [\App\Http\Controllers\Admin\AdminController::class, 'destroyActivityRule'])->name('admin.weather.activity.destroy');
 
     Route::get('/settings', function () {
         return view('admin.settings');

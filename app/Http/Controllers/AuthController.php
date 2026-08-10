@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Str;
@@ -30,13 +31,23 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        $remember = $request->has('remember');
+        $key = 'login.' . $request->ip();
 
+        if (RateLimiter::tooManyAttempts($key, 6)) {
+            $seconds = RateLimiter::availableIn($key);
+            throw ValidationException::withMessages([
+                'email' => "Terlalu banyak percobaan login. Silakan coba lagi dalam {$seconds} detik.",
+            ]);
+        }
+
+        $remember = $request->has('remember');
         $user = User::where('email', $credentials['email'])->first();
         
         if ($user && Hash::check($credentials['password'], $user->password)) {
-            // Check if device is already trusted
-            if ($request->cookie('trusted_device_user_' . $user->id)) {
+            RateLimiter::clear($key);
+
+            // Bypass OTP if Admin or already verified
+            if ($user->role === 'admin' || !is_null($user->email_verified_at)) {
                 Auth::login($user, $remember);
                 $request->session()->regenerate();
                 
@@ -49,8 +60,10 @@ class AuthController extends Controller
             return $this->sendOtp($user, $remember);
         }
 
+        RateLimiter::hit($key, 60);
+
         throw ValidationException::withMessages([
-            'email' => 'The provided credentials do not match our records.',
+            'email' => 'Kredensial yang diberikan tidak cocok dengan data kami.',
         ]);
     }
 
@@ -134,16 +147,18 @@ class AuthController extends Controller
 
                 return $response;
             } else {
-                // New User - Register via Google (OTP required)
+                // New User - Register via Google (Email already verified by Google)
                 $user = User::create([
                     'name' => $googleUser->getName(),
                     'email' => $googleUser->getEmail(),
                     'google_id' => $googleUser->getId(),
                     'password' => Hash::make(Str::random(16)),
+                    'email_verified_at' => now(), // Bypass OTP for Google Users
                 ]);
                 
-                // Require OTP for Google Registration
-                return $this->sendOtp($user, true);
+                Auth::login($user, true);
+                $request->session()->regenerate();
+                return redirect()->intended('/dashboard');
             }
             
         } catch (\Exception $e) {
@@ -226,6 +241,7 @@ class AuthController extends Controller
             // Valid OTP
             $user->otp_code = null;
             $user->otp_expires_at = null;
+            $user->email_verified_at = now(); // Mark as verified
             $user->save();
 
             $rememberCookie = session('otp_remember', false);
@@ -236,11 +252,6 @@ class AuthController extends Controller
             $response = ($user->role === 'admin') 
                         ? redirect()->intended('/admin/dashboard') 
                         : redirect()->intended('/dashboard');
-
-            if ($rememberCookie) {
-                // Trust this device for 30 days (43200 minutes)
-                $response->cookie('trusted_device_user_' . $user->id, true, 43200);
-            }
 
             return $response;
         }

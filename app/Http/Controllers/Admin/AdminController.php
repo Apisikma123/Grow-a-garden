@@ -15,10 +15,47 @@ class AdminController extends Controller
     {
         $totalUsers = User::count();
         $totalGardens = Garden::count();
-        $totalPlants = Plant::count();
+        $totalPlants = Plant::whereIn('status', ['ACTIVE', 'PRODUCTIVE', 'HARVESTING'])->count();
         $premiumUsers = User::whereIn('role', ['pro', 'premium'])->count();
+        
+        // Count successful harvests (completed harvest events)
+        $successfulHarvests = \App\Models\Event::whereHas('eventType', function($q) {
+            $q->where('code', 'like', '%HARVEST%');
+        })->where('status', 'COMPLETED')->count();
 
-        return view('admin.dashboard', compact('totalUsers', 'totalGardens', 'totalPlants', 'premiumUsers'));
+        // Popular plants
+        $popularPlants = Plant::select('plant_template_id', \Illuminate\Support\Facades\DB::raw('count(*) as total'))
+            ->groupBy('plant_template_id')
+            ->orderBy('total', 'desc')
+            ->take(5)
+            ->with('plantTemplate')
+            ->get();
+
+        // Top activities
+        $topActivities = \App\Models\Event::select('event_type_id', \Illuminate\Support\Facades\DB::raw('count(*) as total'))
+            ->where('status', 'COMPLETED')
+            ->groupBy('event_type_id')
+            ->orderBy('total', 'desc')
+            ->take(4)
+            ->with('eventType')
+            ->get();
+        $totalCompletedEvents = \App\Models\Event::where('status', 'COMPLETED')->count();
+
+        // Today's activities
+        $todayActivities = \App\Models\Event::with(['plant.garden.user', 'eventType'])
+            ->whereDate('scheduled_date', today())
+            ->orderBy('updated_at', 'desc')
+            ->take(5)
+            ->get();
+
+        // Average Harvest Age
+        $avgHarvestAge = \App\Models\PlantTemplate::avg('harvest_start_day') ?? 0;
+        $avgHarvestAge = round($avgHarvestAge);
+
+        return view('admin.dashboard', compact(
+            'totalUsers', 'totalGardens', 'totalPlants', 'premiumUsers', 'successfulHarvests',
+            'popularPlants', 'topActivities', 'todayActivities', 'totalCompletedEvents', 'avgHarvestAge'
+        ));
     }
 
     public function users()
@@ -192,5 +229,88 @@ class AdminController extends Controller
         }
 
         return redirect()->back()->with('info', "Pengguna sudah memiliki badge ini.");
+    }
+
+    public function weather()
+    {
+        $weatherRules = \App\Models\WeatherRule::all();
+        $activityRules = \App\Models\ActivityWeatherRule::all();
+        return view('admin.weather', compact('weatherRules', 'activityRules'));
+    }
+
+    public function storeWeatherRule(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'weather_field' => 'required|string',
+            'operator' => 'required|string',
+            'threshold' => 'required|numeric',
+            'severity' => 'required|string',
+            'message' => 'required|string',
+            'is_active' => 'boolean',
+        ]);
+
+        \App\Models\WeatherRule::create($validated);
+        return redirect()->back()->with('success', 'Aturan Peringatan berhasil dibuat!');
+    }
+
+    public function updateWeatherRule(Request $request, \App\Models\WeatherRule $weatherRule)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'weather_field' => 'required|string',
+            'operator' => 'required|string',
+            'threshold' => 'required|numeric',
+            'severity' => 'required|string',
+            'message' => 'required|string',
+            'is_active' => 'boolean',
+        ]);
+
+        $weatherRule->update($validated);
+        return redirect()->back()->with('success', 'Aturan Peringatan berhasil diperbarui!');
+    }
+
+    public function destroyWeatherRule(\App\Models\WeatherRule $weatherRule)
+    {
+        $weatherRule->delete();
+        return redirect()->back()->with('success', 'Aturan Peringatan berhasil dihapus!');
+    }
+
+    public function storeActivityRule(Request $request)
+    {
+        $validated = $request->validate([
+            'activity_type' => 'required|string',
+            'weather_field' => 'required|string',
+            'operator' => 'required|string',
+            'threshold' => 'required|numeric',
+            'action' => 'required|string',
+            'message' => 'required|string',
+            'is_active' => 'boolean',
+        ]);
+
+        \App\Models\ActivityWeatherRule::create($validated);
+        return redirect()->back()->with('success', 'Aturan Modifikasi berhasil dibuat!');
+    }
+
+    public function updateActivityRule(Request $request, \App\Models\ActivityWeatherRule $activityRule)
+    {
+        $validated = $request->validate([
+            'activity_type' => 'required|string',
+            'weather_field' => 'required|string',
+            'operator' => 'required|string',
+            'threshold' => 'required|numeric',
+            'action' => 'required|string',
+            'message' => 'required|string',
+            'is_active' => 'boolean',
+        ]);
+
+        $activityRule->update($validated);
+        return redirect()->back()->with('success', 'Aturan Modifikasi berhasil diperbarui!');
+    }
+
+    public function destroyActivityRule(\App\Models\ActivityWeatherRule $activityRule)
+    {
+        $activityRule->delete();
+        return redirect()->back()->with('success', 'Aturan Modifikasi berhasil dihapus!');
     }
 }
