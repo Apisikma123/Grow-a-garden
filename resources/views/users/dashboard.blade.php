@@ -99,6 +99,41 @@
             </div>
         </div>
 
+        @if(isset($activeAlerts) && $activeAlerts->count() > 0)
+        <div class="flex flex-col gap-3">
+            @foreach($activeAlerts as $alert)
+            @php
+                $alertColor = match($alert->severity) {
+                    'CRITICAL' => 'bg-error/10 border-error/30 text-error',
+                    'HIGH' => 'bg-orange-50 border-orange-200 text-orange-800',
+                    'MEDIUM' => 'bg-warning/10 border-warning/30 text-warning',
+                    default => 'bg-primary/10 border-primary/30 text-primary'
+                };
+                $icon = match($alert->severity) {
+                    'CRITICAL' => 'warning',
+                    'HIGH' => 'priority_high',
+                    default => 'info'
+                };
+            @endphp
+            <div class="rounded-xl border p-4 flex items-start sm:items-center gap-4 {{ $alertColor }}">
+                <div class="shrink-0 p-2 rounded-full bg-white/50 backdrop-blur-sm">
+                    <span class="material-symbols-outlined block text-[24px]">{{ $icon }}</span>
+                </div>
+                <div class="flex-1">
+                    <h4 class="font-bold text-[14px] leading-tight mb-1">
+                        Peringatan Cuaca Ekstrem
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/50 uppercase ml-2">{{ $alert->severity }}</span>
+                    </h4>
+                    <p class="text-[13px] leading-relaxed opacity-90">{{ $alert->message }}</p>
+                </div>
+                <a href="/gardens" class="shrink-0 mt-3 sm:mt-0 font-bold text-[13px] px-4 py-2 bg-white/50 hover:bg-white/80 rounded-lg transition-colors">
+                    Lihat Kebun
+                </a>
+            </div>
+            @endforeach
+        </div>
+        @endif
+
         {{-- Stats Row --}}
         <div class="grid grid-cols-1 md:grid-cols-3 gap-[16px]">
             {{-- Card 1: Gardens --}}
