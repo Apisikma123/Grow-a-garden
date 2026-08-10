@@ -14,7 +14,7 @@
             </div>
             
             <div class="flex items-center gap-3">
-                <button onclick="document.getElementById('award-badge-modal').classList.remove('hidden')" class="bg-secondary hover:bg-secondary/90 text-on-secondary font-bold text-sm px-5 py-2.5 rounded-xl transition-all shadow-sm flex items-center gap-2 active:scale-95 cursor-pointer">
+                <button onclick="document.getElementById('award-badge-modal').classList.remove('hidden')" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-bold text-sm px-5 py-2.5 rounded-xl transition-all shadow-sm flex items-center gap-2 active:scale-95 cursor-pointer">
                     <span class="material-symbols-outlined text-[20px]">workspace_premium</span>
                     Berikan Badge ke User
                 </button>
@@ -44,7 +44,7 @@
             @forelse($badges as $badge)
                 <div class="bg-white rounded-2xl p-6 ambient-shadow border border-slate-200 flex flex-col justify-between relative overflow-hidden group hover:border-[#006c49]/40 transition-all">
                     <div class="flex items-start justify-between mb-4 z-10">
-                        <div class="w-14 h-14 rounded-2xl bg-secondary-container/20 border border-secondary-container/40 text-secondary flex items-center justify-center shadow-sm shrink-0">
+                        <div class="w-14 h-14 rounded-2xl bg-[#006c49]/10 border border-[#006c49]/20 text-[#006c49] flex items-center justify-center shadow-sm shrink-0">
                             <span class="material-symbols-outlined text-[32px]">{{ $badge->icon_url ?? 'military_tech' }}</span>
                         </div>
                         <span class="bg-slate-100 text-slate-700 font-bold text-xs px-3 py-1 rounded-full">
@@ -106,6 +106,29 @@
                         <input type="text" name="icon_url" required placeholder="Contoh: military_tech, water_drop, eco" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#006c49] text-sm">
                     </div>
 
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Kategori Metrik</label>
+                            <select name="metric_type" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#006c49] text-sm">
+                                <option value="total_tasks">Total Tugas Selesai</option>
+                                <option value="watering">Penyiraman</option>
+                                <option value="fertilizing">Pemupukan</option>
+                                <option value="pruning">Pemangkasan</option>
+                                <option value="pest">Kontrol Hama</option>
+                                <option value="harvest">Panen</option>
+                                <option value="plants">Tambah Tanaman</option>
+                                <option value="gardens">Tambah Kebun</option>
+                                <option value="skipped">Tugas Dilewati</option>
+                                <option value="pro">Langganan Pro</option>
+                                <option value="premium">Langganan Premium</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Target Angka</label>
+                            <input type="number" name="target_count" required min="1" value="1" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#006c49] text-sm">
+                        </div>
+                    </div>
+
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Deskripsi / Syarat</label>
                         <textarea name="description" rows="3" required placeholder="Jelaskan syarat mendapatkan badge ini..." class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#006c49] text-sm"></textarea>
@@ -147,6 +170,29 @@
                         <input type="text" id="edit-icon_url" name="icon_url" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#006c49] text-sm">
                     </div>
 
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Kategori Metrik</label>
+                            <select id="edit-metric_type" name="metric_type" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#006c49] text-sm">
+                                <option value="total_tasks">Total Tugas Selesai</option>
+                                <option value="watering">Penyiraman</option>
+                                <option value="fertilizing">Pemupukan</option>
+                                <option value="pruning">Pemangkasan</option>
+                                <option value="pest">Kontrol Hama</option>
+                                <option value="harvest">Panen</option>
+                                <option value="plants">Tambah Tanaman</option>
+                                <option value="gardens">Tambah Kebun</option>
+                                <option value="skipped">Tugas Dilewati</option>
+                                <option value="pro">Langganan Pro</option>
+                                <option value="premium">Langganan Premium</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Target Angka</label>
+                            <input type="number" id="edit-target_count" name="target_count" required min="1" value="1" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#006c49] text-sm">
+                        </div>
+                    </div>
+
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Deskripsi / Syarat</label>
                         <textarea id="edit-description" name="description" rows="3" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#006c49] text-sm"></textarea>
@@ -168,7 +214,7 @@
             <div class="w-full max-w-lg bg-white rounded-3xl p-6 md:p-8 ambient-shadow-lg relative z-10">
                 <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
                     <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-secondary">military_tech</span> Berikan Badge Manual
+                        <span class="material-symbols-outlined text-[#006c49]">military_tech</span> Berikan Badge Manual
                     </h3>
                     <button onclick="document.getElementById('award-badge-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
                         <span class="material-symbols-outlined">close</span>
@@ -199,7 +245,7 @@
 
                     <div class="flex justify-end gap-3 pt-4">
                         <button type="button" onclick="document.getElementById('award-badge-modal').classList.add('hidden')" class="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-100">Batal</button>
-                        <button type="submit" class="px-6 py-2.5 rounded-xl text-sm font-bold text-on-secondary bg-secondary hover:bg-secondary/90">Berikan Badge</button>
+                        <button type="submit" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-[#006c49] hover:bg-[#005236]">Berikan Badge</button>
                     </div>
                 </form>
             </div>
@@ -211,6 +257,8 @@
             document.getElementById('edit-badge-form').action = '/admin/badges/' + badge.id;
             document.getElementById('edit-name').value = badge.name;
             document.getElementById('edit-icon_url').value = badge.icon_url || '';
+            document.getElementById('edit-metric_type').value = badge.metric_type || 'total_tasks';
+            document.getElementById('edit-target_count').value = badge.target_count || 1;
             document.getElementById('edit-description').value = badge.description || '';
             document.getElementById('edit-badge-modal').classList.remove('hidden');
         }

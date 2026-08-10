@@ -154,11 +154,48 @@ class BadgeSeeder extends Seeder
         ];
 
         foreach ($badges as $badge) {
+            $target = 1;
+            $cleanDesc = str_replace('.', '', $badge['description'] ?? '');
+            if (preg_match('/(\d+)/', $cleanDesc, $matches)) {
+                $target = (int) $matches[1];
+            }
+            if ($target <= 0) $target = 1;
+
+            $name = strtolower($badge['name'] ?? '');
+            $desc = strtolower($badge['description'] ?? '');
+            $metricType = 'total_tasks';
+
+            if (str_contains($name, 'sang pro') || str_contains($desc, 'subur (pro)') || str_contains($desc, 'grow a garden pro')) {
+                $metricType = 'pro';
+            } elseif (str_contains($name, 'panen raya premium') || str_contains($name, 'pekebun panen raya') || str_contains($desc, 'panen raya (premium)')) {
+                $metricType = 'premium';
+            } elseif (str_contains($name, 'siram') || str_contains($name, 'water') || str_contains($name, 'setetes') || str_contains($desc, 'penyiraman')) {
+                $metricType = 'watering';
+            } elseif (str_contains($name, 'pupuk') || str_contains($name, 'pemupukan') || str_contains($desc, 'pemupukan')) {
+                $metricType = 'fertilizing';
+            } elseif (str_contains($name, 'pangkas') || str_contains($name, 'pemangkasan') || str_contains($name, 'potongan') || str_contains($desc, 'pemangkasan')) {
+                $metricType = 'pruning';
+            } elseif (str_contains($name, 'hama') || str_contains($name, 'pembasmi') || str_contains($desc, 'pembasmian') || (str_contains($desc, 'hama') && !str_contains($name, 'kebun'))) {
+                $metricType = 'pest';
+            } elseif (str_contains($name, 'panen') || str_contains($desc, 'panen')) {
+                $metricType = 'harvest';
+            } elseif (str_contains($name, 'santai') || str_contains($name, 'rebahan') || str_contains($name, 'cuti') || str_contains($name, 'terlantar') || str_contains($name, 'mengamati') || str_contains($desc, 'lewati (skip)')) {
+                $metricType = 'skipped';
+            } elseif (str_contains($name, 'tanaman') || str_contains($desc, 'menambahkan') || str_contains($desc, 'menanam')) {
+                $metricType = 'plants';
+            } elseif (str_contains($name, 'kebun') || str_contains($name, 'pekebun') || str_contains($name, 'ekosistem') || (str_contains($desc, 'kebun') && !str_contains($desc, 'ke kebun'))) {
+                $metricType = 'gardens';
+            } elseif (str_contains($name, 'langkah') || str_contains($desc, 'menyelesaikan tugas')) {
+                $metricType = 'total_tasks';
+            }
+
             Badge::updateOrCreate(
                 ['name' => $badge['name']],
                 [
                     'description' => $badge['description'],
                     'icon_url' => $badge['icon_url'],
+                    'metric_type' => $metricType,
+                    'target_count' => $target,
                 ]
             );
         }
