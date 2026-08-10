@@ -77,7 +77,10 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/care-tasks/{event}/complete', [\App\Http\Controllers\CareTaskController::class, 'complete'])->name('care-tasks.complete');
     Route::patch('/care-tasks/{event}/skip', [\App\Http\Controllers\CareTaskController::class, 'skip'])->name('care-tasks.skip');
 
+    Route::get('/activity-log', [\App\Http\Controllers\ActivityLogController::class, 'index'])->name('activity-log');
+
     Route::get('/settings', [\App\Http\Controllers\SettingsController::class, 'index'])->name('settings');
+    Route::get('/badges', [\App\Http\Controllers\BadgeController::class, 'index'])->name('badges');
     Route::post('/settings/profile', [\App\Http\Controllers\SettingsController::class, 'updateProfile'])->name('settings.profile');
     Route::post('/settings/notifications', [\App\Http\Controllers\SettingsController::class, 'updateNotifications'])->name('settings.notifications');
     Route::delete('/settings/account', [\App\Http\Controllers\SettingsController::class, 'destroyAccount'])->name('settings.account.destroy');
@@ -127,6 +130,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/plants', [\App\Http\Controllers\Admin\AdminController::class, 'plants'])->name('admin.plants');
 
     Route::get('/care-templates', [\App\Http\Controllers\Admin\AdminController::class, 'careTemplates'])->name('admin.care-templates');
+
+    Route::get('/badges', [\App\Http\Controllers\Admin\AdminController::class, 'badges'])->name('admin.badges');
+    Route::post('/badges', [\App\Http\Controllers\Admin\AdminController::class, 'storeBadge'])->name('admin.badges.store');
+    Route::put('/badges/{badge}', [\App\Http\Controllers\Admin\AdminController::class, 'updateBadge'])->name('admin.badges.update');
+    Route::delete('/badges/{badge}', [\App\Http\Controllers\Admin\AdminController::class, 'destroyBadge'])->name('admin.badges.destroy');
+    Route::post('/badges/award', [\App\Http\Controllers\Admin\AdminController::class, 'awardBadgeToUser'])->name('admin.badges.award');
 
     Route::get('/weather', function () {
         return view('admin.weather');

@@ -41,6 +41,12 @@ class GardenController extends Controller
             'location_name' => $request->location,
         ]);
 
+        // Award 'Pekebun Pertama' badge
+        $badge = \App\Models\Badge::where('name', 'Pekebun Pertama')->first();
+        if ($badge && !$user->badges()->where('badge_id', $badge->id)->exists()) {
+            $user->badges()->attach($badge->id, ['awarded_at' => now()]);
+        }
+
         return response()->json($garden);
     }
 

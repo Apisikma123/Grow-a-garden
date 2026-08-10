@@ -46,6 +46,7 @@
                     ['route' => 'gardens', 'label' => 'Kebun Saya', 'icon' => 'yard', 'url' => '/gardens'],
                     ['route' => 'growth-calendar', 'label' => 'Kalender Tanam', 'icon' => 'calendar_month', 'url' => '/growth-calendar'],
                     ['route' => 'care-tasks', 'label' => 'Tugas Perawatan', 'icon' => 'water_drop', 'url' => '/care-tasks'],
+                    ['route' => 'activity-log', 'label' => 'Activity Log', 'icon' => 'history', 'url' => '/activity-log'],
                 ];
                 $currentRoute = request()->path();
             @endphp
@@ -280,10 +281,6 @@
                                 <span class="text-[11px] text-on-surface-variant mt-0.5">Tracking tak terbatas untuk menyiram, memupuk, dll.</span>
                             </div>
                         </div>
-                        <div class="flex items-start gap-3">
-                            <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">groups</span>
-                            <span class="text-sm text-on-surface font-medium">Ideal untuk Urban Farming & Komunitas</span>
-                        </div>
                     </div>
 
                     <a href="/checkout?plan=pro&from={{ urlencode(request()->path()) }}" class="w-full text-center bg-[#006c49] text-white font-bold py-3 rounded-xl hover:bg-[#005236] transition-colors shadow-sm relative z-10 block">Upgrade ke Pro</a>
@@ -304,6 +301,7 @@
             ['route' => 'gardens', 'label' => 'Kebun', 'icon' => 'yard', 'url' => '/gardens'],
             ['route' => 'growth-calendar', 'label' => 'Kalender', 'icon' => 'event_note', 'url' => '/growth-calendar'],
             ['route' => 'care-tasks', 'label' => 'Tugas', 'icon' => 'checklist', 'url' => '/care-tasks'],
+            ['route' => 'activity-log', 'label' => 'Riwayat', 'icon' => 'history', 'url' => '/activity-log'],
         ];
     @endphp
 
@@ -311,7 +309,7 @@
         @php
             $isActive = ltrim($item['url'], '/') === $currentRoute;
         @endphp
-        <a href="{{ $item['url'] }}" class="flex flex-col items-center justify-center {{ $isActive ? 'bg-primary text-on-primary' : 'text-on-surface-variant hover:bg-surface-container-high' }} rounded-xl px-4 py-1.5 active:scale-95 transition-transform duration-200">
+        <a href="{{ $item['url'] }}" class="flex flex-col items-center justify-center {{ $isActive ? 'bg-primary text-on-primary' : 'text-on-surface-variant hover:bg-surface-container-high' }} rounded-xl px-2.5 py-1.5 active:scale-95 transition-transform duration-200">
             <span class="material-symbols-outlined">{{ $item['icon'] }}</span>
             <span class="text-[10px] font-semibold mt-0.5">{{ $item['label'] }}</span>
         </a>
@@ -344,4 +342,5 @@
         return true;
     };
 </script>
+
 @endsection

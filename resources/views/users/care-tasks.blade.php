@@ -50,15 +50,25 @@
             </div>
 
             {{-- Saran Hari Ini --}}
+            @php
+                $dailyAdviceList = [
+                    ['title' => 'Periksa Kebun', 'desc' => 'Luangkan waktu 10 menit untuk observasi daun & tanah.', 'icon' => 'eco'],
+                    ['title' => 'Cek Kelembapan', 'desc' => 'Pastikan media tanam tidak terlalu kering atau menggenang.', 'icon' => 'water_drop'],
+                    ['title' => 'Pangkas Daun Tua', 'desc' => 'Bersihkan daun kuning untuk menghemat nutrisi tanaman.', 'icon' => 'content_cut'],
+                    ['title' => 'Cek Hama Daun', 'desc' => 'Periksa balik daun untuk mencegah serangga berkembang biak.', 'icon' => 'search'],
+                    ['title' => 'Beri Sinar Matahari', 'desc' => 'Geser pot ke area cerah untuk fotosintesis maksimal.', 'icon' => 'light_mode'],
+                ];
+                $todayAdvice = $dailyAdviceList[\Carbon\Carbon::now()->dayOfYear % count($dailyAdviceList)];
+            @endphp
             <div class="bg-surface-container-low rounded-[24px] p-[24px] flex justify-between relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300 border border-outline-variant/30">
                 <div class="relative z-10 max-w-[160px]">
                     <div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Saran Hari Ini</div>
-                    <h3 class="text-[18px] font-bold text-on-surface leading-tight mb-2">Periksa Kebun</h3>
-                    <p class="text-[12px] text-on-surface-variant font-medium">Luangkan waktu 10 menit untuk observasi.</p>
+                    <h3 class="text-[18px] font-bold text-on-surface leading-tight mb-2">{{ $todayAdvice['title'] }}</h3>
+                    <p class="text-[12px] text-on-surface-variant font-medium">{{ $todayAdvice['desc'] }}</p>
                 </div>
                 <div class="relative z-10 mt-auto">
                     <div class="w-14 h-14 bg-[#d1fae5] rounded-full flex items-center justify-center text-[#059669] shadow-sm">
-                        <span class="material-symbols-outlined text-[28px]">eco</span>
+                        <span class="material-symbols-outlined text-[28px]">{{ $todayAdvice['icon'] }}</span>
                     </div>
                 </div>
             </div>
@@ -77,7 +87,29 @@
                     </div>
                 </div>
 
-                <div class="space-y-[16px] pt-2">
+                <div class="space-y-[16px] pt-2 relative">
+                    
+                    @if(isset($isLocked) && $isLocked)
+                        {{-- Locked State (Paywall) --}}
+                        <div class="bg-surface rounded-[24px] p-8 md:p-12 text-center ambient-shadow-lg border border-primary/20 relative overflow-hidden flex flex-col items-center justify-center min-h-[400px]">
+                            {{-- Decorative Background --}}
+                            <div class="absolute -top-20 -right-20 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+                            <div class="absolute -bottom-20 -left-20 w-64 h-64 bg-secondary/5 rounded-full blur-3xl pointer-events-none"></div>
+                            
+                            <div class="relative z-10 flex flex-col items-center w-full max-w-2xl mx-auto">
+                                <div class="w-20 h-20 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center shadow-lg mb-6 shadow-yellow-500/30 ring-8 ring-yellow-500/10 shrink-0">
+                                    <span class="material-symbols-outlined text-[40px] text-white">lock</span>
+                                </div>
+                                <h3 class="text-[24px] font-black text-on-surface mb-3 text-center">Tugas Perawatan Terkunci</h3>
+                                <p class="text-[15px] text-on-surface-variant leading-relaxed mb-8 text-center max-w-lg">Tingkatkan ke paket <span class="font-bold text-primary">Panen Raya</span> atau <span class="font-bold text-[#ea580c]">Pekebun Aktif</span> untuk membuka asisten perawatan pintar, daftar tugas harian, dan notifikasi kebun real-time.</p>
+                                
+                                <button type="button" onclick="document.getElementById('pricing-modal').classList.remove('hidden')" class="bg-primary text-white font-bold text-[15px] px-8 py-3.5 rounded-full hover:bg-primary/90 active:scale-95 transition-all shadow-md flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-[20px]">workspace_premium</span>
+                                    Upgrade Sekarang
+                                </button>
+                            </div>
+                        </div>
+                    @else
                     
                     @if(session('success'))
                         <div class="bg-[#dcfce7] text-[#166534] px-4 py-3 rounded-xl text-sm font-bold border border-[#bbf7d0]">
@@ -121,7 +153,10 @@
                                     <span class="bg-surface-container text-on-surface-variant text-[10px] font-bold px-2 py-0.5 rounded-[4px]">{{ $task->priority ?? 'LOW' }}</span>
                                     @endif
                                 </div>
-                                <p class="text-[13px] text-on-surface-variant font-medium">{{ $task->plant->garden->name ?? 'Kebun' }}: {{ $task->plant->plantTemplate->name_id }}</p>
+                                <div class="flex items-center gap-2">
+                                    <p class="text-[13px] text-on-surface-variant font-medium">{{ $task->plant->garden->name ?? 'Kebun' }}: {{ $task->plant->plantTemplate->name_id }}</p>
+                                    <a href="{{ route('growth-calendar', ['plant_id' => $task->plant->id]) }}" class="text-[11px] font-bold text-primary hover:underline flex items-center gap-0.5" title="Lihat di Kalender"><span class="material-symbols-outlined text-[14px]">calendar_month</span></a>
+                                </div>
                             </div>
                         </div>
                         <div class="flex items-center gap-6 w-full sm:w-auto justify-end">
@@ -150,8 +185,8 @@
                     </div>
                     @endforelse
 
-                    {{-- Menampilkan 3 Tugas Terakhir Selesai --}}
-                    @foreach($completedTasks->take(3) as $task)
+                    {{-- Menampilkan Tugas Selesai --}}
+                    @foreach($completedTasks as $task)
                     <div class="bg-surface rounded-[24px] p-[20px] flex items-center justify-between ambient-shadow opacity-80">
                         <div class="flex items-center gap-4">
                             <div class="w-14 h-14 rounded-[16px] bg-surface-container-highest text-on-surface-variant flex items-center justify-center shadow-sm">
@@ -176,7 +211,7 @@
                     </div>
                     @endforeach
 
-                    @foreach($skippedTasks->take(2) as $task)
+                    @foreach($skippedTasks as $task)
                     <div class="bg-surface rounded-[24px] p-[20px] flex items-center justify-between ambient-shadow opacity-60">
                         <div class="flex items-center gap-4">
                             <div class="w-14 h-14 rounded-[16px] bg-surface-container-highest text-on-surface-variant flex items-center justify-center shadow-sm">
@@ -199,7 +234,8 @@
                         </div>
                     </div>
                     @endforeach
-
+                    
+                    @endif
                 </div>
             </div>
 
@@ -207,7 +243,7 @@
             <div class="lg:col-span-1 flex flex-col gap-[24px]">
                 
                 {{-- Kebun Terpopuler Card --}}
-                <div class="bg-surface-container-low rounded-3xl p-6 ambient-shadow border border-outline-variant/30 flex flex-col h-full hover:border-primary/30 transition-all group">
+                <div class="bg-surface-container-low rounded-3xl p-6 ambient-shadow border border-outline-variant/30 flex flex-col hover:border-primary/30 transition-all group shrink-0">
                     <h3 class="text-[18px] font-bold text-on-surface mb-4">Kebun Utama Anda</h3>
                     
                     @php $firstGarden = Auth::user() ? Auth::user()->gardens()->first() : null; @endphp
@@ -240,7 +276,7 @@
                 </div>
 
                 {{-- Autopilot (Pro Feature) --}}
-                <div class="bg-surface rounded-[24px] p-[24px] ambient-shadow-lg border border-outline-variant/20 relative overflow-hidden">
+                <div class="bg-surface rounded-[24px] p-[24px] ambient-shadow-lg border border-outline-variant/20 relative overflow-hidden shrink-0">
                     <div class="flex items-center justify-between mb-2">
                         <h3 class="text-[18px] font-bold text-on-surface flex items-center gap-2">
                             <span class="material-symbols-outlined text-primary">smart_toy</span> Autopilot
@@ -272,7 +308,7 @@
                 </div>
 
                 {{-- Misi Mingguan Card --}}
-                <div class="bg-[#67b193] rounded-[24px] p-[24px] relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300 ambient-shadow-lg text-[#003823]">
+                <div class="bg-[#67b193] rounded-[24px] p-[24px] relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300 ambient-shadow-lg text-[#003823] shrink-0">
                     <div class="mb-4 relative z-10">
                         <span class="material-symbols-outlined text-[28px] mb-2">military_tech</span>
                         <h3 class="text-[18px] font-bold mb-1">Misi Mingguan</h3>

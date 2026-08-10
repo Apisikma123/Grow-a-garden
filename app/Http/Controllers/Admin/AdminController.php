@@ -140,4 +140,57 @@ class AdminController extends Controller
         $user->delete();
         return response()->json(['success' => true]);
     }
+
+    public function badges()
+    {
+        $badges = \App\Models\Badge::withCount('users')->get();
+        $users = User::orderBy('name')->get();
+        return view('admin.badges', compact('badges', 'users'));
+    }
+
+    public function storeBadge(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'icon_url' => 'nullable|string',
+        ]);
+
+        \App\Models\Badge::create($validated);
+        return redirect()->back()->with('success', 'Badge berhasil dibuat!');
+    }
+
+    public function updateBadge(Request $request, \App\Models\Badge $badge)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'icon_url' => 'nullable|string',
+        ]);
+
+        $badge->update($validated);
+        return redirect()->back()->with('success', 'Badge berhasil diperbarui!');
+    }
+
+    public function destroyBadge(\App\Models\Badge $badge)
+    {
+        $badge->delete();
+        return redirect()->back()->with('success', 'Badge berhasil dihapus!');
+    }
+
+    public function awardBadgeToUser(Request $request)
+    {
+        $validated = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'badge_id' => 'required|exists:badges,id',
+        ]);
+
+        $user = User::findOrFail($validated['user_id']);
+        if (!$user->badges()->where('badge_id', $validated['badge_id'])->exists()) {
+            $user->badges()->attach($validated['badge_id'], ['awarded_at' => now()]);
+            return redirect()->back()->with('success', "Badge berhasil diberikan ke {$user->name}!");
+        }
+
+        return redirect()->back()->with('info', "Pengguna sudah memiliki badge ini.");
+    }
 }

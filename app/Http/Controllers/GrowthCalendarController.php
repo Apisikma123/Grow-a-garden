@@ -43,12 +43,25 @@ class GrowthCalendarController extends Controller
 
         // Generate timeline
         $timeline = $this->generateTimeline($mainPlant, $currentHst);
+        
+        $isLocked = $user && $user->role === 'free';
+        $todayTasks = collect();
+        if (!$isLocked && $mainPlant) {
+            $todayTasks = \App\Models\Event::with('eventType')
+                ->where('plant_id', $mainPlant->id)
+                ->whereDate('scheduled_date', '<=', Carbon::today())
+                ->whereIn('status', ['PENDING', 'MISSED'])
+                ->orderBy('priority', 'asc')
+                ->get();
+        }
 
         return view('users.growth-calendar', [
             'mainPlant' => $mainPlant,
             'otherPlants' => $otherPlants,
             'timeline' => $timeline,
-            'currentHst' => $currentHst
+            'currentHst' => $currentHst,
+            'todayTasks' => $todayTasks,
+            'isLocked' => $isLocked,
         ]);
     }
 

@@ -293,7 +293,11 @@
             </div>
 
             {{-- Actions --}}
-            <div class="flex justify-end">
+            <div class="flex justify-between items-center mt-6 pt-6 border-t border-outline-variant/30">
+                <a href="{{ route('care-tasks') }}" class="flex items-center gap-2 text-primary font-bold text-[13px] px-5 py-2.5 rounded-full hover:bg-primary/10 transition-colors shadow-sm bg-surface">
+                    <span class="material-symbols-outlined text-[18px]">checklist</span>
+                    Lihat Tugas
+                </a>
                 <button type="button" onclick="GardenApp.deleteCurrentPlant()" class="flex items-center gap-2 text-error font-bold text-[13px] px-4 py-2 rounded-xl hover:bg-error/10 transition-colors">
                     <span class="material-symbols-outlined text-[18px]">delete</span>
                     Hapus Tanaman

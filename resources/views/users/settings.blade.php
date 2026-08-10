@@ -129,6 +129,79 @@
                     </form>
                 </div>
 
+                {{-- Prestasi & Badge Kebun (Gamification Showcase) --}}
+                <div class="bg-surface rounded-[24px] p-[24px] ambient-shadow-lg border border-outline-variant/20 hover:shadow-xl transition-shadow duration-300">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                        <div>
+                            <h2 class="text-[24px] font-bold text-on-surface flex items-center gap-2">
+                                <span class="material-symbols-outlined text-amber-500 text-[28px]">workspace_premium</span>
+                                Prestasi & Badge Kebun
+                            </h2>
+                            <p class="text-[14px] text-on-surface-variant">Selesaikan tugas perawatan untuk membuka badge langka!</p>
+                        </div>
+
+                        @php
+                            $unlockedCount = count($userBadgeIds ?? []);
+                            $progressPct = $totalBadgeCount > 0 ? round(($unlockedCount / $totalBadgeCount) * 100) : 0;
+                        @endphp
+                        <div class="bg-amber-50 text-amber-800 px-4 py-2 rounded-2xl border border-amber-200/60 flex flex-col sm:items-end">
+                            <span class="text-[12px] font-bold uppercase tracking-wider">Koleksi Terbuka</span>
+                            <span class="text-[18px] font-black text-amber-600">{{ $unlockedCount }} / {{ $totalBadgeCount }} Badge ({{ $progressPct }}%)</span>
+                        </div>
+                    </div>
+
+                    {{-- Progress Bar --}}
+                    <div class="w-full bg-surface-container-high h-2.5 rounded-full overflow-hidden mb-6">
+                        <div class="bg-gradient-to-r from-amber-400 to-amber-600 h-full rounded-full transition-all duration-500" style="width: {{ $progressPct }}%;"></div>
+                    </div>
+
+                    {{-- Badges Grid --}}
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        @foreach($displayBadges as $badge)
+                            @php
+                                $isEarned = in_array($badge->id, $userBadgeIds ?? []);
+                            @endphp
+                            <div class="rounded-2xl p-4 border transition-all relative overflow-hidden flex flex-col justify-between {{ $isEarned ? 'bg-gradient-to-br from-amber-500/10 to-yellow-500/5 border-amber-400/50 shadow-sm' : 'bg-surface-container-low border-outline-variant/30 opacity-60 grayscale' }}">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-sm shrink-0 {{ $isEarned ? 'bg-amber-500 text-white shadow-amber-500/30' : 'bg-surface-container-high text-on-surface-variant' }}">
+                                        <span class="material-symbols-outlined text-[26px]">{{ $badge->icon_url ?? 'military_tech' }}</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-[15px] font-bold text-on-surface leading-tight">{{ $badge->name }}</h4>
+                                        @if($isEarned)
+                                            <span class="inline-flex items-center gap-0.5 text-[10px] font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-md mt-1">
+                                                <span class="material-symbols-outlined text-[12px]">check_circle</span> Terbuka
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center gap-0.5 text-[10px] font-bold text-on-surface-variant bg-surface-container-highest px-2 py-0.5 rounded-md mt-1">
+                                                <span class="material-symbols-outlined text-[12px]">lock</span> Terkunci
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div>
+                                <p class="text-[12px] text-on-surface-variant font-medium leading-relaxed flex-grow">{{ $badge->description }}</p>
+                                
+                                <div class="mt-3 pt-3 border-t border-outline-variant/20 flex items-center justify-between">
+                                    @php
+                                        $globalPct = number_format(($badge->users_count / $totalUsers) * 100, 1);
+                                        // Rarity color logic
+                                        $rarityColor = $globalPct < 10 ? 'text-primary font-black' : ($globalPct < 50 ? 'text-amber-600 font-bold' : 'text-on-surface-variant');
+                                    @endphp
+                                    <span class="text-[10px] font-bold uppercase tracking-wider {{ $rarityColor }}">
+                                        Dimiliki {{ $globalPct }}% pemain
+                                    </span>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <div class="mt-6 flex justify-center">
+                        <a href="{{ route('badges') }}" class="inline-flex items-center gap-2 bg-surface-container-low hover:bg-surface-container-high text-on-surface border border-outline-variant/50 px-6 py-3 rounded-full font-bold text-[14px] transition-all">
+                            Lihat Semua Lencana <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+                        </a>
+                    </div>
+                </div>
+
                 {{-- Subscription / Langganan Box --}}
                 <div class="bg-surface rounded-[24px] p-[24px] ambient-shadow-lg border border-outline-variant/20 hover:shadow-xl transition-shadow duration-300">
                     <div class="flex items-center justify-between mb-6">
