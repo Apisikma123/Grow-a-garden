@@ -49,26 +49,7 @@
             @endif
 
             @if(session('new_badge'))
-                @php $b = session('new_badge'); @endphp
-                Swal.fire({
-                    title: '⭐ BADGE BARU TERBUKA!',
-                    html: `
-                        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px 0;">
-                            <div style="width: 64px; height: 64px; background: linear-gradient(135deg, #fbbf24, #d97706); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.4);">
-                                <span class="material-symbols-outlined" style="font-size: 36px; color: #ffffff;">{{ $b['icon_url'] ?? 'workspace_premium' }}</span>
-                            </div>
-                            <h3 style="font-size: 22px; font-weight: 800; color: #0f172a; margin: 0 0 6px 0;">{{ $b['name'] }}</h3>
-                            <p style="font-size: 14px; font-weight: 500; color: #64748b; margin: 0; line-height: 1.5;">{{ $b['description'] }}</p>
-                        </div>
-                    `,
-                    showConfirmButton: true,
-                    confirmButtonText: 'Klaim & Lanjutkan',
-                    confirmButtonColor: '#006c49',
-                    customClass: {
-                        popup: 'rounded-3xl p-6 border-2 border-amber-400/60 shadow-2xl',
-                        confirmButton: 'rounded-full px-6 py-3 font-bold text-sm'
-                    }
-                });
+                Alert.modal.badge({!! json_encode(session('new_badge')) !!});
             @endif
         });
     </script>

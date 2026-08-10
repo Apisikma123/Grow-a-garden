@@ -9,11 +9,11 @@ use Carbon\Carbon;
 
 class CareTaskController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
 
-        $isLocked = $user && $user->role === 'free';
+        $isLocked = false;
         
         $events = collect();
         if ($user && !$isLocked) {
@@ -45,6 +45,25 @@ class CareTaskController extends Controller
         $totalCompleted = $completedTasks->count();
         $totalTasks = $events->count(); // only tasks queried (relevant to today)
 
+        if ($request->has('priority') && in_array($request->priority, ['HIGH', 'MEDIUM', 'LOW'])) {
+            $pendingTasks = $pendingTasks->where('priority', $request->priority);
+            $completedTasks = $completedTasks->where('priority', $request->priority);
+            $skippedTasks = $skippedTasks->where('priority', $request->priority);
+        }
+
+        // Find closest badge using BadgeService
+        $closestBadge = null;
+        $closestTarget = 0;
+        $closestCurrent = 0;
+        if ($user) {
+            $closestData = \App\Services\BadgeService::getClosestBadge($user);
+            if ($closestData) {
+                $closestBadge = $closestData['badge'];
+                $closestTarget = $closestData['target'];
+                $closestCurrent = $closestData['current'];
+            }
+        }
+
         return view('users.care-tasks', [
             'pendingTasks' => $pendingTasks,
             'completedTasks' => $completedTasks,
@@ -53,6 +72,9 @@ class CareTaskController extends Controller
             'totalCompleted' => $totalCompleted,
             'totalTasks' => $totalTasks > 0 ? $totalTasks : 1, // Avoid division by zero
             'isLocked' => $isLocked,
+            'closestBadge' => $closestBadge,
+            'closestTarget' => $closestTarget,
+            'closestCurrent' => $closestCurrent,
         ]);
     }
 
@@ -69,28 +91,12 @@ class CareTaskController extends Controller
         ]);
 
         $user = Auth::user();
-        $gardens = $user->gardens()->pluck('id');
-        $plantIds = \App\Models\Plant::whereIn('garden_id', $gardens)->pluck('id');
-        $completedCount = Event::whereIn('plant_id', $plantIds)->where('status', 'COMPLETED')->count();
+        $sync = \App\Services\BadgeService::syncUserBadges($user);
 
         $newBadge = null;
-        if ($completedCount >= 5) {
-            $badge = \App\Models\Badge::where('name', 'Tangan Dingin')->first();
-            if ($badge && !$user->badges()->where('badge_id', $badge->id)->exists()) {
-                $user->badges()->attach($badge->id, ['awarded_at' => Carbon::now()]);
-                $newBadge = $badge;
-            }
-        }
-
-        if (!$newBadge && $completedCount >= 1) {
-            $badge = \App\Models\Badge::firstOrCreate(['name' => 'Langkah Perdana'], [
-                'description' => 'Menyelesaikan tugas perawatan pertama Anda!',
-                'icon_url' => 'check_circle'
-            ]);
-            if ($badge && !$user->badges()->where('badge_id', $badge->id)->exists()) {
-                $user->badges()->attach($badge->id, ['awarded_at' => Carbon::now()]);
-                $newBadge = $badge;
-            }
+        if (!empty($sync['newlyAwardedIds'])) {
+            $firstAwardedId = reset($sync['newlyAwardedIds']);
+            $newBadge = \App\Models\Badge::find($firstAwardedId);
         }
 
         if ($newBadge) {

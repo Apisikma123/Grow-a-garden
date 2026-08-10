@@ -41,27 +41,34 @@
 <div class="min-h-screen flex items-center justify-center p-4 md:p-8">
     
     {{-- Main Checkout Card --}}
-    <div id="checkout-card" class="w-full max-w-[1100px] flex flex-col md:flex-row rounded-[32px] overflow-hidden glass-card relative z-10 transition-colors duration-500">
+    <div id="checkout-card" class="w-full max-w-[1200px] flex flex-col md:flex-row rounded-[32px] overflow-hidden glass-card relative z-10 transition-colors duration-500">
         
         {{-- Left: Order Summary & Benefits --}}
-        <div id="left-panel" class="w-full md:w-[45%] premium-gradient-subur p-8 md:p-12 text-white relative overflow-hidden flex flex-col transition-colors duration-500">
+        <div id="left-panel" class="w-full md:w-[40%] shrink-0 min-w-0 premium-gradient-subur p-8 md:p-12 text-white relative overflow-hidden flex flex-col transition-colors duration-500">
             <div class="absolute inset-0 bg-pattern"></div>
             <div id="glow-1" class="absolute -bottom-24 -left-24 w-64 h-64 bg-[#10b981] rounded-full mix-blend-multiply filter blur-3xl opacity-50 transition-colors duration-500"></div>
             <div id="glow-2" class="absolute -top-24 -right-24 w-64 h-64 bg-[#059669] rounded-full mix-blend-multiply filter blur-3xl opacity-50 transition-colors duration-500"></div>
             
             <div class="relative z-10">
                 @php
-                    $backUrl = '/#pricing';
-                    $backText = 'Kembali ke Harga';
+                    $backUrl = '/settings#subscription';
+                    $backText = 'Kembali ke Pengaturan';
                     if (request()->query('from')) {
                         $fromPath = request()->query('from');
-                        $backUrl = '/' . ltrim($fromPath, '/');
-                        if (str_contains($fromPath, 'growth-calendar')) {
-                            $backText = 'Kembali ke Kalender';
-                        } elseif (str_contains($fromPath, 'care-tasks')) {
-                            $backText = 'Kembali ke Perawatan';
+                        if ($fromPath === 'settings') {
+                            $backUrl = '/settings#subscription';
+                            $backText = 'Kembali ke Pengaturan';
                         } else {
-                            $backText = 'Kembali ke Dashboard';
+                            $backUrl = '/' . ltrim($fromPath, '/');
+                            if (str_contains($fromPath, 'growth-calendar')) {
+                                $backText = 'Kembali ke Kalender';
+                            } elseif (str_contains($fromPath, 'care-tasks')) {
+                                $backText = 'Kembali ke Perawatan';
+                            } elseif (str_contains($fromPath, 'gardens')) {
+                                $backText = 'Kembali ke Kebun Saya';
+                            } else {
+                                $backText = 'Kembali ke Pengaturan';
+                            }
                         }
                     }
                 @endphp
@@ -79,10 +86,10 @@
                 <p id="plan-desc" class="text-white/80 text-[15px] mb-8 leading-relaxed font-medium">Investasi terbaik untuk panen yang konsisten.</p>
 
                 {{-- Billing Toggle --}}
-                <div class="bg-black/20 backdrop-blur-md rounded-full p-1.5 mb-10 inline-grid grid-cols-2 relative border border-white/10 shadow-inner w-auto">
-                    <button id="btn-monthly" class="relative z-10 py-3 px-8 text-[16px] font-bold rounded-full text-white/50 hover:text-white transition-colors duration-300 flex items-center justify-center">Monthly</button>
-                    <button id="btn-yearly" class="relative z-10 py-3 px-8 text-[16px] font-bold rounded-full text-white transition-colors duration-300 flex items-center justify-center gap-2">
-                        Yearly <span class="bg-[#ffb200] text-[#4d2a00] text-[10px] px-2.5 py-1 rounded-full font-black uppercase tracking-wider hidden md:flex items-center shadow-sm leading-none">SAVE 40%</span>
+                <div class="bg-black/20 backdrop-blur-md rounded-full p-1.5 mb-10 inline-grid grid-cols-2 relative border border-white/10 shadow-inner w-full max-w-[400px]">
+                    <button id="btn-monthly" class="relative z-10 py-3 px-4 text-[16px] font-bold rounded-full text-white/50 hover:text-white transition-colors duration-300 flex items-center justify-center">Monthly</button>
+                    <button id="btn-yearly" class="relative z-10 py-3 px-4 text-[16px] font-bold rounded-full text-white transition-colors duration-300 flex items-center justify-center gap-2">
+                        Yearly <span class="bg-[#ffb200] text-[#4d2a00] text-[10px] px-2.5 py-1 rounded-full font-black uppercase tracking-wider hidden md:flex items-center shadow-sm leading-none shrink-0">SAVE 40%</span>
                     </button>
                     <div id="toggle-pill" class="absolute top-1.5 bottom-1.5 left-1.5 bg-white/20 rounded-full transition-transform duration-300 ease-out shadow-sm border border-white/10" style="width: calc(50% - 6px); transform: translateX(100%);"></div>
                 </div>
@@ -90,7 +97,7 @@
                 <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 mb-8">
                     <div class="flex justify-between items-center mb-4">
                         <span class="text-white/80 font-medium">Langganan</span>
-                        <span id="summary-cycle" class="font-bold">Annual (Hemat 40%)</span>
+                        <span id="summary-cycle" class="font-bold text-right ml-4">Annual (Hemat 40%)</span>
                     </div>
                     <div class="flex justify-between items-center mb-4">
                         <span class="text-white/80 font-medium">Total Pembayaran</span>
@@ -98,7 +105,7 @@
                     </div>
                     <div class="h-px bg-white/20 w-full my-4"></div>
                     <div class="flex items-center gap-2 text-[12px] text-white/70">
-                        <span class="material-symbols-outlined text-[16px]">autorenew</span>
+                        <span class="material-symbols-outlined text-[16px] shrink-0">autorenew</span>
                         <span id="summary-renew-text">Perpanjangan otomatis tahunan. Batalkan kapan saja.</span>
                     </div>
                 </div>
@@ -110,7 +117,7 @@
         </div>
 
         {{-- Right: Payment Form --}}
-        <div class="w-full md:w-[55%] bg-white/60 p-8 md:p-12 relative flex flex-col justify-center">
+        <div class="w-full md:w-[60%] shrink-0 min-w-0 bg-white/60 p-8 md:p-12 relative flex flex-col justify-center">
             
             {{-- Normal State: Payment Button --}}
             <div id="payment-form">
@@ -180,7 +187,7 @@
             </div>
 
             {{-- Success State --}}
-            <div id="payment-success" class="hidden flex-col w-full max-w-md mx-auto py-8">
+            <div id="payment-success" class="hidden flex-col w-full max-w-lg mx-auto py-4">
                 <div class="w-full bg-white rounded-3xl p-8 shadow-2xl border border-emerald-100 text-center relative overflow-hidden">
                     <!-- Background decoration -->
                     <div class="absolute -top-24 -right-24 w-48 h-48 bg-emerald-50 rounded-full blur-3xl opacity-60"></div>
@@ -208,16 +215,16 @@
                                 </div>
                             </div>
                             <div class="flex items-start gap-3" id="success-autopilot-container" style="display: none;">
-                                <span class="material-symbols-outlined text-emerald-600 mt-0.5 text-[20px]">smart_toy</span>
+                                <span class="material-symbols-outlined text-emerald-600 mt-0.5 text-[20px]">checklist</span>
                                 <div>
-                                    <p class="text-[13px] font-bold text-slate-700">Autopilot Aktif</p>
+                                    <p class="text-[13px] font-bold text-slate-700">Jadwal Perawatan Aktif</p>
                                     <p class="text-[12px] text-slate-500" id="success-autopilot-text"></p>
                                 </div>
                             </div>
                         </div>
 
-                        <a href="/dashboard" class="w-full bg-[#006c49] text-white font-bold py-3.5 rounded-xl hover:bg-[#005236] transition-all shadow-md text-[15px] flex items-center justify-center gap-2">
-                            Masuk ke Dashboard
+                        <a href="/gardens" class="w-full bg-[#006c49] text-white font-bold py-3.5 rounded-xl hover:bg-[#005236] transition-all shadow-md text-[15px] flex items-center justify-center gap-2">
+                            Lanjutkan ke Kebun Saya
                             <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
                         </a>
                     </div>
@@ -237,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const plans = {
         subur: {
             name: "Paket Subur",
-            desc: "Investasi terbaik untuk panen yang konsisten. Unlock semua fitur autopilot dan cuaca cerdas.",
+            desc: "Investasi terbaik untuk panen yang konsisten. Unlock fitur perawatan otomatis dan cuaca cerdas.",
             monthlyPrice: 29000,
             yearlyPrice: 199000,
             monthlyPriceLabel: "Rp 29.000",
@@ -248,27 +255,29 @@ document.addEventListener('DOMContentLoaded', () => {
             glow1: "#10b981",
             glow2: "#059669",
             features: [
-                { icon: "smart_toy", title: "Asisten Autopilot", desc: "Otomatisasi jadwal berdasarkan template tanaman." },
+                { icon: "calendar_month", title: "Growth Calendar", desc: "Jadwal estimasi tanam hingga panen interaktif." },
                 { icon: "cloud_done", title: "Weather Adjustment", desc: "Anti gagal panen karena cuaca ekstrem." },
                 { icon: "all_inclusive", title: "Kapasitas Ekstra", desc: "Hingga 10 kebun dan 100 tanaman aktif." }
             ]
         },
         pro: {
-            name: "Panen Raya (Pro)",
+            name: "Panen Raya (Premium)",
             desc: "Skalabilitas maksimal untuk power user. Ideal untuk urban farming dan komunitas besar.",
             monthlyPrice: 99000,
             yearlyPrice: 799000,
             monthlyPriceLabel: "Rp 99.000",
             yearlyPriceLabel: "Rp 799.000",
-            badgeText: "Pro Plan",
+            badgeText: "Premium Plan",
             badgeIcon: "workspace_premium",
             theme: "premium-gradient-pro",
             glow1: "#3b82f6",
             glow2: "#8b5cf6",
             features: [
-                { icon: "all_inclusive", title: "Unlimited Segala", desc: "Kebun & tanaman tanpa batas." },
-                { icon: "history", title: "Activity Log", desc: "Tracking historis tanpa batas sepanjang masa." },
-                { icon: "groups", title: "Dukungan Komunitas", desc: "Akses prioritas CS dan fitur multi-user." }
+                { icon: "all_inclusive", title: "Kapasitas Maksimal", desc: "Maksimal 100 Kebun & Tanaman Tanpa Batas." },
+                { icon: "calendar_month", title: "Growth Calendar", desc: "Jadwal estimasi tanam hingga panen interaktif." },
+                { icon: "cloud_done", title: "Weather Adjustment", desc: "Anti gagal panen karena cuaca ekstrem." },
+                { icon: "emoji_events", title: "Harvest Notification", desc: "Notifikasi panen di dashboard." },
+                { icon: "history", title: "Activity Log Tanpa Batas", desc: "Tracking historis tanpa batas sepanjang masa." }
             ]
         }
     };
@@ -321,10 +330,22 @@ document.addEventListener('DOMContentLoaded', () => {
         return isYearly ? currentPlanData.yearlyPriceLabel : currentPlanData.monthlyPriceLabel;
     }
 
+    const userRole = '{{ Auth::check() ? Auth::user()->role : "free" }}';
+    const isUpgrade = (userRole === 'pro' && selectedPlan === 'pro');
+
     function updatePricingUI() {
-        const priceLabel = getPriceLabel();
+        let price = isYearly ? currentPlanData.yearlyPrice : currentPlanData.monthlyPrice;
+        let discount = 0;
+
+        if (isUpgrade) {
+            discount = isYearly ? plans.subur.yearlyPrice : plans.subur.monthlyPrice;
+        }
+
+        const finalPrice = Math.max(0, price - discount);
+        const finalPriceLabel = formatRupiah(finalPrice);
+
         if (isYearly) {
-            summaryCycle.textContent = "Tahunan (Hemat 40%)";
+            summaryCycle.textContent = isUpgrade ? "Tahunan (Potongan Upgrade Subur)" : "Tahunan (Hemat 40%)";
             summaryRenewText.textContent = "Perpanjangan otomatis tahunan. Batalkan kapan saja.";
             confirmCycle.textContent = "Tahunan";
             
@@ -334,7 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btnMonthly.classList.remove('text-white');
             btnMonthly.classList.add('text-white/50');
         } else {
-            summaryCycle.textContent = "Bulanan";
+            summaryCycle.textContent = isUpgrade ? "Bulanan (Potongan Upgrade Subur)" : "Bulanan";
             summaryRenewText.textContent = "Perpanjangan otomatis bulanan. Batalkan kapan saja.";
             confirmCycle.textContent = "Bulanan";
             
@@ -344,14 +365,20 @@ document.addEventListener('DOMContentLoaded', () => {
             btnYearly.classList.remove('text-white');
             btnYearly.classList.add('text-white/50');
         }
-        summaryPrice.textContent = priceLabel;
-        payButtonText.textContent = `Aktifkan Paket — ${priceLabel}`;
-        confirmPlanName.textContent = currentPlanData.name;
-        confirmPrice.textContent = priceLabel;
+
+        if (isUpgrade) {
+            summaryPrice.innerHTML = `${finalPriceLabel} <span class="text-[12px] font-medium text-yellow-200 block">Dipotong Paket Subur: -${formatRupiah(discount)}</span>`;
+        } else {
+            summaryPrice.textContent = finalPriceLabel;
+        }
+
+        payButtonText.textContent = isUpgrade ? `Upgrade Paket — ${finalPriceLabel}` : `Aktifkan Paket — ${finalPriceLabel}`;
+        confirmPlanName.textContent = isUpgrade ? `${currentPlanData.name} (Upgrade)` : currentPlanData.name;
+        confirmPrice.textContent = finalPriceLabel;
     }
 
     function initPlan() {
-        leftPanel.className = `w-full md:w-[45%] ${currentPlanData.theme} p-8 md:p-12 text-white relative overflow-hidden flex flex-col transition-colors duration-500`;
+        leftPanel.className = `w-full md:w-[40%] shrink-0 min-w-0 ${currentPlanData.theme} p-8 md:p-12 text-white relative overflow-hidden flex flex-col transition-colors duration-500`;
         glow1.style.backgroundColor = currentPlanData.glow1;
         glow2.style.backgroundColor = currentPlanData.glow2;
 
@@ -428,6 +455,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     autopilotContainer.style.display = 'flex';
                     autopilotText.textContent = `${data.autopilot_tasks_generated} tugas perawatan otomatis telah dijadwalkan!`;
                 }
+            }
+
+            // Premium Upgrade Celebration
+            if (window.Alert && Alert.premium) {
+                const planKey = selectedPlan === 'pro' ? 'Panen Raya (Premium)' : 'Subur (Pro)';
+                const planDesc = selectedPlan === 'pro'
+                    ? 'Maksimal 100 kebun dan tanaman tanpa batas.'
+                    : 'Kalender Tanam, Weather AI, dan Jadwal Perawatan Otomatis sudah aktif.';
+                setTimeout(() => {
+                    Alert.premium.celebrate(planKey, planDesc);
+                }, 500);
             }
 
         } catch (error) {

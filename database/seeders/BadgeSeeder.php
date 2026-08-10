@@ -57,7 +57,7 @@ class BadgeSeeder extends Seeder
             // PRUNING BADGES (11)
             // ==========================================
             ['name' => 'Potongan Pertama', 'description' => 'Selesaikan 1 tugas pemangkasan.', 'icon_url' => 'content_cut'],
-            ['name' => 'Pemangkasan 5', 'description' => 'Selesaikan 5 tugas pemangkasan.', 'icon_url' => 'scissors'],
+            ['name' => 'Pemangkasan 5', 'description' => 'Selesaikan 5 tugas pemangkasan.', 'icon_url' => 'content_cut'],
             ['name' => 'Pemangkasan 10', 'description' => 'Selesaikan 10 tugas pemangkasan.', 'icon_url' => 'design_services'],
             ['name' => 'Pemangkasan 25', 'description' => 'Selesaikan 25 tugas pemangkasan.', 'icon_url' => 'brush'],
             ['name' => 'Pemangkasan 50', 'description' => 'Selesaikan 50 tugas pemangkasan.', 'icon_url' => 'cleaning_services'],

@@ -14,21 +14,12 @@ class SettingsController extends Controller
     {
         $user = Auth::user();
 
-        // Retrospectively award 'Pekebun Pertama' if they have a garden
-        if ($user->gardens()->count() > 0) {
-            $badge = \App\Models\Badge::where('name', 'Pekebun Pertama')->first();
-            if ($badge && !$user->badges()->where('badge_id', $badge->id)->exists()) {
-                $user->badges()->attach($badge->id, ['awarded_at' => now()]);
-            }
-        }
-
         $totalUsers = \App\Models\User::count();
         $totalUsers = $totalUsers > 0 ? $totalUsers : 1;
 
-        $userBadgeIds = $user->badges()->pluck('badges.id')->toArray();
-        
-        // Fetch all badges with user counts
-        $badgesWithCounts = \App\Models\Badge::withCount('users')->get();
+        $sync = \App\Services\BadgeService::syncUserBadges($user);
+        $badgesWithCounts = $sync['badges'];
+        $userBadgeIds = $sync['userBadgeIds'];
         $totalBadgeCount = $badgesWithCounts->count();
 
         // Separate user's earned badges and unearned badges

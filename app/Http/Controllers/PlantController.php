@@ -62,41 +62,88 @@ class PlantController extends Controller
     {
         $garden = Garden::where('user_id', Auth::id())->findOrFail($garden_id);
 
-        $request->validate([
-            'plant_template_id' => 'required|exists:plant_templates,id',
-            'planted_date' => 'required|date',
-        ]);
+        if ($request->has('items') && is_array($request->items)) {
+            $request->validate([
+                'planted_date' => 'required|date',
+                'items' => 'required|array|min:1',
+                'items.*.plant_template_id' => 'required|exists:plant_templates,id',
+                'items.*.quantity' => 'required|integer|min:1|max:100',
+            ]);
+            $items = $request->items;
+        } else {
+            $request->validate([
+                'plant_template_id' => 'required|exists:plant_templates,id',
+                'planted_date' => 'required|date',
+                'quantity' => 'nullable|integer|min:1|max:100',
+            ]);
+            $items = [[
+                'plant_template_id' => $request->plant_template_id,
+                'quantity' => (int) $request->input('quantity', 1)
+            ]];
+        }
 
         $user = Auth::user();
+
+        // Calculate total requested quantity across all items
+        $totalQuantity = 0;
+        foreach ($items as $item) {
+            $totalQuantity += (int) $item['quantity'];
+        }
 
         // Enforce plant limits based on user's plan
         $plantCount = Plant::whereIn('garden_id', Garden::where('user_id', $user->id)->pluck('id'))->count();
         $maxPlants = $user->maxPlants();
-        if ($plantCount >= $maxPlants) {
+        
+        if ($plantCount + $totalQuantity > $maxPlants) {
+            $remaining = max(0, $maxPlants - $plantCount);
             return response()->json([
-                'error' => "Batas Paket {$user->planName()}: Maksimal {$maxPlants} Tanaman. Upgrade untuk menambah kapasitas.",
+                'error' => "Batas Paket {$user->planName()}: Maksimal {$maxPlants} Tanaman. Sisa kuota Anda: {$remaining} tanaman, namun Anda mencoba menanam {$totalQuantity} tanaman. Upgrade untuk menambah kapasitas.",
                 'limit_reached' => true,
                 'current_plan' => $user->planName(),
+                'remaining' => $remaining,
             ], 403);
         }
 
-        $plant = Plant::create([
-            'garden_id' => $garden->id,
-            'plant_template_id' => $request->plant_template_id,
-            'planted_date' => $request->planted_date,
-            'stage' => 'SEED',
-            'status' => 'ACTIVE',
-        ]);
+        $autopilot = new \App\Services\AutopilotService();
 
-        $plant->load('plantTemplate.category');
+        foreach ($items as $item) {
+            $qty = (int) $item['quantity'];
+            $templateId = $item['plant_template_id'];
 
-        // 🔥 Autopilot: auto-generate care tasks if user has autopilot access
-        if ($user->canUseAutopilot()) {
-            $autopilot = new \App\Services\AutopilotService();
-            $autopilot->generateForPlant($plant);
+            for ($i = 0; $i < $qty; $i++) {
+                $plant = Plant::create([
+                    'garden_id' => $garden->id,
+                    'plant_template_id' => $templateId,
+                    'planted_date' => $request->planted_date,
+                    'stage' => 'SEED',
+                    'status' => 'ACTIVE',
+                ]);
+
+                // 🔥 Autopilot: auto-generate care tasks if user has autopilot access
+                if ($autopilot) {
+                    $plant->load('plantTemplate.category');
+                    $autopilot->generateForPlant($plant);
+                }
+            }
         }
 
-        return response()->json($plant, 201);
+        // Auto-award badges via BadgeService
+        $sync = \App\Services\BadgeService::syncUserBadges($user);
+        $newBadge = null;
+        if (!empty($sync['newlyAwardedIds'])) {
+            $badge = \App\Models\Badge::find($sync['newlyAwardedIds'][0]);
+            $newBadge = [
+                'name' => $badge->name,
+                'description' => $badge->description,
+                'icon_url' => $badge->icon_url,
+            ];
+        }
+
+        return response()->json([
+            'success' => true,
+            'count' => $totalQuantity,
+            'new_badge' => $newBadge
+        ], 201);
     }
 
     public function destroy($id)

@@ -101,9 +101,10 @@ class User extends Authenticatable
     public function planName(): string
     {
         return match ($this->role) {
-            'pro' => 'Subur',
-            'premium' => 'Panen Raya',
-            default => 'Bibit',
+            'pro' => 'Subur (Pro)',
+            'premium' => 'Panen Raya (Premium)',
+            'admin' => 'Admin Console',
+            default => 'Bibit (Gratis)',
         };
     }
 
@@ -114,7 +115,7 @@ class User extends Authenticatable
     {
         return match ($this->role) {
             'pro' => 10,
-            'premium' => 100,
+            'premium', 'admin' => 100,
             default => 1,
         };
     }
@@ -127,7 +128,7 @@ class User extends Authenticatable
     {
         return match ($this->role) {
             'pro' => 100,
-            'premium' => PHP_INT_MAX,
+            'premium', 'admin' => PHP_INT_MAX,
             default => 10,
         };
     }

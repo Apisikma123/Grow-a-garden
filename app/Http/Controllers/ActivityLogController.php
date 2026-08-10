@@ -27,17 +27,21 @@ class ActivityLogController extends Controller
                     ->orderBy('updated_at', 'desc')
                     ->orderBy('scheduled_date', 'desc');
 
-        if ($isFree) {
+        $role = $user->role ?? 'free';
+        $totalActivities = Event::whereIn('plant_id', $plantIds)
+                                ->whereIn('status', ['COMPLETED', 'SKIPPED'])
+                                ->count();
+
+        if ($role === 'free') {
             // Free users only see the last 3 activities
             $activities = $query->take(3)->get();
-            
-            // To show the count of total activities hidden behind paywall
-            $totalActivities = Event::whereIn('plant_id', $plantIds)
-                                    ->whereIn('status', ['COMPLETED', 'SKIPPED'])
-                                    ->count();
-                                    
             $hiddenCount = max(0, $totalActivities - 3);
+        } elseif ($role === 'pro') {
+            // Pro users see the last 10 activities
+            $activities = $query->take(10)->get();
+            $hiddenCount = max(0, $totalActivities - 10);
         } else {
+            // Premium/Admin see unlimited paginated activity log
             $activities = $query->paginate(20);
             $hiddenCount = 0;
         }

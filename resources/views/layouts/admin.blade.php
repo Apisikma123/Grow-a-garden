@@ -28,7 +28,7 @@
         {{-- Logo --}}
         <div class="px-8 mb-8 flex justify-between items-start">
             <a href="/admin/dashboard" class="flex items-center gap-3">
-                <img src="{{ asset('images/logo.jpg') }}" alt="Logo" class="w-8 h-8 rounded-lg object-contain" onerror="this.outerHTML='<span class=\'material-symbols-outlined text-[32px] text-[#006c49]\'>local_florist</span>'">
+                <img src="{{ asset('images/logo.jpg') }}" alt="Logo" class="w-8 h-8 rounded-lg object-contain shrink-0" onerror="this.outerHTML='<span class=\'material-symbols-outlined text-[32px] text-[#006c49]\'>local_florist</span>'">
                 <div class="flex flex-col">
                     <span class="text-[20px] font-bold text-[#006c49] leading-tight tracking-tight">Grow a Garden</span>
                     <span class="text-[12px] font-bold text-[#006c49]/80 mt-0.5">Admin</span>

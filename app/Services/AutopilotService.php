@@ -87,7 +87,7 @@ class AutopilotService
             Event::create([
                 'plant_id' => $plant->id,
                 'event_type_id' => $eventType->id,
-                'scheduled_date' => $scheduledDate,
+                'scheduled_date' => $scheduledDate->toDateString(),
                 'status' => $scheduledDate->isPast() ? 'MISSED' : 'PENDING',
                 'priority' => $eventType->default_priority ?? 'MEDIUM',
                 'message' => "{$template->name_id}: {$eventType->label} (HST {$day})",
@@ -137,7 +137,7 @@ class AutopilotService
                     Event::create([
                         'plant_id' => $plant->id,
                         'event_type_id' => $eventType->id,
-                        'scheduled_date' => $currentDate->copy(),
+                        'scheduled_date' => $currentDate->toDateString(),
                         'status' => 'PENDING',
                         'priority' => $eventType->default_priority ?? 'MEDIUM',
                         'message' => "{$template->name_id}: {$eventType->label}",
@@ -183,7 +183,7 @@ class AutopilotService
                     Event::create([
                         'plant_id' => $plant->id,
                         'event_type_id' => $eventType->id,
-                        'scheduled_date' => $currentDate->copy(),
+                        'scheduled_date' => $currentDate->toDateString(),
                         'status' => 'PENDING',
                         'priority' => $eventType->default_priority ?? 'MEDIUM',
                         'message' => "{$template->name_id}: {$eventType->label}",

@@ -23,7 +23,7 @@ class SubscriptionController extends Controller
         ],
         'pro' => [
             'role' => 'premium',
-            'label' => 'Panen Raya (Pro)',
+            'label' => 'Panen Raya (Premium)',
             'monthly_price' => 99000,
             'yearly_price' => 799000,
         ],
@@ -44,8 +44,14 @@ class SubscriptionController extends Controller
         $billingCycle = $request->billing_cycle;
         $planConfig = $this->plans[$planKey];
 
-        // Calculate price and valid_until
-        $amount = $billingCycle === 'yearly' ? $planConfig['yearly_price'] : $planConfig['monthly_price'];
+        // Check if user is upgrading from Subur (pro) to Panen Raya (premium)
+        $isUpgrade = ($user->role === 'pro' && $planKey === 'pro');
+        $proConfig = $this->plans['subur'];
+
+        $baseAmount = $billingCycle === 'yearly' ? $planConfig['yearly_price'] : $planConfig['monthly_price'];
+        $deduction = $isUpgrade ? ($billingCycle === 'yearly' ? $proConfig['yearly_price'] : $proConfig['monthly_price']) : 0;
+        $amount = max(0, $baseAmount - $deduction);
+
         $validUntil = $billingCycle === 'yearly'
             ? Carbon::now()->addYear()
             : Carbon::now()->addMonth();
@@ -76,7 +82,10 @@ class SubscriptionController extends Controller
         // Update user role
         $user->update(['role' => $planConfig['role']]);
 
-        // 🔥 Autopilot: Generate care tasks for all active plants
+        // Sync user badges (auto-award subscription badges for new role)
+        \App\Services\BadgeService::syncUserBadges($user);
+
+        // Generate care tasks for active plants
         $autopilot = new AutopilotService();
         $tasksGenerated = $autopilot->generateForUser($user);
 
@@ -116,6 +125,9 @@ class SubscriptionController extends Controller
 
         // Downgrade to free
         $user->update(['role' => 'free']);
+
+        // Sync user badges (detach subscription badges)
+        \App\Services\BadgeService::syncUserBadges($user);
 
         return response()->json([
             'success' => true,

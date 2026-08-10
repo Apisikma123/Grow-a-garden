@@ -342,7 +342,7 @@
                     </div>
                     <div class="flex items-start gap-3">
                         <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">check_circle</span>
-                        <span class="text-sm text-on-surface">Akses ke Growth Calendar</span>
+                        <span class="text-sm text-on-surface">Akses Tugas Perawatan</span>
                     </div>
                     
                     {{-- Kekurangan Sengaja --}}
@@ -399,10 +399,10 @@
                         <span class="text-sm text-white font-medium">Maks. 10 Kebun & 100 Tanaman Aktif</span>
                     </div>
                     <div class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-yellow-400 text-[20px] mt-0.5">smart_toy</span>
+                        <span class="material-symbols-outlined text-yellow-400 text-[20px] mt-0.5">calendar_month</span>
                         <div class="flex flex-col">
-                            <span class="text-sm text-white font-bold">Asisten Autopilot</span>
-                            <span class="text-xs text-white/80 mt-0.5">Rule Engine menghasilkan task perawatan otomatis berbasis Growth & Care Template.</span>
+                            <span class="text-sm text-white font-bold">Growth Calendar</span>
+                            <span class="text-xs text-white/80 mt-0.5">Jadwal estimasi tanam hingga panen interaktif untuk seluruh tanaman.</span>
                         </div>
                     </div>
                     <div class="flex items-start gap-3">
@@ -425,7 +425,7 @@
             {{-- Paket 3: Panen Raya --}}
             <div class="bg-white rounded-3xl p-8 premium-shadow flex flex-col tactile-card relative overflow-hidden scroll-trigger scroll-fade-up delay-300">
                 <div class="absolute -right-6 -top-6 bg-primary/10 w-24 h-24 rounded-full"></div>
-                <h3 class="text-xl font-bold text-on-surface mb-2 relative z-10">Panen Raya <span class="text-xs font-semibold bg-primary-container text-on-primary-container px-2 py-1 rounded-full ml-2">Pro</span></h3>
+                <h3 class="text-xl font-bold text-on-surface mb-2 relative z-10">Panen Raya <span class="text-xs font-semibold bg-primary-container text-on-primary-container px-2 py-1 rounded-full ml-2">Premium</span></h3>
                 
                 <div class="bg-surface-container-low rounded-xl p-3 mb-4 mt-2">
                     <div class="mb-2">
@@ -453,8 +453,22 @@
                         <span class="text-sm text-on-surface font-bold">Maks. 100 Kebun & Tanaman Aktif Tak Terbatas</span>
                     </div>
                     <div class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">check_circle</span>
-                        <span class="text-sm text-on-surface">Seluruh fitur otomasi Paket Subur</span>
+                        <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">calendar_month</span>
+                        <div class="flex flex-col">
+                            <span class="text-sm text-on-surface font-bold">Growth Calendar</span>
+                            <span class="text-xs text-on-surface-variant mt-0.5">Jadwal estimasi tanam hingga panen interaktif untuk seluruh tanaman.</span>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">cloud_done</span>
+                        <div class="flex flex-col">
+                            <span class="text-sm text-on-surface font-bold">Anti-Gagal Panen</span>
+                            <span class="text-xs text-on-surface-variant mt-0.5">Weather Adjustment (-30% penyiraman hujan, +50% kemarau).</span>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">emoji_events</span>
+                        <span class="text-sm text-on-surface font-medium">Notifikasi Upcoming Harvest di Dashboard</span>
                     </div>
                     <div class="flex items-start gap-3">
                         <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">history</span>
@@ -462,10 +476,6 @@
                             <span class="text-sm text-on-surface font-bold">Activity Log Tanpa Batas</span>
                             <span class="text-xs text-on-surface-variant mt-0.5">Tracking tak terbatas untuk menyiram, memupuk, memangkas, dll.</span>
                         </div>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">groups</span>
-                        <span class="text-sm text-on-surface font-medium">Ideal untuk Sekolah, Urban Farming besar & Komunitas</span>
                     </div>
                 </div>
 

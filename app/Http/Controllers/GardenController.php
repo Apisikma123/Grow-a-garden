@@ -10,7 +10,9 @@ class GardenController extends Controller
 {
     public function index()
     {
-        $gardens = Garden::where('user_id', Auth::id())->get();
+        $gardens = Garden::where('user_id', Auth::id())
+            ->withCount('plants')
+            ->get();
 
         return response()->json($gardens);
     }
@@ -41,10 +43,15 @@ class GardenController extends Controller
             'location_name' => $request->location,
         ]);
 
-        // Award 'Pekebun Pertama' badge
-        $badge = \App\Models\Badge::where('name', 'Pekebun Pertama')->first();
-        if ($badge && !$user->badges()->where('badge_id', $badge->id)->exists()) {
-            $user->badges()->attach($badge->id, ['awarded_at' => now()]);
+        // Auto-award badges (like 'Pekebun Pertama') via BadgeService
+        $sync = \App\Services\BadgeService::syncUserBadges($user);
+        if (!empty($sync['newlyAwardedIds'])) {
+            $badge = \App\Models\Badge::find($sync['newlyAwardedIds'][0]);
+            $garden->new_badge = [
+                'name' => $badge->name,
+                'description' => $badge->description,
+                'icon_url' => $badge->icon_url,
+            ];
         }
 
         return response()->json($garden);

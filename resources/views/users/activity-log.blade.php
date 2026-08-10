@@ -107,8 +107,8 @@
                     </div>
                 </div>
 
-                {{-- Paywall for Free Users --}}
-                @if($isFree && $hiddenCount > 0)
+                {{-- Paywall for Non-Premium Users --}}
+                @if($hiddenCount > 0)
                     <div class="mt-12 bg-gradient-to-br from-[#0f172a] to-[#1e293b] rounded-[32px] p-8 md:p-12 text-center ambient-shadow-lg relative overflow-hidden flex flex-col items-center justify-center border border-yellow-500/30">
                         {{-- Decorative Background --}}
                         <div class="absolute -top-20 -right-20 w-64 h-64 bg-yellow-500/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -119,18 +119,24 @@
                                 <span class="material-symbols-outlined text-[40px] text-white">history_edu</span>
                             </div>
                             <h3 class="text-[24px] font-black text-white mb-3 text-center">{{ $hiddenCount }} Aktivitas Terdahulu Disembunyikan</h3>
-                            <p class="text-[15px] text-slate-300 leading-relaxed mb-8 text-center max-w-lg">Sebagai pengguna gratis, Anda hanya dapat melihat 3 aktivitas terakhir. Buka kunci <span class="font-bold text-yellow-400">Activity Log Tanpa Batas</span> dengan paket Pro.</p>
+                            <p class="text-[15px] text-slate-300 leading-relaxed mb-8 text-center max-w-lg">
+                                @if(Auth::user()->role === 'pro')
+                                    Sebagai pengguna Paket Subur (Pro), Anda dapat melihat 10 aktivitas terakhir. Buka kunci <span class="font-bold text-yellow-400">Activity Log Tanpa Batas</span> dengan Paket Panen Raya (Premium).
+                                @else
+                                    Sebagai pengguna paket Bibit (Gratis), Anda hanya dapat melihat 3 aktivitas terakhir. Buka kunci <span class="font-bold text-yellow-400">Activity Log Tanpa Batas</span> dengan paket Premium.
+                                @endif
+                            </p>
                             
                             <button type="button" onclick="document.getElementById('pricing-modal').classList.remove('hidden')" class="bg-yellow-400 text-yellow-900 font-bold text-[15px] px-8 py-3.5 rounded-full hover:bg-yellow-300 active:scale-95 transition-all shadow-md flex items-center gap-2">
                                 <span class="material-symbols-outlined text-[20px]">star</span>
-                                Upgrade Sekarang
+                                Upgrade ke Premium
                             </button>
                         </div>
                     </div>
                 @endif
                 
-                {{-- Pagination for Pro users --}}
-                @if(!$isFree && $activities->hasPages())
+                {{-- Pagination for Premium users --}}
+                @if(method_exists($activities, 'hasPages') && $activities->hasPages())
                     <div class="mt-12 flex justify-center">
                         {{ $activities->links() }}
                     </div>

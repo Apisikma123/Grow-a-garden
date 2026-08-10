@@ -4,7 +4,35 @@
 @section('description', 'Pantau dan kelola tahap pertumbuhan tanaman Anda.')
 
 @section('dashboard-content')
-    <div class="flex flex-col gap-[24px] pb-10">
+<div class="relative min-h-[80vh] pb-10">
+
+    {{-- 1-Page Scoped Blur Paywall Overlay for Free Users --}}
+    @if(isset($isLocked) && $isLocked)
+        {{-- Background blur scoped ONLY inside page content canvas (Does NOT blur sidebar/navbar) --}}
+        <div class="absolute -inset-5 md:-inset-8 z-20 bg-slate-900/60 backdrop-blur-md"></div>
+
+        {{-- Fixed Pop-up Card centered in user screen/viewport --}}
+        <div class="fixed inset-0 z-30 flex items-center justify-center p-4 pointer-events-none md:pl-64">
+            <div class="bg-gradient-to-br from-[#0f172a] to-[#1e293b] text-white rounded-[32px] p-6 sm:p-10 text-center shadow-2xl border border-yellow-500/30 max-w-lg w-full pointer-events-auto flex flex-col items-center my-auto">
+                <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center shadow-lg mx-auto mb-5 sm:mb-6 shadow-yellow-500/30 ring-8 ring-yellow-500/10 shrink-0">
+                    <span class="material-symbols-outlined text-[32px] sm:text-[40px] text-white">lock</span>
+                </div>
+                <div class="text-center w-full min-w-full max-w-md mx-auto self-stretch flex flex-col items-center" style="width: 100% !important; min-width: 100% !important; text-align: center !important;">
+                    <h2 class="text-[22px] sm:text-[26px] md:text-[28px] font-black text-white mb-3" style="width: 100% !important; text-align: center !important; display: block !important; white-space: normal !important; word-break: normal !important;">Growth Calendar Terkunci</h2>
+                    <p class="text-[13px] sm:text-[14px] md:text-[15px] text-slate-300 leading-relaxed mb-6 sm:mb-8" style="width: 100% !important; text-align: center !important; display: block !important; white-space: normal !important; word-break: normal !important;">
+                        Fitur Growth Calendar khusus untuk pengguna Paket Subur (Pro) dan Panen Raya (Premium). Upgrade akun Anda sekarang untuk membuka grafik & estimasi fase pertumbuhan tanaman secara detail.
+                    </p>
+                </div>
+                <a href="/settings#subscription" class="w-full bg-yellow-400 text-yellow-900 font-bold text-[15px] sm:text-[16px] py-3.5 sm:py-4 rounded-xl hover:bg-yellow-300 active:scale-95 transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer">
+                    <span class="material-symbols-outlined text-[20px] sm:text-[22px]">star</span>
+                    Upgrade Sekarang
+                </a>
+            </div>
+        </div>
+    @endif
+
+    {{-- Main Page Content (Blurred if Free user) --}}
+    <div class="flex flex-col gap-[24px] {{ (isset($isLocked) && $isLocked) ? 'filter blur-md opacity-50 pointer-events-none select-none' : '' }}">
         {{-- Header Section --}}
         <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-2">
             <div>
@@ -25,7 +53,6 @@
                     
                     <div class="flex flex-col sm:flex-row items-center sm:items-start md:items-center gap-5 relative z-10 w-full md:w-auto">
                         <div class="relative group cursor-pointer shrink-0">
-                            {{-- Placeholder image based on category or plant --}}
                             @php
                                 $imgSrc = 'https://images.unsplash.com/photo-1592841200221-a6898f307baa?w=200&h=200&fit=crop&q=80'; // Default
                                 if(str_contains(strtolower($mainPlant->plantTemplate->name_id), 'bayam') || str_contains(strtolower($mainPlant->plantTemplate->name_id), 'selada')) {
@@ -128,7 +155,6 @@
                 @if(isset($mainPlant) && $mainPlant && \Carbon\Carbon::parse($mainPlant->planted_date)->diffInDays(now()) >= ($mainPlant->plantTemplate->harvest_start_day - 5))
                 {{-- Card 1: Mendekati Waktu Panen --}}
                 <div class="bg-gradient-to-br from-[#0b6e4f] to-[#044731] text-white rounded-[24px] p-[32px] shadow-[0_12px_32px_rgba(11,110,79,0.25)] hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(11,110,79,0.35)] transition-all duration-300 relative overflow-hidden group">
-                    {{-- Decorative highlight --}}
                     <div class="absolute -top-20 -right-20 w-64 h-64 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-colors duration-700"></div>
                     <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-[#6ffbbe]/10 rounded-full blur-2xl"></div>
 
@@ -138,14 +164,10 @@
                                 <span class="material-symbols-outlined text-[24px] text-[#6ffbbe]">notifications_active</span>
                             </div>
                             <h3 class="text-[28px] font-black leading-tight mb-4 tracking-tight">Mendekati<br>Waktu Panen!</h3>
-                            <div class="flex items-start gap-3 mb-8 bg-black/20 p-4 rounded-2xl border border-white/10 backdrop-blur-sm">
-                                <span class="material-symbols-outlined text-[20px] text-[#6ffbbe] mt-0.5">schedule</span>
-                                <p class="text-[14px] font-medium leading-relaxed text-white/90">Tanaman <strong class="text-white">{{ $mainPlant->plantTemplate->name_id }}</strong> butuh perhatian khusus untuk persiapan panen.</p>
-                            </div>
+                            <p class="text-[14px] text-[#e1f5fe] leading-relaxed mb-6 font-medium">
+                                {{ $mainPlant->plantTemplate->name_id }} Anda diperkirakan siap dipanen dalam kurun waktu kurang dari 5 hari. Siapkan wadah dan peralatan panen Anda!
+                            </p>
                         </div>
-                        <button class="w-full py-4 rounded-2xl bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 text-white font-bold text-[15px] transition-all flex items-center justify-center gap-2 group/btn">
-                            Lihat Detail <span class="material-symbols-outlined text-[18px] group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
-                        </button>
                     </div>
                 </div>
                 @endif
@@ -157,110 +179,57 @@
                         <a href="{{ route('care-tasks') }}" class="text-[13px] text-primary font-bold hover:underline">Lihat Semua</a>
                     </h3>
                     
-                    @if(isset($isLocked) && $isLocked)
-                        <div class="bg-surface-container-lowest border border-outline-variant/50 rounded-[20px] p-6 text-center">
-                            <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                <span class="material-symbols-outlined text-[24px] text-yellow-600">lock</span>
-                            </div>
-                            <h4 class="text-[14px] font-bold text-on-surface mb-2">Tugas Perawatan Terkunci</h4>
-                            <p class="text-[12px] text-on-surface-variant mb-4">Fitur ini khusus pengguna Pro/Premium.</p>
-                            <button type="button" onclick="document.getElementById('pricing-modal').classList.remove('hidden')" class="bg-primary text-white text-[12px] font-bold px-4 py-2 rounded-full shadow-sm hover:bg-primary/90 transition-all">Upgrade Sekarang</button>
+                    @if(isset($todayTasks) && $todayTasks->count() > 0)
+                        <div class="space-y-3">
+                            @foreach($todayTasks->take(3) as $task)
+                                <div class="flex items-start gap-3 p-3 rounded-[16px] border border-outline-variant/30 bg-surface">
+                                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                                        <span class="material-symbols-outlined text-[20px]">
+                                            {{ $task->eventType && str_contains(strtolower($task->eventType->code), 'water') ? 'water_drop' : 'eco' }}
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-[14px] font-bold text-on-surface">{{ $task->eventType->label ?? $task->message ?? 'Tugas Perawatan' }}</h4>
+                                        <p class="text-[12px] text-on-surface-variant font-medium mt-0.5">{{ $task->plant ? $task->plant->plantTemplate->name_id : 'Tanaman' }}</p>
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
                     @else
-                        @if(isset($todayTasks) && $todayTasks->count() > 0)
-                            <div class="space-y-3">
-                                @foreach($todayTasks->take(3) as $task)
-                                    <div class="flex items-start gap-3 p-3 rounded-[16px] border border-outline-variant/30 bg-surface">
-                                        <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                                            <span class="material-symbols-outlined text-[20px]">
-                                                {{ $task->eventType && str_contains(strtolower($task->eventType->code), 'water') ? 'water_drop' : 'eco' }}
-                                            </span>
-                                        </div>
-                                        <div>
-                                            <h4 class="text-[14px] font-bold text-on-surface">{{ $task->eventType->label ?? $task->message ?? 'Tugas Perawatan' }}</h4>
-                                            <p class="text-[11px] text-on-surface-variant">{{ $task->priority ?? 'NORMAL' }} Priority</p>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                            @if($todayTasks->count() > 3)
-                                <p class="text-center text-[12px] text-on-surface-variant font-medium mt-3">+{{ $todayTasks->count() - 3 }} tugas lainnya</p>
-                            @endif
-                        @else
-                            <div class="flex flex-col items-center justify-center py-6 text-center">
-                                <span class="material-symbols-outlined text-[32px] text-outline-variant mb-2">done_all</span>
-                                <p class="text-[13px] text-on-surface-variant font-medium">Tidak ada tugas tertunda untuk hari ini.</p>
-                            </div>
-                        @endif
+                        <div class="bg-surface border border-outline-variant/30 rounded-[16px] p-4 text-center">
+                            <p class="text-[13px] text-on-surface-variant font-medium">Tidak ada tugas mendesak hari ini.</p>
+                        </div>
                     @endif
                 </div>
 
-                {{-- Card 2: Tanaman Lainnya --}}
+                {{-- Tanaman Lainnya Card --}}
+                @if($otherPlants->count() > 0)
                 <div class="bg-white rounded-[24px] p-[28px] shadow-[0_4px_24px_rgba(0,0,0,0.03)] border border-outline-variant/30">
-                    <h3 class="text-[18px] font-black text-slate-800 mb-5 flex items-center justify-between">
-                        Tanaman Lainnya
-                        <a href="{{ route('gardens') }}" class="text-[13px] text-primary font-bold hover:underline">Lihat Kebun</a>
-                    </h3>
+                    <h3 class="text-[18px] font-black text-slate-800 mb-4">Tanaman Lainnya</h3>
                     <div class="space-y-3">
-                        @forelse($otherPlants->take(4) as $plant)
-                        <a href="{{ route('growth-calendar', ['plant_id' => $plant->id]) }}" class="block">
-                            <div class="flex items-center justify-between p-3 rounded-[20px] border border-outline-variant/30 hover:border-primary/30 hover:shadow-[0_8px_24px_rgba(0,108,73,0.08)] cursor-pointer transition-all duration-300 group bg-white">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-14 h-14 rounded-[14px] overflow-hidden shrink-0 border border-outline-variant/20 bg-surface flex items-center justify-center text-primary">
-                                        <span class="material-symbols-outlined">psychiatry</span>
+                        @foreach($otherPlants as $p)
+                            <a href="{{ route('growth-calendar', ['plant_id' => $p->id]) }}" class="flex items-center justify-between p-3 rounded-[16px] border border-outline-variant/30 hover:border-primary/50 transition-all hover:bg-surface group">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center text-primary font-bold text-sm group-hover:bg-primary group-hover:text-white transition-colors">
+                                        <span class="material-symbols-outlined text-[20px]">eco</span>
                                     </div>
                                     <div>
-                                        <h4 class="text-[15px] font-bold text-slate-800 group-hover:text-primary transition-colors mb-1">{{ $plant->plantTemplate->name_id }}</h4>
-                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-primary"></span> {{ $plant->stage }}
-                                        </span>
+                                        <h4 class="text-[14px] font-bold text-on-surface group-hover:text-primary transition-colors">{{ $p->plantTemplate->name_id }}</h4>
+                                        <p class="text-[12px] text-on-surface-variant font-medium">Kebun: {{ $p->garden->name ?? '-' }}</p>
                                     </div>
                                 </div>
-                                <span class="material-symbols-outlined text-outline-variant group-hover:text-primary group-hover:translate-x-1 transition-all mr-2">chevron_right</span>
-                            </div>
-                        </a>
-                        @empty
-                        <p class="text-on-surface-variant text-[14px]">Tidak ada tanaman lain.</p>
-                        @endforelse
+                                <span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">chevron_right</span>
+                            </a>
+                        @endforeach
                     </div>
                 </div>
-
-                {{-- Card 3: Tips Hari Ini --}}
-                <div class="bg-[#f1f5f2] border border-primary/20 rounded-[24px] p-[32px] shadow-sm relative overflow-hidden group hover:border-primary/40 hover:shadow-md transition-all duration-300">
-                    <span class="material-symbols-outlined absolute -top-4 -right-4 text-[120px] text-primary/5 -rotate-12 group-hover:rotate-0 transition-transform duration-700 pointer-events-none" style="font-variation-settings: 'FILL' 1;">format_quote</span>
-                    
-                    <div class="flex items-center gap-2 mb-6 relative z-10">
-                        <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                            <span class="material-symbols-outlined text-[16px] text-primary">lightbulb</span>
-                        </div>
-                        <h3 class="text-[13px] text-primary font-bold uppercase tracking-widest">Tips Hari Ini</h3>
-                    </div>
-
-                    @php
-                        $tips = [
-                            "Saat fase vegetatif, pangkas tunas 'sucker' (tunas air) yang tumbuh di antara batang utama dan dahan agar nutrisi tanaman terfokus penuh pada pertumbuhan batang dan buah.",
-                            "Siram tanaman di pagi hari sebelum matahari terlalu terik agar air tidak cepat menguap dan akar dapat menyerap kelembapan dengan optimal.",
-                            "Gunakan kompos atau pupuk organik secara berkala untuk menjaga struktur tanah tetap gembur dan mikroorganisme tanah tetap aktif.",
-                            "Pastikan pot atau planter bag memiliki lubang drainase yang cukup agar air tidak menggenang dan menyebabkan pembusukan akar.",
-                            "Lakukan rotasi tanaman secara berkala untuk mencegah penumpukan hama dan penyakit yang spesifik pada satu jenis keluarga tanaman.",
-                            "Mulsa organik seperti jerami atau potongan rumput dapat membantu menjaga kelembapan tanah dan menekan pertumbuhan gulma.",
-                            "Periksa bagian bawah daun secara rutin karena biasanya telur hama dan serangga kecil bersembunyi di tempat terlindung tersebut.",
-                            "Tanaman yang mendapatkan paparan sinar matahari langsung minimal 6 jam sehari akan memproduksi buah yang jauh lebih manis dan lebat."
-                        ];
-                        $todayTip = $tips[\Carbon\Carbon::now()->dayOfYear % count($tips)];
-                    @endphp
-
-                    <p class="text-[15px] leading-[26px] font-medium text-slate-700 italic relative z-10">
-                        "{{ $todayTip }}"
-                    </p>
-                </div>
-
+                @endif
             </div>
         </div>
     </div>
 
+    {{-- Edit Modal --}}
     @if($mainPlant)
-    {{-- Edit Jadwal Modal --}}
     <div id="edit-jadwal-modal" class="fixed inset-0 z-[100] hidden overflow-y-auto">
         <div class="fixed inset-0 bg-slate-900/60 transition-opacity" onclick="document.getElementById('edit-jadwal-modal').classList.add('hidden')"></div>
         <div class="min-h-screen w-full px-4 py-8 flex items-center justify-center pointer-events-none">
@@ -289,4 +258,5 @@
         </div>
     </div>
     @endif
+</div>
 @endsection

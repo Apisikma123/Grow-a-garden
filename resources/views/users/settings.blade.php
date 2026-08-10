@@ -134,7 +134,7 @@
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                         <div>
                             <h2 class="text-[24px] font-bold text-on-surface flex items-center gap-2">
-                                <span class="material-symbols-outlined text-amber-500 text-[28px]">workspace_premium</span>
+                                <span class="material-symbols-outlined text-primary text-[28px]">workspace_premium</span>
                                 Prestasi & Badge Kebun
                             </h2>
                             <p class="text-[14px] text-on-surface-variant">Selesaikan tugas perawatan untuk membuka badge langka!</p>
@@ -144,15 +144,15 @@
                             $unlockedCount = count($userBadgeIds ?? []);
                             $progressPct = $totalBadgeCount > 0 ? round(($unlockedCount / $totalBadgeCount) * 100) : 0;
                         @endphp
-                        <div class="bg-amber-50 text-amber-800 px-4 py-2 rounded-2xl border border-amber-200/60 flex flex-col sm:items-end">
+                        <div class="bg-primary/10 text-primary px-4 py-2 rounded-2xl border border-primary/20 flex flex-col sm:items-end">
                             <span class="text-[12px] font-bold uppercase tracking-wider">Koleksi Terbuka</span>
-                            <span class="text-[18px] font-black text-amber-600">{{ $unlockedCount }} / {{ $totalBadgeCount }} Badge ({{ $progressPct }}%)</span>
+                            <span class="text-[18px] font-black text-primary">{{ $unlockedCount }} / {{ $totalBadgeCount }} Badge ({{ $progressPct }}%)</span>
                         </div>
                     </div>
 
                     {{-- Progress Bar --}}
                     <div class="w-full bg-surface-container-high h-2.5 rounded-full overflow-hidden mb-6">
-                        <div class="bg-gradient-to-r from-amber-400 to-amber-600 h-full rounded-full transition-all duration-500" style="width: {{ $progressPct }}%;"></div>
+                        <div class="bg-gradient-to-r from-primary to-tertiary h-full rounded-full transition-all duration-500" style="width: {{ $progressPct }}%;"></div>
                     </div>
 
                     {{-- Badges Grid --}}
@@ -161,15 +161,15 @@
                             @php
                                 $isEarned = in_array($badge->id, $userBadgeIds ?? []);
                             @endphp
-                            <div class="rounded-2xl p-4 border transition-all relative overflow-hidden flex flex-col justify-between {{ $isEarned ? 'bg-gradient-to-br from-amber-500/10 to-yellow-500/5 border-amber-400/50 shadow-sm' : 'bg-surface-container-low border-outline-variant/30 opacity-60 grayscale' }}">
+                            <div class="rounded-2xl p-4 border transition-all relative overflow-hidden flex flex-col justify-between {{ $isEarned ? 'bg-gradient-to-br from-primary/10 to-tertiary/10 border-primary/40 shadow-sm' : 'bg-surface-container-low border-outline-variant/30 opacity-60 grayscale' }}">
                                 <div class="flex items-center gap-3 mb-3">
-                                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-sm shrink-0 {{ $isEarned ? 'bg-amber-500 text-white shadow-amber-500/30' : 'bg-surface-container-high text-on-surface-variant' }}">
+                                    <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-sm shrink-0 {{ $isEarned ? 'bg-primary text-on-primary shadow-primary/20' : 'bg-surface-container-high text-on-surface-variant' }}">
                                         <span class="material-symbols-outlined text-[26px]">{{ $badge->icon_url ?? 'military_tech' }}</span>
                                     </div>
                                     <div>
                                         <h4 class="text-[15px] font-bold text-on-surface leading-tight">{{ $badge->name }}</h4>
                                         @if($isEarned)
-                                            <span class="inline-flex items-center gap-0.5 text-[10px] font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-md mt-1">
+                                            <span class="inline-flex items-center gap-0.5 text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-md mt-1">
                                                 <span class="material-symbols-outlined text-[12px]">check_circle</span> Terbuka
                                             </span>
                                         @else
@@ -184,8 +184,7 @@
                                 <div class="mt-3 pt-3 border-t border-outline-variant/20 flex items-center justify-between">
                                     @php
                                         $globalPct = number_format(($badge->users_count / $totalUsers) * 100, 1);
-                                        // Rarity color logic
-                                        $rarityColor = $globalPct < 10 ? 'text-primary font-black' : ($globalPct < 50 ? 'text-amber-600 font-bold' : 'text-on-surface-variant');
+                                        $rarityColor = $globalPct < 10 ? 'text-primary font-black' : ($globalPct < 50 ? 'text-secondary font-bold' : 'text-on-surface-variant');
                                     @endphp
                                     <span class="text-[10px] font-bold uppercase tracking-wider {{ $rarityColor }}">
                                         Dimiliki {{ $globalPct }}% pemain
@@ -203,7 +202,7 @@
                 </div>
 
                 {{-- Subscription / Langganan Box --}}
-                <div class="bg-surface rounded-[24px] p-[24px] ambient-shadow-lg border border-outline-variant/20 hover:shadow-xl transition-shadow duration-300">
+                <div id="subscription" class="bg-surface rounded-[24px] p-[24px] ambient-shadow-lg border border-outline-variant/20 hover:shadow-xl transition-shadow duration-300">
                     <div class="flex items-center justify-between mb-6">
                         <h2 class="text-[24px] font-bold text-on-surface">Paket Langganan</h2>
                         <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-black uppercase tracking-wider
@@ -237,7 +236,7 @@
                                     @if(Auth::user()->role === 'free')
                                         Paket gratis dengan fitur dasar.
                                     @elseif(Auth::user()->role === 'pro')
-                                        Autopilot aktif · Weather Adjustment aktif
+                                        Kalender Tanam aktif · Weather Adjustment aktif
                                     @else
                                         Unlimited · Semua fitur premium
                                     @endif
@@ -265,7 +264,7 @@
                                         {{ Auth::user()->canUseAutopilot() ? 'check_circle' : 'cancel' }}
                                     </span>
                                 </div>
-                                <div class="text-[10px] font-bold uppercase tracking-wider {{ Auth::user()->role === 'free' ? 'text-on-surface-variant' : 'text-white/60' }}">Autopilot</div>
+                                <div class="text-[10px] font-bold uppercase tracking-wider {{ Auth::user()->role === 'free' ? 'text-on-surface-variant' : 'text-white/60' }}">Kalender Tanam</div>
                             </div>
                         </div>
 
@@ -288,16 +287,16 @@
                     {{-- Action Buttons --}}
                     <div class="flex flex-col sm:flex-row gap-3">
                         @if(Auth::user()->role === 'free')
-                            <a href="/checkout?plan=subur" class="flex-1 flex items-center justify-center gap-2 bg-primary text-on-primary font-bold py-3 rounded-xl hover:bg-primary/90 active:scale-[0.98] transition-all shadow-sm text-[14px]">
+                            <a href="/checkout?plan=subur&from=settings" class="flex-1 flex items-center justify-center gap-2 bg-primary text-on-primary font-bold py-3 rounded-xl hover:bg-primary/90 active:scale-[0.98] transition-all shadow-sm text-[14px]">
                                 <span class="material-symbols-outlined text-[18px]">rocket_launch</span>
                                 Upgrade ke Subur
                             </a>
-                            <a href="/checkout?plan=pro" class="flex-1 flex items-center justify-center gap-2 bg-slate-800 text-white font-bold py-3 rounded-xl hover:bg-slate-700 active:scale-[0.98] transition-all shadow-sm text-[14px]">
+                            <a href="/checkout?plan=pro&from=settings" class="flex-1 flex items-center justify-center gap-2 bg-slate-800 text-white font-bold py-3 rounded-xl hover:bg-slate-700 active:scale-[0.98] transition-all shadow-sm text-[14px]">
                                 <span class="material-symbols-outlined text-[18px]">workspace_premium</span>
                                 Upgrade ke Panen Raya
                             </a>
                         @elseif(Auth::user()->role === 'pro')
-                            <a href="/checkout?plan=pro" class="flex-1 flex items-center justify-center gap-2 bg-slate-800 text-white font-bold py-3 rounded-xl hover:bg-slate-700 active:scale-[0.98] transition-all shadow-sm text-[14px]">
+                            <a href="/checkout?plan=pro&from=settings" class="flex-1 flex items-center justify-center gap-2 bg-slate-800 text-white font-bold py-3 rounded-xl hover:bg-slate-700 active:scale-[0.98] transition-all shadow-sm text-[14px]">
                                 <span class="material-symbols-outlined text-[18px]">upgrade</span>
                                 Upgrade ke Panen Raya
                             </a>
@@ -556,7 +555,7 @@
         const cancelBtn = document.getElementById('btn-cancel-sub');
         if (cancelBtn) {
             cancelBtn.addEventListener('click', async () => {
-                if (!confirm('Apakah Anda yakin ingin membatalkan langganan? Anda akan kembali ke Paket Bibit (Gratis) dan kehilangan akses ke fitur Autopilot dan Weather Adjustment.')) {
+                if (!confirm('Apakah Anda yakin ingin membatalkan langganan? Anda akan kembali ke Paket Bibit (Gratis) dan kehilangan akses ke fitur Jadwal Otomatis dan Weather Adjustment.')) {
                     return;
                 }
 

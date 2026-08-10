@@ -80,10 +80,13 @@
             {{-- Left Column: Daftar Tugas (Takes up 2 columns) --}}
             <div class="lg:col-span-2 flex flex-col gap-[16px]">
                 {{-- Header Filter --}}
-                <div class="flex items-center justify-between pb-4 border-b border-outline-variant/30">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-outline-variant/30 gap-3">
                     <h2 class="text-[20px] font-bold text-on-surface">Daftar Tugas Harian</h2>
-                    <div class="flex gap-2">
-                        <button class="bg-[#047857] text-white px-4 py-1.5 rounded-full text-[13px] font-bold shadow-sm">Semua</button>
+                    <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+                        <a href="{{ route('care-tasks') }}" class="{{ !request('priority') ? 'bg-[#047857] text-white' : 'bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest' }} px-4 py-1.5 rounded-full text-[13px] font-bold shadow-sm transition-colors whitespace-nowrap">Semua</a>
+                        <a href="{{ route('care-tasks', ['priority' => 'HIGH']) }}" class="{{ request('priority') == 'HIGH' ? 'bg-[#f97316] text-white' : 'bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest' }} px-4 py-1.5 rounded-full text-[13px] font-bold shadow-sm transition-colors whitespace-nowrap">Tinggi</a>
+                        <a href="{{ route('care-tasks', ['priority' => 'MEDIUM']) }}" class="{{ request('priority') == 'MEDIUM' ? 'bg-[#047857] text-white' : 'bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest' }} px-4 py-1.5 rounded-full text-[13px] font-bold shadow-sm transition-colors whitespace-nowrap">Sedang</a>
+                        <a href="{{ route('care-tasks', ['priority' => 'LOW']) }}" class="{{ request('priority') == 'LOW' ? 'bg-[#047857] text-white' : 'bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest' }} px-4 py-1.5 rounded-full text-[13px] font-bold shadow-sm transition-colors whitespace-nowrap">Rendah</a>
                     </div>
                 </div>
 
@@ -97,11 +100,11 @@
                             <div class="absolute -bottom-20 -left-20 w-64 h-64 bg-secondary/5 rounded-full blur-3xl pointer-events-none"></div>
                             
                             <div class="relative z-10 flex flex-col items-center w-full max-w-2xl mx-auto">
-                                <div class="w-20 h-20 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center shadow-lg mb-6 shadow-yellow-500/30 ring-8 ring-yellow-500/10 shrink-0">
-                                    <span class="material-symbols-outlined text-[40px] text-white">lock</span>
+                                <div class="w-20 h-20 bg-secondary rounded-full flex items-center justify-center shadow-lg mb-6 shadow-secondary/30 ring-8 ring-secondary/10 shrink-0">
+                                    <span class="material-symbols-outlined text-[40px] text-on-secondary">lock</span>
                                 </div>
                                 <h3 class="text-[24px] font-black text-on-surface mb-3 text-center">Tugas Perawatan Terkunci</h3>
-                                <p class="text-[15px] text-on-surface-variant leading-relaxed mb-8 text-center max-w-lg">Tingkatkan ke paket <span class="font-bold text-primary">Panen Raya</span> atau <span class="font-bold text-[#ea580c]">Pekebun Aktif</span> untuk membuka asisten perawatan pintar, daftar tugas harian, dan notifikasi kebun real-time.</p>
+                                <p class="text-[15px] text-on-surface-variant leading-relaxed mb-8 text-center max-w-lg">Tingkatkan ke paket <span class="font-bold text-primary">Panen Raya</span> atau <span class="font-bold text-secondary">Subur (Pro)</span> untuk membuka asisten perawatan pintar, daftar tugas harian, dan notifikasi kebun real-time.</p>
                                 
                                 <button type="button" onclick="document.getElementById('pricing-modal').classList.remove('hidden')" class="bg-primary text-white font-bold text-[15px] px-8 py-3.5 rounded-full hover:bg-primary/90 active:scale-95 transition-all shadow-md flex items-center gap-2">
                                     <span class="material-symbols-outlined text-[20px]">workspace_premium</span>
@@ -275,59 +278,78 @@
                     @endif
                 </div>
 
-                {{-- Autopilot (Pro Feature) --}}
-                <div class="bg-surface rounded-[24px] p-[24px] ambient-shadow-lg border border-outline-variant/20 relative overflow-hidden shrink-0">
-                    <div class="flex items-center justify-between mb-2">
-                        <h3 class="text-[18px] font-bold text-on-surface flex items-center gap-2">
-                            <span class="material-symbols-outlined text-primary">smart_toy</span> Autopilot
-                        </h3>
-                        @if(in_array(Auth::user()->role ?? 'free', ['pro', 'premium', 'admin']))
-                            <div class="w-10 h-6 bg-primary rounded-full relative cursor-pointer shadow-inner">
-                                <div class="w-4 h-4 bg-white rounded-full absolute right-1 top-1 shadow-sm"></div>
-                            </div>
-                        @else
-                            <div class="w-10 h-6 bg-outline-variant/50 rounded-full relative cursor-pointer" onclick="document.getElementById('pricing-modal').classList.remove('hidden')">
-                                <div class="w-4 h-4 bg-white rounded-full absolute left-1 top-1 shadow-sm flex items-center justify-center">
-                                    <span class="material-symbols-outlined text-[10px] text-outline-variant">lock</span>
-                                </div>
-                            </div>
-                        @endif
-                    </div>
-                    
-                    @if(in_array(Auth::user()->role ?? 'free', ['pro', 'premium', 'admin']))
-                        <p class="text-[13px] text-on-surface-variant font-medium">Asisten AI sedang menyusun jadwal harian Anda secara otomatis.</p>
-                        <div class="mt-4 flex items-center gap-2 text-[12px] font-bold text-primary bg-primary-container/30 px-3 py-1.5 rounded-lg inline-flex">
-                            <span class="material-symbols-outlined text-[16px]">check_circle</span> Aktif
-                        </div>
-                    @else
-                        <p class="text-[13px] text-on-surface-variant font-medium mb-4">Otomatisasi jadwal berdasarkan kebutuhan spesifik tiap tanaman.</p>
-                        <button onclick="document.getElementById('pricing-modal').classList.remove('hidden')" class="w-full bg-surface-container-high hover:bg-surface-container-highest text-primary font-bold py-2 rounded-xl text-[13px] transition-colors border border-primary/20 flex items-center justify-center gap-2">
-                            <span class="material-symbols-outlined text-[16px]">workspace_premium</span> Upgrade to Pro
-                        </button>
-                    @endif
-                </div>
 
                 {{-- Misi Mingguan Card --}}
-                <div class="bg-[#67b193] rounded-[24px] p-[24px] relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300 ambient-shadow-lg text-[#003823] shrink-0">
-                    <div class="mb-4 relative z-10">
-                        <span class="material-symbols-outlined text-[28px] mb-2">military_tech</span>
-                        <h3 class="text-[18px] font-bold mb-1">Misi Mingguan</h3>
-                        <p class="text-[14px] font-medium leading-relaxed opacity-90">Selesaikan 5 tugas lagi untuk mendapatkan badge 'Tangan Dingin'.</p>
-                    </div>
-                    
-                    <div class="flex justify-between items-end relative z-10">
-                        <button class="bg-[#003823] text-white px-5 py-2.5 rounded-full text-[13px] font-bold hover:bg-[#025c3c] active:scale-95 transition-colors shadow-sm">Lihat Badge</button>
-                        <div class="w-12 h-12 bg-[#003823] rounded-[16px] flex items-center justify-center text-white shadow-md">
-                            <span class="material-symbols-outlined text-[24px]">workspace_premium</span>
+                @if(isset($closestBadge) && $closestBadge)
+                    <div class="bg-[#67b193] rounded-[24px] p-[24px] relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300 ambient-shadow-lg text-[#003823] shrink-0">
+                        <div class="mb-4 relative z-10">
+                            <span class="material-symbols-outlined text-[28px] mb-2">{{ $closestBadge->icon_url ?? 'military_tech' }}</span>
+                            <h3 class="text-[18px] font-bold mb-1">Misi Mingguan</h3>
+                            <p class="text-[14px] font-medium leading-relaxed opacity-90">Selesaikan {{ $closestTarget - $closestCurrent }} tugas lagi untuk mendapatkan badge '{{ $closestBadge->name }}'.</p>
                         </div>
-                    </div>
+                        
+                        <div class="flex justify-between items-end relative z-10">
+                            <a href="{{ route('badges') }}" class="inline-block bg-[#003823] text-white px-5 py-2.5 rounded-full text-[13px] font-bold hover:bg-[#025c3c] active:scale-95 transition-colors shadow-sm">Lihat Badge</a>
+                            <div class="w-12 h-12 bg-[#003823] rounded-[16px] flex items-center justify-center text-white shadow-md">
+                                <span class="material-symbols-outlined text-[24px]">{{ $closestBadge->icon_url ?? 'military_tech' }}</span>
+                            </div>
+                        </div>
 
-                    {{-- Decorative blur --}}
-                    <div class="absolute -top-10 -right-10 w-32 h-32 bg-white/20 rounded-full blur-2xl group-hover:bg-white/30 transition-colors duration-500"></div>
-                </div>
+                        {{-- Decorative blur --}}
+                        <div class="absolute -top-10 -right-10 w-32 h-32 bg-white/20 rounded-full blur-2xl group-hover:bg-white/30 transition-colors duration-500"></div>
+                    </div>
+                @else
+                    <div class="bg-[#67b193] rounded-[24px] p-[24px] relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300 ambient-shadow-lg text-[#003823] shrink-0">
+                        <div class="mb-4 relative z-10">
+                            <span class="material-symbols-outlined text-[28px] mb-2">military_tech</span>
+                            <h3 class="text-[18px] font-bold mb-1">Misi Mingguan</h3>
+                            <p class="text-[14px] font-medium leading-relaxed opacity-90">Selesaikan 5 tugas lagi untuk mendapatkan badge 'Tangan Dingin'.</p>
+                        </div>
+                        
+                        <div class="flex justify-between items-end relative z-10">
+                            <a href="{{ route('badges') }}" class="inline-block bg-[#003823] text-white px-5 py-2.5 rounded-full text-[13px] font-bold hover:bg-[#025c3c] active:scale-95 transition-colors shadow-sm">Lihat Badge</a>
+                            <div class="w-12 h-12 bg-[#003823] rounded-[16px] flex items-center justify-center text-white shadow-md">
+                                <span class="material-symbols-outlined text-[24px]">military_tech</span>
+                            </div>
+                        </div>
+
+                        {{-- Decorative blur --}}
+                        <div class="absolute -top-10 -right-10 w-32 h-32 bg-white/20 rounded-full blur-2xl group-hover:bg-white/30 transition-colors duration-500"></div>
+                    </div>
+                @endif
 
             </div>
 
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // ── Badge Unlock from session ──────────────────────────────
+    @if(session('new_badge'))
+        setTimeout(() => {
+            Alert.modal.badge({!! json_encode(session('new_badge')) !!});
+        }, 600);
+    @endif
+
+    // ── Daily Quest Completion Celebration ────────────────────
+    // Detects: all tasks for today are done (no pending tasks left)
+    const totalTasks   = {{ $totalTasks }};
+    const totalCompleted = {{ $totalCompleted }};
+    const pendingCount = {{ $pendingTasks->count() }};
+
+    // Only celebrate when: there are real tasks today AND all pending = 0 AND NOT already shown this session
+    if (totalTasks > 1 && pendingCount === 0 && totalCompleted > 0) {
+        const questKey = 'quest_celebrated_' + new Date().toISOString().slice(0, 10);
+        if (!sessionStorage.getItem(questKey)) {
+            sessionStorage.setItem(questKey, '1');
+            setTimeout(() => {
+                Alert.quest.complete(totalCompleted);
+            }, 800);
+        }
+    }
+});
+</script>
+@endpush

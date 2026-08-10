@@ -14,7 +14,7 @@
             </div>
             
             <div class="flex items-center gap-3">
-                <button onclick="document.getElementById('award-badge-modal').classList.remove('hidden')" class="bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm px-5 py-2.5 rounded-xl transition-all shadow-sm flex items-center gap-2 active:scale-95 cursor-pointer">
+                <button onclick="document.getElementById('award-badge-modal').classList.remove('hidden')" class="bg-secondary hover:bg-secondary/90 text-on-secondary font-bold text-sm px-5 py-2.5 rounded-xl transition-all shadow-sm flex items-center gap-2 active:scale-95 cursor-pointer">
                     <span class="material-symbols-outlined text-[20px]">workspace_premium</span>
                     Berikan Badge ke User
                 </button>
@@ -44,7 +44,7 @@
             @forelse($badges as $badge)
                 <div class="bg-white rounded-2xl p-6 ambient-shadow border border-slate-200 flex flex-col justify-between relative overflow-hidden group hover:border-[#006c49]/40 transition-all">
                     <div class="flex items-start justify-between mb-4 z-10">
-                        <div class="w-14 h-14 rounded-2xl bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center shadow-sm shrink-0">
+                        <div class="w-14 h-14 rounded-2xl bg-secondary-container/20 border border-secondary-container/40 text-secondary flex items-center justify-center shadow-sm shrink-0">
                             <span class="material-symbols-outlined text-[32px]">{{ $badge->icon_url ?? 'military_tech' }}</span>
                         </div>
                         <span class="bg-slate-100 text-slate-700 font-bold text-xs px-3 py-1 rounded-full">
@@ -168,7 +168,7 @@
             <div class="w-full max-w-lg bg-white rounded-3xl p-6 md:p-8 ambient-shadow-lg relative z-10">
                 <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
                     <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-amber-500">military_tech</span> Berikan Badge Manual
+                        <span class="material-symbols-outlined text-secondary">military_tech</span> Berikan Badge Manual
                     </h3>
                     <button onclick="document.getElementById('award-badge-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
                         <span class="material-symbols-outlined">close</span>
@@ -199,7 +199,7 @@
 
                     <div class="flex justify-end gap-3 pt-4">
                         <button type="button" onclick="document.getElementById('award-badge-modal').classList.add('hidden')" class="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-100">Batal</button>
-                        <button type="submit" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-amber-500 hover:bg-amber-600">Berikan Badge</button>
+                        <button type="submit" class="px-6 py-2.5 rounded-xl text-sm font-bold text-on-secondary bg-secondary hover:bg-secondary/90">Berikan Badge</button>
                     </div>
                 </form>
             </div>

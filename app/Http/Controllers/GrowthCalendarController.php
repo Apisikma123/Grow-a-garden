@@ -44,9 +44,9 @@ class GrowthCalendarController extends Controller
         // Generate timeline
         $timeline = $this->generateTimeline($mainPlant, $currentHst);
         
-        $isLocked = $user && $user->role === 'free';
+        $isLocked = $user && ($user->role === 'free' || !$user->role);
         $todayTasks = collect();
-        if (!$isLocked && $mainPlant) {
+        if ($mainPlant) {
             $todayTasks = \App\Models\Event::with('eventType')
                 ->where('plant_id', $mainPlant->id)
                 ->whereDate('scheduled_date', '<=', Carbon::today())

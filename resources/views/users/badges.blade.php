@@ -9,10 +9,10 @@
         <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
             <div>
                 <div class="inline-flex items-center gap-2 mb-2">
-                    <div class="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center">
-                        <span class="material-symbols-outlined text-[16px] text-amber-600">workspace_premium</span>
+                    <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-[16px] text-primary">workspace_premium</span>
                     </div>
-                    <span class="text-[13px] font-black uppercase tracking-wider text-amber-600">Koleksi Lengkap</span>
+                    <span class="text-[13px] font-black uppercase tracking-wider text-primary">Koleksi Lengkap</span>
                 </div>
                 <h1 class="text-[32px] sm:text-[40px] font-black text-on-surface leading-tight tracking-tight">Semua Lencana</h1>
                 <p class="text-[15px] sm:text-[16px] text-on-surface-variant font-medium mt-2 max-w-2xl">
@@ -36,12 +36,12 @@
                     <p class="text-[13px] text-on-surface-variant">Terus lengkapi koleksi Anda.</p>
                 </div>
                 <div class="text-right">
-                    <span class="text-[24px] font-black text-amber-600">{{ $unlockedCount }} / {{ $totalBadgeCount }}</span>
-                    <span class="text-[13px] font-bold text-amber-600/70 ml-1">({{ $progressPct }}%)</span>
+                    <span class="text-[24px] font-black text-primary">{{ $unlockedCount }} / {{ $totalBadgeCount }}</span>
+                    <span class="text-[13px] font-bold text-primary/70 ml-1">({{ $progressPct }}%)</span>
                 </div>
             </div>
             <div class="w-full bg-surface-container-high h-3 rounded-full overflow-hidden">
-                <div class="bg-gradient-to-r from-amber-400 to-amber-600 h-full rounded-full transition-all duration-500" style="width: {{ $progressPct }}%;"></div>
+                <div class="bg-gradient-to-r from-primary to-tertiary h-full rounded-full transition-all duration-500" style="width: {{ $progressPct }}%;"></div>
             </div>
         </div>
 
@@ -66,15 +66,15 @@
                 @php
                     $isEarned = in_array($badge->id, $userBadgeIds ?? []);
                 @endphp
-                <div class="rounded-2xl p-4 border transition-all relative overflow-hidden flex flex-col justify-between {{ $isEarned ? 'bg-gradient-to-br from-amber-500/10 to-yellow-500/5 border-amber-400/50 shadow-sm' : 'bg-surface-container-low border-outline-variant/30 opacity-60 grayscale hover:opacity-100 hover:grayscale-0' }}">
+                <div class="rounded-2xl p-4 border transition-all relative overflow-hidden flex flex-col justify-between {{ $isEarned ? 'bg-gradient-to-br from-primary/10 to-tertiary/10 border-primary/40 shadow-sm' : 'bg-surface-container-low border-outline-variant/30 opacity-60 grayscale hover:opacity-100 hover:grayscale-0' }}">
                     <div class="flex items-center gap-3 mb-3">
-                        <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-sm shrink-0 {{ $isEarned ? 'bg-amber-500 text-white shadow-amber-500/30' : 'bg-surface-container-high text-on-surface-variant' }}">
+                        <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-sm shrink-0 {{ $isEarned ? 'bg-primary text-on-primary shadow-primary/20' : 'bg-surface-container-high text-on-surface-variant' }}">
                             <span class="material-symbols-outlined text-[26px]">{{ $badge->icon_url ?? 'military_tech' }}</span>
                         </div>
                         <div>
                             <h4 class="text-[14px] font-bold text-on-surface leading-tight">{{ $badge->name }}</h4>
                             @if($isEarned)
-                                <span class="inline-flex items-center gap-0.5 text-[10px] font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-md mt-1">
+                                <span class="inline-flex items-center gap-0.5 text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-md mt-1">
                                     <span class="material-symbols-outlined text-[12px]">check_circle</span> Terbuka
                                 </span>
                             @else
@@ -86,11 +86,26 @@
                     </div>
                     <p class="text-[12px] text-on-surface-variant font-medium leading-relaxed flex-grow">{{ $badge->description }}</p>
                     
+                    {{-- Progress Bar --}}
+                    @php
+                        $current = $badge->progress_current ?? ($isEarned ? 1 : 0);
+                        $target = $badge->progress_target ?? 1;
+                        $itemProgressPct = $badge->progress_pct ?? ($isEarned ? 100 : 0);
+                    @endphp
+                    <div class="mt-4 mb-1">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <span class="text-[10px] font-bold text-on-surface-variant uppercase">Progres</span>
+                            <span class="text-[10px] font-bold {{ $isEarned ? 'text-primary' : 'text-on-surface-variant' }}">{{ number_format($current, 0, ',', '.') }} / {{ number_format($target, 0, ',', '.') }}</span>
+                        </div>
+                        <div class="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden">
+                            <div class="{{ $isEarned ? 'bg-primary' : 'bg-tertiary/40' }} h-full rounded-full transition-all duration-500" style="width: {{ $itemProgressPct }}%;"></div>
+                        </div>
+                    </div>
+                    
                     <div class="mt-3 pt-3 border-t border-outline-variant/20 flex items-center justify-between">
                         @php
                             $globalPct = number_format(($badge->users_count / $totalUsers) * 100, 1);
-                            // Rarity color logic
-                            $rarityColor = $globalPct < 10 ? 'text-primary font-black' : ($globalPct < 50 ? 'text-amber-600 font-bold' : 'text-on-surface-variant');
+                            $rarityColor = $globalPct < 10 ? 'text-primary font-black' : ($globalPct < 50 ? 'text-secondary font-bold' : 'text-on-surface-variant');
                         @endphp
                         <span class="text-[10px] font-bold uppercase tracking-wider {{ $rarityColor }}">
                             Dimiliki {{ $globalPct }}% pemain

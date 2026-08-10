@@ -3,13 +3,26 @@
 @section('title', 'Kebun Saya — Grow a Garden')
 @section('description', 'Kelola kebun dan tanaman Anda.')
 
+@php
+    $authUser = auth()->user();
+    $userRole = $authUser ? $authUser->role : 'free';
+    $planName = $authUser ? $authUser->planName() : 'Bibit (Gratis)';
+    $maxGardens = $authUser ? $authUser->maxGardens() : 1;
+    $maxPlants = $authUser ? $authUser->maxPlants() : 10;
+@endphp
+
 @section('dashboard-content')
-<div class="flex flex-col gap-6 pb-10" id="gardens-app">
+<div class="flex flex-col gap-6 pb-28 sm:pb-10 w-full" id="gardens-app" style="width: 100% !important;">
 
     {{-- Page Header --}}
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 w-full">
         <div>
-            <h1 class="text-[28px] md:text-[36px] font-bold text-on-surface tracking-tight leading-tight">Kebun Saya</h1>
+            <div class="flex items-center gap-3 flex-wrap">
+                <h1 class="text-[28px] md:text-[36px] font-bold text-on-surface tracking-tight leading-tight">Kebun Saya</h1>
+                <span class="text-[12px] font-extrabold px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
+                    Paket {{ $planName }} (Maks. {{ $maxGardens }} Kebun)
+                </span>
+            </div>
             <p class="text-[14px] text-on-surface-variant mt-1">Kelola kebun dan tanaman Anda di satu tempat.</p>
         </div>
         <button type="button" onclick="GardenApp.openAddGardenModal()" class="flex items-center gap-2 bg-primary text-on-primary font-bold text-[14px] px-5 py-2.5 rounded-full hover:bg-primary/90 active:scale-95 transition-all shadow-sm shrink-0">
@@ -19,21 +32,21 @@
     </div>
 
     {{-- Loading State --}}
-    <div id="gardens-loading" class="flex items-center justify-center py-20">
-        <div class="flex flex-col items-center gap-3">
+    <div id="gardens-loading" class="w-full flex items-center justify-center py-20" style="width: 100% !important;">
+        <div class="flex flex-col items-center gap-3 text-center">
             <span class="material-symbols-outlined text-[48px] text-primary animate-spin">progress_activity</span>
             <span class="text-[14px] text-on-surface-variant font-medium">Memuat kebun Anda...</span>
         </div>
     </div>
 
     {{-- Empty State --}}
-    <div id="gardens-empty" class="hidden flex-col items-center justify-center py-20 gap-6 w-full">
-        <div class="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center">
-            <span class="material-symbols-outlined text-[48px] text-primary">yard</span>
+    <div id="gardens-empty" style="display: none; width: 100% !important;" class="w-full bg-surface rounded-[24px] p-8 sm:p-12 ambient-shadow flex flex-col items-center justify-center gap-6 text-center border border-outline-variant/20">
+        <div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-[44px] text-primary">yard</span>
         </div>
-        <div class="text-center max-w-sm w-full px-4 mx-auto" style="min-width: 300px; text-wrap: normal;">
-            <h3 class="text-[20px] font-bold text-on-surface mb-2">Belum ada kebun</h3>
-            <p class="text-[14px] text-on-surface-variant leading-relaxed">Mulai dengan membuat kebun pertama Anda, lalu tambahkan tanaman dari katalog kami.</p>
+        <div class="text-center w-full min-w-full max-w-md mx-auto self-stretch" style="width: 100% !important; min-width: 100% !important; text-align: center !important;">
+            <h3 class="text-[20px] font-bold text-on-surface mb-2" style="width: 100% !important; text-align: center !important; display: block !important; white-space: normal !important;">Belum ada kebun</h3>
+            <p class="text-[14px] text-on-surface-variant leading-relaxed" style="width: 100% !important; text-align: center !important; display: block !important; white-space: normal !important;">Mulai dengan membuat kebun pertama Anda, lalu tambahkan tanaman dari katalog kami.</p>
         </div>
         <button type="button" onclick="GardenApp.openAddGardenModal()" class="flex items-center gap-2 bg-primary text-on-primary font-bold text-[14px] px-6 py-3 rounded-full hover:bg-primary/90 active:scale-95 transition-all shadow-sm">
             <span class="material-symbols-outlined text-[18px]">add_circle</span>
@@ -42,42 +55,45 @@
     </div>
 
     {{-- Main Content: Garden List + Detail --}}
-    <div id="gardens-content" style="display: none;" class="flex-col lg:flex-row gap-6">
+    <div id="gardens-content" style="display: none; width: 100% !important;" class="w-full flex flex-col lg:flex-row gap-6">
 
         {{-- Left: Garden List --}}
         <div class="w-full lg:w-[320px] shrink-0 flex flex-col gap-3">
-            <div id="garden-list" class="flex flex-col gap-3">
+            <div id="garden-list" class="flex flex-col gap-3 w-full">
                 {{-- Populated by JS --}}
             </div>
         </div>
 
         {{-- Right: Garden Detail --}}
-        <div class="flex-1 min-w-0">
+        <div class="flex-1 min-w-0 w-full" style="width: 100% !important;">
             {{-- No garden selected state --}}
-            <div id="garden-detail-empty" style="display: none;" class="flex-col items-center justify-center py-20 bg-surface rounded-[24px] ambient-shadow">
+            <div id="garden-detail-empty" style="display: none; width: 100% !important;" class="w-full flex flex-col items-center justify-center py-20 bg-surface rounded-[24px] ambient-shadow text-center">
                 <span class="material-symbols-outlined text-[48px] text-outline-variant mb-4">arrow_back</span>
                 <p class="text-[16px] text-on-surface-variant font-medium">Pilih kebun dari daftar di samping</p>
             </div>
 
             {{-- Garden detail panel --}}
-            <div id="garden-detail" style="display: none;" class="flex-col gap-6">
+            <div id="garden-detail" style="display: none; width: 100% !important;" class="w-full flex flex-col gap-6">
+
+
+
                 {{-- Detail Header --}}
-                <div class="bg-surface rounded-[24px] p-6 ambient-shadow">
+                <div class="bg-surface rounded-[24px] p-6 ambient-shadow w-full" style="width: 100% !important;">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                        <div class="flex items-center gap-4">
-                            <div class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
-                                <span class="material-symbols-outlined text-[28px] text-primary">yard</span>
+                        <div class="flex items-center gap-4 min-w-0">
+                            <div class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0" id="detail-garden-icon-box">
+                                <span class="material-symbols-outlined text-[28px] text-primary" id="detail-garden-icon">yard</span>
                             </div>
-                            <div>
-                                <h2 id="detail-garden-name" class="text-[22px] font-bold text-on-surface"></h2>
-                                <p id="detail-garden-location" class="text-[13px] text-on-surface-variant flex items-center gap-1 mt-0.5">
-                                    <span class="material-symbols-outlined text-[14px]">location_on</span>
-                                    <span></span>
+                            <div class="min-w-0">
+                                <h2 id="detail-garden-name" class="text-[22px] font-bold text-on-surface truncate"></h2>
+                                <p id="detail-garden-location" class="text-[13px] text-on-surface-variant flex items-center gap-1 mt-0.5 truncate">
+                                    <span class="material-symbols-outlined text-[14px] shrink-0">location_on</span>
+                                    <span class="truncate"></span>
                                 </p>
                             </div>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <button type="button" onclick="GardenApp.openAddPlantModal()" class="flex items-center gap-2 bg-primary text-on-primary font-bold text-[13px] px-4 py-2.5 rounded-full hover:bg-primary/90 active:scale-95 transition-all shadow-sm">
+                        <div class="flex items-center gap-2 shrink-0">
+                            <button type="button" id="add-plant-btn" onclick="GardenApp.openAddPlantModal()" class="flex items-center gap-2 bg-primary text-on-primary font-bold text-[13px] px-4 py-2.5 rounded-full hover:bg-primary/90 active:scale-95 transition-all shadow-sm">
                                 <span class="material-symbols-outlined text-[16px]">add</span>
                                 Tambah Tanaman
                             </button>
@@ -88,57 +104,90 @@
                     </div>
                 </div>
 
-                {{-- Plants Loading --}}
-                <div id="plants-loading" class="flex items-center justify-center py-12">
-                    <span class="material-symbols-outlined text-[36px] text-primary animate-spin">progress_activity</span>
-                </div>
+                {{-- Plant Content Section (Supports Glassmorphism Blur Overlay when garden is locked) --}}
+                <div id="plants-wrapper" class="relative w-full min-h-[300px] rounded-[24px]">
 
-                {{-- Plants Empty --}}
-                <div id="plants-empty" style="display: none;" class="bg-surface rounded-[24px] p-10 ambient-shadow flex-col items-center justify-center gap-4">
-                    <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                        <span class="material-symbols-outlined text-[32px] text-primary">potted_plant</span>
+                    {{-- Glassmorphism Blur Overlay for Locked Gardens --}}
+                    <div id="locked-plants-overlay" style="display: none; width: 100% !important;" class="absolute inset-0 z-20 backdrop-blur-md bg-surface/90 rounded-[24px] border border-error/30 p-6 sm:p-10 flex flex-col items-center justify-center text-center shadow-xl">
+                        <div class="w-16 h-16 rounded-full bg-error-container text-on-error-container flex items-center justify-center shadow-md mb-4 shrink-0 border border-error/30">
+                            <span class="material-symbols-outlined text-[36px]">lock</span>
+                        </div>
+                        <div class="text-center w-full min-w-full max-w-md mx-auto self-stretch flex flex-col items-center" style="width: 100% !important; min-width: 100% !important; text-align: center !important;">
+                            <h3 class="text-[20px] font-extrabold text-on-surface mb-2" style="width: 100% !important; text-align: center !important; display: block !important; white-space: normal !important; word-break: normal !important;">Akses Kebun Terkunci</h3>
+                            <p class="text-[13.5px] text-on-surface-variant leading-relaxed mb-6" style="width: 100% !important; text-align: center !important; display: block !important; white-space: normal !important; word-break: normal !important;">
+                                Kebun ini berada di luar kuota paket <strong class="font-bold text-error">{{ $planName }}</strong> Anda (Maksimal {{ $maxGardens }} Kebun). Upgrade paket Anda untuk membuka kembali seluruh isi kebun ini.
+                            </p>
+                        </div>
+                        <a href="/settings#subscription" class="bg-error hover:bg-error/90 text-on-error font-extrabold text-[14px] px-7 py-3 rounded-full shadow-md active:scale-95 transition-all flex items-center gap-2 cursor-pointer shrink-0">
+                            <span class="material-symbols-outlined text-[20px]">workspace_premium</span>
+                            Upgrade Paket Sekarang
+                        </a>
                     </div>
-                    <div class="text-center">
-                        <h3 class="text-[18px] font-bold text-on-surface mb-1">Kebun masih kosong</h3>
-                        <p class="text-[13px] text-on-surface-variant">Tambahkan tanaman pertama dari katalog kami.</p>
-                    </div>
-                    <button type="button" onclick="GardenApp.openAddPlantModal()" class="flex items-center gap-2 bg-primary text-on-primary font-bold text-[13px] px-5 py-2.5 rounded-full hover:bg-primary/90 active:scale-95 transition-all shadow-sm">
-                        <span class="material-symbols-outlined text-[16px]">add</span>
-                        Tambah Tanaman
-                    </button>
-                </div>
 
-                {{-- Plants Grid --}}
-                <div id="plants-grid" style="display: none;" class="grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                    {{-- Populated by JS --}}
+                    {{-- Plants Loading --}}
+                    <div id="plants-loading" class="w-full flex items-center justify-center py-16" style="width: 100% !important;">
+                        <span class="material-symbols-outlined text-[36px] text-primary animate-spin">progress_activity</span>
+                    </div>
+
+                    {{-- Plants Empty --}}
+                    <div id="plants-empty" style="display: none; width: 100% !important;" class="w-full bg-surface rounded-[24px] p-8 sm:p-10 ambient-shadow flex flex-col items-center justify-center gap-4 text-center border border-outline-variant/20">
+                        <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-[32px] text-primary">potted_plant</span>
+                        </div>
+                        <div class="text-center w-full min-w-full max-w-md mx-auto self-stretch" style="width: 100% !important; min-width: 100% !important; text-align: center !important;">
+                            <h3 class="text-[18px] font-bold text-on-surface mb-1" style="width: 100% !important; text-align: center !important; display: block !important; white-space: normal !important; word-break: normal !important;">Belum ada tanaman di kebun ini</h3>
+                            <p class="text-[13px] text-on-surface-variant leading-relaxed" style="width: 100% !important; text-align: center !important; display: block !important; white-space: normal !important; word-break: normal !important;">Tambahkan tanaman pertama dari katalog pustaka tanaman kami.</p>
+                        </div>
+                        <button type="button" onclick="GardenApp.openAddPlantModal()" class="flex items-center gap-2 bg-primary text-on-primary font-bold text-[13px] px-5 py-2.5 rounded-full hover:bg-primary/90 active:scale-95 transition-all shadow-sm shrink-0">
+                            <span class="material-symbols-outlined text-[16px]">add</span>
+                            Tambah Tanaman Pertama
+                        </button>
+                    </div>
+
+                    {{-- Plants Grid --}}
+                    <div id="plants-grid" style="display: none; width: 100% !important;" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+                        {{-- Populated by JS --}}
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-{{-- ============================================
-     MODAL: Add Garden
-     ============================================ --}}
-<div id="add-garden-modal" class="fixed inset-0 z-[100] hidden">
-    <div class="fixed inset-0 bg-slate-900/60 transition-opacity" onclick="GardenApp.closeAddGardenModal()"></div>
-    <div class="w-full min-h-screen px-4 py-8 flex items-center justify-center pointer-events-none">
-        <div class="w-full max-w-md bg-surface-container-lowest rounded-3xl p-8 ambient-shadow-lg border border-outline-variant/30 pointer-events-auto relative" style="min-width: 350px; text-wrap: normal;">
-            <button onclick="GardenApp.closeAddGardenModal()" class="absolute top-5 right-5 w-9 h-9 bg-surface-container-high rounded-full flex items-center justify-center text-on-surface-variant hover:bg-error/10 hover:text-error transition-colors">
-                <span class="material-symbols-outlined text-[20px]">close</span>
-            </button>
-            <h3 class="text-[22px] font-bold text-on-surface mb-6">Buat Kebun Baru</h3>
-            <form id="add-garden-form" onsubmit="GardenApp.submitAddGarden(event)">
-                <div class="flex flex-col gap-5">
-                    <div>
-                        <label class="text-[12px] font-bold text-on-surface-variant uppercase tracking-wider mb-2 block">Nama Kebun *</label>
-                        <input type="text" name="name" required placeholder="contoh: Kebun Belakang Rumah" class="w-full px-4 py-3 rounded-xl border border-outline-variant/40 bg-surface-container-lowest text-on-surface text-[14px] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all">
+{{-- ── Add Garden Modal ── --}}
+<div id="add-garden-modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="GardenApp.closeAddGardenModal()"></div>
+    <div class="w-full min-h-screen px-4 py-8 flex flex-col items-center justify-center pointer-events-none">
+        <div class="w-full shrink-0 min-w-full sm:min-w-[400px] max-w-md mx-auto bg-surface rounded-[28px] p-6 sm:p-8 ambient-shadow-lg border border-outline-variant/30 pointer-events-auto relative self-stretch" style="white-space: normal; word-break: normal;">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                        <span class="material-symbols-outlined text-[22px]">yard</span>
                     </div>
-                    <div>
-                        <label class="text-[12px] font-bold text-on-surface-variant uppercase tracking-wider mb-2 block">Lokasi (opsional)</label>
-                        <input type="text" name="location" placeholder="contoh: Bandung, Jawa Barat" class="w-full px-4 py-3 rounded-xl border border-outline-variant/40 bg-surface-container-lowest text-on-surface text-[14px] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all">
-                    </div>
-                    <button type="submit" id="add-garden-submit" class="w-full bg-primary text-on-primary font-bold text-[14px] py-3 rounded-xl hover:bg-primary/90 active:scale-[0.98] transition-all shadow-sm mt-2">
+                    <h3 class="text-[20px] font-bold text-on-surface">Tambah Kebun Baru</h3>
+                </div>
+                <button type="button" onclick="GardenApp.closeAddGardenModal()" class="w-9 h-9 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:bg-error/10 hover:text-error transition-colors">
+                    <span class="material-symbols-outlined text-[20px]">close</span>
+                </button>
+            </div>
+
+            <form id="add-garden-form" onsubmit="GardenApp.submitAddGarden(event)" class="flex flex-col gap-5">
+                <div>
+                    <label class="block text-[13px] font-bold text-on-surface mb-2">Nama Kebun <span class="text-error">*</span></label>
+                    <input type="text" name="name" required placeholder="Contoh: Kebun Belakang Rumah, Balkon Apt..."
+                        class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 bg-surface text-on-surface text-[14px] focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+                </div>
+                <div>
+                    <label class="block text-[13px] font-bold text-on-surface mb-2">Lokasi <span class="text-[12px] font-normal text-on-surface-variant">(Opsional)</span></label>
+                    <input type="text" name="location" placeholder="Contoh: Bandung, Jawa Barat"
+                        class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 bg-surface text-on-surface text-[14px] focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+                </div>
+                <div class="flex items-center justify-end gap-3 pt-2">
+                    <button type="button" onclick="GardenApp.closeAddGardenModal()" class="px-5 py-2.5 rounded-full text-[14px] font-bold text-on-surface-variant hover:bg-surface-container-high transition-colors">
+                        Batal
+                    </button>
+                    <button type="submit" id="add-garden-submit" class="bg-primary text-on-primary font-bold text-[14px] px-6 py-2.5 rounded-full hover:bg-primary/90 active:scale-95 transition-all shadow-sm">
                         Buat Kebun
                     </button>
                 </div>
@@ -147,156 +196,135 @@
     </div>
 </div>
 
-{{-- ============================================
-     MODAL: Add Plant (Template Picker)
-     ============================================ --}}
-<div id="add-plant-modal" class="fixed inset-0 z-[100] hidden">
-    <div class="fixed inset-0 bg-slate-900/60 transition-opacity" onclick="GardenApp.closeAddPlantModal()"></div>
-    <div class="min-h-screen px-4 py-8 flex items-center justify-center pointer-events-none">
-        <div class="w-full max-w-2xl bg-surface-container-lowest rounded-3xl p-8 ambient-shadow-lg border border-outline-variant/30 pointer-events-auto relative max-h-[90vh] flex flex-col" style="min-width: 350px; text-wrap: normal;">
-            <button onclick="GardenApp.closeAddPlantModal()" class="absolute top-5 right-5 w-9 h-9 bg-surface-container-high rounded-full flex items-center justify-center text-on-surface-variant hover:bg-error/10 hover:text-error transition-colors z-10">
-                <span class="material-symbols-outlined text-[20px]">close</span>
-            </button>
-            <h3 class="text-[22px] font-bold text-on-surface mb-2">Tambah Tanaman</h3>
-            <p class="text-[13px] text-on-surface-variant mb-5">Pilih dari katalog tanaman, lalu tentukan tanggal tanam.</p>
-
-            {{-- Search --}}
-            <div class="relative mb-4">
-                <span class="material-symbols-outlined text-[20px] text-on-surface-variant absolute left-4 top-1/2 -translate-y-1/2">search</span>
-                <input type="text" id="template-search" placeholder="Cari tanaman..." oninput="GardenApp.filterTemplates(this.value)" class="w-full pl-12 pr-4 py-3 rounded-xl border border-outline-variant/40 bg-surface-container-lowest text-on-surface text-[14px] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all">
-            </div>
-
-            {{-- Category Tabs --}}
-            <div id="category-tabs" class="flex items-center gap-2 mb-5 overflow-x-auto no-scrollbar pb-1">
-                <button type="button" onclick="GardenApp.filterByCategory(null)" class="category-tab active-tab px-4 py-2 rounded-full text-[12px] font-bold whitespace-nowrap transition-all" data-category="all">Semua</button>
-            </div>
-
-            {{-- Template Grid --}}
-            <div id="template-grid" class="flex-1 overflow-y-auto no-scrollbar grid grid-cols-1 sm:grid-cols-2 gap-3 pr-1 mb-5" style="max-height: 40vh;">
-                {{-- Populated by JS --}}
-            </div>
-
-            {{-- Selected Plant + Date --}}
-            <div id="selected-plant-section" class="hidden border-t border-outline-variant/30 pt-5 mt-auto">
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                        <span class="material-symbols-outlined text-[24px] text-primary">eco</span>
+{{-- ── Add Plant Modal (Catalog Picker) ── --}}
+<div id="add-plant-modal" class="fixed inset-0 z-50 hidden">
+    {{-- Backdrop --}}
+    <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="GardenApp.closeAddPlantModal()"></div>
+    
+    {{-- Scrollable Wrapper --}}
+    <div class="fixed inset-0 z-10 overflow-y-auto overscroll-contain">
+        <div class="flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4 pointer-events-none">
+            
+            {{-- Modal Card --}}
+            <div class="w-full max-w-2xl bg-surface rounded-t-[28px] sm:rounded-[28px] flex flex-col pointer-events-auto relative shadow-2xl sm:ambient-shadow-lg sm:border border-outline-variant/30" style="white-space: normal; word-break: normal;">
+                
+                <div class="p-5 pb-24 sm:p-7 sm:pb-7 flex flex-col w-full">
+                    {{-- Header --}}
+                    <div class="flex items-center justify-between mb-4 sm:mb-6 shrink-0 w-full">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                                <span class="material-symbols-outlined text-[22px]">potted_plant</span>
+                            </div>
+                            <div class="min-w-0">
+                                <h3 class="text-[18px] sm:text-[20px] font-bold text-on-surface leading-tight truncate">Pilih Tanaman</h3>
+                                <p class="text-[11px] sm:text-[12px] text-on-surface-variant truncate">Pilih tanaman dari katalog.</p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="GardenApp.closeAddPlantModal()" class="w-9 h-9 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:bg-error/10 hover:text-error transition-colors shrink-0">
+                            <span class="material-symbols-outlined text-[20px]">close</span>
+                        </button>
                     </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-[15px] font-bold text-on-surface truncate" id="selected-plant-name"></p>
-                        <p class="text-[12px] text-on-surface-variant italic truncate" id="selected-plant-scientific"></p>
+
+                    {{-- Search & Filters --}}
+                    <div class="flex flex-col gap-3 sm:gap-4 mb-3 sm:mb-4 shrink-0 w-full">
+                        <div class="relative w-full">
+                            <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+                            <input type="text" id="template-search" oninput="GardenApp.filterTemplates(this.value)" placeholder="Cari nama tanaman (contoh: Cabai, Tomat...)"
+                                class="w-full pl-10 pr-4 py-2.5 rounded-full border border-outline-variant/50 bg-surface text-on-surface text-[13px] focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+                        </div>
+                        <div id="category-tabs" class="flex gap-2 overflow-x-auto no-scrollbar pb-1 touch-pan-x w-full">
+                            {{-- Category tabs injected by JS --}}
+                        </div>
                     </div>
-                    <button type="button" onclick="GardenApp.deselectTemplate()" class="text-on-surface-variant hover:text-error transition-colors p-1">
-                        <span class="material-symbols-outlined text-[18px]">close</span>
-                    </button>
-                </div>
-                <div class="flex flex-col sm:flex-row gap-3">
-                    <div class="flex-1">
-                        <label class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1.5 block">Tanggal Tanam</label>
-                        <input type="date" id="planted-date-input" class="w-full px-4 py-2.5 rounded-xl border border-outline-variant/40 bg-surface-container-lowest text-on-surface text-[14px] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all">
+
+                    {{-- Template Grid (Grows naturally, no scroll bar here) --}}
+                    <div id="template-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full pb-4">
+                        {{-- Templates injected by JS --}}
                     </div>
-                    <button type="button" onclick="GardenApp.submitAddPlant()" id="add-plant-submit" class="bg-primary text-on-primary font-bold text-[13px] px-6 py-2.5 rounded-xl hover:bg-primary/90 active:scale-[0.98] transition-all shadow-sm sm:self-end">
-                        Tanam Sekarang
-                    </button>
+
+                    {{-- Form Actions --}}
+                    <form id="add-plant-form" onsubmit="GardenApp.submitAddPlant(event)" class="mt-2 pt-4 border-t border-outline-variant/30 shrink-0 flex flex-col gap-3 w-full">
+                        <div class="flex items-center justify-between gap-3.5 w-full">
+                            {{-- Summary Badge --}}
+                            <span id="batch-summary-badge" class="text-[12px] font-bold px-3 py-1.5 rounded-full bg-primary/10 text-primary border border-primary/20 whitespace-nowrap shrink-0">
+                                Terpilih: 0
+                            </span>
+
+                            {{-- Actions --}}
+                            <div class="flex items-center gap-2 shrink-0">
+                                <button type="button" onclick="GardenApp.closeAddPlantModal()" class="px-4 py-2 rounded-full text-[13px] font-bold text-on-surface-variant hover:bg-surface-container-high transition-colors whitespace-nowrap shrink-0">
+                                    Batal
+                                </button>
+                                <button type="submit" id="add-plant-submit" disabled class="bg-primary text-on-primary font-bold text-[13px] px-6 py-2 rounded-full hover:bg-primary/90 active:scale-95 transition-all shadow-xs disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap shrink-0">
+                                    Tanam
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-{{-- ============================================
-     MODAL: Plant Detail
-     ============================================ --}}
-<div id="plant-detail-modal" class="fixed inset-0 z-[100] hidden">
-    <div class="fixed inset-0 bg-slate-900/60 transition-opacity" onclick="GardenApp.closePlantDetail()"></div>
-    <div class="w-full min-h-screen px-4 py-8 flex items-center justify-center pointer-events-none">
-        <div class="w-full max-w-lg max-h-[90vh] overflow-y-auto bg-surface-container-lowest rounded-3xl p-8 ambient-shadow-lg border border-outline-variant/30 pointer-events-auto relative" style="min-width: 350px; text-wrap: normal;">
-            <button onclick="GardenApp.closePlantDetail()" class="absolute top-5 right-5 w-9 h-9 bg-surface-container-high rounded-full flex items-center justify-center text-on-surface-variant hover:bg-error/10 hover:text-error transition-colors">
-                <span class="material-symbols-outlined text-[20px]">close</span>
-            </button>
-
-            {{-- Plant Info Header --}}
-            <div class="flex items-center gap-4 mb-6">
-                <div class="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
-                    <span class="material-symbols-outlined text-[32px] text-primary">eco</span>
-                </div>
-                <div>
-                    <h3 id="pd-name" class="text-[22px] font-bold text-on-surface"></h3>
-                    <p id="pd-scientific" class="text-[13px] text-on-surface-variant italic"></p>
-                    <div class="flex items-center gap-2 mt-1">
-                        <span id="pd-category-badge" class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-primary/10 text-primary"></span>
-                        <span id="pd-status-badge" class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full"></span>
+{{-- ── Plant Detail Modal ── --}}
+<div id="plant-detail-modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="GardenApp.closePlantDetailModal()"></div>
+    <div class="w-full min-h-screen px-4 py-8 flex flex-col items-center justify-center pointer-events-none">
+        <div class="w-full shrink-0 min-w-full sm:min-w-[500px] max-w-lg mx-auto bg-surface rounded-[28px] p-6 sm:p-8 ambient-shadow-lg border border-outline-variant/30 pointer-events-auto relative flex flex-col gap-6 self-stretch" style="white-space: normal; word-break: normal;">
+            {{-- Modal Header --}}
+            <div class="flex items-start justify-between">
+                <div class="flex items-center gap-4">
+                    <div id="detail-plant-icon-box" class="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0">
+                        <span id="detail-plant-icon" class="material-symbols-outlined text-[32px]"></span>
                     </div>
+                    <div>
+                        <h3 id="detail-plant-name" class="text-[22px] font-bold text-on-surface leading-tight"></h3>
+                        <p id="detail-plant-scientific" class="text-[13px] text-on-surface-variant italic"></p>
+                    </div>
+                </div>
+                <button type="button" onclick="GardenApp.closePlantDetailModal()" class="w-9 h-9 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:bg-error/10 hover:text-error transition-colors">
+                    <span class="material-symbols-outlined text-[20px]">close</span>
+                </button>
+            </div>
+
+            {{-- Badges Row --}}
+            <div class="flex items-center gap-2 flex-wrap">
+                <span id="detail-plant-stage-badge" class="text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full"></span>
+                <span id="detail-plant-status-badge" class="text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full"></span>
+                <span id="detail-plant-category-badge" class="text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant"></span>
+            </div>
+
+            {{-- Stats Cards --}}
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-surface-container-low p-4 rounded-2xl flex flex-col">
+                    <span class="text-[11px] text-on-surface-variant font-medium">Hari Setelah Tanam</span>
+                    <span id="detail-plant-hst" class="text-[24px] font-black text-on-surface mt-1"></span>
+                </div>
+                <div class="bg-surface-container-low p-4 rounded-2xl flex flex-col">
+                    <span class="text-[11px] text-on-surface-variant font-medium">Estimasi Panen</span>
+                    <span id="detail-plant-harvest" class="text-[18px] font-bold text-primary mt-2"></span>
                 </div>
             </div>
 
-            {{-- Key Info Grid --}}
-            <div class="grid grid-cols-3 gap-3 mb-6">
-                <div class="bg-surface-container-low rounded-2xl p-4 text-center">
-                    <span class="material-symbols-outlined text-[20px] text-primary mb-1">calendar_today</span>
-                    <div id="pd-hst" class="text-[24px] font-black text-on-surface leading-none mb-1"></div>
-                    <div class="text-[10px] text-on-surface-variant font-bold uppercase tracking-wider">HST</div>
+            {{-- Requirements --}}
+            <div id="detail-plant-reqs" class="bg-surface-container-low p-4 rounded-2xl flex flex-col gap-3">
+                <h4 class="text-[13px] font-bold text-on-surface uppercase tracking-wider">Kebutuhan Perawatan</h4>
+                <div class="flex items-center gap-3 text-[13px] text-on-surface-variant">
+                    <span class="material-symbols-outlined text-[18px] text-primary">water_drop</span>
+                    <span id="detail-plant-water"></span>
                 </div>
-                <div class="bg-surface-container-low rounded-2xl p-4 text-center">
-                    <span class="material-symbols-outlined text-[20px] text-status-healthy mb-1">eco</span>
-                    <div id="pd-stage-label" class="text-[13px] font-black text-on-surface leading-tight mb-1"></div>
-                    <div class="text-[10px] text-on-surface-variant font-bold uppercase tracking-wider">Fase</div>
-                </div>
-                <div class="bg-surface-container-low rounded-2xl p-4 text-center">
-                    <span class="material-symbols-outlined text-[20px] text-[#f97316] mb-1">schedule</span>
-                    <div id="pd-harvest-eta" class="text-[13px] font-black text-on-surface leading-tight mb-1"></div>
-                    <div class="text-[10px] text-on-surface-variant font-bold uppercase tracking-wider">Panen</div>
-                </div>
-            </div>
-
-            {{-- Growth Timeline --}}
-            <div class="mb-6">
-                <h4 class="text-[13px] font-bold text-on-surface-variant uppercase tracking-wider mb-4">Timeline Pertumbuhan</h4>
-                <div id="pd-timeline" class="flex flex-col gap-0">
-                    {{-- Populated by JS --}}
-                </div>
-            </div>
-
-            {{-- Plant Details --}}
-            <div class="mb-6">
-                <h4 class="text-[13px] font-bold text-on-surface-variant uppercase tracking-wider mb-3">Informasi Perawatan</h4>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div class="flex items-start gap-3 bg-surface-container-low rounded-xl p-3">
-                        <span class="material-symbols-outlined text-[18px] text-primary mt-0.5">water_drop</span>
-                        <div>
-                            <div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-0.5">Kebutuhan Air</div>
-                            <div id="pd-water" class="text-[13px] text-on-surface font-medium"></div>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-3 bg-surface-container-low rounded-xl p-3">
-                        <span class="material-symbols-outlined text-[18px] text-[#f97316] mt-0.5">sunny</span>
-                        <div>
-                            <div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-0.5">Cahaya Matahari</div>
-                            <div id="pd-sunlight" class="text-[13px] text-on-surface font-medium"></div>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-3 bg-surface-container-low rounded-xl p-3">
-                        <span class="material-symbols-outlined text-[18px] text-[#8b5cf6] mt-0.5">science</span>
-                        <div>
-                            <div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-0.5">pH Tanah</div>
-                            <div id="pd-ph" class="text-[13px] text-on-surface font-medium"></div>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-3 bg-surface-container-low rounded-xl p-3">
-                        <span class="material-symbols-outlined text-[18px] text-status-healthy mt-0.5">event</span>
-                        <div>
-                            <div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-0.5">Tanggal Tanam</div>
-                            <div id="pd-planted" class="text-[13px] text-on-surface font-medium"></div>
-                        </div>
-                    </div>
+                <div class="flex items-center gap-3 text-[13px] text-on-surface-variant">
+                    <span class="material-symbols-outlined text-[18px] text-secondary">wb_sunny</span>
+                    <span id="detail-plant-sunlight"></span>
                 </div>
             </div>
 
             {{-- Actions --}}
-            <div class="flex justify-between items-center mt-6 pt-6 border-t border-outline-variant/30">
-                <a href="{{ route('care-tasks') }}" class="flex items-center gap-2 text-primary font-bold text-[13px] px-5 py-2.5 rounded-full hover:bg-primary/10 transition-colors shadow-sm bg-surface">
-                    <span class="material-symbols-outlined text-[18px]">checklist</span>
-                    Lihat Tugas
+            <div class="flex items-center justify-between pt-2 border-t border-outline-variant/30">
+                <a id="detail-plant-calendar-link" href="/growth-calendar" class="flex items-center gap-2 text-primary font-bold text-[13px] hover:underline">
+                    <span class="material-symbols-outlined text-[18px]">calendar_month</span>
+                    Lihat di Kalender
                 </a>
                 <button type="button" onclick="GardenApp.deleteCurrentPlant()" class="flex items-center gap-2 text-error font-bold text-[13px] px-4 py-2 rounded-xl hover:bg-error/10 transition-colors">
                     <span class="material-symbols-outlined text-[18px]">delete</span>
@@ -307,10 +335,14 @@
     </div>
 </div>
 
-@endsection
-
-@push('scripts')
 <script>
+window.USER_PLAN_CONFIG = {
+    role: @json($userRole),
+    planName: @json($planName),
+    maxGardens: {{ $maxGardens }},
+    maxPlants: {{ $maxPlants >= 99999 ? 999999 : $maxPlants }}
+};
+
 window.GardenApp = (() => {
     let gardens = [];
     let selectedGardenId = null;
@@ -324,52 +356,101 @@ window.GardenApp = (() => {
         'GERMINATION': { label: 'Germinasi',    color: '#10b981', icon: 'spa' },
         'SEEDLING':    { label: 'Persemaian',   color: '#059669', icon: 'grass' },
         'VEGETATIVE':  { label: 'Vegetatif',    color: '#047857', icon: 'eco' },
-        'FLOWERING':   { label: 'Berbunga',     color: '#f59e0b', icon: 'local_florist' },
-        'FRUITING':    { label: 'Berbuah',      color: '#f97316', icon: 'nutrition' },
+        'FLOWERING':   { label: 'Berbunga',     color: '#944a23', icon: 'local_florist' },
+        'FRUITING':    { label: 'Berbuah',      color: '#1b6b51', icon: 'nutrition' },
         'HARVEST':     { label: 'Panen',        color: '#006c49', icon: 'agriculture' },
         'FINISHED':    { label: 'Selesai',      color: '#6b7280', icon: 'check_circle' },
-        'DEAD':        { label: 'Mati',         color: '#ef4444', icon: 'dangerous' },
+        'DEAD':        { label: 'Mati',         color: '#ba1a1a', icon: 'dangerous' },
     };
 
     const STATUS_CONFIG = {
         'ACTIVE':     { label: 'Aktif',       bg: 'bg-[#10b981]/10', text: 'text-[#006c49]' },
-        'PRODUCTIVE': { label: 'Produktif',   bg: 'bg-[#f59e0b]/10', text: 'text-[#92400e]' },
+        'PRODUCTIVE': { label: 'Produktif',   bg: 'bg-[#944a23]/10', text: 'text-[#944a23]' },
         'HARVESTING': { label: 'Panen',       bg: 'bg-[#006c49]/10', text: 'text-[#006c49]' },
         'FINISHED':   { label: 'Selesai',     bg: 'bg-[#6b7280]/10', text: 'text-[#374151]' },
-        'DEAD':       { label: 'Mati',        bg: 'bg-[#ef4444]/10', text: 'text-[#b91c1c]' },
+        'DEAD':       { label: 'Mati',        bg: 'bg-[#ba1a1a]/10', text: 'text-[#ba1a1a]' },
     };
+
+    function escHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+    function escAttr(str) {
+        return escHtml(str);
+    }
 
     // ── Init ──
     async function init() {
+        // Absolute fallback: guarantee spinner hides after 2.5s regardless of network delays
+        setTimeout(() => {
+            const loading = document.getElementById('gardens-loading');
+            if (loading && loading.style.display !== 'none') {
+                loading.style.display = 'none';
+                const empty = document.getElementById('gardens-empty');
+                const content = document.getElementById('gardens-content');
+                if (gardens && gardens.length > 0 && content) {
+                    content.style.display = 'flex';
+                } else if (empty) {
+                    empty.style.display = 'flex';
+                }
+            }
+        }, 2500);
+
         await loadGardens();
-        document.getElementById('planted-date-input').value = new Date().toISOString().split('T')[0];
+        const dateInput = document.getElementById('planted-date-input');
+        if (dateInput) {
+            dateInput.value = new Date().toISOString().split('T')[0];
+        }
     }
 
     // ── API Helpers ──
     async function api(url, options = {}) {
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
+
         const defaults = {
+            signal: controller.signal,
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
                 'X-CSRF-TOKEN': csrfToken,
             },
         };
-        const resp = await fetch(url, { ...defaults, ...options });
-        if (!resp.ok) {
-            const err = await resp.json().catch(() => ({}));
-            throw new Error(err.error || err.message || `HTTP ${resp.status}`);
+        try {
+            const resp = await fetch(url, { ...defaults, ...options });
+            clearTimeout(timeoutId);
+            if (!resp.ok) {
+                const err = await resp.json().catch(() => ({}));
+                throw new Error(err.error || err.message || `HTTP ${resp.status}`);
+            }
+            return await resp.json();
+        } catch (err) {
+            clearTimeout(timeoutId);
+            if (err.name === 'AbortError') {
+                throw new Error('Waktu tunggu koneksi habis. Silakan muat ulang.');
+            }
+            throw err;
         }
-        return resp.json();
     }
 
     // ── Gardens ──
     async function loadGardens() {
+        const loading = document.getElementById('gardens-loading');
+        const empty = document.getElementById('gardens-empty');
         try {
             gardens = await api('/api/gardens');
             renderGardens();
         } catch (e) {
             console.error('Failed to load gardens:', e);
+            if (loading) loading.style.display = 'none';
+            if (empty) {
+                empty.style.display = 'flex';
+                empty.style.width = '100%';
+            }
+            if (window.Alert && Alert.modal) {
+                Alert.modal.error('Gagal Memuat Halaman', e.message || 'Terjadi kesalahan jaringan.');
+            }
         }
     }
 
@@ -383,30 +464,35 @@ window.GardenApp = (() => {
 
         if (gardens.length === 0) {
             empty.style.display = 'flex';
+            empty.style.width = '100%';
             content.style.display = 'none';
             return;
         }
 
         empty.style.display = 'none';
         content.style.display = 'flex';
+        content.style.width = '100%';
 
-        list.innerHTML = gardens.map(g => `
+        list.innerHTML = gardens.map((g, idx) => {
+            const isLocked = idx >= USER_PLAN_CONFIG.maxGardens;
+            return `
             <button type="button" onclick="GardenApp.selectGarden(${g.id})"
-                class="garden-card w-full text-left bg-surface rounded-[20px] p-5 ambient-shadow hover:-translate-y-0.5 hover:ambient-shadow-lg transition-all duration-200 border-2 ${selectedGardenId === g.id ? 'border-[#006c49]' : 'border-transparent'}" data-garden-id="${g.id}">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl ${selectedGardenId === g.id ? 'bg-primary text-on-primary' : 'bg-primary/10 text-primary'} flex items-center justify-center shrink-0 transition-colors">
-                        <span class="material-symbols-outlined text-[24px]">yard</span>
+                class="garden-card w-full text-left bg-surface rounded-[20px] p-4 sm:p-5 ambient-shadow hover:-translate-y-0.5 hover:ambient-shadow-lg transition-all duration-200 border-2 ${selectedGardenId === g.id ? (isLocked ? 'border-error bg-error-container/20' : 'border-[#006c49]') : 'border-transparent'} ${isLocked ? 'bg-surface-container-low opacity-80' : ''}" data-garden-id="${g.id}">
+                <div class="flex items-center gap-3 sm:gap-4">
+                    <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl ${selectedGardenId === g.id ? (isLocked ? 'bg-error text-on-error' : 'bg-primary text-on-primary') : (isLocked ? 'bg-error/15 text-error' : 'bg-primary/10 text-primary')} flex items-center justify-center shrink-0 transition-colors">
+                        <span class="material-symbols-outlined text-[22px] sm:text-[24px]">${isLocked ? 'lock' : 'yard'}</span>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <h3 class="text-[15px] font-bold text-on-surface truncate">${escHtml(g.name)}</h3>
-                        ${g.location_name ? `<p class="text-[12px] text-on-surface-variant truncate flex items-center gap-1 mt-0.5"><span class="material-symbols-outlined text-[12px]">location_on</span>${escHtml(g.location_name)}</p>` : ''}
+                        <h3 class="text-[14px] sm:text-[15px] font-bold ${isLocked ? 'text-on-surface-variant line-through opacity-70' : 'text-on-surface'} truncate">${escHtml(g.name)}</h3>
+                        ${g.location_name ? `<p class="text-[11px] sm:text-[12px] text-on-surface-variant truncate flex items-center gap-1 mt-0.5"><span class="material-symbols-outlined text-[12px]">location_on</span>${escHtml(g.location_name)}</p>` : ''}
+                        ${isLocked ? `<div class="mt-1"><span class="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container border border-error/30 whitespace-nowrap inline-block">Terkunci</span></div>` : ''}
                     </div>
-                    <span class="material-symbols-outlined text-[20px] text-on-surface-variant">chevron_right</span>
+                    <span class="material-symbols-outlined text-[20px] ${isLocked ? 'text-error' : 'text-on-surface-variant'}">chevron_right</span>
                 </div>
             </button>
-        `).join('');
+            `;
+        }).join('');
 
-        // Auto-select first or previously selected
         if (selectedGardenId && gardens.find(g => g.id === selectedGardenId)) {
             selectGarden(selectedGardenId);
         } else if (gardens.length > 0) {
@@ -416,30 +502,74 @@ window.GardenApp = (() => {
 
     async function selectGarden(gardenId) {
         selectedGardenId = gardenId;
-        const garden = gardens.find(g => g.id === gardenId);
+        const gardenIdx = gardens.findIndex(g => g.id === gardenId);
+        const garden = gardens[gardenIdx];
         if (!garden) return;
+
+        const isGardenLocked = gardenIdx >= USER_PLAN_CONFIG.maxGardens;
+
+        // Show/hide blur overlay for locked garden
+        const lockOverlay = document.getElementById('locked-plants-overlay');
+        if (lockOverlay) {
+            lockOverlay.style.display = isGardenLocked ? 'flex' : 'none';
+        }
+
+        // Toggle header action button
+        const addBtn = document.getElementById('add-plant-btn');
+        if (addBtn) {
+            if (isGardenLocked) {
+                addBtn.className = 'flex items-center gap-2 bg-error text-on-error font-bold text-[13px] px-4 py-2.5 rounded-full hover:bg-error/90 active:scale-95 transition-all shadow-sm cursor-pointer';
+                addBtn.innerHTML = '<span class="material-symbols-outlined text-[16px]">workspace_premium</span> Upgrade Paket';
+                addBtn.onclick = () => window.location.href = '/settings#subscription';
+            } else {
+                addBtn.className = 'flex items-center gap-2 bg-primary text-on-primary font-bold text-[13px] px-4 py-2.5 rounded-full hover:bg-primary/90 active:scale-95 transition-all shadow-sm cursor-pointer';
+                addBtn.innerHTML = '<span class="material-symbols-outlined text-[16px]">add</span> Tambah Tanaman';
+                addBtn.onclick = () => GardenApp.openAddPlantModal();
+            }
+        }
 
         // Update card highlights
         document.querySelectorAll('.garden-card').forEach(card => {
             const id = parseInt(card.dataset.gardenId);
-            const icon = card.querySelector('.w-12');
+            const cardIdx = gardens.findIndex(g => g.id === id);
+            const cardIsLocked = cardIdx >= USER_PLAN_CONFIG.maxGardens;
+            const icon = card.querySelector('.w-11, .w-12');
+            
             if (id === gardenId) {
                 card.classList.remove('border-transparent');
-                card.classList.add('border-[#006c49]');
-                icon.classList.remove('bg-primary/10', 'text-primary');
-                icon.classList.add('bg-primary', 'text-on-primary');
+                card.classList.add(cardIsLocked ? 'border-error' : 'border-[#006c49]');
+                if (icon) {
+                    icon.className = `w-11 h-11 sm:w-12 sm:h-12 rounded-xl ${cardIsLocked ? 'bg-error text-on-error' : 'bg-primary text-on-primary'} flex items-center justify-center shrink-0 transition-colors relative`;
+                }
             } else {
                 card.classList.add('border-transparent');
-                card.classList.remove('border-[#006c49]');
-                icon.classList.add('bg-primary/10', 'text-primary');
-                icon.classList.remove('bg-primary', 'text-on-primary');
+                card.classList.remove('border-[#006c49]', 'border-error');
+                if (icon) {
+                    icon.className = `w-11 h-11 sm:w-12 sm:h-12 rounded-xl ${cardIsLocked ? 'bg-error/15 text-error' : 'bg-primary/10 text-primary'} flex items-center justify-center shrink-0 transition-colors relative`;
+                }
             }
         });
 
         // Show detail panel
         document.getElementById('garden-detail-empty').style.display = 'none';
-        document.getElementById('garden-detail').style.display = 'flex';
+        const detailPanel = document.getElementById('garden-detail');
+        detailPanel.style.display = 'flex';
+        detailPanel.style.width = '100%';
+
         document.getElementById('detail-garden-name').textContent = garden.name;
+        
+        const iconBox = document.getElementById('detail-garden-icon-box');
+        const iconEl = document.getElementById('detail-garden-icon');
+        if (iconBox && iconEl) {
+            if (isGardenLocked) {
+                iconBox.className = 'w-14 h-14 rounded-2xl bg-error/15 text-error flex items-center justify-center shrink-0';
+                iconEl.textContent = 'lock';
+            } else {
+                iconBox.className = 'w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0';
+                iconEl.textContent = 'yard';
+            }
+        }
+
         const locEl = document.getElementById('detail-garden-location');
         if (garden.location_name) {
             locEl.classList.remove('hidden');
@@ -448,17 +578,18 @@ window.GardenApp = (() => {
             locEl.classList.add('hidden');
         }
 
-        // Load plants
-        await loadPlants(gardenId);
+        // Load plants for this garden
+        await loadPlants(gardenId, isGardenLocked);
     }
 
     // ── Plants ──
-    async function loadPlants(gardenId) {
+    async function loadPlants(gardenId, isGardenLocked = false) {
         const loading = document.getElementById('plants-loading');
         const empty = document.getElementById('plants-empty');
         const grid = document.getElementById('plants-grid');
 
         loading.style.display = 'flex';
+        loading.style.width = '100%';
         empty.style.display = 'none';
         grid.style.display = 'none';
 
@@ -468,11 +599,14 @@ window.GardenApp = (() => {
 
             if (plants.length === 0) {
                 empty.style.display = 'flex';
+                empty.style.width = '100%';
                 return;
             }
 
             grid.style.display = 'grid';
-            grid.innerHTML = plants.map(p => {
+            grid.style.width = '100%';
+            grid.innerHTML = plants.map((p, pIdx) => {
+                const isPlantLocked = isGardenLocked || (pIdx >= USER_PLAN_CONFIG.maxPlants);
                 const stage = STAGE_CONFIG[p.stage] || STAGE_CONFIG['SEED'];
                 const status = STATUS_CONFIG[p.status] || STATUS_CONFIG['ACTIVE'];
                 const harvestText = p.estimated_harvest_days !== null
@@ -480,24 +614,31 @@ window.GardenApp = (() => {
                     : '-';
                 const harvestColor = p.estimated_harvest_days !== null && p.estimated_harvest_days <= 0 ? 'text-[#006c49]' : 'text-on-surface-variant';
 
+                const onclickAttr = isPlantLocked
+                    ? `GardenApp.showPlantLockedAlert('${escAttr(p.template_name)}')`
+                    : `GardenApp.openPlantDetail(${p.id})`;
+
                 return `
-                    <button type="button" onclick='GardenApp.openPlantDetail(${JSON.stringify(p).replace(/'/g, "&#39;")})'
-                        class="bg-surface rounded-[20px] p-5 ambient-shadow text-left hover:-translate-y-1 hover:ambient-shadow-lg transition-all duration-200 flex flex-col gap-3 group">
+                    <button type="button" onclick="${onclickAttr}"
+                        class="bg-surface rounded-[20px] p-5 ambient-shadow text-left hover:-translate-y-1 hover:ambient-shadow-lg transition-all duration-200 flex flex-col gap-3 group relative ${isPlantLocked ? 'opacity-75 bg-surface-container-low border border-error/30' : ''}">
                         <div class="flex items-start justify-between">
-                            <div class="flex items-center gap-3">
-                                <div class="w-11 h-11 rounded-xl flex items-center justify-center shrink-0" style="background: ${stage.color}15;">
-                                    <span class="material-symbols-outlined text-[22px]" style="color: ${stage.color};">${stage.icon}</span>
+                            <div class="flex items-center gap-3 min-w-0">
+                                <div class="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 relative" style="background: ${isPlantLocked ? '#ffdad6' : stage.color + '15'};">
+                                    <span class="material-symbols-outlined text-[22px]" style="color: ${isPlantLocked ? '#ba1a1a' : stage.color};">${isPlantLocked ? 'lock' : stage.icon}</span>
                                 </div>
                                 <div class="min-w-0">
-                                    <h4 class="text-[14px] font-bold text-on-surface truncate">${escHtml(p.template_name)}</h4>
+                                    <h4 class="text-[14px] font-bold ${isPlantLocked ? 'text-on-surface-variant line-through opacity-70' : 'text-on-surface'} truncate">${escHtml(p.template_name)}</h4>
                                     <p class="text-[11px] text-on-surface-variant italic truncate">${escHtml(p.scientific_name)}</p>
                                 </div>
                             </div>
                             <span class="material-symbols-outlined text-[18px] text-outline-variant group-hover:text-primary transition-colors">open_in_new</span>
                         </div>
                         <div class="flex items-center gap-2 flex-wrap">
-                            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full" style="background: ${stage.color}15; color: ${stage.color};">${stage.label}</span>
-                            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full ${status.bg} ${status.text}">${status.label}</span>
+                            ${isPlantLocked 
+                                ? `<span class="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container border border-error/30 whitespace-nowrap inline-block">Terkunci</span>`
+                                : `<span class="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full" style="background: ${stage.color}15; color: ${stage.color};">${stage.label}</span>
+                                   <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full ${status.bg} ${status.text}">${status.label}</span>`
+                            }
                         </div>
                         <div class="flex items-center justify-between text-[12px] text-on-surface-variant pt-1 border-t border-outline-variant/20">
                             <div class="flex items-center gap-1">
@@ -518,14 +659,42 @@ window.GardenApp = (() => {
         }
     }
 
+    function showPlantLockedAlert(plantName) {
+        Alert.modal.confirm(
+            'Tanaman Terkunci',
+            `Tanaman "${plantName}" terkunci karena melebihi kuota ${USER_PLAN_CONFIG.maxPlants} tanaman paket ${USER_PLAN_CONFIG.planName}. Upgrade ke paket Pro atau Premium untuk membuka kembali seluruh tanaman Anda.`,
+            'Upgrade Paket',
+            false
+        ).then(res => {
+            if (res && res.isConfirmed) {
+                window.location.href = '/settings#subscription';
+            }
+        });
+    }
+
     // ── Add Garden ──
     function openAddGardenModal() {
+        if (gardens.length >= USER_PLAN_CONFIG.maxGardens) {
+            Alert.modal.confirm(
+                'Batas Kebun Tercapai',
+                `Paket ${USER_PLAN_CONFIG.planName} Anda dibatasi maksimal ${USER_PLAN_CONFIG.maxGardens} kebun. Tingkatkan paket Anda ke Pro (10 Kebun) atau Premium (Tanpa Batas) untuk menambah kebun baru.`,
+                'Upgrade Paket',
+                false
+            ).then(res => {
+                if (res && res.isConfirmed) {
+                    window.location.href = '/settings#subscription';
+                }
+            });
+            return;
+        }
         document.getElementById('add-garden-modal').classList.remove('hidden');
         document.getElementById('add-garden-form').reset();
     }
+
     function closeAddGardenModal() {
         document.getElementById('add-garden-modal').classList.add('hidden');
     }
+
     async function submitAddGarden(e) {
         e.preventDefault();
         const form = e.target;
@@ -543,10 +712,13 @@ window.GardenApp = (() => {
             closeAddGardenModal();
             selectedGardenId = garden.id;
             renderGardens();
-            // Update AppState
             if (window.AppState) window.AppState.usage.gardens++;
+
+            if (garden.new_badge) {
+                Alert.modal.badge(garden.new_badge);
+            }
         } catch (e) {
-            alert(e.message);
+            Alert.modal.error('Gagal Membuat Kebun', e.message);
         } finally {
             btn.disabled = false;
             btn.textContent = 'Buat Kebun';
@@ -574,9 +746,39 @@ window.GardenApp = (() => {
     // ── Add Plant ──
     async function openAddPlantModal() {
         if (!selectedGardenId) return;
+
+        const gardenIdx = gardens.findIndex(g => g.id === selectedGardenId);
+        if (gardenIdx >= USER_PLAN_CONFIG.maxGardens) {
+            Alert.modal.confirm(
+                'Kebun Terkunci',
+                `Kebun ini terkunci karena melebihi batas kuota ${USER_PLAN_CONFIG.maxGardens} kebun paket ${USER_PLAN_CONFIG.planName}. Tingkatkan paket Anda untuk mengelola kebun ini.`,
+                'Upgrade Paket',
+                false
+            ).then(res => {
+                if (res && res.isConfirmed) {
+                    window.location.href = '/settings#subscription';
+                }
+            });
+            return;
+        }
+
+        if (plants.length >= USER_PLAN_CONFIG.maxPlants) {
+            Alert.modal.confirm(
+                'Batas Tanaman Terlampaui',
+                `Paket ${USER_PLAN_CONFIG.planName} Anda dibatasi maksimal ${USER_PLAN_CONFIG.maxPlants} tanaman per kebun. Tingkatkan paket Anda untuk menambah tanaman baru.`,
+                'Upgrade Paket',
+                false
+            ).then(res => {
+                if (res && res.isConfirmed) {
+                    window.location.href = '/settings#subscription';
+                }
+            });
+            return;
+        }
+
         document.getElementById('add-plant-modal').classList.remove('hidden');
         document.getElementById('template-search').value = '';
-        deselectTemplate();
+        resetBatchSelection();
 
         if (templateCategories.length === 0) {
             try {
@@ -590,6 +792,7 @@ window.GardenApp = (() => {
             renderTemplateGrid();
         }
     }
+
     function closeAddPlantModal() {
         document.getElementById('add-plant-modal').classList.add('hidden');
     }
@@ -607,7 +810,6 @@ window.GardenApp = (() => {
 
     function filterByCategory(catId) {
         activeCategoryId = catId;
-        // Update tab styles
         document.querySelectorAll('.category-tab').forEach(tab => {
             const tabCat = tab.dataset.category;
             const isActive = (catId === null && tabCat === 'all') || (catId !== null && parseInt(tabCat) === catId);
@@ -622,8 +824,44 @@ window.GardenApp = (() => {
         renderTemplateGrid();
     }
 
-    function filterTemplates(query) {
-        renderTemplateGrid(query.toLowerCase());
+    // ── Batch Plant Selector Logic ──
+    let selectedBatch = {}; // { templateId: quantity }
+
+    function resetBatchSelection() {
+        selectedBatch = {};
+        updateBatchUI();
+    }
+
+    function adjustBatchQty(templateId, delta, event) {
+        if (event) event.stopPropagation();
+        const current = selectedBatch[templateId] || 0;
+        const next = Math.max(0, current + delta);
+        if (next === 0) {
+            delete selectedBatch[templateId];
+        } else {
+            selectedBatch[templateId] = next;
+        }
+        renderTemplateGrid(document.getElementById('template-search')?.value?.toLowerCase() || '');
+        updateBatchUI();
+    }
+
+    function updateBatchUI() {
+        const totalCount = Object.values(selectedBatch).reduce((sum, qty) => sum + qty, 0);
+        const submitBtn = document.getElementById('add-plant-submit');
+        const badge = document.getElementById('batch-summary-badge');
+
+        if (badge) {
+            badge.textContent = `Terpilih: ${totalCount}`;
+        }
+
+        if (submitBtn) {
+            submitBtn.disabled = totalCount === 0;
+            submitBtn.textContent = 'Tanam';
+        }
+    }
+
+    function filterTemplates(query = '') {
+        renderTemplateGrid((query || '').toLowerCase());
     }
 
     function renderTemplateGrid(searchQuery = '') {
@@ -643,227 +881,191 @@ window.GardenApp = (() => {
             return;
         }
 
-        grid.innerHTML = templates.map(t => `
-            <button type="button" onclick="GardenApp.selectTemplate(${t.id}, '${escAttr(t.name_id)}', '${escAttr(t.scientific_name || '')}')"
-                class="template-card text-left p-4 rounded-xl border-2 transition-all duration-200 hover:shadow-md ${selectedTemplateId === t.id ? 'border-primary bg-primary/5' : 'border-outline-variant/30 bg-surface hover:border-primary/50'}" data-template-id="${t.id}">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                        <span class="material-symbols-outlined text-[20px] text-primary">eco</span>
+        grid.innerHTML = templates.map(t => {
+            const qty = selectedBatch[t.id] || 0;
+            const isSelected = qty > 0;
+
+            return `
+            <div class="template-card p-4 rounded-xl border-2 transition-all duration-200 flex items-center justify-between gap-3 ${isSelected ? 'border-primary bg-primary/5 shadow-sm' : 'border-outline-variant/30 bg-surface hover:border-primary/40'}" data-template-id="${t.id}">
+                <div class="flex items-center gap-3 min-w-0">
+                    <div class="w-10 h-10 rounded-xl ${isSelected ? 'bg-primary text-on-primary' : 'bg-primary/10 text-primary'} flex items-center justify-center shrink-0 transition-colors">
+                        <span class="material-symbols-outlined text-[20px]">eco</span>
                     </div>
                     <div class="min-w-0">
-                        <h4 class="text-[13px] font-bold text-on-surface truncate">${escHtml(t.name_id)}</h4>
+                        <h4 class="text-[14px] font-bold text-on-surface truncate">${escHtml(t.name_id)}</h4>
                         <p class="text-[11px] text-on-surface-variant italic truncate">${escHtml(t.scientific_name || '')}</p>
                     </div>
                 </div>
-                <div class="flex items-center gap-2 mt-2.5">
-                    <span class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant">${escHtml(t.categoryName)}</span>
-                    <span class="text-[9px] font-medium text-on-surface-variant">${t.harvest_start_day}–${t.harvest_end_day} hari</span>
+
+                <!-- Quantity Controller -->
+                <div class="flex items-center gap-1.5 shrink-0 bg-surface-container-high/80 p-1 rounded-lg border border-outline-variant/30">
+                    ${isSelected ? `
+                        <button type="button" onclick="GardenApp.adjustBatchQty(${t.id}, -1, event)" class="w-7 h-7 rounded-md bg-surface hover:bg-error/10 hover:text-error text-on-surface-variant flex items-center justify-center font-bold text-[14px] transition-colors">
+                            <span class="material-symbols-outlined text-[16px]">remove</span>
+                        </button>
+                        <span class="text-[13px] font-extrabold text-primary w-6 text-center">${qty}</span>
+                        <button type="button" onclick="GardenApp.adjustBatchQty(${t.id}, 1, event)" class="w-7 h-7 rounded-md bg-primary text-on-primary flex items-center justify-center font-bold text-[14px] hover:bg-primary/90 transition-colors shadow-xs">
+                            <span class="material-symbols-outlined text-[16px]">add</span>
+                        </button>
+                    ` : `
+                        <button type="button" onclick="GardenApp.adjustBatchQty(${t.id}, 1, event)" class="px-3 py-1.5 rounded-md bg-primary/10 text-primary hover:bg-primary hover:text-on-primary font-bold text-[12px] flex items-center gap-1 transition-all">
+                            <span class="material-symbols-outlined text-[14px]">add</span> Tambah
+                        </button>
+                    `}
                 </div>
-            </button>
-        `).join('');
-    }
-
-    function selectTemplate(id, name, scientific) {
-        selectedTemplateId = id;
-        document.getElementById('selected-plant-section').classList.remove('hidden');
-        document.getElementById('selected-plant-name').textContent = name;
-        document.getElementById('selected-plant-scientific').textContent = scientific;
-
-        // Highlight card
-        document.querySelectorAll('.template-card').forEach(card => {
-            if (parseInt(card.dataset.templateId) === id) {
-                card.classList.remove('border-outline-variant/30', 'bg-surface', 'hover:border-primary/50');
-                card.classList.add('border-primary', 'bg-primary/5');
-            } else {
-                card.classList.add('border-outline-variant/30', 'bg-surface', 'hover:border-primary/50');
-                card.classList.remove('border-primary', 'bg-primary/5');
-            }
-        });
-    }
-
-    function deselectTemplate() {
-        selectedTemplateId = null;
-        document.getElementById('selected-plant-section').classList.add('hidden');
-        document.querySelectorAll('.template-card').forEach(card => {
-            card.classList.add('border-outline-variant/30', 'bg-surface', 'hover:border-primary/50');
-            card.classList.remove('border-primary', 'bg-primary/5');
-        });
-    }
-
-    async function submitAddPlant() {
-        if (!selectedTemplateId || !selectedGardenId) return;
-        const plantedDate = document.getElementById('planted-date-input').value;
-        if (!plantedDate) { alert('Pilih tanggal tanam.'); return; }
-
-        const btn = document.getElementById('add-plant-submit');
-        btn.disabled = true;
-        btn.textContent = 'Menyimpan...';
-
-        try {
-            await api(`/api/gardens/${selectedGardenId}/plants`, {
-                method: 'POST',
-                body: JSON.stringify({
-                    plant_template_id: selectedTemplateId,
-                    planted_date: plantedDate,
-                }),
-            });
-            closeAddPlantModal();
-            deselectTemplate();
-            await loadPlants(selectedGardenId);
-            if (window.AppState) window.AppState.usage.plants++;
-        } catch (e) {
-            alert(e.message);
-        } finally {
-            btn.disabled = false;
-            btn.textContent = 'Tanam Sekarang';
-        }
-    }
-
-    // ── Plant Detail ──
-    function openPlantDetail(plant) {
-        currentPlantDetail = plant;
-        const modal = document.getElementById('plant-detail-modal');
-        modal.classList.remove('hidden');
-
-        const stage = STAGE_CONFIG[plant.stage] || STAGE_CONFIG['SEED'];
-        const status = STATUS_CONFIG[plant.status] || STATUS_CONFIG['ACTIVE'];
-
-        document.getElementById('pd-name').textContent = plant.template_name;
-        document.getElementById('pd-scientific').textContent = plant.scientific_name;
-        document.getElementById('pd-category-badge').textContent = plant.category;
-        const statusBadge = document.getElementById('pd-status-badge');
-        statusBadge.textContent = status.label;
-        statusBadge.className = `text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${status.bg} ${status.text}`;
-
-        document.getElementById('pd-hst').textContent = plant.hst;
-        document.getElementById('pd-stage-label').textContent = stage.label;
-
-        const harvestEta = document.getElementById('pd-harvest-eta');
-        if (plant.estimated_harvest_days !== null) {
-            harvestEta.textContent = plant.estimated_harvest_days <= 0 ? 'Siap!' : `${plant.estimated_harvest_days}h`;
-        } else {
-            harvestEta.textContent = '-';
-        }
-
-        // Planted date
-        document.getElementById('pd-planted').textContent = plant.planted_date
-            ? new Date(plant.planted_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
-            : '-';
-
-        // Care info
-        document.getElementById('pd-water').textContent = plant.template?.water_requirement || '-';
-        document.getElementById('pd-sunlight').textContent = plant.template?.sunlight || '-';
-        document.getElementById('pd-ph').textContent = plant.template ? `${plant.template.soil_ph_min} - ${plant.template.soil_ph_max}` : '-';
-
-        // Growth Timeline
-        renderTimeline(plant);
-    }
-
-    function renderTimeline(plant) {
-        const t = plant.template;
-        if (!t) return;
-
-        const stages = [
-            { key: 'SEED', label: 'Benih', day: 0 },
-            { key: 'GERMINATION', label: 'Germinasi', day: t.germination_day },
-            { key: 'SEEDLING', label: 'Persemaian', day: t.seedling_day },
-            { key: 'VEGETATIVE', label: 'Vegetatif', day: t.vegetative_day },
-        ];
-        if (t.flowering_day) stages.push({ key: 'FLOWERING', label: 'Berbunga', day: t.flowering_day });
-        if (t.fruiting_day) stages.push({ key: 'FRUITING', label: 'Berbuah', day: t.fruiting_day });
-        stages.push({ key: 'HARVEST', label: 'Panen', day: t.harvest_start_day });
-
-        const currentStageIndex = stages.findIndex(s => s.key === plant.stage);
-        const container = document.getElementById('pd-timeline');
-
-        container.innerHTML = stages.map((s, i) => {
-            const cfg = STAGE_CONFIG[s.key] || STAGE_CONFIG['SEED'];
-            const isPast = i < currentStageIndex;
-            const isCurrent = i === currentStageIndex;
-            const isFuture = i > currentStageIndex;
-
-            const lineColor = isPast ? cfg.color : '#e5e7eb';
-            const dotBg = isCurrent ? cfg.color : (isPast ? cfg.color : '#d1d5db');
-            const textClass = isCurrent ? 'font-black text-on-surface' : (isPast ? 'font-bold text-on-surface' : 'font-medium text-on-surface-variant');
-
-            return `
-                <div class="flex items-stretch gap-4">
-                    <div class="flex flex-col items-center w-6 shrink-0">
-                        <div class="w-4 h-4 rounded-full border-2 shrink-0 ${isCurrent ? 'ring-4 ring-opacity-20' : ''}" style="background: ${dotBg}; border-color: ${dotBg}; ${isCurrent ? `ring-color: ${dotBg};` : ''}"></div>
-                        ${i < stages.length - 1 ? `<div class="w-0.5 flex-1 min-h-[24px]" style="background: ${lineColor};"></div>` : ''}
-                    </div>
-                    <div class="pb-4 flex-1">
-                        <div class="flex items-center justify-between">
-                            <span class="text-[13px] ${textClass}">${s.label}</span>
-                            <span class="text-[11px] text-on-surface-variant">HST ${s.day || 0}</span>
-                        </div>
-                        ${isCurrent ? `<span class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full mt-1 inline-block" style="background: ${cfg.color}15; color: ${cfg.color};">Saat ini</span>` : ''}
-                    </div>
-                </div>
+            </div>
             `;
         }).join('');
     }
 
-    function closePlantDetail() {
+    function selectTemplate(id, name, scientific) {
+        adjustBatchQty(id, 1);
+    }
+
+    function deselectTemplate() {
+        resetBatchSelection();
+    }
+
+    async function submitAddPlant(e) {
+        e.preventDefault();
+        const items = Object.keys(selectedBatch).map(id => ({
+            plant_template_id: parseInt(id),
+            quantity: selectedBatch[id]
+        })).filter(item => item.quantity > 0);
+
+        if (items.length === 0 || !selectedGardenId) return;
+
+        const btn = document.getElementById('add-plant-submit');
+        btn.disabled = true;
+        btn.textContent = 'Menanam...';
+
+        try {
+            const dateVal = new Date().toISOString().split('T')[0];
+            const response = await api(`/api/gardens/${selectedGardenId}/plants`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    items: items,
+                    planted_date: dateVal
+                }),
+            });
+
+            closeAddPlantModal();
+            const gardenIdx = gardens.findIndex(g => g.id === selectedGardenId);
+            if (gardenIdx > -1) {
+                gardens[gardenIdx].plants_count = (gardens[gardenIdx].plants_count || 0) + (response.count || 1);
+                renderGardens();
+            }
+            const isGardenLocked = gardenIdx >= USER_PLAN_CONFIG.maxGardens;
+            await loadPlants(selectedGardenId, isGardenLocked);
+            if (window.AppState) window.AppState.usage.plants += (response.count || 1);
+            Alert.toast.success(`${response.count || 1} Tanaman berhasil ditambahkan!`);
+
+            if (response.new_badge) {
+                Alert.modal.badge(response.new_badge);
+            }
+        } catch (err) {
+            Alert.modal.error('Gagal Menambah Tanaman', err.message);
+        } finally {
+            btn.disabled = false;
+            updateBatchUI();
+        }
+    }
+
+    // ── Plant Detail Modal ──
+    function openPlantDetail(plantOrId) {
+        let plant = plantOrId;
+        if (typeof plantOrId === 'number' || typeof plantOrId === 'string') {
+            plant = plants.find(p => p.id == plantOrId);
+        }
+        if (!plant) return;
+
+        currentPlantDetail = plant;
+        const modal = document.getElementById('plant-detail-modal');
+
+        const stage = STAGE_CONFIG[plant.stage] || STAGE_CONFIG['SEED'];
+        const status = STATUS_CONFIG[plant.status] || STATUS_CONFIG['ACTIVE'];
+
+        document.getElementById('detail-plant-name').textContent = plant.template_name;
+        document.getElementById('detail-plant-scientific').textContent = plant.scientific_name || '';
+
+        const iconBox = document.getElementById('detail-plant-icon-box');
+        const icon = document.getElementById('detail-plant-icon');
+        iconBox.style.background = `${stage.color}15`;
+        icon.style.color = stage.color;
+        icon.textContent = stage.icon;
+
+        const stageBadge = document.getElementById('detail-plant-stage-badge');
+        stageBadge.textContent = stage.label;
+        stageBadge.style.background = `${stage.color}15`;
+        stageBadge.style.color = stage.color;
+
+        const statusBadge = document.getElementById('detail-plant-status-badge');
+        statusBadge.textContent = status.label;
+        statusBadge.className = `text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full ${status.bg} ${status.text}`;
+
+        document.getElementById('detail-plant-category-badge').textContent = plant.category || 'Sayuran';
+        document.getElementById('detail-plant-hst').textContent = `${plant.hst} HST`;
+
+        const harvestText = plant.estimated_harvest_days !== null
+            ? (plant.estimated_harvest_days <= 0 ? 'Siap Panen!' : `${plant.estimated_harvest_days} Hari`)
+            : 'Belum ditentukan';
+        document.getElementById('detail-plant-harvest').textContent = harvestText;
+
+        const t = plant.template || {};
+        document.getElementById('detail-plant-water').textContent = t.water_requirement || 'Secukupnya';
+        document.getElementById('detail-plant-sunlight').textContent = t.sunlight || 'Full Sun';
+
+        modal.classList.remove('hidden');
+    }
+
+    function closePlantDetailModal() {
         document.getElementById('plant-detail-modal').classList.add('hidden');
         currentPlantDetail = null;
     }
 
     async function deleteCurrentPlant() {
         if (!currentPlantDetail) return;
-        const result = await Alert.modal.confirm('Hapus Tanaman?', 'Hapus tanaman ini dari kebun Anda?', 'Ya, Hapus', true);
+        const result = await Alert.modal.confirm('Hapus Tanaman?', `Hapus ${currentPlantDetail.template_name} dari kebun ini?`, 'Ya, Hapus', true);
         if (!result.isConfirmed) return;
 
         try {
             await api(`/api/plants/${currentPlantDetail.id}`, { method: 'DELETE' });
-            closePlantDetail();
-            await loadPlants(selectedGardenId);
-            if (window.AppState) window.AppState.usage.plants--;
-            Alert.toast.success('Tanaman berhasil dihapus');
+            closePlantDetailModal();
+            const gardenIdx = gardens.findIndex(g => g.id === selectedGardenId);
+            await loadPlants(selectedGardenId, gardenIdx >= USER_PLAN_CONFIG.maxGardens);
+            Alert.toast.success('Tanaman berhasil dihapus.');
         } catch (e) {
             Alert.modal.error('Gagal menghapus tanaman', e.message);
         }
     }
 
-    // ── Helpers ──
-    function escHtml(str) {
-        const d = document.createElement('div');
-        d.textContent = str || '';
-        return d.innerHTML;
-    }
-    function escAttr(str) {
-        return (str || '').replace(/'/g, "\\'").replace(/"/g, '\\"');
-    }
-
-    // ── Expose ──
     return {
         init,
-        selectGarden,
         openAddGardenModal,
         closeAddGardenModal,
         submitAddGarden,
         deleteCurrentGarden,
+        selectGarden,
         openAddPlantModal,
         closeAddPlantModal,
-        selectTemplate,
-        deselectTemplate,
-        submitAddPlant,
+        filterCategoryTabs: renderCategoryTabs,
         filterByCategory,
         filterTemplates,
+        selectTemplate,
+        adjustBatchQty,
+        resetBatchSelection,
+        submitAddPlant,
         openPlantDetail,
-        closePlantDetail,
+        closePlantDetailModal,
         deleteCurrentPlant,
+        showPlantLockedAlert,
     };
 })();
 
-document.addEventListener('DOMContentLoaded', () => GardenApp.init());
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => GardenApp.init());
+} else {
+    GardenApp.init();
+}
 </script>
-
-<style>
-    .active-tab {
-        background: #006c49;
-        color: white;
-        border-color: #006c49;
-    }
-</style>
-@endpush
+@endsection
