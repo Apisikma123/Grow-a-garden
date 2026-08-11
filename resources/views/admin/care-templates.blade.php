@@ -10,10 +10,7 @@
             <p class="text-[15px] text-on-surface-variant max-w-[600px] leading-relaxed">Konfigurasi siklus hidup otomatis, instruksi perawatan, dan aturan cuaca untuk setiap tanaman.</p>
         </div>
         <div class="flex gap-3 shrink-0">
-            <button class="flex items-center gap-2 bg-white border border-outline-variant/30 text-on-surface font-bold text-[13px] px-5 py-2.5 rounded-full hover:bg-surface-container-lowest transition-all shadow-sm">
-                <span class="material-symbols-outlined text-[18px] text-[#10b981]">filter_list</span>
-                Filter Tampilan
-            </button>
+
             <div class="relative group">
                 <button class="flex items-center gap-2 bg-white border border-outline-variant/30 text-on-surface font-bold text-[13px] px-5 py-2.5 rounded-full hover:bg-surface-container-lowest transition-all shadow-sm">
                     <span class="material-symbols-outlined text-[18px] text-[#10b981]">sort</span>

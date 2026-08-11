@@ -9,10 +9,16 @@
             <h1 class="text-[28px] font-bold text-on-surface tracking-tight">Katalog Tanaman</h1>
             <p class="text-[14px] text-on-surface-variant">Kelola database tanaman global termasuk taksonomi, kondisi ideal, dan status.</p>
         </div>
-        <button onclick="openPlantModal()" class="flex items-center gap-2 bg-primary text-on-primary font-bold text-[14px] px-5 py-2.5 rounded-lg hover:bg-primary/90 active:scale-[0.98] transition-all shadow-sm shrink-0">
-            <span class="material-symbols-outlined text-[18px]">add_circle</span>
-            Tambah Tanaman Baru
-        </button>
+        <div class="flex items-center gap-3 shrink-0">
+            <form action="{{ route('admin.plants') }}" method="GET" class="relative">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari tanaman..." class="pl-9 pr-4 py-2 bg-surface-container-highest border border-outline-variant/30 rounded-lg text-[13px] text-on-surface focus:outline-none focus:ring-2 focus:ring-primary w-64">
+                <span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-on-surface-variant">search</span>
+            </form>
+            <button onclick="openPlantModal()" class="flex items-center gap-2 bg-primary text-on-primary font-bold text-[14px] px-5 py-2.5 rounded-lg hover:bg-primary/90 active:scale-[0.98] transition-all shadow-sm">
+                <span class="material-symbols-outlined text-[18px]">add_circle</span>
+                Tambah Tanaman Baru
+            </button>
+        </div>
     </div>
 
     {{-- Main Table Container --}}

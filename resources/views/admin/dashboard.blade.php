@@ -114,7 +114,32 @@
                         <div class="w-full"></div>
                     </div>
 
-                    {{-- Mock Line using SVG (Optimized Aspect Ratio) --}}
+                    @php
+                        $max = max($userGrowth) > 0 ? max($userGrowth) : 1;
+                        $points = [];
+                        foreach($userGrowth as $i => $val) {
+                            $x = $i * 200;
+                            // Leave 20px padding at the top
+                            $y = 250 - (($val / $max) * 230);
+                            $points[] = ['x' => $x, 'y' => $y, 'val' => $val];
+                        }
+                        
+                        $pathLine = "";
+                        $pathArea = "M 0 250 ";
+                        foreach($points as $i => $pt) {
+                            $prefix = $i === 0 ? "M" : "L";
+                            $pathLine .= "$prefix {$pt['x']} {$pt['y']} ";
+                            $pathArea .= "L {$pt['x']} {$pt['y']} ";
+                        }
+                        $pathArea .= "L 1000 250 Z";
+
+                        $months = [];
+                        for($i = 5; $i >= 0; $i--) {
+                            $months[] = now()->subMonths($i)->format('M');
+                        }
+                    @endphp
+
+                    {{-- Dynamic Line Chart --}}
                     <svg class="absolute inset-0 w-full h-full z-10" preserveAspectRatio="none" viewBox="0 0 1000 250">
                         <defs>
                             <linearGradient id="gradientArea" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -122,26 +147,23 @@
                                 <stop offset="100%" stop-color="#10b981" stop-opacity="0.05"></stop>
                             </linearGradient>
                         </defs>
-                        <path d="M 0 200 Q 200 150, 300 125 T 500 75 T 700 100 T 1000 25 L 1000 250 L 0 250 Z" fill="url(#gradientArea)"></path>
-                        <path d="M 0 200 Q 200 150, 300 125 T 500 75 T 700 100 T 1000 25" fill="none" stroke="#006c49" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
+                        <path d="{{ $pathArea }}" fill="url(#gradientArea)"></path>
+                        <path d="{{ $pathLine }}" fill="none" stroke="#006c49" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
                         
                         {{-- Data points --}}
-                        <circle cx="0" cy="200" r="6" fill="white" stroke="#006c49" stroke-width="3" vector-effect="non-scaling-stroke"></circle>
-                        <circle cx="300" cy="125" r="6" fill="white" stroke="#006c49" stroke-width="3" vector-effect="non-scaling-stroke"></circle>
-                        <circle cx="500" cy="75" r="6" fill="white" stroke="#006c49" stroke-width="3" vector-effect="non-scaling-stroke"></circle>
-                        <circle cx="700" cy="100" r="6" fill="white" stroke="#006c49" stroke-width="3" vector-effect="non-scaling-stroke"></circle>
-                        <circle cx="1000" cy="25" r="6" fill="white" stroke="#006c49" stroke-width="3" vector-effect="non-scaling-stroke"></circle>
+                        @foreach($points as $pt)
+                        <circle cx="{{ $pt['x'] }}" cy="{{ $pt['y'] }}" r="6" fill="white" stroke="#006c49" stroke-width="3" vector-effect="non-scaling-stroke">
+                            <title>Users: {{ $pt['val'] }}</title>
+                        </circle>
+                        @endforeach
                     </svg>
                 </div>
 
                 {{-- X-Axis Labels --}}
                 <div class="absolute bottom-0 left-10 right-0 flex justify-between text-[10px] text-on-surface-variant font-medium">
-                    <span>Jan</span>
-                    <span>Feb</span>
-                    <span>Mar</span>
-                    <span>Apr</span>
-                    <span>May</span>
-                    <span>Jun</span>
+                    @foreach($months as $m)
+                    <span>{{ $m }}</span>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -243,7 +265,7 @@
     <div class="bg-surface-container-lowest rounded-[24px] p-6 ambient-shadow border border-outline-variant/30 flex flex-col">
         <div class="flex justify-between items-center mb-6">
             <h3 class="text-[18px] font-bold text-on-surface">Aktivitas Hari Ini</h3>
-            <a href="#" class="text-[13px] font-bold text-primary hover:text-primary/80 transition-colors">View All</a>
+
         </div>
 
         <div class="overflow-x-auto w-full no-scrollbar">
