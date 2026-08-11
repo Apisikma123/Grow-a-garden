@@ -11,6 +11,7 @@ class Garden extends Model
     protected $fillable = [
         'user_id',
         'name',
+        'location_name',
         'latitude',
         'longitude',
         'area_size_m2',
@@ -19,11 +20,6 @@ class Garden extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function plots(): HasMany
-    {
-        return $this->hasMany(GardenPlot::class);
     }
 
     public function plants(): HasMany

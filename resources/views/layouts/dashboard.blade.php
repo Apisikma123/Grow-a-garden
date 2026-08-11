@@ -13,15 +13,21 @@
         </a>
         <div class="flex items-center gap-3">
             {{-- Mobile Upgrade Button --}}
-            <button onclick="document.getElementById('pricing-modal').classList.remove('hidden')" class="bg-gradient-to-r from-yellow-400 to-yellow-500 text-yellow-900 text-[11px] font-black tracking-wide px-3 py-1.5 rounded-full flex items-center gap-1 shadow-sm hover:scale-105 active:scale-95 transition-transform">
-                <span class="material-symbols-outlined text-[14px]">star</span> PRO
+            @if(!in_array(Auth::user()->role ?? 'free', ['premium', 'admin']))
+            <button type="button" onclick="document.getElementById('pricing-modal').classList.remove('hidden')" class="bg-gradient-to-r from-yellow-400 to-yellow-500 text-yellow-900 text-[11px] font-black tracking-wide px-3 py-1.5 rounded-full flex items-center gap-1 shadow-sm hover:scale-105 active:scale-95 transition-transform cursor-pointer">
+                <span class="material-symbols-outlined text-[14px]">star</span> {{ (Auth::user()->role ?? 'free') === 'pro' ? 'UPGRADE PREMIUM' : 'PRO' }}
             </button>
+            @endif
 
             <button class="text-on-surface-variant active:opacity-80 transition-opacity p-1 flex items-center justify-center" aria-label="Notifications">
                 <span class="material-symbols-outlined text-[24px]">notifications</span>
             </button>
-            <a href="/settings" class="w-9 h-9 rounded-full bg-surface-container-highest flex items-center justify-center text-primary font-bold text-sm shadow-sm active:scale-95 transition-transform" aria-label="Profile and Settings">
-                {{ strtoupper(substr(Auth::user()->name ?? 'GT', 0, 2)) }}
+            <a href="/settings" class="w-9 h-9 rounded-full bg-surface-container-highest flex items-center justify-center text-primary font-bold text-sm shadow-sm active:scale-95 transition-transform overflow-hidden" aria-label="Profile and Settings">
+                @if(Auth::user()->avatar)
+                    <img src="{{ filter_var(Auth::user()->avatar, FILTER_VALIDATE_URL) ? Auth::user()->avatar : asset('storage/' . Auth::user()->avatar) }}" class="w-full h-full object-cover" alt="Profile">
+                @else
+                    {{ strtoupper(substr(Auth::user()->name ?? 'GT', 0, 2)) }}
+                @endif
             </a>
         </div>
     </header>
@@ -33,8 +39,8 @@
         {{-- Logo --}}
         <div class="px-6 mb-8">
             <a href="/" class="text-xl font-bold text-primary flex items-center gap-3">
-                <img src="{{ asset('images/logo.jpg') }}" alt="Logo" class="w-8 h-8 rounded-lg object-contain" onerror="this.outerHTML='<span class=\'material-symbols-outlined text-[32px]\'>local_florist</span>'">
-                Grow a Garden
+                <img src="{{ asset('images/logo.jpg') }}" alt="Logo" class="w-8 h-8 rounded-lg object-contain shrink-0" onerror="this.outerHTML='<span class=\'material-symbols-outlined text-[32px]\'>local_florist</span>'">
+                <span>Grow a Garden</span>
             </a>
         </div>
 
@@ -43,9 +49,10 @@
             @php
                 $navItems = [
                     ['route' => 'dashboard', 'label' => 'Beranda', 'icon' => 'dashboard', 'url' => '/dashboard'],
-                    ['route' => 'garden-plots', 'label' => 'Plot Kebun', 'icon' => 'potted_plant', 'url' => '/garden-plots'],
+                    ['route' => 'gardens', 'label' => 'Kebun Saya', 'icon' => 'yard', 'url' => '/gardens'],
                     ['route' => 'growth-calendar', 'label' => 'Kalender Tanam', 'icon' => 'calendar_month', 'url' => '/growth-calendar'],
                     ['route' => 'care-tasks', 'label' => 'Tugas Perawatan', 'icon' => 'water_drop', 'url' => '/care-tasks'],
+                    ['route' => 'activity-log', 'label' => 'Activity Log', 'icon' => 'history', 'url' => '/activity-log'],
                 ];
                 $currentRoute = request()->path();
             @endphp
@@ -76,33 +83,47 @@
         <div class="px-6 mt-auto">
 
             {{-- Upgrade Ad Box (Kapitalis Style) --}}
+            @if(!in_array(Auth::user()->role ?? 'free', ['premium', 'admin']))
             <div class="bg-gradient-to-br from-[#0f172a] to-[#1e293b] rounded-2xl p-4 flex flex-col relative overflow-hidden group shadow-lg mb-2">
                 <div class="absolute -right-4 -top-4 w-16 h-16 bg-[#006c49] rounded-full opacity-20 group-hover:scale-150 transition-transform duration-500"></div>
                 <div class="absolute -left-4 -bottom-4 w-12 h-12 bg-yellow-400 rounded-full opacity-10 group-hover:scale-150 transition-transform duration-500"></div>
                 
                 <div class="flex items-center gap-2 mb-1 z-10">
                     <span class="material-symbols-outlined text-yellow-400 text-[18px]">verified</span>
-                    <span class="text-[12px] font-black text-white tracking-widest uppercase">Go Premium</span>
+                    <span class="text-[12px] font-black text-white tracking-widest uppercase">{{ (Auth::user()->role ?? 'free') === 'pro' ? 'Upgrade Premium' : 'Go Premium' }}</span>
                 </div>
-                <p class="text-[11px] text-slate-300 font-medium mb-3 leading-snug z-10">Unlock unlimited plots, plants, and smart weather adjustments.</p>
-                <button type="button" onclick="document.getElementById('pricing-modal').classList.remove('hidden')" class="w-full text-center bg-yellow-400 text-yellow-900 font-bold text-[13px] py-2 rounded-xl hover:bg-yellow-300 transition-colors z-10 shadow-sm cursor-pointer">
-                    Upgrade Now
+                <p class="text-[11px] text-slate-300 font-medium mb-3 leading-snug z-10">
+                    {{ (Auth::user()->role ?? 'free') === 'pro' ? 'Tingkatkan ke Panen Raya (Premium) untuk hingga 100 kebun & tanaman tanpa batas.' : 'Unlock hingga 100 kebun, tanaman tanpa batas, dan Weather AI.' }}
+                </p>
+                <button type="button" onclick="document.getElementById('pricing-modal').classList.remove('hidden')" class="w-full text-center bg-yellow-400 text-yellow-900 font-bold text-[13px] py-2 rounded-xl hover:bg-yellow-300 transition-colors z-10 shadow-sm block cursor-pointer">
+                    {{ (Auth::user()->role ?? 'free') === 'pro' ? 'Upgrade ke Premium' : 'Upgrade Sekarang' }}
                 </button>
             </div>
+            @endif
 
             <div class="bg-surface rounded-[20px] p-2 flex items-center justify-between border border-outline-variant/30 ambient-shadow">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-outline-variant/20 flex items-center justify-center text-[#006c49] font-black text-[14px]">
-                        {{ strtoupper(substr(Auth::user()->name ?? 'GT', 0, 2)) }}
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <div class="w-9 h-9 rounded-full bg-outline-variant/20 flex items-center justify-center text-[#006c49] font-black text-[13px] shrink-0">
+                        @if(Auth::user()->avatar)
+                            <img src="{{ filter_var(Auth::user()->avatar, FILTER_VALIDATE_URL) ? Auth::user()->avatar : asset('storage/' . Auth::user()->avatar) }}" class="w-full h-full rounded-full object-cover" alt="Profile">
+                        @else
+                            {{ strtoupper(substr(Auth::user()->name ?? 'GT', 0, 2)) }}
+                        @endif
                     </div>
-                    <div class="flex flex-col">
-                        <span class="text-[14px] font-bold text-on-surface leading-tight truncate max-w-[120px]">{{ Auth::user()->name ?? 'Green Thumb' }}</span>
-                        <span class="text-[11px] text-on-surface-variant font-medium">Profil & Pengaturan</span>
+                    <div class="flex flex-col min-w-0">
+                        <span class="text-[13px] font-bold text-on-surface leading-tight truncate max-w-[95px]">{{ Auth::user()->name ?? 'Green Thumb' }}</span>
+                        <span class="text-[10px] text-on-surface-variant font-medium">Profil</span>
                     </div>
                 </div>
-                <a href="/settings" class="p-2 text-on-surface-variant hover:text-[#006c49] transition-colors flex items-center justify-center rounded-full hover:bg-black/5">
-                    <span class="material-symbols-outlined text-[22px] font-bold">settings</span>
-                </a>
+                <div class="flex items-center gap-0.5 shrink-0">
+                    <button type="button" class="p-1.5 text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center rounded-full hover:bg-black/5 relative" title="Notifikasi" aria-label="Notifikasi">
+                        <span class="material-symbols-outlined text-[18px]">notifications</span>
+                        <span class="absolute top-1 right-1 w-1.5 h-1.5 bg-error rounded-full ring-2 ring-surface"></span>
+                    </button>
+                    <a href="/settings" class="p-1.5 text-on-surface-variant hover:text-[#006c49] transition-colors flex items-center justify-center rounded-full hover:bg-black/5" title="Pengaturan" aria-label="Pengaturan">
+                        <span class="material-symbols-outlined text-[18px] font-bold">settings</span>
+                    </a>
+                </div>
             </div>
         </div>
     </nav>
@@ -135,10 +156,22 @@
             {{-- Modal Header --}}
             <div class="text-center mb-10 max-w-[672px] mx-auto">
                 <h2 class="text-[28px] md:text-[36px] font-bold text-on-surface tracking-tight mb-4">
-                    Pilih Paket Sesuai Kebutuhan Kebun Anda
+                    @if((Auth::user()->role ?? 'free') === 'pro')
+                        Anda Sedang Menikmati Paket Subur (Pro)
+                    @elseif(in_array(Auth::user()->role ?? 'free', ['premium', 'admin']))
+                        Anda Sedang Menikmati Paket Premium
+                    @else
+                        Pilih Paket Sesuai Kebutuhan Kebun Anda
+                    @endif
                 </h2>
                 <p class="text-base text-on-surface-variant leading-relaxed">
-                    Mulai dari hobi kecil hingga komunitas hidroponik besar.
+                    @if((Auth::user()->role ?? 'free') === 'pro')
+                        Anda memiliki kuota hingga 10 Kebun & 100 Tanaman. Tingkatkan ke Panen Raya (Premium) untuk kuota hingga 100 Kebun & Tanaman Tanpa Batas.
+                    @elseif(in_array(Auth::user()->role ?? 'free', ['premium', 'admin']))
+                        Seluruh fitur terbaik Grow a Garden telah aktif tanpa batasan.
+                    @else
+                        Mulai dari hobi kecil hingga komunitas hidroponik besar.
+                    @endif
                 </p>
             </div>
 
@@ -155,11 +188,11 @@
                     <div class="space-y-4 flex-1 mb-6">
                         <div class="flex items-start gap-3">
                             <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">check_circle</span>
-                            <span class="text-sm text-on-surface">Maks. 1 Garden, 4 Plot & 10 Tanaman Aktif</span>
+                            <span class="text-sm text-on-surface">Maks. 1 Garden & 10 Tanaman Aktif</span>
                         </div>
                         <div class="flex items-start gap-3">
                             <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">check_circle</span>
-                            <span class="text-sm text-on-surface">Akses ke Growth Calendar</span>
+                            <span class="text-sm text-on-surface">Akses Tugas Perawatan</span>
                         </div>
                         
                         {{-- Kekurangan Sengaja --}}
@@ -179,7 +212,11 @@
                         </div>
                     </div>
 
-                    <button class="w-full text-center border-2 border-outline-variant text-on-surface font-bold py-3 rounded-xl hover:bg-surface-container-high transition-colors" disabled>Current Plan</button>
+                    @if((Auth::user()->role ?? 'free') === 'free')
+                        <button class="w-full text-center border-2 border-outline-variant text-on-surface font-bold py-3 rounded-xl hover:bg-surface-container-high transition-colors" disabled>Paket Saat Ini</button>
+                    @else
+                        <button class="w-full text-center border border-outline-variant/30 text-on-surface-variant/50 font-medium py-3 rounded-xl opacity-50 cursor-not-allowed" disabled>—</button>
+                    @endif
                 </div>
 
                 {{-- Paket 2: Subur --}}
@@ -189,7 +226,7 @@
                         Paling Populer - Best Value
                     </div>
                     
-                    <h3 class="text-xl font-bold text-white mb-2">Subur</h3>
+                    <h3 class="text-xl font-bold text-white mb-2">Subur <span class="text-xs font-semibold bg-white/20 px-2 py-1 rounded-full text-white ml-2">Pro</span></h3>
                     
                     <div class="bg-white/10 rounded-xl p-3 mb-4 backdrop-blur-sm">
                         <div class="mb-2">
@@ -213,13 +250,13 @@
                     <div class="space-y-4 flex-1 mb-6 mt-2">
                         <div class="flex items-start gap-3">
                             <span class="material-symbols-outlined text-yellow-400 text-[20px] mt-0.5">check_circle</span>
-                            <span class="text-sm text-white font-medium">Maks. 10 Garden, 50 Plot & 100 Tanaman Aktif</span>
+                            <span class="text-sm text-white font-medium">Maks. 10 Garden & 100 Tanaman Aktif</span>
                         </div>
                         <div class="flex items-start gap-3">
-                            <span class="material-symbols-outlined text-yellow-400 text-[20px] mt-0.5">smart_toy</span>
+                            <span class="material-symbols-outlined text-yellow-400 text-[20px] mt-0.5">calendar_month</span>
                             <div class="flex flex-col">
-                                <span class="text-sm text-white font-bold">Asisten Autopilot</span>
-                                <span class="text-[11px] text-white/80 mt-0.5">Rule Engine menghasilkan task perawatan otomatis berbasis Growth & Care Template.</span>
+                                <span class="text-sm text-white font-bold">Growth Calendar</span>
+                                <span class="text-[11px] text-white/80 mt-0.5">Jadwal estimasi tanam hingga panen interaktif untuk seluruh tanaman.</span>
                             </div>
                         </div>
                         <div class="flex items-start gap-3">
@@ -235,14 +272,20 @@
                         </div>
                     </div>
 
-                    <a href="/checkout?plan=subur&from={{ urlencode(request()->path()) }}" class="w-full text-center bg-yellow-400 text-yellow-900 font-bold py-3 rounded-xl hover:bg-yellow-300 transition-colors shadow-lg mb-2 text-[15px] block">Mulai 7-Day Free Trial</a>
-                    <p class="text-center text-[11px] text-white/70">Cancel anytime. Bebas risiko.</p>
+                    @if((Auth::user()->role ?? 'free') === 'pro')
+                        <button class="w-full text-center bg-white/20 text-white font-bold py-3 rounded-xl shadow-inner border border-white/30 cursor-default" disabled>Paket Saat Ini (Pro)</button>
+                    @elseif(in_array(Auth::user()->role ?? 'free', ['premium', 'admin']))
+                        <button class="w-full text-center bg-white/10 text-white/50 font-medium py-3 rounded-xl cursor-not-allowed" disabled>—</button>
+                    @else
+                        <a href="/checkout?plan=subur&from={{ urlencode(request()->path()) }}" class="w-full text-center bg-yellow-400 text-yellow-900 font-bold py-3 rounded-xl hover:bg-yellow-300 transition-colors shadow-lg mb-2 text-[15px] block">Mulai 7-Day Free Trial</a>
+                        <p class="text-center text-[11px] text-white/70">Cancel anytime. Bebas risiko.</p>
+                    @endif
                 </div>
 
                 {{-- Paket 3: Panen Raya --}}
                 <div class="bg-white rounded-3xl p-6 ambient-shadow border border-outline-variant/30 flex flex-col hover:shadow-xl transition-all duration-300 relative overflow-hidden">
                     <div class="absolute -right-6 -top-6 bg-primary/10 w-24 h-24 rounded-full"></div>
-                    <h3 class="text-xl font-bold text-on-surface mb-2 relative z-10">Panen Raya <span class="text-xs font-semibold bg-primary-container text-on-primary-container px-2 py-1 rounded-full ml-2">Pro</span></h3>
+                    <h3 class="text-xl font-bold text-on-surface mb-2 relative z-10">Panen Raya <span class="text-xs font-semibold bg-primary-container text-on-primary-container px-2 py-1 rounded-full ml-2">Premium</span></h3>
                     
                     <div class="bg-surface-container-low rounded-xl p-3 mb-4 mt-2">
                         <div class="mb-2">
@@ -267,26 +310,42 @@
                     <div class="space-y-4 flex-1 mb-6 relative z-10">
                         <div class="flex items-start gap-3">
                             <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">all_inclusive</span>
-                            <span class="text-sm text-on-surface font-bold">Maks. 100 Garden, Unlimited Plot & Tanaman</span>
+                            <span class="text-sm text-on-surface font-bold">Maks. 100 Garden & Unlimited Tanaman</span>
                         </div>
                         <div class="flex items-start gap-3">
-                            <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">check_circle</span>
-                            <span class="text-sm text-on-surface">Seluruh fitur otomatis Paket Subur</span>
+                            <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">calendar_month</span>
+                            <div class="flex flex-col">
+                                <span class="text-sm text-on-surface font-bold">Growth Calendar</span>
+                                <span class="text-[11px] text-on-surface-variant mt-0.5">Jadwal estimasi tanam hingga panen interaktif untuk seluruh tanaman.</span>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">cloud_done</span>
+                            <div class="flex flex-col">
+                                <span class="text-sm text-on-surface font-bold">Anti-Gagal Panen</span>
+                                <span class="text-[11px] text-on-surface-variant mt-0.5">Weather Adjustment (-30% penyiraman hujan, +50% kemarau).</span>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">emoji_events</span>
+                            <span class="text-sm text-on-surface font-medium">Notifikasi Upcoming Harvest di Dashboard</span>
                         </div>
                         <div class="flex items-start gap-3">
                             <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">history</span>
                             <div class="flex flex-col">
                                 <span class="text-sm text-on-surface font-bold">Activity Log Tanpa Batas</span>
-                                <span class="text-[11px] text-on-surface-variant mt-0.5">Tracking tak terbatas untuk menyiram, memupuk, dll.</span>
+                                <span class="text-[11px] text-on-surface-variant mt-0.5">Tracking tak terbatas untuk menyiram, memupuk, memangkas, dll.</span>
                             </div>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <span class="material-symbols-outlined text-[#006c49] text-[20px] mt-0.5">groups</span>
-                            <span class="text-sm text-on-surface font-medium">Ideal untuk Urban Farming & Komunitas</span>
                         </div>
                     </div>
 
-                    <a href="/checkout?plan=pro&from={{ urlencode(request()->path()) }}" class="w-full text-center bg-[#006c49] text-white font-bold py-3 rounded-xl hover:bg-[#005236] transition-colors shadow-sm relative z-10 block">Upgrade ke Pro</a>
+                    @if(in_array(Auth::user()->role ?? 'free', ['premium', 'admin']))
+                        <button class="w-full text-center bg-primary text-white font-bold py-3 rounded-xl shadow-sm cursor-default" disabled>Paket Saat Ini (Premium)</button>
+                    @else
+                        <a href="/checkout?plan=pro&from={{ urlencode(request()->path()) }}" class="w-full text-center bg-[#006c49] text-white font-bold py-3 rounded-xl hover:bg-[#005236] transition-colors shadow-sm relative z-10 block">
+                            {{ (Auth::user()->role ?? 'free') === 'pro' ? 'Upgrade ke Premium' : 'Upgrade ke Premium' }}
+                        </a>
+                    @endif
                 </div>
 
             </div>
@@ -301,9 +360,10 @@
     @php
         $bnavItems = [
             ['route' => 'dashboard', 'label' => 'Beranda', 'icon' => 'home', 'url' => '/dashboard'],
-            ['route' => 'garden-plots', 'label' => 'Plot', 'icon' => 'potted_plant', 'url' => '/garden-plots'],
+            ['route' => 'gardens', 'label' => 'Kebun', 'icon' => 'yard', 'url' => '/gardens'],
             ['route' => 'growth-calendar', 'label' => 'Kalender', 'icon' => 'event_note', 'url' => '/growth-calendar'],
             ['route' => 'care-tasks', 'label' => 'Tugas', 'icon' => 'checklist', 'url' => '/care-tasks'],
+            ['route' => 'activity-log', 'label' => 'Riwayat', 'icon' => 'history', 'url' => '/activity-log'],
         ];
     @endphp
 
@@ -311,7 +371,7 @@
         @php
             $isActive = ltrim($item['url'], '/') === $currentRoute;
         @endphp
-        <a href="{{ $item['url'] }}" class="flex flex-col items-center justify-center {{ $isActive ? 'bg-primary text-on-primary' : 'text-on-surface-variant hover:bg-surface-container-high' }} rounded-xl px-4 py-1.5 active:scale-95 transition-transform duration-200">
+        <a href="{{ $item['url'] }}" class="flex flex-col items-center justify-center {{ $isActive ? 'bg-primary text-on-primary' : 'text-on-surface-variant hover:bg-surface-container-high' }} rounded-xl px-2.5 py-1.5 active:scale-95 transition-transform duration-200">
             <span class="material-symbols-outlined">{{ $item['icon'] }}</span>
             <span class="text-[10px] font-semibold mt-0.5">{{ $item['label'] }}</span>
         </a>
@@ -320,13 +380,16 @@
 <script>
     window.AppState = {
         plan: '{{ Auth::check() ? Auth::user()->role : "free" }}',
-        usage: { gardens: 1, plots: 4, plants: 10 }
+        usage: { 
+            gardens: {{ Auth::check() ? \App\Models\Garden::where('user_id', Auth::id())->count() : 0 }}, 
+            plants: {{ Auth::check() ? \App\Models\Plant::whereIn('garden_id', \App\Models\Garden::where('user_id', Auth::id())->pluck('id'))->count() : 0 }} 
+        }
     };
 
     const PLAN_LIMITS = {
-        free: { gardens: 1, plots: 4, plants: 10 },
-        pro: { gardens: 10, plots: 50, plants: 100 },
-        premium: { gardens: Infinity, plots: Infinity, plants: Infinity }
+        free: { gardens: 1, plants: 10 },
+        pro: { gardens: 10, plants: 100 },
+        premium: { gardens: Infinity, plants: Infinity }
     };
 
     window.checkLimit = function(resourceType) {
@@ -338,8 +401,21 @@
             document.getElementById('pricing-modal').classList.remove('hidden');
             return false;
         }
-        window.AppState.usage[resourceType]++;
         return true;
     };
+
+    // Badge unlock from session (for redirect-back flows)
+    document.addEventListener('DOMContentLoaded', () => {
+        @if(session('new_badge'))
+            setTimeout(() => {
+                if (window.Alert && Alert.modal && Alert.modal.badge) {
+                    Alert.modal.badge({!! json_encode(session('new_badge')) !!});
+                }
+            }, 600);
+        @endif
+    });
 </script>
+
+@stack('scripts')
 @endsection
+

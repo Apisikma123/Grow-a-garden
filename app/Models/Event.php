@@ -27,4 +27,9 @@ class Event extends Model
     {
         return $this->belongsTo(Plant::class);
     }
+
+    public function eventType(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\EventType::class, 'event_type_id');
+    }
 }

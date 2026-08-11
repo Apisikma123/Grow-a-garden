@@ -15,12 +15,37 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        if (!User::where('email', 'free@example.com')->exists()) {
+            User::factory()->create([
+                'name' => 'Free User',
+                'email' => 'free@example.com',
+                'role' => 'free',
+            ]);
+        }
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        if (!User::where('email', 'pro@example.com')->exists()) {
+            User::factory()->create([
+                'name' => 'Pro User',
+                'email' => 'pro@example.com',
+                'role' => 'pro',
+            ]);
+        }
+
+        if (!User::where('email', 'premium@example.com')->exists()) {
+            User::factory()->create([
+                'name' => 'Premium User',
+                'email' => 'premium@example.com',
+                'role' => 'premium',
+            ]);
+        }
+
+        if (!User::where('email', 'admin@example.com')->exists()) {
+            User::factory()->create([
+                'name' => 'Admin User',
+                'email' => 'admin@example.com',
+                'role' => 'admin',
+            ]);
+        }
 
         // ── Master Data Seeders ──
         $this->call([

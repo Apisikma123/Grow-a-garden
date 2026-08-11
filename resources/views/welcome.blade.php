@@ -174,21 +174,32 @@
         {{-- Feature Cards --}}
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
 
-            {{-- Feature 1: Garden Canvas --}}
-            <div class="bg-white rounded-3xl p-8 premium-shadow tactile-card group scroll-trigger scroll-fade-up delay-100 border border-white/60" id="feature-garden-canvas">
+            {{-- Feature 1: Tugas Perawatan --}}
+            <div class="bg-white rounded-3xl p-8 premium-shadow tactile-card group scroll-trigger scroll-fade-up delay-100 border border-white/60" id="feature-tugas-perawatan">
                 {{-- Icon --}}
                 <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1 group-hover:scale-105 group-hover:bg-primary/20">
-                    <span class="material-symbols-outlined text-primary text-2xl">draw</span>
+                    <span class="material-symbols-outlined text-primary text-2xl">psychiatry</span>
                 </div>
 
-                <h3 class="text-lg font-bold text-on-surface mb-2">Garden Canvas</h3>
+                <h3 class="text-lg font-bold text-on-surface mb-2">Tugas Perawatan</h3>
                 <p class="text-sm text-on-surface-variant leading-relaxed mb-5">
-                    Drag and create based on your real garden's layout. Visual grid system interaktif layaknya bermain game.
+                    Dapatkan rekomendasi kegiatan-kegiatan perawatan harian yang spesifik untuk menjaga dan mengoptimalkan kebun Anda.
                 </p>
 
-                {{-- Visual Preview: Mini Grid --}}
-                <div class="mt-4 rounded-xl overflow-hidden border border-outline-variant/30 shadow-sm">
-                    <img src="{{ asset('images/garden-canvas-preview.png') }}" alt="Garden Canvas Preview" class="w-full h-auto object-cover">
+                {{-- Visual Preview: Task List --}}
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between bg-surface-container-high rounded-lg py-2 px-3">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-outline text-[18px]">check_box_outline_blank</span>
+                            <span class="text-xs font-medium text-on-surface">Pangkas daun kuning</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between bg-surface-container-high rounded-lg py-2 px-3">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary text-[18px]">check_box</span>
+                            <span class="text-xs font-medium text-on-surface-variant line-through">Beri pupuk organik</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -327,11 +338,11 @@
                 <div class="space-y-4 flex-1 mb-8">
                     <div class="flex items-start gap-3">
                         <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">check_circle</span>
-                        <span class="text-sm text-on-surface">Maks. 1 Garden, 4 Plot & 10 Tanaman Aktif</span>
+                        <span class="text-sm text-on-surface">Maks. 1 Kebun & 10 Tanaman Aktif</span>
                     </div>
                     <div class="flex items-start gap-3">
                         <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">check_circle</span>
-                        <span class="text-sm text-on-surface">Akses ke Growth Calendar</span>
+                        <span class="text-sm text-on-surface">Akses Tugas Perawatan</span>
                     </div>
                     
                     {{-- Kekurangan Sengaja --}}
@@ -385,13 +396,13 @@
                 <div class="space-y-4 flex-1 mb-8 mt-2">
                     <div class="flex items-start gap-3">
                         <span class="material-symbols-outlined text-yellow-400 text-[20px] mt-0.5">check_circle</span>
-                        <span class="text-sm text-white font-medium">Maks. 10 Garden, 50 Plot & 100 Tanaman Aktif</span>
+                        <span class="text-sm text-white font-medium">Maks. 10 Kebun & 100 Tanaman Aktif</span>
                     </div>
                     <div class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-yellow-400 text-[20px] mt-0.5">smart_toy</span>
+                        <span class="material-symbols-outlined text-yellow-400 text-[20px] mt-0.5">calendar_month</span>
                         <div class="flex flex-col">
-                            <span class="text-sm text-white font-bold">Asisten Autopilot</span>
-                            <span class="text-xs text-white/80 mt-0.5">Rule Engine menghasilkan task perawatan otomatis berbasis Growth & Care Template.</span>
+                            <span class="text-sm text-white font-bold">Growth Calendar</span>
+                            <span class="text-xs text-white/80 mt-0.5">Jadwal estimasi tanam hingga panen interaktif untuk seluruh tanaman.</span>
                         </div>
                     </div>
                     <div class="flex items-start gap-3">
@@ -414,7 +425,7 @@
             {{-- Paket 3: Panen Raya --}}
             <div class="bg-white rounded-3xl p-8 premium-shadow flex flex-col tactile-card relative overflow-hidden scroll-trigger scroll-fade-up delay-300">
                 <div class="absolute -right-6 -top-6 bg-primary/10 w-24 h-24 rounded-full"></div>
-                <h3 class="text-xl font-bold text-on-surface mb-2 relative z-10">Panen Raya <span class="text-xs font-semibold bg-primary-container text-on-primary-container px-2 py-1 rounded-full ml-2">Pro</span></h3>
+                <h3 class="text-xl font-bold text-on-surface mb-2 relative z-10">Panen Raya <span class="text-xs font-semibold bg-primary-container text-on-primary-container px-2 py-1 rounded-full ml-2">Premium</span></h3>
                 
                 <div class="bg-surface-container-low rounded-xl p-3 mb-4 mt-2">
                     <div class="mb-2">
@@ -439,11 +450,25 @@
                 <div class="space-y-4 flex-1 mb-8 relative z-10">
                     <div class="flex items-start gap-3">
                         <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">all_inclusive</span>
-                        <span class="text-sm text-on-surface font-bold">Maks. 100 Garden, Unlimited Plot & Tanaman Aktif</span>
+                        <span class="text-sm text-on-surface font-bold">Maks. 100 Kebun & Tanaman Aktif Tak Terbatas</span>
                     </div>
                     <div class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">check_circle</span>
-                        <span class="text-sm text-on-surface">Seluruh fitur otomasi Paket Subur</span>
+                        <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">calendar_month</span>
+                        <div class="flex flex-col">
+                            <span class="text-sm text-on-surface font-bold">Growth Calendar</span>
+                            <span class="text-xs text-on-surface-variant mt-0.5">Jadwal estimasi tanam hingga panen interaktif untuk seluruh tanaman.</span>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">cloud_done</span>
+                        <div class="flex flex-col">
+                            <span class="text-sm text-on-surface font-bold">Anti-Gagal Panen</span>
+                            <span class="text-xs text-on-surface-variant mt-0.5">Weather Adjustment (-30% penyiraman hujan, +50% kemarau).</span>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">emoji_events</span>
+                        <span class="text-sm text-on-surface font-medium">Notifikasi Upcoming Harvest di Dashboard</span>
                     </div>
                     <div class="flex items-start gap-3">
                         <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">history</span>
@@ -451,10 +476,6 @@
                             <span class="text-sm text-on-surface font-bold">Activity Log Tanpa Batas</span>
                             <span class="text-xs text-on-surface-variant mt-0.5">Tracking tak terbatas untuk menyiram, memupuk, memangkas, dll.</span>
                         </div>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">groups</span>
-                        <span class="text-sm text-on-surface font-medium">Ideal untuk Sekolah, Urban Farming besar & Komunitas</span>
                     </div>
                 </div>
 

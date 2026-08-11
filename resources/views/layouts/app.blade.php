@@ -24,6 +24,36 @@
     @yield('content')
 
     @include('components.loading-overlay')
+
+    {{-- SweetAlert2 for Alerts & Toasts --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('js/alerts.js') }}"></script>
+
+    {{-- Generate All Notifications from Session --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            @if(session('success'))
+                Alert.success('Berhasil!', {!! json_encode(session('success')) !!});
+            @endif
+            
+            @if(session('error'))
+                Alert.error('Oops!', {!! json_encode(session('error')) !!});
+            @endif
+            
+            @if(session('warning'))
+                Alert.warning('Peringatan', {!! json_encode(session('warning')) !!});
+            @endif
+            
+            @if(session('info'))
+                Alert.info('Informasi', {!! json_encode(session('info')) !!});
+            @endif
+
+            @if(session('new_badge'))
+                Alert.modal.badge({!! json_encode(session('new_badge')) !!});
+            @endif
+        });
+    </script>
+
     @stack('scripts')
 </body>
 </html>

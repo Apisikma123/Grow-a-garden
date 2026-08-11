@@ -23,11 +23,17 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'phone',
         'password',
         'role',
         'google_id',
         'otp_code',
         'otp_expires_at',
+        'avatar',
+        'province',
+        'language',
+        'email_notifications',
+        'push_notifications',
     ];
 
     /**
@@ -73,5 +79,81 @@ class User extends Authenticatable
         return $this->belongsToMany(Badge::class, 'user_badges')
             ->withPivot('awarded_at')
             ->withTimestamps();
+    }
+
+    // ── Plan Helper Methods ──
+
+    /**
+     * Get the user's active subscription.
+     */
+    public function activeSubscription()
+    {
+        return $this->subscriptions()
+            ->where('status', 'active')
+            ->where('valid_until', '>', now())
+            ->latest()
+            ->first();
+    }
+
+    /**
+     * Get human-readable plan name.
+     */
+    public function planName(): string
+    {
+        return match ($this->role) {
+            'pro' => 'Subur (Pro)',
+            'premium' => 'Panen Raya (Premium)',
+            'admin' => 'Admin Console',
+            default => 'Bibit (Gratis)',
+        };
+    }
+
+    /**
+     * Maximum gardens allowed for this user's plan.
+     */
+    public function maxGardens(): int
+    {
+        return match ($this->role) {
+            'pro' => 10,
+            'premium', 'admin' => 100,
+            default => 1,
+        };
+    }
+
+    /**
+     * Maximum plants allowed for this user's plan.
+     * Returns PHP_INT_MAX for unlimited.
+     */
+    public function maxPlants(): int
+    {
+        return match ($this->role) {
+            'pro' => 100,
+            'premium', 'admin' => PHP_INT_MAX,
+            default => 10,
+        };
+    }
+
+    /**
+     * Whether this user can use the Autopilot feature (auto care task generation).
+     */
+    public function canUseAutopilot(): bool
+    {
+        return in_array($this->role, ['pro', 'premium', 'admin']);
+    }
+
+    /**
+     * Whether this user can use Weather Adjustment.
+     */
+    public function canUseWeatherAdjustment(): bool
+    {
+        return in_array($this->role, ['pro', 'premium', 'admin']);
+    }
+
+    /**
+     * Whether this user has unlimited activity log.
+     */
+    public function hasUnlimitedActivityLog(): bool
+    {
+        return in_array($this->role, ['premium', 'admin']);
     }
 }

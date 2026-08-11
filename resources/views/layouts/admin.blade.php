@@ -28,7 +28,7 @@
         {{-- Logo --}}
         <div class="px-8 mb-8 flex justify-between items-start">
             <a href="/admin/dashboard" class="flex items-center gap-3">
-                <img src="{{ asset('images/logo.jpg') }}" alt="Logo" class="w-8 h-8 rounded-lg object-contain" onerror="this.outerHTML='<span class=\'material-symbols-outlined text-[32px] text-[#006c49]\'>local_florist</span>'">
+                <img src="{{ asset('images/logo.jpg') }}" alt="Logo" class="w-8 h-8 rounded-lg object-contain shrink-0" onerror="this.outerHTML='<span class=\'material-symbols-outlined text-[32px] text-[#006c49]\'>local_florist</span>'">
                 <div class="flex flex-col">
                     <span class="text-[20px] font-bold text-[#006c49] leading-tight tracking-tight">Grow a Garden</span>
                     <span class="text-[12px] font-bold text-[#006c49]/80 mt-0.5">Admin</span>
@@ -47,6 +47,7 @@
                     ['route' => 'admin.users', 'label' => 'Manajemen Pengguna', 'icon' => 'group', 'url' => '/admin/users'],
                     ['route' => 'admin.plants', 'label' => 'Database Tanaman', 'icon' => 'local_florist', 'url' => '/admin/plants'],
                     ['route' => 'admin.care-templates', 'label' => 'Template Perawatan', 'icon' => 'assignment', 'url' => '/admin/care-templates'],
+                    ['route' => 'admin.badges', 'label' => 'Kelola Badge', 'icon' => 'workspace_premium', 'url' => '/admin/badges'],
                     ['route' => 'admin.weather', 'label' => 'Aturan Cuaca', 'icon' => 'partly_cloudy_day', 'url' => '/admin/weather'],
                     ['route' => 'admin.settings', 'label' => 'Pengaturan', 'icon' => 'settings', 'url' => '/admin/settings'],
                 ];
@@ -76,11 +77,6 @@
 
         {{-- Bottom Area --}}
         <div class="px-5 mt-auto flex flex-col gap-4">
-            {{-- Action Button --}}
-            <a href="/admin/plants" class="w-full flex items-center justify-center gap-2 bg-[#006c49] text-white px-4 py-3.5 rounded-full hover:bg-[#005236] transition-colors shadow-sm font-bold text-[15px]">
-                <span class="material-symbols-outlined text-[20px]">add</span>
-                Add New Plant
-            </a>
 
             {{-- Profile & Pengaturan Box --}}
             <div class="bg-surface-container-low border border-outline-variant/30 rounded-[24px] p-3 flex items-center justify-between shadow-sm">
