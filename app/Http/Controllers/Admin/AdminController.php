@@ -124,6 +124,7 @@ class AdminController extends Controller
             'germination_day' => 'nullable|integer',
             'seedling_day' => 'nullable|integer',
             'harvest_start_day' => 'required|integer',
+            'harvest_end_day' => 'required|integer',
             'soil_ph_min' => 'required|numeric',
             'soil_ph_max' => 'required|numeric',
         ]);
@@ -141,6 +142,7 @@ class AdminController extends Controller
             'germination_day' => 'nullable|integer',
             'seedling_day' => 'nullable|integer',
             'harvest_start_day' => 'required|integer',
+            'harvest_end_day' => 'required|integer',
             'soil_ph_min' => 'required|numeric',
             'soil_ph_max' => 'required|numeric',
         ]);
