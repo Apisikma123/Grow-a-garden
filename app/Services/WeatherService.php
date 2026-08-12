@@ -47,18 +47,17 @@ class WeatherService
                     $currentWind = $current['wind_speed_10m'] ?? 10;
                     $currentPrecip = $current['precipitation'] ?? 0;
 
-                    // Compute next 6-hour precipitation probability accurately
+                    // Get current real-time hour precipitation probability
                     $currentHour = (int) now()->format('H');
                     $hourlyProbs = $hourly['precipitation_probability'] ?? [];
-                    $next6hProbs = array_slice($hourlyProbs, $currentHour, 6);
-                    $rainProb6h = !empty($next6hProbs) ? (int) max($next6hProbs) : (int) ($daily['precipitation_probability_max'][0] ?? 0);
+                    $currentRainProb = isset($hourlyProbs[$currentHour]) ? (int) $hourlyProbs[$currentHour] : (int) ($daily['precipitation_probability_max'][0] ?? 0);
                     $rainProb24h = (int) ($daily['precipitation_probability_max'][0] ?? 0);
 
                     return [
                         'weather_code' => (int) $currentCode,
                         'temperature' => (float) $currentTemp,
                         'apparent_temperature' => (float) $apparentTemp,
-                        'rain_probability' => (int) $rainProb6h,
+                        'rain_probability' => (int) $currentRainProb,
                         'rain_probability_24h' => (int) $rainProb24h,
                         'wind_speed' => (float) $currentWind,
                         'humidity' => (int) $currentHumidity,
@@ -79,11 +78,11 @@ class WeatherService
 
     /**
      * Analyze weather parameters using realistic agricultural/farming principles.
-     * Evaluates Smart Irrigation decision based on the strict Priority Chain:
+     * Evaluates Smart Irrigation decision based on strict real-time current conditions:
      * 1. CURRENT RAIN / HEAVY_RAIN / THUNDERSTORM -> SKIP
      * 2. RECENT HEAVY RAIN TODAY -> SKIP
-     * 3. UPCOMING 6H RAIN PROBABILITY >= 70% -> SKIP
-     * 4. UPCOMING 6H RAIN PROBABILITY 50% - 69% -> REDUCE
+     * 3. CURRENT RAIN PROBABILITY >= 70% -> SKIP
+     * 4. CURRENT RAIN PROBABILITY 50% - 69% -> REDUCE
      * 5. TEMPERATURE >= 33°C (without rain) -> NORMAL_PLUS
      * 6. DRIZZLE -> REDUCE
      * 7. FOG -> REDUCE
@@ -116,13 +115,13 @@ class WeatherService
             $title = 'Hujan Lebat';
             $icon = 'rainy';
             $badgeBg = 'bg-blue-200 text-blue-900 border border-blue-300';
-            $summary = "Hujan Lebat terdeteksi (Curah hujan {$precip} mm, Peluang {$rainProb}%). Penyiraman otomatis dilewati.";
+            $summary = "Hujan Lebat terdeteksi saat ini (Curah hujan {$precip} mm, Peluang {$rainProb}%). Penyiraman otomatis dilewati.";
         } elseif (in_array($code, [61, 63, 80, 81]) || $precip > 0 || $rainProb >= 70) {
             $conditionCategory = 'RAIN';
             $title = 'Hujan';
             $icon = 'rainy';
             $badgeBg = 'bg-blue-100 text-blue-800 border border-blue-200';
-            $summary = "Hujan terdeteksi (Peluang Hujan 6 jam ke depan {$rainProb}%). Tunda penyiraman & pemupukan cair.";
+            $summary = "Hujan terdeteksi saat ini (Peluang Hujan saat ini {$rainProb}%). Tunda penyiraman & pemupukan cair.";
         } elseif (in_array($code, [51, 53, 55])) {
             $conditionCategory = 'DRIZZLE';
             $title = 'Gerimis';
@@ -134,19 +133,19 @@ class WeatherService
             $title = 'Berkabut';
             $icon = 'foggy';
             $badgeBg = 'bg-stone-100 text-stone-800 border border-stone-200';
-            $summary = "Kondisi berkabut. Kelembapan udara tinggi, pertimbangkan pengurangan penyiraman.";
+            $summary = "Kondisi berkabut saat ini. Kelembapan udara tinggi, pertimbangkan pengurangan penyiraman.";
         } elseif ($code === 3 || ($humidity >= 75 && $rainProb >= 30)) {
             $conditionCategory = 'CLOUDY';
             $title = 'Berawan';
             $icon = 'cloud';
             $badgeBg = 'bg-slate-100 text-slate-800 border border-slate-200';
-            $summary = "Berawan. Kelembapan tanah stabil & sejuk, waktu ideal untuk perawatan harian.";
+            $summary = "Berawan saat ini. Kelembapan tanah stabil & sejuk, waktu ideal untuk perawatan harian.";
         } elseif ($code === 0 || $code === 1 || $temp >= 33) {
             $conditionCategory = 'CLEAR';
             $title = $temp >= 33 ? 'Sangat Panas' : 'Cerah';
             $icon = 'wb_sunny';
             $badgeBg = $temp >= 33 ? 'bg-amber-100 text-amber-900 border border-amber-300' : 'bg-yellow-100 text-yellow-800 border border-yellow-200';
-            $summary = "Cuaca cerah dengan suhu {$temp}°C. Risiko penguapan tinggi jika terik.";
+            $summary = "Cuaca cerah saat ini dengan suhu {$temp}°C. Risiko penguapan tinggi jika terik.";
         } else {
             $conditionCategory = 'PARTLY_CLOUDY';
             $title = 'Cerah Berawan';
@@ -168,7 +167,7 @@ class WeatherService
                 'action' => 'SKIP',
                 'title' => 'Lewati Penyiraman',
                 'time_window' => $fixedWindow,
-                'advice' => "Sedang {$title} (Peluang Hujan {$rainProb}%). Penyiraman dilewati untuk mencegah pembusukan akar.",
+                'advice' => "Sedang {$title} (Peluang Hujan {$rainProb}% saat ini). Penyiraman dilewati untuk mencegah pembusukan akar.",
                 'badge' => 'Penyiraman Dilewati (Hujan)',
                 'badge_bg' => 'bg-red-100 text-red-800 border border-red-200'
             ];
@@ -194,7 +193,7 @@ class WeatherService
                 'action' => 'SKIP',
                 'title' => 'Lewati Penyiraman',
                 'time_window' => $fixedWindow,
-                'advice' => "Kemungkinan hujan sangat tinggi ({$rainProb}% dalam 6 jam). Penyiraman dilewati untuk menghemat air.",
+                'advice' => "Kemungkinan hujan sangat tinggi ({$rainProb}% saat ini). Penyiraman dilewati untuk menghemat air.",
                 'badge' => 'Penyiraman Dilewati (Peluang Hujan ≥ 70%)',
                 'badge_bg' => 'bg-red-100 text-red-800 border border-red-200'
             ];
