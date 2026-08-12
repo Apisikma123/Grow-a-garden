@@ -18,74 +18,83 @@
         </div>
 
         {{-- Top Stats Cards --}}
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-[24px] mb-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-[24px] mb-4 items-stretch">
             {{-- Tugas Selesai --}}
-            <div class="bg-[#dcfce7] rounded-[24px] p-[24px] flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
-                <div class="flex justify-between items-start mb-6 relative z-10">
-                    <div class="w-12 h-12 bg-[#16a34a] rounded-[16px] flex items-center justify-center text-white shadow-sm">
+            <div class="bg-surface-container-low rounded-[24px] p-[24px] flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1 transition-all duration-300 border border-outline-variant/30 min-h-[156px]">
+                <div class="flex justify-between items-start mb-4 relative z-10">
+                    <div class="w-12 h-12 bg-primary/10 text-primary rounded-[16px] flex items-center justify-center shadow-xs">
                         <span class="material-symbols-outlined text-[24px]">task_alt</span>
                     </div>
-                    <div class="text-[28px] font-bold text-[#166534]">{{ $totalCompleted }}/{{ $totalTasks }}</div>
+                    <div class="text-[28px] font-black text-primary leading-none">{{ $totalCompleted }}/{{ $totalTasks }}</div>
                 </div>
                 <div class="relative z-10">
-                    <h3 class="text-[16px] font-bold text-[#166534] mb-3">Tugas Selesai</h3>
-                    <div class="w-full bg-[#bbf7d0] h-[6px] rounded-full overflow-hidden">
-                        <div class="bg-[#166534] h-full rounded-full" style="width: {{ $totalTasks > 0 ? ($totalCompleted/$totalTasks)*100 : 0 }}%;"></div>
+                    <div class="flex items-center justify-between text-[14px] font-bold text-on-surface mb-2">
+                        <span>Tugas Selesai</span>
+                        <span class="text-[12px] font-bold text-primary">{{ $totalTasks > 0 ? round(($totalCompleted/$totalTasks)*100) : 0 }}%</span>
+                    </div>
+                    <div class="w-full bg-surface-container-highest h-[6px] rounded-full overflow-hidden">
+                        <div class="bg-primary h-full rounded-full transition-all duration-500" style="width: {{ $totalTasks > 0 ? ($totalCompleted/$totalTasks)*100 : 0 }}%;"></div>
                     </div>
                 </div>
             </div>
 
-            {{-- Prioritas Tinggi --}}
-            <div class="bg-[#ffedd5] rounded-[24px] p-[24px] flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
-                <div class="flex justify-between items-start mb-6 relative z-10">
-                    <div class="w-12 h-12 bg-[#f97316] rounded-[16px] flex items-center justify-center text-white shadow-sm">
+            {{-- Prioritas Tinggi (Using Terracotta Earth Token #944a23) --}}
+            <div class="bg-surface-container-low rounded-[24px] p-[24px] flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1 transition-all duration-300 border border-outline-variant/30 min-h-[156px]">
+                <div class="flex justify-between items-start mb-4 relative z-10">
+                    <div class="w-12 h-12 bg-secondary/10 text-secondary rounded-[16px] flex items-center justify-center shadow-xs">
                         <span class="material-symbols-outlined text-[24px]">priority_high</span>
                     </div>
-                    <div class="text-[28px] font-bold text-[#9a3412]">{{ $highPriorityCount }}</div>
+                    <div class="text-[28px] font-black text-secondary leading-none">{{ $highPriorityCount }}</div>
                 </div>
                 <div class="relative z-10">
-                    <h3 class="text-[16px] font-bold text-[#9a3412] mb-1">Prioritas Tinggi</h3>
-                    <p class="text-[12px] text-[#c2410c] font-medium">Membutuhkan perhatian segera</p>
+                    <h3 class="text-[14px] font-bold text-on-surface mb-0.5">Prioritas Tinggi</h3>
+                    <p class="text-[12px] text-on-surface-variant font-medium">
+                        {{ $highPriorityCount > 0 ? 'Membutuhkan perhatian segera' : 'Semua tugas terkendali' }}
+                    </p>
                 </div>
             </div>
 
-            {{-- Saran Hari Ini / Adaptasi Cuaca --}}
+            {{-- Adaptasi Cuaca Real-Time --}}
             @if(isset($weatherAdvice) && $weatherAdvice)
-            <div class="bg-surface-container-low rounded-[24px] p-[24px] flex justify-between relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300 border border-outline-variant/30">
-                <div class="relative z-10 max-w-[210px]">
-                    <div class="text-[10px] font-bold text-primary uppercase tracking-wider mb-1 flex items-center gap-1">
-                        <span class="material-symbols-outlined text-[13px]">auto_awesome</span> Adaptasi Cuaca Real-Time
+            <div class="bg-surface-container-low rounded-[24px] p-[24px] flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1 transition-all duration-300 border border-outline-variant/30 min-h-[156px]">
+                <div class="flex justify-between items-start mb-4 relative z-10">
+                    <div class="w-12 h-12 bg-primary/10 text-primary rounded-[16px] flex items-center justify-center shadow-xs">
+                        <span class="material-symbols-outlined text-[24px]">{{ $weatherAdvice['icon'] ?? 'wb_sunny' }}</span>
                     </div>
-                    <h3 class="text-[16px] font-bold text-on-surface leading-tight mb-1.5">{{ $weatherAdvice['title'] }}</h3>
-                    <p class="text-[12px] text-on-surface-variant font-medium leading-relaxed">{{ $weatherAdvice['desc'] }}</p>
+                    <div class="flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1 rounded-full text-[12px] font-bold">
+                        <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+                        {{ $agronomic['temperature'] ?? 29 }}°C
+                    </div>
                 </div>
-                <div class="relative z-10 mt-auto shrink-0">
-                    <div class="w-12 h-12 bg-primary-container rounded-full flex items-center justify-center text-on-primary-container shadow-sm">
-                        <span class="material-symbols-outlined text-[24px]">{{ $weatherAdvice['icon'] }}</span>
+                <div class="relative z-10 min-w-0 w-full">
+                    <div class="text-[10px] font-bold text-primary uppercase tracking-wider mb-0.5 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[13px]">auto_awesome</span> Adaptasi Cuaca
                     </div>
+                    <h3 class="text-[14px] font-bold text-on-surface truncate leading-snug">{{ $agronomic['watering']['title'] ?? 'Penyiraman Normal' }}</h3>
+                    <p class="text-[12px] text-on-surface-variant font-medium truncate">{{ $agronomic['summary'] ?? 'Kondisi cuaca ideal' }}</p>
                 </div>
             </div>
             @else
             @php
                 $dailyAdviceList = [
-                    ['title' => 'Periksa Kebun', 'desc' => 'Luangkan waktu 10 menit untuk observasi daun & tanah.', 'icon' => 'eco'],
-                    ['title' => 'Cek Kelembapan', 'desc' => 'Pastikan media tanam tidak terlalu kering atau menggenang.', 'icon' => 'water_drop'],
-                    ['title' => 'Pangkas Daun Tua', 'desc' => 'Bersihkan daun kuning untuk menghemat nutrisi tanaman.', 'icon' => 'content_cut'],
-                    ['title' => 'Cek Hama Daun', 'desc' => 'Periksa balik daun untuk mencegah serangga berkembang biak.', 'icon' => 'search'],
-                    ['title' => 'Beri Sinar Matahari', 'desc' => 'Geser pot ke area cerah untuk fotosintesis maksimal.', 'icon' => 'light_mode'],
+                    ['title' => 'Periksa Kebun', 'desc' => 'Observasi daun & tanah', 'icon' => 'eco'],
+                    ['title' => 'Cek Kelembapan', 'desc' => 'Pastikan media tanam ideal', 'icon' => 'water_drop'],
+                    ['title' => 'Pangkas Daun Tua', 'desc' => 'Bersihkan daun menguning', 'icon' => 'content_cut'],
+                    ['title' => 'Cek Hama Daun', 'desc' => 'Inspeksi balik daun rutin', 'icon' => 'search'],
+                    ['title' => 'Sinar Matahari', 'desc' => 'Pencahayaan fotosintesis cukup', 'icon' => 'light_mode'],
                 ];
                 $todayAdvice = $dailyAdviceList[\Carbon\Carbon::now()->dayOfYear % count($dailyAdviceList)];
             @endphp
-            <div class="bg-surface-container-low rounded-[24px] p-[24px] flex justify-between relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300 border border-outline-variant/30">
-                <div class="relative z-10 max-w-[160px]">
-                    <div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Saran Hari Ini</div>
-                    <h3 class="text-[18px] font-bold text-on-surface leading-tight mb-2">{{ $todayAdvice['title'] }}</h3>
-                    <p class="text-[12px] text-on-surface-variant font-medium">{{ $todayAdvice['desc'] }}</p>
-                </div>
-                <div class="relative z-10 mt-auto">
-                    <div class="w-14 h-14 bg-[#d1fae5] rounded-full flex items-center justify-center text-[#059669] shadow-sm">
-                        <span class="material-symbols-outlined text-[28px]">{{ $todayAdvice['icon'] }}</span>
+            <div class="bg-surface-container-low rounded-[24px] p-[24px] flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1 transition-all duration-300 border border-outline-variant/30 min-h-[156px]">
+                <div class="flex justify-between items-start mb-4 relative z-10">
+                    <div class="w-12 h-12 bg-primary/10 text-primary rounded-[16px] flex items-center justify-center shadow-xs">
+                        <span class="material-symbols-outlined text-[24px]">{{ $todayAdvice['icon'] }}</span>
                     </div>
+                    <span class="text-[11px] font-bold bg-surface-container-high text-on-surface-variant px-2.5 py-1 rounded-full">Saran Hari Ini</span>
+                </div>
+                <div class="relative z-10 min-w-0 w-full">
+                    <h3 class="text-[14px] font-bold text-on-surface mb-0.5 truncate">{{ $todayAdvice['title'] }}</h3>
+                    <p class="text-[12px] text-on-surface-variant font-medium truncate">{{ $todayAdvice['desc'] }}</p>
                 </div>
             </div>
             @endif
@@ -102,7 +111,7 @@
                     <div>
                         <div class="flex items-center gap-2">
                             <span class="text-xs font-bold text-primary uppercase tracking-wider">Evaluasi Smart Irrigation</span>
-                            <span class="text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-100 text-emerald-800">🟢 Live Sync</span>
+                            <span class="text-[10px] px-2.5 py-0.5 rounded-full font-bold bg-emerald-100 text-emerald-800 inline-flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-600 inline-block animate-pulse"></span>Live Sync</span>
                         </div>
                         <h2 class="text-lg font-bold text-on-surface">Keputusan: {{ $agronomic['watering']['title'] ?? 'Penyiraman Normal' }}</h2>
                     </div>
@@ -117,7 +126,7 @@
                     <span class="material-symbols-outlined text-primary text-[20px] shrink-0 mt-0.5">schedule</span>
                     <div>
                         <span class="font-bold text-on-surface block mb-0.5">Jadwal Evaluasi Tetap</span>
-                        <p class="text-on-surface-variant leading-relaxed">🌅 Pagi: 06.00 – 09.00 | 🌇 Sore: 16.00 – 18.00</p>
+                        <p class="text-on-surface-variant leading-relaxed">Pagi: 06.00 – 09.00 | Sore: 16.00 – 18.00</p>
                     </div>
                 </div>
                 <div class="bg-surface-container rounded-xl p-3.5 flex items-start gap-2.5">
@@ -248,7 +257,7 @@
                     @empty
                     <div class="bg-surface rounded-[24px] p-8 text-center text-on-surface-variant">
                         <span class="material-symbols-outlined text-[48px] mb-2 opacity-50">done_all</span>
-                        <p class="font-bold">Yeay! Semua tugas hari ini sudah selesai.</p>
+                        <p class="font-bold text-on-surface">Seluruh tugas harian telah selesai dilaksanakan.</p>
                     </div>
                     @endforelse
 
@@ -309,39 +318,6 @@
             {{-- Right Column: Sidebar (Takes up 1 column) --}}
             <div class="lg:col-span-1 flex flex-col gap-[24px]">
                 
-                {{-- Kebun Terpopuler Card --}}
-                <div class="bg-surface-container-low rounded-3xl p-6 ambient-shadow border border-outline-variant/30 flex flex-col hover:border-primary/30 transition-all group shrink-0">
-                    <h3 class="text-[18px] font-bold text-on-surface mb-4">Kebun Utama Anda</h3>
-                    
-                    @php $firstGarden = Auth::user() ? Auth::user()->gardens()->first() : null; @endphp
-                    @if($firstGarden)
-                    <div class="relative h-[140px] rounded-[16px] overflow-hidden mb-4 shadow-sm group cursor-pointer">
-                        <img src="https://images.unsplash.com/photo-1615811361523-6bd03d7748e7?w=400&h=200&fit=crop&q=80" alt="Garden" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                        <div class="absolute bottom-4 left-4 text-white font-bold text-[16px]">{{ $firstGarden->name }}</div>
-                    </div>
-
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between p-3.5 bg-surface-container-lowest rounded-[16px] border border-outline-variant/30">
-                            <div class="flex items-center gap-3">
-                                <span class="material-symbols-outlined text-[#059669] text-[20px]">water_drop</span>
-                                <span class="text-[14px] font-bold text-on-surface-variant">Kelembapan</span>
-                            </div>
-                            <span class="text-[16px] font-bold text-[#059669]">82%</span>
-                        </div>
-                        <div class="flex items-center justify-between p-3.5 bg-surface-container-lowest rounded-[16px] border border-outline-variant/30">
-                            <div class="flex items-center gap-3">
-                                <span class="material-symbols-outlined text-status-attention text-[20px]">light_mode</span>
-                                <span class="text-[14px] font-bold text-on-surface-variant">Paparan Sinar</span>
-                            </div>
-                            <span class="text-[16px] font-bold text-[#ea580c]">6 jam</span>
-                        </div>
-                    </div>
-                    @else
-                    <p class="text-[14px] text-on-surface-variant">Belum ada kebun. Tambahkan kebun untuk memantau metrik kebun.</p>
-                    @endif
-                </div>
-
 
                 {{-- Misi Mingguan Card --}}
                 @if(isset($closestBadge) && $closestBadge)

@@ -10,7 +10,7 @@ class WeatherService
 {
     /**
      * Get today's weather forecast for a specific location.
-     * Uses Open-Meteo API (Free, no API key required).
+     * Uses Open-Meteo API with real-time current & 6-hour hourly precision.
      */
     public function getTodayWeather(float $latitude, float $longitude): ?array
     {
@@ -18,31 +18,53 @@ class WeatherService
         $lat = round($latitude, 2);
         $lng = round($longitude, 2);
         
-        $cacheKey = "weather_v3_{$lat}_{$lng}_" . now()->format('Y-m-d_H');
+        // Cache per hour for 15 minutes to guarantee fresh precision weather updates
+        $cacheKey = "weather_v4_{$lat}_{$lng}_" . now()->format('Y-m-d_H_i');
         
-        return Cache::remember($cacheKey, now()->addMinutes(30), function () use ($lat, $lng) {
+        return Cache::remember($cacheKey, now()->addMinutes(15), function () use ($lat, $lng) {
             try {
-                $response = Http::timeout(10)->get('https://api.open-meteo.com/v1/forecast', [
+                $response = Http::withoutVerifying()->timeout(10)->get('https://api.open-meteo.com/v1/forecast', [
                     'latitude' => $lat,
                     'longitude' => $lng,
-                    'current_weather' => true,
-                    'daily' => 'weather_code,temperature_2m_max,precipitation_probability_max,wind_speed_10m_max,relative_humidity_2m_mean',
-                    'timezone' => 'Asia/Jakarta',
+                    'current' => 'temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,rain,showers,weather_code,cloud_cover,wind_speed_10m',
+                    'hourly' => 'temperature_2m,relative_humidity_2m,precipitation_probability,precipitation,weather_code,wind_speed_10m',
+                    'daily' => 'weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max',
+                    'timezone' => 'auto',
                     'forecast_days' => 1
                 ]);
 
                 if ($response->successful()) {
                     $data = $response->json();
                     
-                    $currentCode = $data['current_weather']['weathercode'] ?? ($data['daily']['weather_code'][0] ?? 0);
-                    $currentTemp = $data['current_weather']['temperature'] ?? ($data['daily']['temperature_2m_max'][0] ?? 29);
+                    $current = $data['current'] ?? [];
+                    $hourly = $data['hourly'] ?? [];
+                    $daily = $data['daily'] ?? [];
+
+                    $currentCode = $current['weather_code'] ?? ($daily['weather_code'][0] ?? 0);
+                    $currentTemp = $current['temperature_2m'] ?? ($daily['temperature_2m_max'][0] ?? 29);
+                    $apparentTemp = $current['apparent_temperature'] ?? $currentTemp;
+                    $currentHumidity = $current['relative_humidity_2m'] ?? ($daily['relative_humidity_2m_mean'][0] ?? 70);
+                    $currentWind = $current['wind_speed_10m'] ?? 10;
+                    $currentPrecip = $current['precipitation'] ?? 0;
+
+                    // Compute next 6-hour precipitation probability accurately
+                    $currentHour = (int) now()->format('H');
+                    $hourlyProbs = $hourly['precipitation_probability'] ?? [];
+                    $next6hProbs = array_slice($hourlyProbs, $currentHour, 6);
+                    $rainProb6h = !empty($next6hProbs) ? (int) max($next6hProbs) : (int) ($daily['precipitation_probability_max'][0] ?? 0);
+                    $rainProb24h = (int) ($daily['precipitation_probability_max'][0] ?? 0);
 
                     return [
                         'weather_code' => (int) $currentCode,
                         'temperature' => (float) $currentTemp,
-                        'rain_probability' => (int) ($data['daily']['precipitation_probability_max'][0] ?? 0),
-                        'wind_speed' => (float) ($data['current_weather']['windspeed'] ?? $data['daily']['wind_speed_10m_max'][0] ?? 10),
-                        'humidity' => (int) ($data['daily']['relative_humidity_2m_mean'][0] ?? 70),
+                        'apparent_temperature' => (float) $apparentTemp,
+                        'rain_probability' => (int) $rainProb6h,
+                        'rain_probability_24h' => (int) $rainProb24h,
+                        'wind_speed' => (float) $currentWind,
+                        'humidity' => (int) $currentHumidity,
+                        'precipitation' => (float) $currentPrecip,
+                        'is_day' => (int) ($current['is_day'] ?? 1),
+                        'cloud_cover' => (int) ($current['cloud_cover'] ?? 0),
                     ];
                 }
                 
@@ -58,10 +80,10 @@ class WeatherService
     /**
      * Analyze weather parameters using realistic agricultural/farming principles.
      * Evaluates Smart Irrigation decision based on the strict Priority Chain:
-     * 1. RAIN / HEAVY_RAIN / THUNDERSTORM -> SKIP
+     * 1. CURRENT RAIN / HEAVY_RAIN / THUNDERSTORM -> SKIP
      * 2. RECENT HEAVY RAIN TODAY -> SKIP
-     * 3. RAIN PROBABILITY >= 70% -> SKIP
-     * 4. RAIN PROBABILITY 50% - 69% -> REDUCE
+     * 3. UPCOMING 6H RAIN PROBABILITY >= 70% -> SKIP
+     * 4. UPCOMING 6H RAIN PROBABILITY 50% - 69% -> REDUCE
      * 5. TEMPERATURE >= 33°C (without rain) -> NORMAL_PLUS
      * 6. DRIZZLE -> REDUCE
      * 7. FOG -> REDUCE
@@ -74,6 +96,7 @@ class WeatherService
         $windSpeed = $weather['wind_speed'] ?? 10;
         $humidity = $weather['humidity'] ?? 70;
         $code = $weather['weather_code'] ?? 0;
+        $precip = $weather['precipitation'] ?? 0;
 
         // 8 Weather Condition Spectrum Categories
         $conditionCategory = 'PARTLY_CLOUDY';
@@ -88,18 +111,18 @@ class WeatherService
             $icon = 'thunderstorm';
             $badgeBg = 'bg-purple-100 text-purple-900 border border-purple-300';
             $summary = "WASPADA Hujan Badai & Angin Kencang ({$windSpeed} km/j)! Amankan pot gantung dan bibit muda.";
-        } elseif (in_array($code, [65, 82])) {
+        } elseif (in_array($code, [65, 82]) || $precip > 5.0) {
             $conditionCategory = 'HEAVY_RAIN';
             $title = 'Hujan Lebat';
             $icon = 'rainy';
             $badgeBg = 'bg-blue-200 text-blue-900 border border-blue-300';
-            $summary = "Hujan Lebat terdeteksi (Peluang Hujan {$rainProb}%). Penyiraman otomatis dilewati.";
-        } elseif (in_array($code, [61, 63, 80, 81]) || $rainProb >= 70) {
+            $summary = "Hujan Lebat terdeteksi (Curah hujan {$precip} mm, Peluang {$rainProb}%). Penyiraman otomatis dilewati.";
+        } elseif (in_array($code, [61, 63, 80, 81]) || $precip > 0 || $rainProb >= 70) {
             $conditionCategory = 'RAIN';
             $title = 'Hujan';
             $icon = 'rainy';
             $badgeBg = 'bg-blue-100 text-blue-800 border border-blue-200';
-            $summary = "Hujan terdeteksi (Peluang Hujan {$rainProb}%). Tunda penyiraman & pemupukan cair.";
+            $summary = "Hujan terdeteksi (Peluang Hujan 6 jam ke depan {$rainProb}%). Tunda penyiraman & pemupukan cair.";
         } elseif (in_array($code, [51, 53, 55])) {
             $conditionCategory = 'DRIZZLE';
             $title = 'Gerimis';
@@ -112,13 +135,13 @@ class WeatherService
             $icon = 'foggy';
             $badgeBg = 'bg-stone-100 text-stone-800 border border-stone-200';
             $summary = "Kondisi berkabut. Kelembapan udara tinggi, pertimbangkan pengurangan penyiraman.";
-        } elseif ($code === 3 || ($humidity >= 75 && $rainProb >= 20)) {
+        } elseif ($code === 3 || ($humidity >= 75 && $rainProb >= 30)) {
             $conditionCategory = 'CLOUDY';
             $title = 'Berawan';
             $icon = 'cloud';
             $badgeBg = 'bg-slate-100 text-slate-800 border border-slate-200';
             $summary = "Berawan. Kelembapan tanah stabil & sejuk, waktu ideal untuk perawatan harian.";
-        } elseif ($code === 0 || $temp >= 33) {
+        } elseif ($code === 0 || $code === 1 || $temp >= 33) {
             $conditionCategory = 'CLEAR';
             $title = $temp >= 33 ? 'Sangat Panas' : 'Cerah';
             $icon = 'wb_sunny';
@@ -132,10 +155,10 @@ class WeatherService
             $summary = "Cuaca sejuk & sinar matahari cukup. Kondisi ideal untuk pertumbuhan tanaman.";
         }
 
-        // Section 8 & Section 11 Pseudocode Priority Evaluation Chain
+        // Priority Evaluation Chain for Smart Irrigation
         $fixedWindow = 'Pagi (06.00 - 09.00) & Sore (16.00 - 18.00)';
         $decision = 'NORMAL';
-        $waterStatus = 'WAITING'; // DRY, WATERED, RAINED, WAITING
+        $waterStatus = 'WAITING';
 
         // 1. Current Weather is HEAVY_RAIN, THUNDERSTORM, or RAIN -> SKIP
         if (in_array($conditionCategory, ['HEAVY_RAIN', 'THUNDERSTORM', 'RAIN'])) {
@@ -150,7 +173,7 @@ class WeatherService
                 'badge_bg' => 'bg-red-100 text-red-800 border border-red-200'
             ];
         }
-        // 2. Recent Heavy Rain Today -> SKIP (Section 6 & 11)
+        // 2. Recent Heavy Rain Today -> SKIP
         elseif ($hasRecentRain) {
             $decision = 'SKIP';
             $waterStatus = 'RAINED';
@@ -163,7 +186,7 @@ class WeatherService
                 'badge_bg' => 'bg-purple-100 text-purple-800 border border-purple-200'
             ];
         }
-        // 3. Rain Probability >= 70% -> SKIP (Section 5 & 11)
+        // 3. Rain Probability >= 70% -> SKIP
         elseif ($rainProb >= 70) {
             $decision = 'SKIP';
             $waterStatus = 'WAITING';
@@ -171,12 +194,12 @@ class WeatherService
                 'action' => 'SKIP',
                 'title' => 'Lewati Penyiraman',
                 'time_window' => $fixedWindow,
-                'advice' => "Kemungkinan hujan sangat tinggi ({$rainProb}%). Penyiraman dilewati untuk menghemat air.",
+                'advice' => "Kemungkinan hujan sangat tinggi ({$rainProb}% dalam 6 jam). Penyiraman dilewati untuk menghemat air.",
                 'badge' => 'Penyiraman Dilewati (Peluang Hujan ≥ 70%)',
                 'badge_bg' => 'bg-red-100 text-red-800 border border-red-200'
             ];
         }
-        // 4. Rain Probability 50% - 69% -> REDUCE (Section 5 & 11)
+        // 4. Rain Probability 50% - 69% -> REDUCE
         elseif ($rainProb >= 50) {
             $decision = 'REDUCE';
             $waterStatus = 'DRY';
@@ -189,7 +212,7 @@ class WeatherService
                 'badge_bg' => 'bg-blue-100 text-blue-800 border border-blue-200'
             ];
         }
-        // 5. Temperature >= 33°C -> NORMAL_PLUS (Section 7 & 11 - only when NO recent rain)
+        // 5. Temperature >= 33°C -> NORMAL_PLUS
         elseif ($temp >= 33) {
             $decision = 'NORMAL_PLUS';
             $waterStatus = 'DRY';
@@ -198,11 +221,11 @@ class WeatherService
                 'title' => 'Penyiraman Normal + Ekstra',
                 'time_window' => $fixedWindow,
                 'advice' => "Suhu sangat panas ({$temp}°C). Lakukan penyiraman normal pada sesi Pagi/Sore dengan sedikit tambahan volume air.",
-                'badge' => 'Penyiraman Normal + Sedikit Tambahan (≥ 33°C)',
+                'badge' => 'Penyiraman Normal + Extra (≥ 33°C)',
                 'badge_bg' => 'bg-amber-100 text-amber-900 border border-amber-300'
             ];
         }
-        // 6. Drizzle -> REDUCE (Section 4 & 11)
+        // 6. Drizzle -> REDUCE
         elseif ($conditionCategory === 'DRIZZLE') {
             $decision = 'REDUCE';
             $waterStatus = 'DRY';
@@ -215,7 +238,7 @@ class WeatherService
                 'badge_bg' => 'bg-sky-100 text-sky-800 border border-sky-200'
             ];
         }
-        // 7. Fog -> REDUCE / NORMAL
+        // 7. Fog -> REDUCE
         elseif ($conditionCategory === 'FOG') {
             $decision = 'REDUCE';
             $waterStatus = 'DRY';
@@ -241,13 +264,6 @@ class WeatherService
                 'badge_bg' => 'bg-emerald-100 text-emerald-800 border border-emerald-200'
             ];
         }
-
-        $fertilization = [
-            'allowed' => true,
-            'advice' => 'Aman untuk pemupukan rutin (organik/NPK). Aplikasikan pada pagi atau sore hari.',
-            'badge' => 'Pemupukan Aman',
-            'badge_bg' => 'bg-emerald-100 text-emerald-800'
-        ];
 
         $fertilization = [
             'allowed' => true,
@@ -311,6 +327,41 @@ class WeatherService
             ];
         }
 
+        // Dynamic Check against Custom WeatherRules in Database
+        $customAlerts = [];
+        try {
+            $weatherRules = \App\Models\WeatherRule::where('is_active', true)->get();
+            foreach ($weatherRules as $rule) {
+                $val = match ($rule->weather_field) {
+                    'temperature' => $temp,
+                    'humidity' => $humidity,
+                    'wind_speed' => $windSpeed,
+                    'rain_probability' => $rainProb,
+                    default => null,
+                };
+                if ($val !== null) {
+                    $matched = match ($rule->operator) {
+                        '>' => $val > $rule->threshold,
+                        '<' => $val < $rule->threshold,
+                        '>=' => $val >= $rule->threshold,
+                        '<=' => $val <= $rule->threshold,
+                        '==' => $val == $rule->threshold,
+                        '!=' => $val != $rule->threshold,
+                        default => false,
+                    };
+                    if ($matched) {
+                        $customAlerts[] = [
+                            'name' => $rule->name,
+                            'severity' => $rule->severity,
+                            'message' => $rule->message,
+                        ];
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            // Ignore DB exceptions
+        }
+
         return [
             'status' => $conditionCategory,
             'condition_category' => $conditionCategory,
@@ -328,7 +379,9 @@ class WeatherService
             'watering' => $watering,
             'fertilization' => $fertilization,
             'pest_disease' => $pest_disease,
-            'protection' => $protection
+            'protection' => $protection,
+            'custom_alerts' => $customAlerts,
         ];
     }
 }
+
