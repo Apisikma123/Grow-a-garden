@@ -52,7 +52,7 @@
                             </span>
                         </td>
                         <td class="py-4 px-6">
-                            <span class="text-[12px] font-medium text-on-surface-variant">{{ $template->harvest_start_day }} HST</span>
+                            <span class="text-[12px] font-medium text-on-surface-variant">{{ $template->harvest_start_day }} Hari</span>
                         </td>
                         <td class="py-4 px-6">
                             <span class="text-[12px] font-medium text-on-surface-variant">{{ $template->soil_ph_min }} - {{ $template->soil_ph_max }}</span>
@@ -119,7 +119,7 @@
                     </div>
                 </div>
                 
-                <h3 class="text-[14px] font-bold text-on-surface border-b border-outline-variant/20 pb-2 mt-2">Siklus Pertumbuhan (HST)</h3>
+                <h3 class="text-[14px] font-bold text-on-surface border-b border-outline-variant/20 pb-2 mt-2">Siklus Pertumbuhan (Hari Tanam)</h3>
                 <div class="grid grid-cols-4 gap-5">
                     <div>
                         <label class="block text-[12px] font-bold text-on-surface-variant mb-1">Semai</label>

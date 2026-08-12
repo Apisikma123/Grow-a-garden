@@ -298,8 +298,8 @@
             {{-- Stats Cards --}}
             <div class="grid grid-cols-2 gap-3">
                 <div class="bg-surface-container-low p-4 rounded-2xl flex flex-col">
-                    <span class="text-[11px] text-on-surface-variant font-medium">Hari Setelah Tanam</span>
-                    <span id="detail-plant-hst" class="text-[24px] font-black text-on-surface mt-1"></span>
+                    <span class="text-[11px] text-on-surface-variant font-medium">Umur Tanaman</span>
+                    <span id="detail-plant-hst" class="text-[20px] font-black text-on-surface mt-1"></span>
                 </div>
                 <div class="bg-surface-container-low p-4 rounded-2xl flex flex-col">
                     <span class="text-[11px] text-on-surface-variant font-medium">Estimasi Panen</span>
@@ -643,7 +643,7 @@ window.GardenApp = (() => {
                         <div class="flex items-center justify-between text-[12px] text-on-surface-variant pt-1 border-t border-outline-variant/20">
                             <div class="flex items-center gap-1">
                                 <span class="material-symbols-outlined text-[14px]">calendar_today</span>
-                                <span class="font-bold text-on-surface">${p.hst}</span> HST
+                                <span class="font-bold text-on-surface">${(!p.hst || p.hst <= 0) ? '1 Hari' : p.hst + ' Hari'}</span>
                             </div>
                             <div class="flex items-center gap-1 ${harvestColor}">
                                 <span class="material-symbols-outlined text-[14px]">schedule</span>
@@ -1003,8 +1003,26 @@ window.GardenApp = (() => {
         statusBadge.textContent = status.label;
         statusBadge.className = `text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full ${status.bg} ${status.text}`;
 
+        function formatWaterRequirement(str) {
+            if (!str) return 'Siram 2x sehari (Pagi & Sore)';
+            if (str.includes('4 L/m²')) return '2 Liter air per m², 2x sehari (Pagi & Sore)';
+            if (str.includes('2x sehari')) return 'Siram 2x sehari (Pagi & Sore)';
+            if (str.includes('1x sehari')) return 'Siram 1x sehari (Pagi/Sore)';
+            return str;
+        }
+
+        function formatSunlight(str) {
+            if (!str) return 'Sinar Matahari Cukup';
+            if (str === 'Full Sun') return 'Sinar Matahari Penuh (6-8 jam)';
+            if (str.includes('Full Sun to Partial')) return 'Sinar Matahari Cukup (4-6 jam)';
+            if (str.includes('Partial')) return 'Cahaya Sedang / Peneduh (3-4 jam)';
+            if (str.includes('Shade')) return 'Tempat Teduh';
+            return str;
+        }
+
         document.getElementById('detail-plant-category-badge').textContent = plant.category || 'Sayuran';
-        document.getElementById('detail-plant-hst').textContent = `${plant.hst} HST`;
+        const ageDays = (!plant.hst || plant.hst <= 0) ? 1 : plant.hst;
+        document.getElementById('detail-plant-hst').textContent = `${ageDays} Hari`;
 
         const harvestText = plant.estimated_harvest_days !== null
             ? (plant.estimated_harvest_days <= 0 ? 'Siap Panen!' : `${plant.estimated_harvest_days} Hari`)
@@ -1012,8 +1030,8 @@ window.GardenApp = (() => {
         document.getElementById('detail-plant-harvest').textContent = harvestText;
 
         const t = plant.template || {};
-        document.getElementById('detail-plant-water').textContent = t.water_requirement || 'Secukupnya';
-        document.getElementById('detail-plant-sunlight').textContent = t.sunlight || 'Full Sun';
+        document.getElementById('detail-plant-water').textContent = formatWaterRequirement(t.water_requirement);
+        document.getElementById('detail-plant-sunlight').textContent = formatSunlight(t.sunlight);
 
         modal.classList.remove('hidden');
     }

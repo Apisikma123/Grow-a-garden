@@ -415,25 +415,115 @@ function initDashboard() {
         document.getElementById('weather-' + state).classList.remove('hidden');
     }
 
-    function applyWeather(locationData) {
-        const province = locationData.region || '';
-        const season = getSeason(province);
-        const config = getWeatherConfig(season);
+    async function fetchLiveWeather(lat, lon) {
+        if (!lat || !lon) return null;
+        try {
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,rain,showers,precipitation&daily=weather_code,temperature_2m_max,precipitation_probability_max&timezone=Asia/Jakarta`;
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), 3500);
+            const resp = await fetch(url, { signal: controller.signal });
+            clearTimeout(timer);
+            if (resp.ok) {
+                const data = await resp.json();
+                const current = data.current || {};
+                const daily = data.daily || {};
+                
+                const temp = Math.round(current.temperature_2m ?? daily.temperature_2m_max?.[0] ?? 29);
+                const rainProb = daily.precipitation_probability_max?.[0] ?? 0;
+                const wCode = current.weather_code ?? daily.weather_code?.[0] ?? 0;
+                
+                // WMO codes for rain/drizzle/showers/thunderstorm: 51..67, 80..82, 95..99
+                const rainCodes = [51,53,55,61,63,65,66,67,80,81,82,95,96,99];
+                const isRaining = (current.rain > 0 || current.showers > 0 || current.precipitation > 0 || rainProb >= 40 || rainCodes.includes(wCode));
 
-        document.getElementById('weather-icon-main').textContent = config.icon;
-        document.getElementById('weather-icon-1').textContent = config.icons[0];
-        document.getElementById('weather-icon-2').textContent = config.icons[1];
-        document.getElementById('weather-title').textContent = config.title;
-        document.getElementById('weather-desc').textContent = config.desc;
+                return { temp, rainProb, isRaining, wCode };
+            }
+        } catch(e) {
+            console.warn('Open-Meteo live weather fetch failed', e);
+        }
+        return null;
+    }
+
+    async function applyWeather(locationData) {
+        const province = locationData.region || '';
+        const cityName = locationData.city || province || 'Wilayah Anda';
+
+        let lat = locationData.lat;
+        let lon = locationData.lon;
+
+        // Default coordinates for Medan / Sumatera Utara if lat/lon missing
+        if (!lat || !lon) {
+            lat = 3.58;
+            lon = 98.67;
+        }
+
+        const live = await fetchLiveWeather(lat, lon);
+
+        let title = 'Cuaca: Normal';
+        let iconMain = 'partly_cloudy_day';
+        let icon1 = 'cloud';
+        let icon2 = 'wb_sunny';
+        let badge = 'Cuaca Normal';
+        let badgeBg = 'bg-surface-container-highest';
+        let badgeText = 'text-on-surface-variant';
+        let desc = 'Kondisi cuaca normal. Jadwal penyiraman berjalan sesuai standar.';
+
+        if (live) {
+            if (live.isRaining) {
+                title = 'Cuaca: Hujan';
+                iconMain = 'rainy';
+                icon1 = 'cloud';
+                icon2 = 'water_drop';
+                badge = `Hujan (${live.temp}°C)`;
+                badgeBg = 'bg-primary-container';
+                badgeText = 'text-on-primary-container';
+                desc = `Hujan/Gerimis terdeteksi hari ini di ${cityName} (Peluang Hujan ${live.rainProb}%). Frekuensi penyiraman dikurangi 30% untuk menghemat air & mencegah pembusukan akar.`;
+            } else if (live.temp >= 31) {
+                title = 'Cuaca: Cerah / Panas';
+                iconMain = 'thermostat';
+                icon1 = 'sunny';
+                icon2 = 'wb_sunny';
+                badge = `Suhu Tinggi (${live.temp}°C)`;
+                badgeBg = 'bg-orange-100';
+                badgeText = 'text-orange-800';
+                desc = `Cuaca cerah dengan suhu tinggi ${live.temp}°C terdeteksi di ${cityName}. Frekuensi penyiraman ditambah 50% untuk mengkompensasi penguapan tinggi.`;
+            } else {
+                title = 'Cuaca: Berawan';
+                iconMain = 'partly_cloudy_day';
+                icon1 = 'cloud';
+                icon2 = 'wb_sunny';
+                badge = `Berawan (${live.temp}°C)`;
+                badgeBg = 'bg-surface-container-highest';
+                badgeText = 'text-on-surface-variant';
+                desc = `Kondisi cuaca berawan dengan suhu ${live.temp}°C di ${cityName}. Penyiraman berjalan sesuai jadwal standar.`;
+            }
+        } else {
+            // Offline fallback
+            title = 'Cuaca: Berawan';
+            iconMain = 'partly_cloudy_day';
+            icon1 = 'cloud';
+            icon2 = 'wb_sunny';
+            badge = 'Cuaca Normal';
+            badgeBg = 'bg-surface-container-highest';
+            badgeText = 'text-on-surface-variant';
+            desc = 'Kondisi cuaca normal. Jadwal penyiraman berjalan sesuai standar.';
+        }
+
+        document.getElementById('weather-icon-main').textContent = iconMain;
+        document.getElementById('weather-icon-1').textContent = icon1;
+        document.getElementById('weather-icon-2').textContent = icon2;
+        document.getElementById('weather-title').textContent = title;
+        document.getElementById('weather-desc').textContent = desc;
         document.getElementById('weather-location').textContent = locationData.formatted || province;
         
-        const badge = document.getElementById('weather-badge');
-        badge.textContent = config.badge;
-        badge.className = `text-[10px] sm:text-[11px] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap ${config.badgeBg} ${config.badgeText}`;
+        const badgeElem = document.getElementById('weather-badge');
+        badgeElem.textContent = badge;
+        badgeElem.className = `text-[10px] sm:text-[11px] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap ${badgeBg} ${badgeText}`;
 
         showWeatherState('active');
     }
 
+    const userProvince = @json(Auth::user()->province);
     const saved = localStorage.getItem('garden_location');
     if (saved) {
         try {
@@ -441,74 +531,207 @@ function initDashboard() {
         } catch(e) {
             showWeatherState('ask');
         }
+    } else if (userProvince) {
+        const userLoc = {
+            region: userProvince,
+            formatted: `${userProvince}, Indonesia`
+        };
+        localStorage.setItem('garden_location', JSON.stringify(userLoc));
+        applyWeather(userLoc);
     } else {
         showWeatherState('ask');
     }
 
+    const INDONESIA_PROVINCES = [
+        'Aceh', 'Sumatera Utara', 'Sumatera Barat', 'Riau', 'Kepulauan Riau', 'Jambi', 
+        'Sumatera Selatan', 'Bangka Belitung', 'Bengkulu', 'Lampung', 'DKI Jakarta', 
+        'Jawa Barat', 'Banten', 'Jawa Tengah', 'DI Yogyakarta', 'Jawa Timur', 'Bali', 
+        'Nusa Tenggara Barat', 'Nusa Tenggara Timur', 'Kalimantan Barat', 'Kalimantan Tengah', 
+        'Kalimantan Selatan', 'Kalimantan Timur', 'Kalimantan Utara', 'Sulawesi Utara', 
+        'Gorontalo', 'Sulawesi Tengah', 'Sulawesi Barat', 'Sulawesi Selatan', 'Sulawesi Tenggara', 
+        'Maluku', 'Maluku Utara', 'Papua Barat', 'Papua'
+    ];
+
+    const PROVINCE_MAP = {
+        'north sumatra': 'Sumatera Utara',
+        'north sumatera': 'Sumatera Utara',
+        'sumatra utara': 'Sumatera Utara',
+        'sumatra': 'Sumatera Utara',
+        'medan': 'Sumatera Utara',
+        'kota medan': 'Sumatera Utara',
+        'percut': 'Sumatera Utara',
+        'deli serdang': 'Sumatera Utara',
+        'west java': 'Jawa Barat',
+        'bandung': 'Jawa Barat',
+        'central java': 'Jawa Tengah',
+        'semarang': 'Jawa Tengah',
+        'east java': 'Jawa Timur',
+        'surabaya': 'Jawa Timur',
+        'jakarta': 'DKI Jakarta',
+        'dki jakarta': 'DKI Jakarta',
+        'yogyakarta': 'DI Yogyakarta',
+        'jogja': 'DI Yogyakarta',
+        'west sumatra': 'Sumatera Barat',
+        'padang': 'Sumatera Barat',
+        'south sumatra': 'Sumatera Selatan',
+        'palembang': 'Sumatera Selatan',
+        'west kalimantan': 'Kalimantan Barat',
+        'pontianak': 'Kalimantan Barat',
+        'central kalimantan': 'Kalimantan Tengah',
+        'south kalimantan': 'Kalimantan Selatan',
+        'east kalimantan': 'Kalimantan Timur',
+        'samarinda': 'Kalimantan Timur',
+        'balikpapan': 'Kalimantan Timur',
+        'north kalimantan': 'Kalimantan Utara',
+        'north sulawesi': 'Sulawesi Utara',
+        'manado': 'Sulawesi Utara',
+        'central sulawesi': 'Sulawesi Tengah',
+        'west sulawesi': 'Sulawesi Barat',
+        'south sulawesi': 'Sulawesi Selatan',
+        'makassar': 'Sulawesi Selatan',
+        'southeast sulawesi': 'Sulawesi Tenggara',
+        'west nusa tenggara': 'Nusa Tenggara Barat',
+        'mataram': 'Nusa Tenggara Barat',
+        'east nusa tenggara': 'Nusa Tenggara Timur',
+        'kupang': 'Nusa Tenggara Timur',
+        'north maluku': 'Maluku Utara',
+        'west papua': 'Papua Barat',
+        'papua': 'Papua'
+    };
+
+    function normalizeProvinceName(str) {
+        if (!str) return 'Sumatera Utara';
+        const lower = str.toLowerCase().trim();
+        for (const p of INDONESIA_PROVINCES) {
+            if (p.toLowerCase() === lower) return p;
+        }
+        for (const [k, v] of Object.entries(PROVINCE_MAP)) {
+            if (lower.includes(k) || k.includes(lower)) return v;
+        }
+        for (const p of INDONESIA_PROVINCES) {
+            if (lower.includes(p.toLowerCase()) || p.toLowerCase().includes(lower)) return p;
+        }
+        return 'Sumatera Utara';
+    }
+
+    // Fast & Reliable Location Detector with GPS & IP Fallback
+    async function getFastLocation() {
+        let coords = null;
+        if (navigator.geolocation) {
+            coords = await new Promise((resolve) => {
+                let done = false;
+                const timer = setTimeout(() => { if (!done) { done = true; resolve(null); } }, 3000);
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => { if (!done) { done = true; clearTimeout(timer); resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }); } },
+                    () => { if (!done) { done = true; clearTimeout(timer); resolve(null); } },
+                    { enableHighAccuracy: false, timeout: 2500, maximumAge: 60000 }
+                );
+            });
+        }
+
+        if (coords) {
+            try {
+                const controller = new AbortController();
+                const fetchTimer = setTimeout(() => controller.abort(), 3000);
+                const resp = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.lat}&lon=${coords.lon}&zoom=10`, {
+                    headers: { 'Accept-Language': 'id, en' },
+                    signal: controller.signal
+                });
+                clearTimeout(fetchTimer);
+                if (resp.ok) {
+                    const data = await resp.json();
+                    const addr = data.address || {};
+                    const city = addr.city || addr.town || addr.municipality || addr.city_district || addr.county || 'Kota Terdeteksi';
+                    const state = addr.state || addr.region || city;
+                    const normProv = normalizeProvinceName(state || city);
+                    return {
+                        lat: coords.lat,
+                        lon: coords.lon,
+                        city: city,
+                        region: normProv,
+                        country: addr.country || 'Indonesia',
+                        formatted: `${city}, ${normProv}, Indonesia`
+                    };
+                }
+            } catch (e) {
+                console.warn('Reverse geocode timeout/fail, using IP fallback', e);
+            }
+        }
+
+        // IP Geolocation fallback via ipwho.is
+        try {
+            const controller = new AbortController();
+            const fetchTimer = setTimeout(() => controller.abort(), 3000);
+            const resp = await fetch('https://ipwho.is/', { signal: controller.signal });
+            clearTimeout(fetchTimer);
+            if (resp.ok) {
+                const ipData = await resp.json();
+                if (ipData.success) {
+                    const city = ipData.city || 'Kota Terdeteksi';
+                    const rawState = ipData.region || ipData.city || '';
+                    const normProv = normalizeProvinceName(rawState);
+                    return {
+                        lat: ipData.latitude || 0,
+                        lon: ipData.longitude || 0,
+                        city: city,
+                        region: normProv,
+                        country: 'Indonesia',
+                        formatted: `${city}, ${normProv}, Indonesia`
+                    };
+                }
+            }
+        } catch (e) {
+            console.warn('ipwho.is fallback failed', e);
+        }
+
+        // Secondary fallback to ip-api.com
+        try {
+            const controller = new AbortController();
+            const fetchTimer = setTimeout(() => controller.abort(), 3000);
+            const resp = await fetch('http://ip-api.com/json', { signal: controller.signal });
+            clearTimeout(fetchTimer);
+            if (resp.ok) {
+                const data = await resp.json();
+                if (data.status === 'success') {
+                    const city = data.city || 'Kota Terdeteksi';
+                    const rawState = data.regionName || data.region || '';
+                    const normProv = normalizeProvinceName(rawState);
+                    return {
+                        lat: data.lat || 0,
+                        lon: data.lon || 0,
+                        city: city,
+                        region: normProv,
+                        country: 'Indonesia',
+                        formatted: `${city}, ${normProv}, Indonesia`
+                    };
+                }
+            }
+        } catch (e) {
+            console.warn('ip-api.com fallback failed', e);
+        }
+
+        return {
+            lat: 3.58,
+            lon: 98.67,
+            city: 'Kota Medan',
+            region: 'Sumatera Utara',
+            country: 'Indonesia',
+            formatted: 'Kota Medan, Sumatera Utara, Indonesia'
+        };
+    }
+
     const detectBtn = document.getElementById('dash-detect-location');
     if (detectBtn) {
-        detectBtn.addEventListener('click', () => {
-            if (!navigator.geolocation) {
-                Alert.toast.error('Browser Anda tidak mendukung Geolocation.');
-                return;
-            }
-
+        detectBtn.addEventListener('click', async () => {
             showWeatherState('loading');
-
-            navigator.geolocation.getCurrentPosition(
-                async (position) => {
-                    const lat = position.coords.latitude;
-                    const lon = position.coords.longitude;
-
-                    try {
-                        const resp = await fetch(
-                            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10`,
-                            { headers: { 'Accept-Language': 'id, en' } }
-                        );
-                        if (!resp.ok) throw new Error('API error');
-
-                        const data = await resp.json();
-                        const addr = data.address || {};
-                        const city = addr.city || addr.town || addr.municipality || addr.city_district || addr.county || 'Lokasi Terdeteksi';
-                        const state = addr.state || addr.region || '';
-                        const formatted = state ? `${city}, ${state}` : city;
-
-                        const locationData = {
-                            lat, lon, city,
-                            region: state || city,
-                            country: addr.country || 'Indonesia',
-                            formatted: `${formatted}, Indonesia`
-                        };
-
-                        localStorage.setItem('garden_location', JSON.stringify(locationData));
-                        applyWeather(locationData);
-
-                    } catch (err) {
-                        console.error('Reverse geocoding error:', err);
-                        const fallback = {
-                            lat, lon,
-                            city: `${lat.toFixed(4)}, ${lon.toFixed(4)}`,
-                            region: '',
-                            country: 'Indonesia',
-                            formatted: `Koordinat: ${lat.toFixed(4)}, ${lon.toFixed(4)}`
-                        };
-                        localStorage.setItem('garden_location', JSON.stringify(fallback));
-                        applyWeather(fallback);
-                    }
-                },
-                (error) => {
-                    showWeatherState('ask');
-                    let msg = 'Gagal mendeteksi lokasi.';
-                    if (error.code === error.PERMISSION_DENIED)
-                        msg = 'Izin lokasi ditolak. Anda bisa mengatur lokasi secara manual di halaman Settings.';
-                    else if (error.code === error.POSITION_UNAVAILABLE)
-                        msg = 'Informasi lokasi tidak tersedia.';
-                    else if (error.code === error.TIMEOUT)
-                        msg = 'Waktu permintaan lokasi habis. Coba lagi.';
-                    Alert.modal.error('Gagal Mendeteksi', msg);
-                },
-                { enableHighAccuracy: true, timeout: 10000 }
-            );
+            try {
+                const locationData = await getFastLocation();
+                localStorage.setItem('garden_location', JSON.stringify(locationData));
+                applyWeather(locationData);
+            } catch (err) {
+                console.error('Dash detect location error:', err);
+                showWeatherState('ask');
+            }
         });
     }
 }

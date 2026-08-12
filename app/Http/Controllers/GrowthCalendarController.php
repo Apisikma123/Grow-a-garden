@@ -8,23 +8,33 @@ use Carbon\Carbon;
 
 class GrowthCalendarController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, \App\Services\WeatherService $weatherService, \App\Services\AutopilotService $autopilot)
     {
         $user = Auth::user();
         
         // Fetch all active plants for the user
         $plants = collect();
         if ($user) {
-            $plants = $user->gardens()->with(['plants' => function($query) {
+            $autopilot->generateForUser($user);
+
+            $gardens = $user->gardens()->with(['plants' => function($query) {
                 $query->whereNotIn('status', ['FINISHED', 'DEAD']);
-            }, 'plants.plantTemplate'])->get()->pluck('plants')->flatten();
+            }, 'plants.plantTemplate'])->get();
+            $plants = $gardens->pluck('plants')->flatten();
+            foreach ($plants as $p) {
+                $p->setRelation('garden', $gardens->firstWhere('id', $p->garden_id));
+            }
         }
 
         if ($plants->isEmpty()) {
             return view('users.growth-calendar', [
                 'mainPlant' => null,
                 'otherPlants' => collect(),
-                'timeline' => []
+                'timeline' => [],
+                'todayTasks' => collect(),
+                'agronomic' => null,
+                'stageWeatherAdvice' => null,
+                'isLocked' => false,
             ]);
         }
 
@@ -46,6 +56,14 @@ class GrowthCalendarController extends Controller
         
         $isLocked = $user && ($user->role === 'free' || !$user->role);
         $todayTasks = collect();
+
+        // Get coordinates for weather
+        $lat = $mainPlant->garden->latitude ?? 3.58;
+        $lng = $mainPlant->garden->longitude ?? 98.67;
+
+        $weather = $weatherService->getTodayWeather((float)$lat, (float)$lng);
+        $agronomic = $weatherService->analyzeAgronomicConditions($weather);
+
         if ($mainPlant) {
             $todayTasks = \App\Models\Event::with('eventType')
                 ->where('plant_id', $mainPlant->id)
@@ -53,7 +71,66 @@ class GrowthCalendarController extends Controller
                 ->whereIn('status', ['PENDING', 'MISSED'])
                 ->orderBy('priority', 'asc')
                 ->get();
+
+            // Synchronize tasks with agronomic weather rules
+            foreach ($todayTasks as $task) {
+                $code = strtolower($task->eventType->code ?? '');
+                if (str_contains($code, 'water')) {
+                    $task->weather_tag = $agronomic['watering']['badge'];
+                    $task->weather_badge_bg = $agronomic['watering']['badge_bg'];
+                    $task->weather_reason = $agronomic['watering']['time_window'];
+                    if ($agronomic['status'] === 'HEAT') $task->priority = 'HIGH';
+                } elseif (str_contains($code, 'fertiliz')) {
+                    $task->weather_tag = $agronomic['fertilization']['badge'];
+                    $task->weather_badge_bg = $agronomic['fertilization']['badge_bg'];
+                    $task->weather_reason = $agronomic['fertilization']['advice'];
+                } elseif (str_contains($code, 'pest')) {
+                    $task->weather_tag = $agronomic['pest_disease']['badge'];
+                    $task->weather_badge_bg = $agronomic['pest_disease']['badge_bg'];
+                    $task->weather_reason = $agronomic['pest_disease']['advice'];
+                }
+            }
         }
+
+        // Build Phase & Weather Specific Guidance for the Main Plant
+        $activeStage = collect($timeline)->firstWhere('status', 'active')['key'] ?? 'VEGETATIVE';
+        $plantName = $mainPlant->plantTemplate->name_id ?? 'Tanaman';
+        $temp = $agronomic['temperature'];
+        $rainProb = $agronomic['rain_probability'];
+        $status = $agronomic['status'];
+
+        $stageAdviceText = '';
+        if (in_array($activeStage, ['FLOWERING', 'FRUITING'])) {
+            if ($status === 'HEAT') {
+                $stageAdviceText = "Fase {$activeStage} ({$plantName}) & Suhu Panas ({$temp}°C): Semprotkan embun air halus di udara sekitar tajuk untuk mendinginkan mikroklimat agar bunga & calon buah tidak gugur.";
+            } elseif ($status === 'RAIN') {
+                $stageAdviceText = "Fase {$activeStage} ({$plantName}) & Hujan ({$rainProb}%): Waspada pembusukan calon buah & serangan antraknosa! Pastikan sirkulasi udara di sekitar perakaran lancar.";
+            } else {
+                $stageAdviceText = "Fase {$activeStage} ({$plantName}): Bunga & calon buah sedang berkembang. Jaga kelembapan tanah tetap stabil dan beri pupuk tinggi Kalium.";
+            }
+        } elseif (in_array($activeStage, ['SEED', 'GERMINATION', 'SEEDLING'])) {
+            if ($status === 'HEAT') {
+                $stageAdviceText = "Fase Persemaian ({$plantName}) & Suhu Panas ({$temp}°C): Bibit muda rentan layu permanen. Berikan naungan peneduh (paranet) atau pindahkan ke tempat teduh.";
+            } elseif ($status === 'RAIN') {
+                $stageAdviceText = "Fase Persemaian ({$plantName}) & Hujan: Lindungi nampan persemaian dari terpaan air hujan langsung agar benih tidak hanyut atau tumbang.";
+            } else {
+                $stageAdviceText = "Fase Persemaian ({$plantName}): Jaga kelembapan media semai dengan penyemprotan semprotan halus (sprayer).";
+            }
+        } else { // VEGETATIVE / HARVEST
+            if ($status === 'HEAT') {
+                $stageAdviceText = "Fase Vegetatif ({$plantName}) & Suhu Panas ({$temp}°C): Batang & daun tumbuh pesat. Berikan mulsa daun/jerami kering di atas permukaan tanah pot.";
+            } elseif ($status === 'RAIN') {
+                $stageAdviceText = "Fase Vegetatif ({$plantName}) & Hujan: Tunda pemupukan cair dan pangkas daun tua bagian bawah yang bersentuhan dengan tanah basah.";
+            } else {
+                $stageAdviceText = "Fase Vegetatif ({$plantName}): Fokus pertumbuhan daun & batang. Lakukan pemangkasan daun kuning secara berkala.";
+            }
+        }
+
+        $stageWeatherAdvice = [
+            'text' => $stageAdviceText,
+            'stage' => $activeStage,
+            'status' => $status
+        ];
 
         return view('users.growth-calendar', [
             'mainPlant' => $mainPlant,
@@ -61,6 +138,8 @@ class GrowthCalendarController extends Controller
             'timeline' => $timeline,
             'currentHst' => $currentHst,
             'todayTasks' => $todayTasks,
+            'agronomic' => $agronomic,
+            'stageWeatherAdvice' => $stageWeatherAdvice,
             'isLocked' => $isLocked,
         ]);
     }
