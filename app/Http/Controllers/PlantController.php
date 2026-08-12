@@ -19,7 +19,7 @@ class PlantController extends Controller
             ->map(function ($plant) {
                 $template = $plant->plantTemplate;
                 $plantedDate = $plant->planted_date;
-                $hst = $plantedDate ? (int) now()->diffInDays($plantedDate) : 0;
+                $hst = $plantedDate ? max(0, (int) floor($plantedDate->diffInDays(now(), false))) : 0;
 
                 // Determine current stage based on HST and template days
                 $stage = $this->calculateStage($hst, $template);

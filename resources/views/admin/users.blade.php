@@ -14,18 +14,7 @@
         
         {{-- Toolbar --}}
         <div class="p-5 flex justify-between items-center border-b border-outline-variant/20">
-            {{-- Filter Dropdown --}}
-            <button class="flex items-center gap-2 bg-surface-container-high hover:bg-surface-container-highest transition-colors px-4 py-2 rounded-md text-[13px] font-semibold text-on-surface">
-                <span class="material-symbols-outlined text-[18px]">filter_list</span>
-                All Membership Levels
-                <span class="material-symbols-outlined text-[18px] ml-2">expand_more</span>
-            </button>
-
-            {{-- Export Button --}}
-            <button class="flex items-center gap-2 px-4 py-2 rounded-md border border-secondary text-secondary font-bold text-[13px] hover:bg-secondary/5 transition-colors">
-                <span class="material-symbols-outlined text-[18px]">download</span>
-                Ekspor
-            </button>
+            <h2 class="text-[16px] font-bold text-on-surface">Daftar Pengguna Aktif</h2>
         </div>
 
         {{-- Table --}}
@@ -98,17 +87,8 @@
         </div>
 
         {{-- Footer & Pagination --}}
-        <div class="p-5 flex justify-between items-center border-t border-outline-variant/20 bg-surface-container-lowest">
-            <div class="text-[13px] text-on-surface-variant font-medium">
-                Showing 1 to 3 of 45 entries
-            </div>
-            
-            <div class="flex items-center gap-1">
-                <button class="px-3 py-1.5 rounded-md text-[13px] font-medium text-on-surface-variant hover:bg-surface-container-high transition-colors">Prev</button>
-                <button class="w-8 h-8 rounded-md bg-[#006c49] text-white text-[13px] font-bold flex items-center justify-center shadow-sm">1</button>
-                <button class="w-8 h-8 rounded-md text-[13px] font-medium text-on-surface hover:bg-surface-container-high transition-colors flex items-center justify-center">2</button>
-                <button class="px-3 py-1.5 rounded-md text-[13px] font-medium text-on-surface hover:bg-surface-container-high transition-colors">Next</button>
-            </div>
+        <div class="p-5 border-t border-outline-variant/20 bg-surface-container-lowest">
+            {{ $users->links() }}
         </div>
 
     </div>

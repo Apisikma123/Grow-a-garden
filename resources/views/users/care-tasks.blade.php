@@ -49,7 +49,23 @@
                 </div>
             </div>
 
-            {{-- Saran Hari Ini --}}
+            {{-- Saran Hari Ini / Adaptasi Cuaca --}}
+            @if(isset($weatherAdvice) && $weatherAdvice)
+            <div class="bg-surface-container-low rounded-[24px] p-[24px] flex justify-between relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300 border border-outline-variant/30">
+                <div class="relative z-10 max-w-[210px]">
+                    <div class="text-[10px] font-bold text-primary uppercase tracking-wider mb-1 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[13px]">auto_awesome</span> Adaptasi Cuaca Real-Time
+                    </div>
+                    <h3 class="text-[16px] font-bold text-on-surface leading-tight mb-1.5">{{ $weatherAdvice['title'] }}</h3>
+                    <p class="text-[12px] text-on-surface-variant font-medium leading-relaxed">{{ $weatherAdvice['desc'] }}</p>
+                </div>
+                <div class="relative z-10 mt-auto shrink-0">
+                    <div class="w-12 h-12 bg-primary-container rounded-full flex items-center justify-center text-on-primary-container shadow-sm">
+                        <span class="material-symbols-outlined text-[24px]">{{ $weatherAdvice['icon'] }}</span>
+                    </div>
+                </div>
+            </div>
+            @else
             @php
                 $dailyAdviceList = [
                     ['title' => 'Periksa Kebun', 'desc' => 'Luangkan waktu 10 menit untuk observasi daun & tanah.', 'icon' => 'eco'],
@@ -72,6 +88,7 @@
                     </div>
                 </div>
             </div>
+            @endif
         </div>
 
         {{-- Main Content Grid --}}
@@ -145,9 +162,13 @@
                                 <span class="material-symbols-outlined text-[28px]">{{ $icon }}</span>
                             </div>
                             <div>
-                                <div class="flex items-center gap-2 mb-0.5">
+                                <div class="flex items-center gap-2 mb-0.5 flex-wrap">
                                     <h3 class="text-[18px] font-bold text-on-surface">{{ $task->eventType->label ?? $task->message ?? 'Tugas Perawatan' }}</h3>
                                     
+                                    @if(isset($task->weather_tag))
+                                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-[4px] {{ $task->weather_badge_bg }}">{{ $task->weather_tag }}</span>
+                                    @endif
+
                                     @if($task->priority == 'HIGH' || $task->priority == 'CRITICAL')
                                     <span class="bg-[var(--color-status-late-bg)] text-[var(--color-status-late-text)] text-[10px] font-bold px-2 py-0.5 rounded-[4px]">{{ $task->priority }}</span>
                                     @elseif($task->priority == 'MEDIUM')
@@ -156,8 +177,11 @@
                                     <span class="bg-surface-container text-on-surface-variant text-[10px] font-bold px-2 py-0.5 rounded-[4px]">{{ $task->priority ?? 'LOW' }}</span>
                                     @endif
                                 </div>
-                                <div class="flex items-center gap-2">
+                                <div class="flex items-center gap-2 flex-wrap">
                                     <p class="text-[13px] text-on-surface-variant font-medium">{{ $task->plant->garden->name ?? 'Kebun' }}: {{ $task->plant->plantTemplate->name_id }}</p>
+                                    @if(isset($task->weather_reason))
+                                    <span class="text-[11px] font-semibold text-primary/80 italic">— {{ $task->weather_reason }}</span>
+                                    @endif
                                     <a href="{{ route('growth-calendar', ['plant_id' => $task->plant->id]) }}" class="text-[11px] font-bold text-primary hover:underline flex items-center gap-0.5" title="Lihat di Kalender"><span class="material-symbols-outlined text-[14px]">calendar_month</span></a>
                                 </div>
                             </div>

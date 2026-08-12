@@ -9,20 +9,34 @@ use Carbon\Carbon;
 
 class CareTaskController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, \App\Services\WeatherService $weatherService, \App\Services\AutopilotService $autopilot)
     {
         $user = Auth::user();
 
         $isLocked = false;
         
         $events = collect();
+        $weatherAdvice = null;
+
         if ($user && !$isLocked) {
-            $plants = $user->gardens()->with('plants')->get()->pluck('plants')->flatten();
+            // Auto generate care tasks for user active plants if needed
+            $autopilot->generateForUser($user);
+
+            $gardens = $user->gardens()->with('plants')->get();
+            $plants = $gardens->pluck('plants')->flatten();
             $plantIds = $plants->pluck('id');
             
+            // Get location for weather
+            $firstGarden = $gardens->first();
+            $lat = $firstGarden->latitude ?? 3.58;
+            $lng = $firstGarden->longitude ?? 98.67;
+
+            // Fetch today weather & analyze agronomic rules
+            $weather = $weatherService->getTodayWeather((float)$lat, (float)$lng);
+            $agronomic = $weatherService->analyzeAgronomicConditions($weather);
+
             $events = Event::with(['plant', 'eventType', 'plant.plantTemplate'])
                             ->whereIn('plant_id', $plantIds)
-                            // Hanya ambil event yang dijadwalkan hari ini (bukan semua yang <= hari ini)
                             ->where(function($query) {
                                 $query->where(function($q) {
                                     $q->whereDate('scheduled_date', Carbon::today())
@@ -32,9 +46,44 @@ class CareTaskController extends Controller
                                       ->whereIn('status', ['COMPLETED', 'SKIPPED']);
                                 });
                             })
-                            ->orderBy('scheduled_date', 'asc')
                             ->orderBy('priority', 'asc')
+                            ->orderBy('scheduled_date', 'asc')
                             ->get();
+
+            // Apply Agronomic Weather-Task Synchronization Logic
+            foreach ($events as $event) {
+                $code = strtolower($event->eventType->code ?? '');
+
+                if ($event->status === 'PENDING') {
+                    if (str_contains($code, 'water')) {
+                        $event->weather_tag = $agronomic['watering']['badge'];
+                        $event->weather_badge_bg = $agronomic['watering']['badge_bg'];
+                        $event->weather_reason = $agronomic['watering']['time_window'];
+
+                        if ($agronomic['status'] === 'HEAT') {
+                            $event->priority = 'HIGH';
+                        }
+                    } elseif (str_contains($code, 'fertiliz')) {
+                        $event->weather_tag = $agronomic['fertilization']['badge'];
+                        $event->weather_badge_bg = $agronomic['fertilization']['badge_bg'];
+                        $event->weather_reason = $agronomic['fertilization']['advice'];
+                    } elseif (str_contains($code, 'pest')) {
+                        $event->weather_tag = $agronomic['pest_disease']['badge'];
+                        $event->weather_badge_bg = $agronomic['pest_disease']['badge_bg'];
+                        $event->weather_reason = $agronomic['pest_disease']['advice'];
+                    }
+                }
+            }
+
+            // Build Comprehensive Agronomic Weather Advice Banner
+            $weatherAdvice = [
+                'title' => $agronomic['watering']['title'] . ' • ' . $agronomic['summary'],
+                'desc' => $agronomic['watering']['advice'] . ' ' . $agronomic['fertilization']['advice'],
+                'icon' => ($agronomic['status'] === 'RAIN') ? 'rainy' : (($agronomic['status'] === 'HEAT') ? 'wb_sunny' : 'eco'),
+                'badge' => $agronomic['watering']['badge'],
+                'time_window' => $agronomic['watering']['time_window'],
+                'agronomic' => $agronomic
+            ];
         }
 
         $pendingTasks = $events->whereIn('status', ['PENDING', 'MISSED']);
@@ -43,7 +92,7 @@ class CareTaskController extends Controller
 
         $highPriorityCount = $pendingTasks->where('priority', 'HIGH')->count();
         $totalCompleted = $completedTasks->count();
-        $totalTasks = $events->count(); // only tasks queried (relevant to today)
+        $totalTasks = $events->count();
 
         if ($request->has('priority') && in_array($request->priority, ['HIGH', 'MEDIUM', 'LOW'])) {
             $pendingTasks = $pendingTasks->where('priority', $request->priority);
@@ -70,11 +119,12 @@ class CareTaskController extends Controller
             'skippedTasks' => $skippedTasks,
             'highPriorityCount' => $highPriorityCount,
             'totalCompleted' => $totalCompleted,
-            'totalTasks' => $totalTasks > 0 ? $totalTasks : 1, // Avoid division by zero
+            'totalTasks' => $totalTasks > 0 ? $totalTasks : 1,
             'isLocked' => $isLocked,
             'closestBadge' => $closestBadge,
             'closestTarget' => $closestTarget,
             'closestCurrent' => $closestCurrent,
+            'weatherAdvice' => $weatherAdvice,
         ]);
     }
 

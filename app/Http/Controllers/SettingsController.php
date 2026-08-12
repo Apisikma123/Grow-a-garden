@@ -50,7 +50,7 @@ class SettingsController extends Controller
 
         $user->name = $request->name;
         $user->phone = $request->phone;
-        $user->province = $request->province;
+        $user->province = self::normalizeProvince($request->province);
         $user->language = $request->language;
 
         if ($request->hasFile('avatar')) {
@@ -66,6 +66,81 @@ class SettingsController extends Controller
         $user->save();
 
         return redirect()->back()->with('success', 'Pengaturan profil berhasil disimpan.');
+    }
+
+    public static function normalizeProvince(?string $input): ?string
+    {
+        if (!$input) return null;
+
+        $provinces = [
+            'Aceh', 'Sumatera Utara', 'Sumatera Barat', 'Riau', 'Kepulauan Riau', 'Jambi', 
+            'Sumatera Selatan', 'Bangka Belitung', 'Bengkulu', 'Lampung', 'DKI Jakarta', 
+            'Jawa Barat', 'Banten', 'Jawa Tengah', 'DI Yogyakarta', 'Jawa Timur', 'Bali', 
+            'Nusa Tenggara Barat', 'Nusa Tenggara Timur', 'Kalimantan Barat', 'Kalimantan Tengah', 
+            'Kalimantan Selatan', 'Kalimantan Timur', 'Kalimantan Utara', 'Sulawesi Utara', 
+            'Gorontalo', 'Sulawesi Tengah', 'Sulawesi Barat', 'Sulawesi Selatan', 'Sulawesi Tenggara', 
+            'Maluku', 'Maluku Utara', 'Papua Barat', 'Papua'
+        ];
+
+        $map = [
+            'north sumatra' => 'Sumatera Utara',
+            'north sumatera' => 'Sumatera Utara',
+            'sumatra utara' => 'Sumatera Utara',
+            'sumatra' => 'Sumatera Utara',
+            'medan' => 'Sumatera Utara',
+            'kota medan' => 'Sumatera Utara',
+            'percut' => 'Sumatera Utara',
+            'deli serdang' => 'Sumatera Utara',
+            'west java' => 'Jawa Barat',
+            'bandung' => 'Jawa Barat',
+            'central java' => 'Jawa Tengah',
+            'semarang' => 'Jawa Tengah',
+            'east java' => 'Jawa Timur',
+            'surabaya' => 'Jawa Timur',
+            'jakarta' => 'DKI Jakarta',
+            'dki jakarta' => 'DKI Jakarta',
+            'yogyakarta' => 'DI Yogyakarta',
+            'jogja' => 'DI Yogyakarta',
+            'west sumatra' => 'Sumatera Barat',
+            'south sumatra' => 'Sumatera Selatan',
+            'west kalimantan' => 'Kalimantan Barat',
+            'central kalimantan' => 'Kalimantan Tengah',
+            'south kalimantan' => 'Kalimantan Selatan',
+            'east kalimantan' => 'Kalimantan Timur',
+            'north kalimantan' => 'Kalimantan Utara',
+            'north sulawesi' => 'Sulawesi Utara',
+            'central sulawesi' => 'Sulawesi Tengah',
+            'west sulawesi' => 'Sulawesi Barat',
+            'south sulawesi' => 'Sulawesi Selatan',
+            'southeast sulawesi' => 'Sulawesi Tenggara',
+            'west nusa tenggara' => 'Nusa Tenggara Barat',
+            'east nusa tenggara' => 'Nusa Tenggara Timur',
+            'north maluku' => 'Maluku Utara',
+            'west papua' => 'Papua Barat',
+            'papua' => 'Papua',
+        ];
+
+        $lower = strtolower(trim($input));
+        
+        foreach ($provinces as $prov) {
+            if (strtolower($prov) === $lower) {
+                return $prov;
+            }
+        }
+
+        foreach ($map as $key => $val) {
+            if (str_contains($lower, $key) || str_contains($key, $lower)) {
+                return $val;
+            }
+        }
+
+        foreach ($provinces as $prov) {
+            if (str_contains($lower, strtolower($prov)) || str_contains(strtolower($prov), $lower)) {
+                return $prov;
+            }
+        }
+
+        return $input;
     }
 
     public function updateNotifications(Request $request)

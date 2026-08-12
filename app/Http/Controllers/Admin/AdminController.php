@@ -52,15 +52,34 @@ class AdminController extends Controller
         $avgHarvestAge = \App\Models\PlantTemplate::avg('harvest_start_day') ?? 0;
         $avgHarvestAge = round($avgHarvestAge);
 
+        // User Growth (Last 6 months)
+        $sixMonthsAgo = now()->subMonths(5)->startOfMonth();
+        $monthlyUsers = User::where('created_at', '>=', $sixMonthsAgo)
+            ->selectRaw('YEAR(created_at) year, MONTH(created_at) month, count(*) data')
+            ->groupBy('year', 'month')
+            ->orderBy('year', 'asc')
+            ->orderBy('month', 'asc')
+            ->get();
+
+        $userGrowth = [];
+        $currentMonth = $sixMonthsAgo->copy();
+        for ($i = 0; $i < 6; $i++) {
+            $month = $currentMonth->month;
+            $year = $currentMonth->year;
+            $count = $monthlyUsers->where('year', $year)->where('month', $month)->first()->data ?? 0;
+            $userGrowth[] = $count;
+            $currentMonth->addMonth();
+        }
+
         return view('admin.dashboard', compact(
             'totalUsers', 'totalGardens', 'totalPlants', 'premiumUsers', 'successfulHarvests',
-            'popularPlants', 'topActivities', 'todayActivities', 'totalCompletedEvents', 'avgHarvestAge'
+            'popularPlants', 'topActivities', 'todayActivities', 'totalCompletedEvents', 'avgHarvestAge', 'userGrowth'
         ));
     }
 
     public function users()
     {
-        $users = User::withCount('gardens')->orderBy('created_at', 'desc')->get();
+        $users = User::withCount('gardens')->orderBy('created_at', 'desc')->paginate(10);
         return view('admin.users', compact('users'));
     }
 
@@ -69,20 +88,12 @@ class AdminController extends Controller
         $query = \App\Models\PlantTemplate::with('category');
 
         if ($request->has('search') && $request->search != '') {
-            $search = $request->search;
-            $query->where('name_id', 'like', "%{$search}%")
-                  ->orWhere('scientific_name', 'like', "%{$search}%");
+            $query->where('name_id', 'like', '%'.$request->search.'%');
         }
 
-        if ($request->has('category') && $request->category != '') {
-            $query->whereHas('category', function($q) use ($request) {
-                $q->where('name', 'like', "%{$request->category}%");
-            });
-        }
-
-        $plants = $query->paginate(10)->withQueryString();
+        $plants = $query->paginate(15)->withQueryString();
         $categories = \App\Models\PlantCategory::all();
-        
+
         return view('admin.plants', compact('plants', 'categories'));
     }
 
@@ -113,6 +124,7 @@ class AdminController extends Controller
             'germination_day' => 'nullable|integer',
             'seedling_day' => 'nullable|integer',
             'harvest_start_day' => 'required|integer',
+            'harvest_end_day' => 'required|integer',
             'soil_ph_min' => 'required|numeric',
             'soil_ph_max' => 'required|numeric',
         ]);
@@ -130,6 +142,7 @@ class AdminController extends Controller
             'germination_day' => 'nullable|integer',
             'seedling_day' => 'nullable|integer',
             'harvest_start_day' => 'required|integer',
+            'harvest_end_day' => 'required|integer',
             'soil_ph_min' => 'required|numeric',
             'soil_ph_max' => 'required|numeric',
         ]);

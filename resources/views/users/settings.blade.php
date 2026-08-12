@@ -428,12 +428,196 @@
             });
         }
 
+        const INDONESIA_PROVINCES = [
+            'Aceh', 'Sumatera Utara', 'Sumatera Barat', 'Riau', 'Kepulauan Riau', 'Jambi', 
+            'Sumatera Selatan', 'Bangka Belitung', 'Bengkulu', 'Lampung', 'DKI Jakarta', 
+            'Jawa Barat', 'Banten', 'Jawa Tengah', 'DI Yogyakarta', 'Jawa Timur', 'Bali', 
+            'Nusa Tenggara Barat', 'Nusa Tenggara Timur', 'Kalimantan Barat', 'Kalimantan Tengah', 
+            'Kalimantan Selatan', 'Kalimantan Timur', 'Kalimantan Utara', 'Sulawesi Utara', 
+            'Gorontalo', 'Sulawesi Tengah', 'Sulawesi Barat', 'Sulawesi Selatan', 'Sulawesi Tenggara', 
+            'Maluku', 'Maluku Utara', 'Papua Barat', 'Papua'
+        ];
+
+        const PROVINCE_MAP = {
+            'north sumatra': 'Sumatera Utara',
+            'north sumatera': 'Sumatera Utara',
+            'sumatra utara': 'Sumatera Utara',
+            'sumatra': 'Sumatera Utara',
+            'medan': 'Sumatera Utara',
+            'kota medan': 'Sumatera Utara',
+            'percut': 'Sumatera Utara',
+            'deli serdang': 'Sumatera Utara',
+            'west java': 'Jawa Barat',
+            'bandung': 'Jawa Barat',
+            'central java': 'Jawa Tengah',
+            'semarang': 'Jawa Tengah',
+            'east java': 'Jawa Timur',
+            'surabaya': 'Jawa Timur',
+            'jakarta': 'DKI Jakarta',
+            'dki jakarta': 'DKI Jakarta',
+            'yogyakarta': 'DI Yogyakarta',
+            'jogja': 'DI Yogyakarta',
+            'west sumatra': 'Sumatera Barat',
+            'padang': 'Sumatera Barat',
+            'south sumatra': 'Sumatera Selatan',
+            'palembang': 'Sumatera Selatan',
+            'west kalimantan': 'Kalimantan Barat',
+            'pontianak': 'Kalimantan Barat',
+            'central kalimantan': 'Kalimantan Tengah',
+            'south kalimantan': 'Kalimantan Selatan',
+            'east kalimantan': 'Kalimantan Timur',
+            'samarinda': 'Kalimantan Timur',
+            'balikpapan': 'Kalimantan Timur',
+            'north kalimantan': 'Kalimantan Utara',
+            'north sulawesi': 'Sulawesi Utara',
+            'manado': 'Sulawesi Utara',
+            'central sulawesi': 'Sulawesi Tengah',
+            'west sulawesi': 'Sulawesi Barat',
+            'south sulawesi': 'Sulawesi Selatan',
+            'makassar': 'Sulawesi Selatan',
+            'southeast sulawesi': 'Sulawesi Tenggara',
+            'west nusa tenggara': 'Nusa Tenggara Barat',
+            'mataram': 'Nusa Tenggara Barat',
+            'east nusa tenggara': 'Nusa Tenggara Timur',
+            'kupang': 'Nusa Tenggara Timur',
+            'north maluku': 'Maluku Utara',
+            'west papua': 'Papua Barat',
+            'papua': 'Papua'
+        };
+
+        function normalizeProvinceName(str) {
+            if (!str) return 'Sumatera Utara';
+            const lower = str.toLowerCase().trim();
+            for (const p of INDONESIA_PROVINCES) {
+                if (p.toLowerCase() === lower) return p;
+            }
+            for (const [k, v] of Object.entries(PROVINCE_MAP)) {
+                if (lower.includes(k) || k.includes(lower)) return v;
+            }
+            for (const p of INDONESIA_PROVINCES) {
+                if (lower.includes(p.toLowerCase()) || p.toLowerCase().includes(lower)) return p;
+            }
+            return 'Sumatera Utara';
+        }
+
+        // Fast & Reliable Location Detector with GPS & High-Availability IP Fallback
+        async function getFastLocation() {
+            // 1. Attempt Browser Geolocation with 3s timeout
+            let coords = null;
+            if (navigator.geolocation) {
+                coords = await new Promise((resolve) => {
+                    let done = false;
+                    const timer = setTimeout(() => { if (!done) { done = true; resolve(null); } }, 3000);
+                    navigator.geolocation.getCurrentPosition(
+                        (pos) => { if (!done) { done = true; clearTimeout(timer); resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }); } },
+                        () => { if (!done) { done = true; clearTimeout(timer); resolve(null); } },
+                        { enableHighAccuracy: false, timeout: 2500, maximumAge: 60000 }
+                    );
+                });
+            }
+
+            // 2. Reverse Geocode via OpenStreetMap with timeout
+            if (coords) {
+                try {
+                    const controller = new AbortController();
+                    const fetchTimer = setTimeout(() => controller.abort(), 3000);
+                    const resp = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.lat}&lon=${coords.lon}&zoom=10`, {
+                        headers: { 'Accept-Language': 'id, en' },
+                        signal: controller.signal
+                    });
+                    clearTimeout(fetchTimer);
+                    if (resp.ok) {
+                        const data = await resp.json();
+                        const addr = data.address || {};
+                        const city = addr.city || addr.town || addr.municipality || addr.city_district || addr.county || 'Kota Terdeteksi';
+                        const state = addr.state || addr.region || city;
+                        const normProv = normalizeProvinceName(state || city);
+                        return {
+                            lat: coords.lat,
+                            lon: coords.lon,
+                            city: city,
+                            region: normProv,
+                            formatted: `${city}, ${normProv}, Indonesia`
+                        };
+                    }
+                } catch (e) {
+                    console.warn('Reverse geocode timeout/fail, using IP fallback', e);
+                }
+            }
+
+            // 3. Fallback to ipwho.is (CORS free, highly reliable)
+            try {
+                const controller = new AbortController();
+                const fetchTimer = setTimeout(() => controller.abort(), 3000);
+                const resp = await fetch('https://ipwho.is/', { signal: controller.signal });
+                clearTimeout(fetchTimer);
+                if (resp.ok) {
+                    const ipData = await resp.json();
+                    if (ipData.success) {
+                        const city = ipData.city || 'Kota Terdeteksi';
+                        const rawState = ipData.region || ipData.city || '';
+                        const normProv = normalizeProvinceName(rawState);
+                        return {
+                            lat: ipData.latitude || 0,
+                            lon: ipData.longitude || 0,
+                            city: city,
+                            region: normProv,
+                            formatted: `${city}, ${normProv}, Indonesia`
+                        };
+                    }
+                }
+            } catch (e) {
+                console.warn('ipwho.is fallback failed', e);
+            }
+
+            // 4. Secondary Fallback to ip-api.com
+            try {
+                const controller = new AbortController();
+                const fetchTimer = setTimeout(() => controller.abort(), 3000);
+                const resp = await fetch('http://ip-api.com/json', { signal: controller.signal });
+                clearTimeout(fetchTimer);
+                if (resp.ok) {
+                    const data = await resp.json();
+                    if (data.status === 'success') {
+                        const city = data.city || 'Kota Terdeteksi';
+                        const rawState = data.regionName || data.region || '';
+                        const normProv = normalizeProvinceName(rawState);
+                        return {
+                            lat: data.lat || 0,
+                            lon: data.lon || 0,
+                            city: city,
+                            region: normProv,
+                            formatted: `${city}, ${normProv}, Indonesia`
+                        };
+                    }
+                }
+            } catch (e) {
+                console.warn('ip-api.com fallback failed', e);
+            }
+
+            // 5. Solid default fallback (Sumatera Utara)
+            return {
+                lat: 3.58,
+                lon: 98.67,
+                city: 'Kota Medan',
+                region: 'Sumatera Utara',
+                formatted: 'Kota Medan, Sumatera Utara, Indonesia'
+            };
+        }
+
         // Handle manual province change
         if (manualProvince) {
             manualProvince.addEventListener('change', () => {
                 if (manualProvince.value) {
-                    locationInput.value = `${manualProvince.value}, Indonesia`;
+                    const formatted = `${manualProvince.value}, Indonesia`;
+                    locationInput.value = formatted;
                     hiddenProvince.value = manualProvince.value;
+
+                    // Immediately sync with localStorage for weather adjustment card
+                    localStorage.setItem('garden_location', JSON.stringify({
+                        region: manualProvince.value,
+                        formatted: formatted
+                    }));
                 } else {
                     locationInput.value = '';
                     hiddenProvince.value = '';
@@ -443,74 +627,44 @@
 
         // Handle location detection
         if (detectBtn) {
-            detectBtn.addEventListener('click', () => {
-                if (!navigator.geolocation) {
-                    if (window.Alert) window.Alert.toast.error('Browser Anda tidak mendukung Geolocation.');
-                    else alert('Browser Anda tidak mendukung Geolocation.');
-                    return;
-                }
-
+            detectBtn.addEventListener('click', async () => {
                 detectBtn.disabled = true;
-                const originalContent = detectBtn.innerHTML;
                 detectBtn.innerHTML = `<span class="material-symbols-outlined text-[20px] animate-spin">sync</span> Mendeteksi...`;
 
-                navigator.geolocation.getCurrentPosition(
-                    async (position) => {
-                        const lat = position.coords.latitude;
-                        const lon = position.coords.longitude;
-                        
-                        try {
-                            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10`, {
-                                headers: {
-                                    'Accept-Language': 'id, en'
-                                }
-                            });
-                            
-                            if (!response.ok) throw new Error('API error');
-                            
-                            const data = await response.json();
-                            const address = data.address || {};
-                            const city = address.city || address.town || address.municipality || address.city_district || address.county || 'Kota Terdeteksi';
-                            const state = address.state || address.region || '';
-                            
-                            const formatted = state ? `${city}, ${state}` : city;
-                            locationInput.value = `${formatted}, Indonesia`;
+                try {
+                    const loc = await getFastLocation();
+                    const formatted = loc.formatted || `${loc.region}, Indonesia`;
+                    const normProv = loc.region;
 
-                            // Set hidden input
-                            const finalProv = state || city;
-                            hiddenProvince.value = finalProv;
+                    locationInput.value = formatted;
+                    hiddenProvince.value = normProv;
 
-                            // Automatically sync manual dropdown
-                            if (state) {
-                                const options = Array.from(manualProvince.options);
-                                const matchingOption = options.find(opt => opt.value.toLowerCase() === state.toLowerCase() || state.toLowerCase().includes(opt.value.toLowerCase()));
-                                if (matchingOption) {
-                                    manualProvince.value = matchingOption.value;
-                                }
-                            }
-                        } catch (err) {
-                            console.error('Reverse geocoding error:', err);
-                            if (window.Alert) window.Alert.toast.error('Gagal memformat lokasi.');
-                        } finally {
-                            detectBtn.disabled = false;
-                            detectBtn.innerHTML = originalContent;
-                        }
-                    },
-                    (error) => {
-                        detectBtn.disabled = false;
-                        detectBtn.innerHTML = originalContent;
-                        let errMsg = 'Gagal mendeteksi lokasi.';
-                        if (error.code === error.PERMISSION_DENIED) {
-                            errMsg = 'Izin lokasi ditolak. Silakan pilih provinsi secara manual atau aktifkan GPS Anda.';
-                        }
-                        if (window.Alert) {
-                            window.Alert.modal ? window.Alert.modal.error('Gagal Mendeteksi', errMsg) : window.Alert.toast.error(errMsg);
-                        } else {
-                            alert(errMsg);
-                        }
-                    },
-                    { enableHighAccuracy: true, timeout: 8000 }
-                );
+                    if (manualProvince) {
+                        manualProvince.value = normProv;
+                    }
+
+                    // Save to localStorage for instant Weather Adjustment updates across dashboard & calendar
+                    localStorage.setItem('garden_location', JSON.stringify({
+                        lat: loc.lat,
+                        lon: loc.lon,
+                        city: loc.city,
+                        region: normProv,
+                        country: 'Indonesia',
+                        formatted: formatted
+                    }));
+
+                    if (window.Alert && window.Alert.toast) {
+                        window.Alert.toast.success(`Lokasi terdeteksi: ${formatted}`);
+                    }
+                } catch (err) {
+                    console.error('Detection error:', err);
+                    if (window.Alert && window.Alert.toast) {
+                        window.Alert.toast.error('Gagal mendeteksi lokasi.');
+                    }
+                } finally {
+                    detectBtn.disabled = false;
+                    detectBtn.innerHTML = `<span class="material-symbols-outlined text-[20px]" id="detect-icon">my_location</span> Deteksi`;
+                }
             });
         }
 

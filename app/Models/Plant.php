@@ -43,7 +43,8 @@ class Plant extends Model
     public function getHstAttribute(): int
     {
         if (!$this->planted_date) return 0;
-        return (int) now()->diffInDays($this->planted_date);
+        $diff = (int) floor($this->planted_date->diffInDays(now(), false));
+        return max(0, $diff);
     }
 
     public function getStageNameAttribute(): string

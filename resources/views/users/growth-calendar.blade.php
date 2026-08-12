@@ -68,7 +68,7 @@
                             <h2 class="text-[28px] md:text-[32px] font-black text-on-surface leading-tight mb-3 tracking-tight">{{ collect($timeline)->where('status', 'active')->first()['label'] ?? 'Panen' }} {{ $mainPlant->plantTemplate->name_id }}</h2>
                             <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
                                 <span class="bg-primary/10 text-primary px-3 py-1.5 rounded-full text-[12px] font-bold tracking-wider uppercase border border-primary/20 shadow-sm backdrop-blur-md">Fase {{ collect($timeline)->where('status', 'active')->first()['label'] ?? 'Panen' }}</span>
-                                <span class="bg-[#944a23]/10 text-[#944a23] px-3 py-1.5 rounded-full text-[12px] font-bold tracking-wider uppercase border border-[#944a23]/20 shadow-sm backdrop-blur-md">HST {{ max(0, $currentHst) }} / {{ $mainPlant->plantTemplate->harvest_start_day }}</span>
+                                <span class="bg-[#944a23]/10 text-[#944a23] px-3 py-1.5 rounded-full text-[12px] font-bold tracking-wider uppercase border border-[#944a23]/20 shadow-sm backdrop-blur-md">Umur {{ max(0, $currentHst) <= 0 ? 1 : max(0, $currentHst) }} Hari (Est. Panen {{ $mainPlant->plantTemplate->harvest_start_day }} Hari)</span>
                             </div>
                         </div>
                     </div>
@@ -104,8 +104,17 @@
                                 <div class="ml-4 md:ml-6 bg-gradient-to-br from-white to-[#006c49]/5 border border-primary/20 rounded-[20px] p-[24px] shadow-[0_8px_32px_rgba(0,108,73,0.08)] relative overflow-hidden transition-all duration-300 hover:shadow-[0_12px_48px_rgba(0,108,73,0.12)] hover:-translate-y-1">
                                     <div class="absolute top-0 left-0 w-1.5 h-full bg-primary"></div>
                                     <h3 class="text-[18px] font-black text-primary mb-1">{{ $stage['label'] }} <span class="text-[13px] bg-primary text-white px-2 py-0.5 rounded-full ml-2 font-bold tracking-wide">AKTIF</span></h3>
-                                    <p class="text-[14px] text-on-surface-variant font-medium mb-6 leading-relaxed">{{ $stage['desc'] }}</p>
+                                    <p class="text-[14px] text-on-surface-variant font-medium mb-4 leading-relaxed">{{ $stage['desc'] }}</p>
                                     
+                                    @if(isset($stageWeatherAdvice) && $stageWeatherAdvice)
+                                    <div class="bg-primary/5 border border-primary/20 rounded-xl p-3 mb-5 flex items-start gap-2.5">
+                                        <span class="material-symbols-outlined text-primary text-[20px] shrink-0 mt-0.5">auto_awesome</span>
+                                        <p class="text-[12px] font-semibold text-primary leading-relaxed">
+                                            {{ $stageWeatherAdvice['text'] }}
+                                        </p>
+                                    </div>
+                                    @endif
+
                                     <div class="flex items-center gap-4">
                                         <div class="flex-1 bg-outline-variant/30 h-[10px] rounded-full overflow-hidden shadow-inner">
                                             <div class="bg-gradient-to-r from-[#006c49] to-[#10b981] h-full rounded-full transition-all duration-1000 ease-out relative" style="width: {{ $stage['progress'] }}%;">
@@ -133,7 +142,12 @@
                                     </span>
                                 </div>
                                 <div class="ml-4 md:ml-6">
-                                    <h3 class="text-[16px] font-bold text-on-surface-variant mb-0.5 group-hover:text-primary transition-colors">{{ $stage['label'] }}</h3>
+                                    <div class="flex items-center gap-2 flex-wrap mb-0.5">
+                                        <h3 class="text-[16px] font-bold text-on-surface-variant group-hover:text-primary transition-colors">{{ $stage['label'] }}</h3>
+                                        @if(isset($stage['weatherBadge']) && $stage['weatherBadge'])
+                                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full {{ $stage['weatherBadgeBg'] }}">{{ $stage['weatherBadge'] }}</span>
+                                        @endif
+                                    </div>
                                     <p class="text-[13px] text-outline font-medium">Est. {{ $stage['date']->isoFormat('D MMM YYYY') }} • {{ $stage['desc'] }}</p>
                                 </div>
                             </div>
@@ -189,8 +203,16 @@
                                         </span>
                                     </div>
                                     <div>
-                                        <h4 class="text-[14px] font-bold text-on-surface">{{ $task->eventType->label ?? $task->message ?? 'Tugas Perawatan' }}</h4>
-                                        <p class="text-[12px] text-on-surface-variant font-medium mt-0.5">{{ $task->plant ? $task->plant->plantTemplate->name_id : 'Tanaman' }}</p>
+                                        <div class="flex items-center gap-1.5 flex-wrap">
+                                            <h4 class="text-[14px] font-bold text-on-surface">{{ $task->eventType->label ?? $task->message ?? 'Tugas Perawatan' }}</h4>
+                                            @if(isset($task->weather_tag))
+                                            <span class="text-[9px] font-bold px-1.5 py-0.5 rounded {{ $task->weather_badge_bg }}">{{ $task->weather_tag }}</span>
+                                            @endif
+                                        </div>
+                                        <p class="text-[12px] text-on-surface-variant font-medium mt-0.5">
+                                            {{ $task->plant ? $task->plant->plantTemplate->name_id : 'Tanaman' }}
+                                            @if(isset($task->weather_reason)) <span class="italic text-primary/80">— {{ $task->weather_reason }}</span> @endif
+                                        </p>
                                     </div>
                                 </div>
                             @endforeach

@@ -9,10 +9,16 @@
             <h1 class="text-[28px] font-bold text-on-surface tracking-tight">Katalog Tanaman</h1>
             <p class="text-[14px] text-on-surface-variant">Kelola database tanaman global termasuk taksonomi, kondisi ideal, dan status.</p>
         </div>
-        <button onclick="openPlantModal()" class="flex items-center gap-2 bg-primary text-on-primary font-bold text-[14px] px-5 py-2.5 rounded-lg hover:bg-primary/90 active:scale-[0.98] transition-all shadow-sm shrink-0">
-            <span class="material-symbols-outlined text-[18px]">add_circle</span>
-            Tambah Tanaman Baru
-        </button>
+        <div class="flex items-center gap-3 shrink-0">
+            <form action="{{ route('admin.plants') }}" method="GET" class="relative">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari tanaman..." class="pl-9 pr-4 py-2 bg-surface-container-highest border border-outline-variant/30 rounded-lg text-[13px] text-on-surface focus:outline-none focus:ring-2 focus:ring-primary w-64">
+                <span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-on-surface-variant">search</span>
+            </form>
+            <button onclick="openPlantModal()" class="flex items-center gap-2 bg-primary text-on-primary font-bold text-[14px] px-5 py-2.5 rounded-lg hover:bg-primary/90 active:scale-[0.98] transition-all shadow-sm">
+                <span class="material-symbols-outlined text-[18px]">add_circle</span>
+                Tambah Tanaman Baru
+            </button>
+        </div>
     </div>
 
     {{-- Main Table Container --}}
@@ -46,7 +52,7 @@
                             </span>
                         </td>
                         <td class="py-4 px-6">
-                            <span class="text-[12px] font-medium text-on-surface-variant">{{ $template->harvest_start_day }} HST</span>
+                            <span class="text-[12px] font-medium text-on-surface-variant">{{ $template->harvest_start_day }} Hari</span>
                         </td>
                         <td class="py-4 px-6">
                             <span class="text-[12px] font-medium text-on-surface-variant">{{ $template->soil_ph_min }} - {{ $template->soil_ph_max }}</span>
@@ -113,19 +119,23 @@
                     </div>
                 </div>
                 
-                <h3 class="text-[14px] font-bold text-on-surface border-b border-outline-variant/20 pb-2 mt-2">Siklus Pertumbuhan (HST)</h3>
-                <div class="grid grid-cols-3 gap-5">
+                <h3 class="text-[14px] font-bold text-on-surface border-b border-outline-variant/20 pb-2 mt-2">Siklus Pertumbuhan (Hari Tanam)</h3>
+                <div class="grid grid-cols-4 gap-5">
                     <div>
-                        <label class="block text-[12px] font-bold text-on-surface-variant mb-1">Semai (Germination)</label>
+                        <label class="block text-[12px] font-bold text-on-surface-variant mb-1">Semai</label>
                         <input type="number" id="germination_day" class="w-full px-3 py-2 border border-outline-variant/40 rounded-xl focus:ring-2 focus:ring-primary outline-none" placeholder="Hari ke-">
                     </div>
                     <div>
-                        <label class="block text-[12px] font-bold text-on-surface-variant mb-1">Persemaian (Seedling)</label>
+                        <label class="block text-[12px] font-bold text-on-surface-variant mb-1">Persemaian</label>
                         <input type="number" id="seedling_day" class="w-full px-3 py-2 border border-outline-variant/40 rounded-xl focus:ring-2 focus:ring-primary outline-none" placeholder="Hari ke-">
                     </div>
                     <div>
-                        <label class="block text-[12px] font-bold text-on-surface-variant mb-1">Awal Panen (Harvest)</label>
+                        <label class="block text-[12px] font-bold text-on-surface-variant mb-1">Awal Panen</label>
                         <input type="number" id="harvest_start_day" required class="w-full px-3 py-2 border border-outline-variant/40 rounded-xl focus:ring-2 focus:ring-primary outline-none" placeholder="Hari ke-">
+                    </div>
+                    <div>
+                        <label class="block text-[12px] font-bold text-on-surface-variant mb-1">Akhir Panen</label>
+                        <input type="number" id="harvest_end_day" required class="w-full px-3 py-2 border border-outline-variant/40 rounded-xl focus:ring-2 focus:ring-primary outline-none" placeholder="Hari ke-">
                     </div>
                 </div>
 
@@ -166,6 +176,7 @@
         document.getElementById('germination_day').value = plant.germination_day;
         document.getElementById('seedling_day').value = plant.seedling_day;
         document.getElementById('harvest_start_day').value = plant.harvest_start_day;
+        document.getElementById('harvest_end_day').value = plant.harvest_end_day;
         document.getElementById('soil_ph_min').value = plant.soil_ph_min;
         document.getElementById('soil_ph_max').value = plant.soil_ph_max;
 
@@ -188,6 +199,7 @@
             germination_day: document.getElementById('germination_day').value || null,
             seedling_day: document.getElementById('seedling_day').value || null,
             harvest_start_day: document.getElementById('harvest_start_day').value,
+            harvest_end_day: document.getElementById('harvest_end_day').value,
             soil_ph_min: document.getElementById('soil_ph_min').value,
             soil_ph_max: document.getElementById('soil_ph_max').value,
         };
@@ -206,18 +218,21 @@
             });
 
             if (res.ok) {
-                window.location.reload();
+                Alert.toast.success('Tanaman berhasil disimpan!');
+                setTimeout(() => window.location.reload(), 1000);
             } else {
-                alert('Gagal menyimpan data tanaman.');
+                const errorData = await res.json();
+                Alert.modal.error('Gagal Menyimpan', errorData.message || 'Terjadi kesalahan pada input data.');
             }
         } catch (e) {
             console.error(e);
-            alert('Terjadi kesalahan sistem.');
+            Alert.modal.error('Error Sistem', 'Terjadi kesalahan saat menyambung ke server.');
         }
     }
 
     async function deletePlant(id) {
-        if (!confirm('Hapus tanaman ini dari database? Semua kebun yang menggunakan tanaman ini mungkin terpengaruh.')) return;
+        const result = await Alert.modal.confirm('Hapus Tanaman?', 'Semua kebun yang menggunakan tanaman ini mungkin terpengaruh. Aksi ini permanen.', 'Ya, Hapus', true);
+        if (!result.isConfirmed) return;
         
         try {
             const res = await fetch(`/api/admin/plants/${id}`, {
@@ -228,12 +243,14 @@
             });
             
             if (res.ok) {
-                window.location.reload();
+                Alert.toast.success('Tanaman berhasil dihapus!');
+                setTimeout(() => window.location.reload(), 1000);
             } else {
-                alert('Gagal menghapus tanaman.');
+                Alert.modal.error('Gagal', 'Tidak dapat menghapus tanaman.');
             }
         } catch (e) {
             console.error(e);
+            Alert.modal.error('Error Sistem', 'Terjadi kesalahan sistem.');
         }
     }
 </script>
