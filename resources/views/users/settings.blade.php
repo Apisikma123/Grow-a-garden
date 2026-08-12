@@ -297,7 +297,7 @@
                             </a>
                         @elseif(Auth::user()->role === 'pro')
                             <a href="/checkout?plan=pro&from=settings" class="flex-1 flex items-center justify-center gap-2 bg-slate-800 text-white font-bold py-3 rounded-xl hover:bg-slate-700 active:scale-[0.98] transition-all shadow-sm text-[14px]">
-                                <span class="material-symbols-outlined text-[18px]">upgrade</span>
+                                <span class="material-symbols-outlined text-[18px]">workspace_premium</span>
                                 Upgrade ke Panen Raya
                             </a>
                             <button type="button" id="btn-cancel-sub" class="flex-1 flex items-center justify-center gap-2 border-2 border-error/30 text-error font-bold py-3 rounded-xl hover:bg-error/5 active:scale-[0.98] transition-all text-[14px]">

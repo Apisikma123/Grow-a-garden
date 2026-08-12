@@ -93,7 +93,7 @@
                     <span class="text-[12px] font-black text-white tracking-widest uppercase">{{ (Auth::user()->role ?? 'free') === 'pro' ? 'Upgrade Premium' : 'Go Premium' }}</span>
                 </div>
                 <p class="text-[11px] text-slate-300 font-medium mb-3 leading-snug z-10">
-                    {{ (Auth::user()->role ?? 'free') === 'pro' ? 'Tingkatkan ke Panen Raya (Premium) untuk hingga 100 kebun & tanaman tanpa batas.' : 'Unlock hingga 100 kebun, tanaman tanpa batas, dan Weather AI.' }}
+                    {{ (Auth::user()->role ?? 'free') === 'pro' ? 'Tingkatkan ke Panen Raya (Premium) untuk hingga 100 kebun & tanaman tanpa batas.' : 'Unlock hingga 100 kebun, tanaman tanpa batas, dan Weather Adjustment.' }}
                 </p>
                 <button type="button" onclick="document.getElementById('pricing-modal').classList.remove('hidden')" class="w-full text-center bg-yellow-400 text-yellow-900 font-bold text-[13px] py-2 rounded-xl hover:bg-yellow-300 transition-colors z-10 shadow-sm block cursor-pointer">
                     {{ (Auth::user()->role ?? 'free') === 'pro' ? 'Upgrade ke Premium' : 'Upgrade Sekarang' }}

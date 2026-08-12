@@ -462,7 +462,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const planKey = selectedPlan === 'pro' ? 'Panen Raya (Premium)' : 'Subur (Pro)';
                 const planDesc = selectedPlan === 'pro'
                     ? 'Maksimal 100 kebun dan tanaman tanpa batas.'
-                    : 'Kalender Tanam, Weather AI, dan Jadwal Perawatan Otomatis sudah aktif.';
+                    : 'Kalender Tanam, Weather Adjustment, dan Jadwal Perawatan Otomatis sudah aktif.';
                 setTimeout(() => {
                     Alert.premium.celebrate(planKey, planDesc);
                 }, 500);
