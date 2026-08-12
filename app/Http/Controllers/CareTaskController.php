@@ -125,6 +125,7 @@ class CareTaskController extends Controller
             'closestTarget' => $closestTarget,
             'closestCurrent' => $closestCurrent,
             'weatherAdvice' => $weatherAdvice,
+            'agronomic' => $agronomic ?? null,
         ]);
     }
 
