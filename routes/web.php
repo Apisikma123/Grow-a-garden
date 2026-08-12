@@ -300,6 +300,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 });
 
 // Static Pages
+Route::get('/learn', function () {
+    return view('pages.learn');
+});
 Route::get('/sitemap', function () {
     return view('pages.sitemap');
 });

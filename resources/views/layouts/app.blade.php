@@ -9,10 +9,10 @@
     <meta name="description" content="@yield('description', 'Kelola kebun rumahan, urban farming, atau hidroponik dengan pemetaan cerdas dan kalender pertumbuhan otomatis.')" />
     <link rel="icon" type="image/jpeg" href="{{ asset('images/logo.jpg') }}" />
 
-    {{-- Google Fonts: Poppins + Material Symbols --}}
+    {{-- Google Fonts: Outfit + Material Symbols --}}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
 
     {{-- Vite Assets --}}
