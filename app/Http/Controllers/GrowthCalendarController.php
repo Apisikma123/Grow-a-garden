@@ -48,6 +48,9 @@ class GrowthCalendarController extends Controller
 
         $otherPlants = $plants->where('id', '!=', $mainPlant->id);
 
+        // Calculate current HST as integer
+        $currentHst = (int) floor(Carbon::parse($mainPlant->planted_date)->diffInDays(now(), false));
+
         // Get coordinates for weather
         $lat = $mainPlant->garden->latitude ?? 3.58;
         $lng = $mainPlant->garden->longitude ?? 98.67;
