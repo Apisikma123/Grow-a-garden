@@ -142,7 +142,12 @@
                                     </span>
                                 </div>
                                 <div class="ml-4 md:ml-6">
-                                    <h3 class="text-[16px] font-bold text-on-surface-variant mb-0.5 group-hover:text-primary transition-colors">{{ $stage['label'] }}</h3>
+                                    <div class="flex items-center gap-2 flex-wrap mb-0.5">
+                                        <h3 class="text-[16px] font-bold text-on-surface-variant group-hover:text-primary transition-colors">{{ $stage['label'] }}</h3>
+                                        @if(isset($stage['weatherBadge']) && $stage['weatherBadge'])
+                                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full {{ $stage['weatherBadgeBg'] }}">{{ $stage['weatherBadge'] }}</span>
+                                        @endif
+                                    </div>
                                     <p class="text-[13px] text-outline font-medium">Est. {{ $stage['date']->isoFormat('D MMM YYYY') }} • {{ $stage['desc'] }}</p>
                                 </div>
                             </div>

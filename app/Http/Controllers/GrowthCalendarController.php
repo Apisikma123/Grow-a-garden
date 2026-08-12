@@ -48,21 +48,18 @@ class GrowthCalendarController extends Controller
 
         $otherPlants = $plants->where('id', '!=', $mainPlant->id);
 
-        // Calculate current HST as integer
-        $currentHst = (int) floor(Carbon::parse($mainPlant->planted_date)->diffInDays(now(), false));
-
-        // Generate timeline
-        $timeline = $this->generateTimeline($mainPlant, $currentHst);
-        
-        $isLocked = $user && ($user->role === 'free' || !$user->role);
-        $todayTasks = collect();
-
         // Get coordinates for weather
         $lat = $mainPlant->garden->latitude ?? 3.58;
         $lng = $mainPlant->garden->longitude ?? 98.67;
 
         $weather = $weatherService->getTodayWeather((float)$lat, (float)$lng);
         $agronomic = $weatherService->analyzeAgronomicConditions($weather);
+
+        // Generate weather-aware timeline
+        $timeline = $this->generateTimeline($mainPlant, $currentHst, $agronomic);
+        
+        $isLocked = $user && ($user->role === 'free' || !$user->role);
+        $todayTasks = collect();
 
         if ($mainPlant) {
             $todayTasks = \App\Models\Event::with('eventType')
@@ -144,7 +141,7 @@ class GrowthCalendarController extends Controller
         ]);
     }
 
-    private function generateTimeline($plant, $currentHst)
+    private function generateTimeline($plant, $currentHst, $agronomic = null)
     {
         $template = $plant->plantTemplate;
         $plantedDate = Carbon::parse($plant->planted_date);
@@ -167,48 +164,76 @@ class GrowthCalendarController extends Controller
         $stages[] = ['key' => 'HARVEST', 'label' => 'Panen', 'day' => $template->harvest_start_day, 'desc' => 'Siap untuk dipanen.'];
 
         $timeline = [];
+        $status = $agronomic['status'] ?? 'NORMAL';
+        $temp = $agronomic['temperature'] ?? 29;
+        $rainProb = $agronomic['rain_probability'] ?? 0;
 
         foreach ($stages as $index => $stage) {
             if ($stage['day'] === null) continue;
 
-            $date = $plantedDate->copy()->addDays($stage['day']);
+            $shiftedDays = $stage['day'];
+            $weatherBadge = null;
+            $weatherBadgeBg = '';
+            $weatherDesc = $stage['desc'];
+
+            if ($stage['day'] > 0) {
+                if ($status === 'HEAT') {
+                    // Hot weather speeds up metabolism & photosynthesis: harvest/stage 1-2 days earlier
+                    $shift = max(1, (int)ceil($stage['day'] * 0.08)); // ~8% faster
+                    $shiftedDays = max(1, $stage['day'] - $shift);
+                    $weatherBadge = "Panas ({$temp}°C): Maju {$shift} Hari";
+                    $weatherBadgeBg = "bg-amber-100 text-amber-800 border border-amber-200/60";
+                    $weatherDesc = $stage['desc'] . " (Percepatan tumbuh akibat suhu terik & matahari tinggi).";
+                } elseif ($status === 'RAIN') {
+                    // Rainy/cloudy weather slows down light absorption & vegetative growth slightly: stage 1-2 days slower
+                    $shift = max(1, (int)ceil($stage['day'] * 0.08)); // ~8% slower
+                    $shiftedDays = $stage['day'] + $shift;
+                    $weatherBadge = "Hujan ({$rainProb}%): Mundur {$shift} Hari";
+                    $weatherBadgeBg = "bg-blue-100 text-blue-800 border border-blue-200/60";
+                    $weatherDesc = $stage['desc'] . " (Est. tumbuh melambat akibat awan hujan & matahari kurang).";
+                }
+            }
+
+            $date = $plantedDate->copy()->addDays($shiftedDays);
             $nextStageDay = isset($stages[$index + 1]) && $stages[$index + 1]['day'] !== null 
                                 ? $stages[$index + 1]['day'] 
                                 : 9999;
             
-            $status = 'upcoming'; // default
+            $stageStatus = 'upcoming'; // default
             if ($currentHst >= $stage['day'] && $currentHst < $nextStageDay) {
-                $status = 'active';
+                $stageStatus = 'active';
             } elseif ($currentHst >= $nextStageDay) {
-                $status = 'completed';
+                $stageStatus = 'completed';
             }
             
             if ($index == count($stages) - 1 && $currentHst >= $stage['day']) {
-                $status = 'active'; 
+                $stageStatus = 'active'; 
             }
 
             $progress = 0;
             $daysLeft = 0;
-            if ($status === 'active' && $nextStageDay != 9999) {
+            if ($stageStatus === 'active' && $nextStageDay != 9999) {
                 $duration = $nextStageDay - $stage['day'];
                 $passed = $currentHst - $stage['day'];
                 $progress = min(100, max(0, ($passed / $duration) * 100));
                 $daysLeft = max(0, $duration - $passed);
-            } elseif ($status === 'active' && $nextStageDay == 9999) {
+            } elseif ($stageStatus === 'active' && $nextStageDay == 9999) {
                 $progress = 100;
             }
 
             $timeline[] = [
                 'key' => $stage['key'],
                 'label' => $stage['label'],
-                'desc' => $stage['desc'],
+                'desc' => $weatherDesc,
+                'weatherBadge' => $weatherBadge,
+                'weatherBadgeBg' => $weatherBadgeBg,
                 'date' => $date,
-                'status' => $status,
+                'status' => $stageStatus,
                 'progress' => $progress,
                 'daysLeft' => $daysLeft
             ];
         }
 
-        return $timeline;
+        return $timeline;ne;
     }
 }
