@@ -430,13 +430,10 @@ function initDashboard() {
                 
                 const temp = Math.round(current.temperature_2m ?? daily.temperature_2m_max?.[0] ?? 29);
                 const rainProb = daily.precipitation_probability_max?.[0] ?? 0;
-                const wCode = current.weather_code ?? daily.weather_code?.[0] ?? 0;
-                
-                // WMO codes for rain/drizzle/showers/thunderstorm: 51..67, 80..82, 95..99
-                const rainCodes = [51,53,55,61,63,65,66,67,80,81,82,95,96,99];
-                const isRaining = (current.rain > 0 || current.showers > 0 || current.precipitation > 0 || rainProb >= 40 || rainCodes.includes(wCode));
+                const windSpeed = Math.round(current.windspeed ?? daily.wind_speed_10m_max?.[0] ?? 10);
+                const wCode = current.weathercode ?? daily.weather_code?.[0] ?? 0;
 
-                return { temp, rainProb, isRaining, wCode };
+                return { temp, rainProb, windSpeed, wCode };
             }
         } catch(e) {
             console.warn('Open-Meteo live weather fetch failed', e);
@@ -448,77 +445,82 @@ function initDashboard() {
         const province = locationData.region || '';
         const cityName = locationData.city || province || 'Wilayah Anda';
 
-        let lat = locationData.lat;
-        let lon = locationData.lon;
+        try {
+            const resp = await fetch('/api/weather/live');
+            if (resp.ok) {
+                const apiData = await resp.json();
+                if (apiData.success && apiData.agronomic) {
+                    const agro = apiData.agronomic;
+                    const temp = agro.temperature || 29;
 
-        // Default coordinates for Medan / Sumatera Utara if lat/lon missing
-        if (!lat || !lon) {
-            lat = 3.58;
-            lon = 98.67;
+                    document.getElementById('weather-icon-main').textContent = agro.icon || 'partly_cloudy_day';
+                    document.getElementById('weather-title').textContent = `Cuaca: ${agro.condition_title || 'Cerah Berawan'}`;
+                    document.getElementById('weather-desc').textContent = `${agro.summary} Sistem penyiraman otomatis menyesuaikan keputusan secara pintar.`;
+                    document.getElementById('weather-location').textContent = locationData.formatted || `${cityName}, ${province}`;
+
+                    const badgeElem = document.getElementById('weather-badge');
+                    badgeElem.textContent = `${agro.condition_title} (${temp}°C)`;
+                    badgeElem.className = `text-[10px] sm:text-[11px] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap ${agro.badge_bg}`;
+
+                    showWeatherState('active');
+                    return;
+                }
+            }
+        } catch(e) {
+            console.warn('Backend live weather API fallback to client fetch', e);
         }
+
+        let lat = locationData.lat || 3.58;
+        let lon = locationData.lon || 98.67;
 
         const live = await fetchLiveWeather(lat, lon);
 
-        let title = 'Cuaca: Normal';
+        let title = 'Cuaca: Cerah Berawan';
         let iconMain = 'partly_cloudy_day';
-        let icon1 = 'cloud';
-        let icon2 = 'wb_sunny';
-        let badge = 'Cuaca Normal';
-        let badgeBg = 'bg-surface-container-highest';
-        let badgeText = 'text-on-surface-variant';
-        let desc = 'Kondisi cuaca normal. Jadwal penyiraman berjalan sesuai standar.';
+        let badge = 'Cerah Berawan (29°C)';
+        let badgeBg = 'bg-emerald-100 text-emerald-800 border border-emerald-200';
+        let desc = 'Kondisi cuaca sejuk & stabil. Jadwal penyiraman otomatis berjalan sesuai standar.';
 
         if (live) {
-            if (live.isRaining) {
+            const code = live.wCode;
+            const temp = live.temp;
+            const rainProb = live.rainProb;
+
+            if ([95, 96, 99].includes(code)) {
+                title = 'Cuaca: Hujan Badai & Petir';
+                iconMain = 'thunderstorm';
+                badge = `Badai & Petir (${temp}°C)`;
+                badgeBg = 'bg-purple-100 text-purple-900 border border-purple-300';
+                desc = `WASPADA Hujan Badai & Angin Kencang di ${cityName}! Amankan tanaman outdoor.`;
+            } else if ([65, 82, 61, 63, 80, 81].includes(code) || rainProb >= 70) {
                 title = 'Cuaca: Hujan';
                 iconMain = 'rainy';
-                icon1 = 'cloud';
-                icon2 = 'water_drop';
-                badge = `Hujan (${live.temp}°C)`;
-                badgeBg = 'bg-primary-container';
-                badgeText = 'text-on-primary-container';
-                desc = `Hujan/Gerimis terdeteksi hari ini di ${cityName} (Peluang Hujan ${live.rainProb}%). Frekuensi penyiraman dikurangi 30% untuk menghemat air & mencegah pembusukan akar.`;
-            } else if (live.temp >= 31) {
-                title = 'Cuaca: Cerah / Panas';
-                iconMain = 'thermostat';
-                icon1 = 'sunny';
-                icon2 = 'wb_sunny';
-                badge = `Suhu Tinggi (${live.temp}°C)`;
-                badgeBg = 'bg-orange-100';
-                badgeText = 'text-orange-800';
-                desc = `Cuaca cerah dengan suhu tinggi ${live.temp}°C terdeteksi di ${cityName}. Frekuensi penyiraman ditambah 50% untuk mengkompensasi penguapan tinggi.`;
+                badge = `Hujan (${temp}°C)`;
+                badgeBg = 'bg-blue-100 text-blue-800 border border-blue-200';
+                desc = `Hujan terdeteksi di ${cityName} (Peluang ${rainProb}%). Penyesuaian penyiraman otomatis aktif.`;
+            } else if (temp >= 33) {
+                title = 'Cuaca: Panas Terik';
+                iconMain = 'wb_sunny';
+                badge = `Panas Terik (${temp}°C)`;
+                badgeBg = 'bg-amber-100 text-amber-900 border border-amber-300';
+                desc = `Suhu tinggi ${temp}°C terdeteksi di ${cityName}. Perlindungan ekstra dari penguapan disarankan.`;
             } else {
-                title = 'Cuaca: Berawan';
+                title = 'Cuaca: Cerah Berawan';
                 iconMain = 'partly_cloudy_day';
-                icon1 = 'cloud';
-                icon2 = 'wb_sunny';
-                badge = `Berawan (${live.temp}°C)`;
-                badgeBg = 'bg-surface-container-highest';
-                badgeText = 'text-on-surface-variant';
-                desc = `Kondisi cuaca berawan dengan suhu ${live.temp}°C di ${cityName}. Penyiraman berjalan sesuai jadwal standar.`;
+                badge = `Cerah Berawan (${temp}°C)`;
+                badgeBg = 'bg-emerald-100 text-emerald-800 border border-emerald-200';
+                desc = `Kondisi cuaca sejuk & sinar matahari cukup di ${cityName}. Ideal untuk pertumbuhan tanaman.`;
             }
-        } else {
-            // Offline fallback
-            title = 'Cuaca: Berawan';
-            iconMain = 'partly_cloudy_day';
-            icon1 = 'cloud';
-            icon2 = 'wb_sunny';
-            badge = 'Cuaca Normal';
-            badgeBg = 'bg-surface-container-highest';
-            badgeText = 'text-on-surface-variant';
-            desc = 'Kondisi cuaca normal. Jadwal penyiraman berjalan sesuai standar.';
         }
 
         document.getElementById('weather-icon-main').textContent = iconMain;
-        document.getElementById('weather-icon-1').textContent = icon1;
-        document.getElementById('weather-icon-2').textContent = icon2;
         document.getElementById('weather-title').textContent = title;
         document.getElementById('weather-desc').textContent = desc;
         document.getElementById('weather-location').textContent = locationData.formatted || province;
         
         const badgeElem = document.getElementById('weather-badge');
         badgeElem.textContent = badge;
-        badgeElem.className = `text-[10px] sm:text-[11px] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap ${badgeBg} ${badgeText}`;
+        badgeElem.className = `text-[10px] sm:text-[11px] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap ${badgeBg}`;
 
         showWeatherState('active');
     }
@@ -541,6 +543,16 @@ function initDashboard() {
     } else {
         showWeatherState('ask');
     }
+
+    // Automatic Live Weather Background Sync (Every 2 minutes, no page refresh!)
+    setInterval(async () => {
+        const currentLoc = localStorage.getItem('garden_location');
+        if (currentLoc) {
+            try {
+                await applyWeather(JSON.parse(currentLoc));
+            } catch(e){}
+        }
+    }, 120000);
 
     const INDONESIA_PROVINCES = [
         'Aceh', 'Sumatera Utara', 'Sumatera Barat', 'Riau', 'Kepulauan Riau', 'Jambi', 

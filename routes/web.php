@@ -248,6 +248,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/api/cancel-subscription', [\App\Http\Controllers\SubscriptionController::class, 'cancel']);
     Route::get('/api/subscription-status', [\App\Http\Controllers\SubscriptionController::class, 'status']);
 
+    // Live Weather API Route
+    Route::get('/api/weather/live', [\App\Http\Controllers\WeatherController::class, 'live'])->name('api.weather.live');
+
     // Admin API Routes
     Route::middleware(['admin'])->group(function () {
         Route::put('/api/admin/users/{user}/role', [\App\Http\Controllers\Admin\AdminController::class, 'updateRole']);

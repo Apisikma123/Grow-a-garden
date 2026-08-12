@@ -91,6 +91,46 @@
             @endif
         </div>
 
+        {{-- Smart Weather & Irrigation Evaluation Banner --}}
+        @if(isset($agronomic))
+        <div class="bg-surface-container-low rounded-[24px] p-5 sm:p-6 border border-outline-variant/30 w-full self-stretch max-w-none">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-4 pb-4 border-b border-outline-variant/30">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-primary-container text-on-primary-container flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-[28px]">{{ $agronomic['icon'] ?? 'thermostat' }}</span>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold text-primary uppercase tracking-wider">Evaluasi Smart Irrigation</span>
+                            <span class="text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-100 text-emerald-800">🟢 Live Sync</span>
+                        </div>
+                        <h2 class="text-lg font-bold text-on-surface">Keputusan: {{ $agronomic['watering']['title'] ?? 'Penyiraman Normal' }}</h2>
+                    </div>
+                </div>
+                <span class="text-xs sm:text-sm font-semibold px-3 py-1.5 rounded-full {{ $agronomic['watering']['badge_bg'] ?? 'bg-emerald-100 text-emerald-800' }}">
+                    {{ $agronomic['watering']['badge'] ?? 'Normal' }} ({{ $agronomic['temperature'] ?? 29 }}°C)
+                </span>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
+                <div class="bg-surface-container rounded-xl p-3.5 flex items-start gap-2.5">
+                    <span class="material-symbols-outlined text-primary text-[20px] shrink-0 mt-0.5">schedule</span>
+                    <div>
+                        <span class="font-bold text-on-surface block mb-0.5">Jadwal Evaluasi Tetap</span>
+                        <p class="text-on-surface-variant leading-relaxed">🌅 Pagi: 06.00 – 09.00 | 🌇 Sore: 16.00 – 18.00</p>
+                    </div>
+                </div>
+                <div class="bg-surface-container rounded-xl p-3.5 flex items-start gap-2.5">
+                    <span class="material-symbols-outlined text-primary text-[20px] shrink-0 mt-0.5">info</span>
+                    <div>
+                        <span class="font-bold text-on-surface block mb-0.5">Rekomendasi Cuaca Real-Time</span>
+                        <p class="text-on-surface-variant leading-relaxed">{{ $agronomic['watering']['advice'] ?? $agronomic['summary'] }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
         {{-- Main Content Grid --}}
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-[32px]">
             
