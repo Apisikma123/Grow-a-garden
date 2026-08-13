@@ -55,6 +55,7 @@ class DatabaseSeeder extends Seeder
             EventTypeCatalogSeeder::class,
             WeatherRuleSeeder::class,
             ActivityWeatherRuleSeeder::class,
+            BadgeSeeder::class,
         ]);
     }
 }

@@ -12,6 +12,8 @@ class Badge extends Model
         'name',
         'description',
         'icon_url',
+        'metric_type',
+        'target_count',
     ];
 
     public function missions(): HasMany
