@@ -204,6 +204,8 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'icon_url' => 'nullable|string',
+            'metric_type' => 'required|string',
+            'target_count' => 'required|integer|min:1',
         ]);
 
         \App\Models\Badge::create($validated);
@@ -216,6 +218,8 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'icon_url' => 'nullable|string',
+            'metric_type' => 'required|string',
+            'target_count' => 'required|integer|min:1',
         ]);
 
         $badge->update($validated);

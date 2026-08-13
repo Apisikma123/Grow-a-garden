@@ -90,69 +90,11 @@ class BadgeService
      */
     public static function calculateProgress(Badge $badge, array $userStats, bool $isEarned): array
     {
-        $target = 1;
-        // Strip periods in formatted numbers like 1.000 -> 1000
-        $cleanDesc = str_replace('.', '', $badge->description ?? '');
-        if (preg_match('/(\d+)/', $cleanDesc, $matches)) {
-            $target = (int) $matches[1];
-        }
-        if ($target <= 0) $target = 1;
+        $target = max(1, (int) ($badge->target_count ?? 1));
+        $metricType = $badge->metric_type ?? 'total_tasks';
 
-        $name = strtolower($badge->name ?? '');
-        $desc = strtolower($badge->description ?? '');
-
-        // --- Priority-ordered routing (most-specific keywords FIRST) ---
-
-        // 1. Subscription Badges (Pro & Premium) — checked FIRST so 'panen' in Panen Raya isn't caught by harvest task rule
-        if (str_contains($name, 'sang pro') || str_contains($desc, 'subur (pro)') || str_contains($desc, 'grow a garden pro')) {
-            $current = $userStats['pro'];
-
-        } elseif (str_contains($name, 'panen raya premium') || str_contains($name, 'pekebun panen raya') || str_contains($desc, 'panen raya (premium)')) {
-            $current = $userStats['premium'];
-
-        // 2. Watering
-        } elseif (str_contains($name, 'siram') || str_contains($name, 'water') || str_contains($name, 'setetes') || str_contains($desc, 'penyiraman')) {
-            $current = $userStats['watering'];
-
-        // 3. Fertilizing
-        } elseif (str_contains($name, 'pupuk') || str_contains($name, 'pemupukan') || str_contains($desc, 'pemupukan')) {
-            $current = $userStats['fertilizing'];
-
-        // 4. Pruning
-        } elseif (str_contains($name, 'pangkas') || str_contains($name, 'pemangkasan') || str_contains($name, 'potongan') || str_contains($desc, 'pemangkasan')) {
-            $current = $userStats['pruning'];
-
-        // 5. Pest / Hama
-        } elseif (str_contains($name, 'hama') || str_contains($name, 'pembasmi') || str_contains($desc, 'pembasmian') ||
-                  (str_contains($desc, 'hama') && !str_contains($name, 'kebun'))) {
-            $current = $userStats['pest'];
-
-        // 6. Harvest / Panen
-        } elseif (str_contains($name, 'panen') || str_contains($desc, 'panen')) {
-            $current = $userStats['harvest'];
-
-        // 7. Skip badges
-        } elseif (str_contains($name, 'santai') || str_contains($name, 'rebahan') || str_contains($name, 'cuti') ||
-                  str_contains($name, 'terlantar') || str_contains($name, 'mengamati') || str_contains($desc, 'lewati (skip)')) {
-            $current = $userStats['skipped'];
-
-        // 8. Plants (tanaman) — checked BEFORE gardens to prevent "ke kebun" in desc hijacking
-        } elseif (str_contains($name, 'tanaman') || str_contains($desc, 'menambahkan') || str_contains($desc, 'menanam')) {
-            $current = $userStats['plants'];
-
-        // 9. Gardens (kebun) — after plants so "ke kebun" in plant descs doesn't match here
-        } elseif (str_contains($name, 'kebun') || str_contains($name, 'pekebun') || str_contains($name, 'ekosistem') ||
-                  (str_contains($desc, 'kebun') && !str_contains($desc, 'ke kebun'))) {
-            $current = $userStats['gardens'];
-
-        // 10. Langkah Perdana / General task completion (first task etc.)
-        } elseif (str_contains($name, 'langkah') || str_contains($desc, 'menyelesaikan tugas')) {
-            $current = $userStats['total_tasks'];
-
-        // 11. Default: total tasks
-        } else {
-            $current = $userStats['total_tasks'];
-        }
+        // Retrieve current stat based on metric_type
+        $current = $userStats[$metricType] ?? $userStats['total_tasks'] ?? 0;
 
         if ($isEarned) {
             $current = max($current, $target);
