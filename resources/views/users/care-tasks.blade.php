@@ -158,28 +158,6 @@
 
                 <div class="space-y-[16px] pt-2 relative">
                     
-                    @if(isset($isLocked) && $isLocked)
-                        {{-- Locked State (Paywall) --}}
-                        <div class="bg-surface rounded-[24px] p-8 md:p-12 text-center ambient-shadow-lg border border-primary/20 relative overflow-hidden flex flex-col items-center justify-center min-h-[400px]">
-                            {{-- Decorative Background --}}
-                            <div class="absolute -top-20 -right-20 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
-                            <div class="absolute -bottom-20 -left-20 w-64 h-64 bg-secondary/5 rounded-full blur-3xl pointer-events-none"></div>
-                            
-                            <div class="relative z-10 flex flex-col items-center w-full max-w-2xl mx-auto">
-                                <div class="w-20 h-20 bg-secondary rounded-full flex items-center justify-center shadow-lg mb-6 shadow-secondary/30 ring-8 ring-secondary/10 shrink-0">
-                                    <span class="material-symbols-outlined text-[40px] text-on-secondary">lock</span>
-                                </div>
-                                <h3 class="text-[24px] font-black text-on-surface mb-3 text-center">Tugas Perawatan Terkunci</h3>
-                                <p class="text-[15px] text-on-surface-variant leading-relaxed mb-8 text-center max-w-lg">Tingkatkan ke paket <span class="font-bold text-primary">Panen Raya</span> atau <span class="font-bold text-secondary">Subur (Pro)</span> untuk membuka asisten perawatan pintar, daftar tugas harian, dan notifikasi kebun real-time.</p>
-                                
-                                <button type="button" onclick="document.getElementById('pricing-modal').classList.remove('hidden')" class="bg-primary text-white font-bold text-[15px] px-8 py-3.5 rounded-full hover:bg-primary/90 active:scale-95 transition-all shadow-md flex items-center gap-2">
-                                    <span class="material-symbols-outlined text-[20px]">workspace_premium</span>
-                                    Upgrade Sekarang
-                                </button>
-                            </div>
-                        </div>
-                    @else
-                    
                     @if(session('success'))
                         <div class="bg-[#dcfce7] text-[#166534] px-4 py-3 rounded-xl text-sm font-bold border border-[#bbf7d0]">
                             {{ session('success') }}
@@ -311,7 +289,7 @@
                     </div>
                     @endforeach
                     
-                    @endif
+
                 </div>
             </div>
 
