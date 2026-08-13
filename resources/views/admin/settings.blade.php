@@ -36,10 +36,6 @@
                             <input type="email" value="admin@growagarden.com" class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
                         </div>
                         <div class="group">
-                            <label class="block text-[14px] font-bold text-on-surface mb-2 group-focus-within:text-primary transition-colors">Nomor Telepon</label>
-                            <input type="tel" value="" placeholder="08xxxxxxxxxx" class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
-                        </div>
-                        <div class="group">
                             <label class="block text-[14px] font-bold text-on-surface mb-2">Role Akun</label>
                             <div class="flex items-center gap-2 mt-1">
                                 <span class="bg-yellow-400 text-yellow-900 px-3 py-1.5 rounded-full text-[13px] font-bold tracking-wide flex items-center gap-1.5 shadow-sm">

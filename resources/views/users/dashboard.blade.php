@@ -453,6 +453,15 @@ function initDashboard() {
         return null;
     }
 
+    function cleanLocationName(name) {
+        if (!name) return 'Lokasi Kebun';
+        let cleaned = String(name).replace(/\s*\([\d\.\,\s\-]+\)/gi, '').trim();
+        if (cleaned === 'Lokasi Terdeteksi' || cleaned === 'Kota Terdeteksi' || !cleaned) {
+            return 'Lokasi Kebun';
+        }
+        return cleaned;
+    }
+
     async function applyWeather(locationData = null) {
         showWeatherState('loading');
         let queryStr = '';
@@ -467,9 +476,10 @@ function initDashboard() {
                 if (apiData.success && apiData.agronomic) {
                     const agro = apiData.agronomic;
                     const temp = agro.temperature || 29;
-                    const locName = (apiData.location && apiData.location.name) 
+                    const rawName = (apiData.location && apiData.location.name) 
                         ? apiData.location.name 
                         : (locationData ? (locationData.formatted || locationData.name || locationData.city) : 'Lokasi Kebun');
+                    const locName = cleanLocationName(rawName);
 
                     document.getElementById('weather-icon-main').textContent = agro.icon || 'partly_cloudy_day';
                     document.getElementById('weather-title').textContent = `Cuaca: ${agro.condition_title || 'Cerah Berawan'}`;

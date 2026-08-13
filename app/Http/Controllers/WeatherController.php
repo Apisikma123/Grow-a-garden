@@ -52,13 +52,18 @@ class WeatherController extends Controller
             ->exists();
         }
 
+        if ($locationName) {
+            $cleanedLoc = trim(preg_replace('/\s*\([\d\.\,\s\-]+\)/i', '', $locationName));
+            $locationName = ($cleanedLoc === 'Lokasi Terdeteksi' || $cleanedLoc === 'Kota Terdeteksi' || !$cleanedLoc) ? 'Lokasi Kebun' : $cleanedLoc;
+        }
+
         $weather = $weatherService->getTodayWeather((float)$lat, (float)$lng);
         $agronomic = $weatherService->analyzeAgronomicConditions($weather, $hasRecentRain);
 
         return response()->json([
             'success' => true,
             'location' => [
-                'name' => $locationName,
+                'name' => $locationName ?: 'Lokasi Kebun',
                 'latitude' => (float)$lat,
                 'longitude' => (float)$lng,
             ],
