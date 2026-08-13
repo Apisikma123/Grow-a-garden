@@ -22,7 +22,17 @@
                     }
                     $userName = auth()->check() ? explode(' ', auth()->user()->name)[0] : 'Guest';
                 @endphp
-                <h1 class="text-[26px] sm:text-[32px] md:text-[40px] font-bold text-on-surface tracking-tight leading-tight mb-2 break-words">{{ $greeting }}, {{ $userName }}!</h1>
+                <div class="flex items-center gap-3 flex-wrap mb-1">
+                    <h1 class="text-[26px] sm:text-[32px] md:text-[40px] font-bold text-on-surface tracking-tight leading-tight break-words">{{ $greeting }}, {{ $userName }}!</h1>
+                    @if(auth()->check())
+                        <a href="/settings#subscription" class="text-[12px] font-extrabold px-3.5 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-all flex items-center gap-1.5 shrink-0 cursor-pointer" title="Kelola Paket Langganan">
+                            <span class="material-symbols-outlined text-[14px]">
+                                {{ auth()->user()->role === 'premium' ? 'workspace_premium' : (auth()->user()->role === 'pro' ? 'star' : 'eco') }}
+                            </span>
+                            Paket {{ auth()->user()->planName() }}
+                        </a>
+                    @endif
+                </div>
                 <p class="text-[14px] sm:text-[16px] text-on-surface-variant leading-relaxed">Kebun Anda tumbuh dengan baik. Mari lihat apa yang perlu dirawat hari ini.</p>
             </div>
             
