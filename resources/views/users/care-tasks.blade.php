@@ -219,15 +219,15 @@
                                 <div class="text-[11px] text-on-surface-variant">{{ $task->scheduled_date->isoFormat('D MMM') }}</div>
                             </div>
                             <div class="flex items-center gap-2">
-                                <form action="{{ route('care-tasks.complete', $task->id) }}" method="POST" class="inline">
+                                <form action="{{ route('care-tasks.complete', $task->id) }}" method="POST" class="inline" onsubmit="return preventDoubleSubmit(this)">
                                     @csrf
                                     @method('PATCH')
                                     <button type="submit" class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-[#059669] hover:bg-[#d1fae5] transition-colors" title="Tandai Selesai"><span class="material-symbols-outlined">check</span></button>
                                 </form>
-                                <form action="{{ route('care-tasks.skip', $task->id) }}" method="POST" class="inline">
+                                <form action="{{ route('care-tasks.skip', $task->id) }}" method="POST" class="inline" onsubmit="return preventDoubleSubmit(this)">
                                     @csrf
                                     @method('PATCH')
-                                    <button type="submit" class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors" title="Lewati / Skip"><span class="material-symbols-outlined">fast_forward</span></button>
+                                    <button type="submit" class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-[#dc2626] hover:bg-[#fee2e2] transition-colors" title="Lewati"><span class="material-symbols-outlined">close</span></button>
                                 </form>
                             </div>
                         </div>
@@ -369,5 +369,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+</script>
+<script>
+    function preventDoubleSubmit(form) {
+        if (form.dataset.submitted) return false;
+        form.dataset.submitted = 'true';
+        const btn = form.querySelector('button[type="submit"]');
+        if (btn) {
+            btn.style.opacity = '0.5';
+            btn.style.pointerEvents = 'none';
+        }
+        return true;
+    }
 </script>
 @endpush
