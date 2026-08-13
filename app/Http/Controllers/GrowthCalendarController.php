@@ -61,7 +61,7 @@ class GrowthCalendarController extends Controller
         // Generate weather-aware timeline
         $timeline = $this->generateTimeline($mainPlant, $currentHst, $agronomic);
         
-        $isLocked = $user && ($user->role === 'free' || !$user->role);
+        $isLocked = $user && !in_array($user->role, ['pro', 'premium', 'admin']);
         $todayTasks = collect();
 
         if ($mainPlant) {
@@ -72,22 +72,24 @@ class GrowthCalendarController extends Controller
                 ->orderBy('priority', 'asc')
                 ->get();
 
-            // Synchronize tasks with agronomic weather rules
-            foreach ($todayTasks as $task) {
-                $code = strtolower($task->eventType->code ?? '');
-                if (str_contains($code, 'water')) {
-                    $task->weather_tag = $agronomic['watering']['badge'];
-                    $task->weather_badge_bg = $agronomic['watering']['badge_bg'];
-                    $task->weather_reason = $agronomic['watering']['time_window'];
-                    if ($agronomic['status'] === 'HEAT') $task->priority = 'HIGH';
-                } elseif (str_contains($code, 'fertiliz')) {
-                    $task->weather_tag = $agronomic['fertilization']['badge'];
-                    $task->weather_badge_bg = $agronomic['fertilization']['badge_bg'];
-                    $task->weather_reason = $agronomic['fertilization']['advice'];
-                } elseif (str_contains($code, 'pest')) {
-                    $task->weather_tag = $agronomic['pest_disease']['badge'];
-                    $task->weather_badge_bg = $agronomic['pest_disease']['badge_bg'];
-                    $task->weather_reason = $agronomic['pest_disease']['advice'];
+            // Synchronize tasks with agronomic weather rules (Pro/Premium only)
+            if (!$isLocked) {
+                foreach ($todayTasks as $task) {
+                    $code = strtolower($task->eventType->code ?? '');
+                    if (str_contains($code, 'water')) {
+                        $task->weather_tag = $agronomic['watering']['badge'];
+                        $task->weather_badge_bg = $agronomic['watering']['badge_bg'];
+                        $task->weather_reason = $agronomic['watering']['time_window'];
+                        if ($agronomic['status'] === 'HEAT') $task->priority = 'HIGH';
+                    } elseif (str_contains($code, 'fertiliz')) {
+                        $task->weather_tag = $agronomic['fertilization']['badge'];
+                        $task->weather_badge_bg = $agronomic['fertilization']['badge_bg'];
+                        $task->weather_reason = $agronomic['fertilization']['advice'];
+                    } elseif (str_contains($code, 'pest')) {
+                        $task->weather_tag = $agronomic['pest_disease']['badge'];
+                        $task->weather_badge_bg = $agronomic['pest_disease']['badge_bg'];
+                        $task->weather_reason = $agronomic['pest_disease']['advice'];
+                    }
                 }
             }
         }

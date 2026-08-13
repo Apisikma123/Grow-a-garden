@@ -115,14 +115,26 @@
                         <span class="text-[10px] text-on-surface-variant font-medium">Profil</span>
                     </div>
                 </div>
-                <div class="flex items-center gap-0.5 shrink-0">
-                    <button type="button" class="p-1.5 text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center rounded-full hover:bg-black/5 relative" title="Notifikasi" aria-label="Notifikasi">
-                        <span class="material-symbols-outlined text-[18px]">notifications</span>
+                <div class="relative group shrink-0">
+                    <button type="button" class="p-1.5 text-on-surface-variant hover:text-[#006c49] transition-colors flex items-center justify-center rounded-full hover:bg-black/5 relative" title="Menu" aria-label="Menu">
+                        <span class="material-symbols-outlined text-[18px] font-bold">more_vert</span>
                         <span class="absolute top-1 right-1 w-1.5 h-1.5 bg-error rounded-full ring-2 ring-surface"></span>
                     </button>
-                    <a href="/settings" class="p-1.5 text-on-surface-variant hover:text-[#006c49] transition-colors flex items-center justify-center rounded-full hover:bg-black/5" title="Pengaturan" aria-label="Pengaturan">
-                        <span class="material-symbols-outlined text-[18px] font-bold">settings</span>
-                    </a>
+                    
+                    <!-- Dropdown -->
+                    <div class="absolute right-0 bottom-full mb-2 w-48 bg-surface border border-outline-variant/30 rounded-[16px] shadow-lg ring-1 ring-black ring-opacity-5 invisible opacity-0 scale-95 group-hover:visible group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 transform origin-bottom-right z-50 overflow-hidden ambient-shadow">
+                        <div class="py-1">
+                            <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm text-on-surface hover:bg-surface-container-highest hover:text-[#006c49] transition-colors group/item">
+                                <span class="material-symbols-outlined text-[18px] text-on-surface-variant group-hover/item:text-[#006c49] transition-colors">notifications</span>
+                                <span class="font-medium">Notifikasi</span>
+                                <span class="ml-auto w-2 h-2 bg-error rounded-full shadow-sm"></span>
+                            </a>
+                            <a href="/settings" class="flex items-center gap-3 px-4 py-3 text-sm text-on-surface hover:bg-surface-container-highest hover:text-[#006c49] transition-colors group/item">
+                                <span class="material-symbols-outlined text-[18px] text-on-surface-variant group-hover/item:text-[#006c49] transition-colors">settings</span>
+                                <span class="font-medium">Pengaturan</span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
