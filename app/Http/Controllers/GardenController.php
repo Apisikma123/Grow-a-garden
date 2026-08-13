@@ -22,6 +22,8 @@ class GardenController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'location' => 'nullable|string|max:255',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
         ]);
 
         $user = Auth::user();
@@ -41,6 +43,8 @@ class GardenController extends Controller
             'user_id' => $user->id,
             'name' => $request->name,
             'location_name' => $request->location,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
         ]);
 
         // Auto-award badges (like 'Pekebun Pertama') via BadgeService
@@ -54,6 +58,8 @@ class GardenController extends Controller
             ];
         }
 
+        $garden->loadCount('plants');
+
         return response()->json($garden);
     }
 
@@ -66,12 +72,18 @@ class GardenController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'location' => 'nullable|string|max:255',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
         ]);
 
         $garden->update([
             'name' => $request->name,
             'location_name' => $request->location,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
         ]);
+
+        $garden->loadCount('plants');
 
         return response()->json($garden);
     }
