@@ -171,89 +171,187 @@
             </p>
         </div>
 
-        {{-- Feature Cards --}}
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+        {{-- Feature Cards (3 Compact, High-Fidelity App Preview Cards) --}}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
 
             {{-- Feature 1: Tugas Perawatan --}}
-            <div class="bg-white rounded-3xl p-8 premium-shadow tactile-card group scroll-trigger scroll-fade-up delay-100 border border-white/60" id="feature-tugas-perawatan">
-                {{-- Icon --}}
-                <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1 group-hover:scale-105 group-hover:bg-primary/20">
-                    <span class="material-symbols-outlined text-primary text-2xl">psychiatry</span>
-                </div>
-
-                <h3 class="text-lg font-bold text-on-surface mb-2">Tugas Perawatan</h3>
-                <p class="text-sm text-on-surface-variant leading-relaxed mb-5">
-                    Dapatkan rekomendasi kegiatan-kegiatan perawatan harian yang spesifik untuk menjaga dan mengoptimalkan kebun Anda.
-                </p>
-
-                {{-- Visual Preview: Task List --}}
-                <div class="space-y-3">
-                    <div class="flex items-center justify-between bg-surface-container-high rounded-lg py-2 px-3">
-                        <div class="flex items-center gap-3">
-                            <span class="material-symbols-outlined text-outline text-[18px]">check_box_outline_blank</span>
-                            <span class="text-xs font-medium text-on-surface">Pangkas daun kuning</span>
+            <div class="bg-white rounded-[24px] p-6 premium-shadow border border-white/60 flex flex-col justify-between gap-5 hover:-translate-y-1 transition-all duration-300 group" id="feature-tugas-perawatan">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#006c49]/10 to-[#10b981]/20 border border-[#006c49]/20 flex items-center justify-center shrink-0 shadow-xs group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined text-[#006c49] text-xl font-bold">water_drop</span>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-on-surface leading-tight">Tugas Perawatan</h3>
+                            <p class="text-[12px] text-on-surface-variant leading-tight">Rekomendasi harian berbasis cuaca.</p>
                         </div>
                     </div>
-                    <div class="flex items-center justify-between bg-surface-container-high rounded-lg py-2 px-3">
-                        <div class="flex items-center gap-3">
-                            <span class="material-symbols-outlined text-primary text-[18px]">check_box</span>
-                            <span class="text-xs font-medium text-on-surface-variant line-through">Beri pupuk organik</span>
+
+                    {{-- Compact Task Items List --}}
+                    <div class="space-y-2.5">
+                        {{-- Task 1 --}}
+                        <div class="bg-surface-container-low rounded-xl p-3 border border-outline-variant/30 flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <div class="w-7 h-7 rounded-lg bg-[#e6f4ea] flex items-center justify-center shrink-0">
+                                    <span class="material-symbols-outlined text-[#006c49] text-[15px]">water_drop</span>
+                                </div>
+                                <div class="min-w-0">
+                                    <div class="text-[12px] font-bold text-on-surface truncate">Pengingat Penyiraman</div>
+                                    <span class="bg-[#ffdad6] text-[#ba1a1a] text-[9px] font-bold px-1.5 py-0.2 rounded-full inline-block">Dilewati (Hujan)</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-1 shrink-0">
+                                <span class="w-6 h-6 rounded-full bg-[#e6f4ea] text-[#006c49] flex items-center justify-center text-[12px] font-bold">✓</span>
+                                <span class="w-6 h-6 rounded-full bg-[#ffdad6] text-[#ba1a1a] flex items-center justify-center text-[12px] font-bold">✕</span>
+                            </div>
+                        </div>
+
+                        {{-- Task 2 --}}
+                        <div class="bg-surface-container-low rounded-xl p-3 border border-outline-variant/30 flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <div class="w-7 h-7 rounded-lg bg-[#e6f4ea] flex items-center justify-center shrink-0">
+                                    <span class="material-symbols-outlined text-[#006c49] text-[15px]">eco</span>
+                                </div>
+                                <div class="min-w-0">
+                                    <div class="text-[12px] font-bold text-on-surface truncate">Pengingat Pemupukan</div>
+                                    <span class="bg-[#fff8d6] text-[#7c6300] text-[9px] font-bold px-1.5 py-0.2 rounded-full inline-block">Tunda Pupuk Cair</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-1 shrink-0">
+                                <span class="w-6 h-6 rounded-full bg-[#e6f4ea] text-[#006c49] flex items-center justify-center text-[12px] font-bold">✓</span>
+                                <span class="w-6 h-6 rounded-full bg-[#ffdad6] text-[#ba1a1a] flex items-center justify-center text-[12px] font-bold">✕</span>
+                            </div>
+                        </div>
+
+                        {{-- Task 3 --}}
+                        <div class="bg-surface-container-low rounded-xl p-3 border border-outline-variant/30 flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <div class="w-7 h-7 rounded-lg bg-[#fbebe4] flex items-center justify-center shrink-0">
+                                    <span class="material-symbols-outlined text-[#944a23] text-[15px]">pest_control</span>
+                                </div>
+                                <div class="min-w-0">
+                                    <div class="text-[12px] font-bold text-on-surface truncate">Inspeksi Hama</div>
+                                    <span class="bg-[#f3e8ff] text-[#6b21a8] text-[9px] font-bold px-1.5 py-0.2 rounded-full inline-block">Cek Jamur Daun</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-1 shrink-0">
+                                <span class="w-6 h-6 rounded-full bg-[#e6f4ea] text-[#006c49] flex items-center justify-center text-[12px] font-bold">✓</span>
+                                <span class="w-6 h-6 rounded-full bg-[#ffdad6] text-[#ba1a1a] flex items-center justify-center text-[12px] font-bold">✕</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             {{-- Feature 2: Growth Calendar --}}
-            <div class="bg-white rounded-3xl p-8 premium-shadow tactile-card group scroll-trigger scroll-fade-up delay-200 border border-white/60" id="feature-growth-calendar">
-                {{-- Icon --}}
-                <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1 group-hover:scale-105 group-hover:bg-primary/20">
-                    <span class="material-symbols-outlined text-primary text-2xl">calendar_month</span>
-                </div>
-
-                <h3 class="text-lg font-bold text-on-surface mb-2">Growth Calendar</h3>
-                <p class="text-sm text-on-surface-variant leading-relaxed mb-5">
-                    Timeline otomatis yang memantau fase perkembangan tanaman dari penyemaian benih hingga waktu panen tiba.
-                </p>
-
-                {{-- Visual Preview: Timeline --}}
-                <div class="space-y-3">
+            <div class="bg-white rounded-[24px] p-6 premium-shadow border border-white/60 flex flex-col justify-between gap-5 hover:-translate-y-1 transition-all duration-300 group" id="feature-growth-calendar">
+                <div class="space-y-4">
                     <div class="flex items-center gap-3">
-                        <div class="w-3 h-3 rounded-full bg-primary-container flex-shrink-0"></div>
-                        <div class="flex-1 bg-surface-container-high rounded-lg py-2 px-3">
-                            <span class="text-xs font-medium text-on-surface-variant">Penyemaian (Hari 1)</span>
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#006c49]/10 to-[#10b981]/20 border border-[#006c49]/20 flex items-center justify-center shrink-0 shadow-xs group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined text-[#006c49] text-xl font-bold">calendar_month</span>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-on-surface leading-tight">Growth Calendar</h3>
+                            <p class="text-[12px] text-on-surface-variant leading-tight">Timeline tahapan pertumbuhan.</p>
                         </div>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-3 h-3 rounded-full bg-tertiary-container flex-shrink-0"></div>
-                        <div class="flex-1 bg-surface-container-high rounded-lg py-2 px-3">
-                            <span class="text-xs font-medium text-on-surface-variant">Tunas (Hari 7)</span>
+
+                    {{-- Compact Timeline --}}
+                    <div class="relative pl-11 space-y-5">
+                        {{-- Vertical dashed line --}}
+                        <div class="absolute left-[14px] top-2 bottom-2 w-[2px] border-l-2 border-dashed border-[#006c49]/30"></div>
+
+                        {{-- Step 1 --}}
+                        <div class="relative flex items-center">
+                            <div class="absolute -left-[42px] w-6 h-6 rounded-full bg-[#006c49] text-white flex items-center justify-center shadow-xs z-10">
+                                <svg class="w-3.5 h-3.5 text-white stroke-[3.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <div class="text-[12px] font-bold text-[#006c49] inline-flex items-center gap-1.5 bg-[#e6f4ea] px-3 py-1 rounded-full border border-[#006c49]/20 shadow-xs">
+                                <span>Tanam</span>
+                                <span class="text-[11px] font-bold text-[#006c49] opacity-80">(Selesai)</span>
+                            </div>
+                        </div>
+
+                        {{-- Step 2: Active Card --}}
+                        <div class="relative">
+                            <div class="absolute -left-[46px] top-2 w-8 h-8 rounded-full bg-[#e6f4ea] border border-[#006c49]/30 flex items-center justify-center shadow-xs z-10">
+                                <span class="material-symbols-outlined text-[18px] text-[#006c49]" style="font-variation-settings: 'FILL' 1;">eco</span>
+                            </div>
+                            <div class="bg-surface rounded-xl p-3.5 border-2 border-[#006c49] space-y-2 shadow-sm">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[12px] font-bold text-[#006c49]">Germinasi</span>
+                                    <span class="bg-[#006c49] text-white text-[8px] font-extrabold px-2 py-0.5 rounded-full tracking-wider">AKTIF</span>
+                                </div>
+                                <div class="bg-[#e8f3ee] rounded-lg p-2 text-[10px] text-[#006c49] font-medium leading-tight">
+                                    ✦ <strong>Fase Persemaian:</strong> Jaga kelembapan media semai.
+                                </div>
+                                <div class="flex items-center gap-2 pt-0.5">
+                                    <div class="flex-1 bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+                                        <div class="bg-[#006c49] h-full w-[50%] rounded-full"></div>
+                                    </div>
+                                    <span class="text-[9px] font-bold text-[#006c49]">3 hari lagi</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Step 3 --}}
+                        <div class="relative flex items-center">
+                            <div class="absolute -left-[42px] w-6 h-6 rounded-full bg-surface-container-high border border-outline-variant/60 text-on-surface-variant flex items-center justify-center z-10">
+                                <span class="material-symbols-outlined text-[13px] text-on-surface-variant">schedule</span>
+                            </div>
+                            <div class="text-[12px] font-bold text-on-surface-variant py-0.5">Persemaian & Panen</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {{-- Feature 3: Care Reminder --}}
-            <div class="bg-white rounded-3xl p-8 premium-shadow tactile-card group scroll-trigger scroll-fade-up delay-300 border border-white/60" id="feature-care-reminder">
-                {{-- Icon --}}
-                <div class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center mb-4 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1 group-hover:scale-105 group-hover:bg-secondary/20">
-                    <span class="material-symbols-outlined text-secondary text-2xl">notifications_active</span>
-                </div>
+            {{-- Feature 3: Care Reminder & Weather Adjust --}}
+            <div class="bg-white rounded-[24px] p-6 premium-shadow border border-white/60 flex flex-col justify-between gap-5 hover:-translate-y-1 transition-all duration-300 group" id="feature-care-reminder">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#944a23]/10 to-[#944a23]/20 border border-[#944a23]/20 flex items-center justify-center shrink-0 shadow-xs group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined text-[#944a23] text-xl font-bold">notifications_active</span>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-on-surface leading-tight">Care Reminder</h3>
+                            <p class="text-[12px] text-on-surface-variant leading-tight">Notifikasi pintar & cuaca otomatis.</p>
+                        </div>
+                    </div>
 
-                <h3 class="text-lg font-bold text-on-surface mb-2">Care Reminder</h3>
-                <p class="text-sm text-on-surface-variant leading-relaxed mb-5">
-                    Notifikasi pintar untuk jadwal penyiraman dan pemupukan berdasarkan template jenis tanaman Anda.
-                </p>
+                    {{-- Compact Weather Status & Reminder Chips --}}
+                    <div class="space-y-3">
+                        <div class="bg-gradient-to-r from-[#f4fbf6] to-[#e6f4ea]/60 rounded-xl p-3 border border-[#006c49]/20 flex items-center justify-between gap-2 shadow-xs">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-8 h-8 rounded-lg bg-[#006c49]/10 flex items-center justify-center shrink-0 border border-[#006c49]/20">
+                                    <span class="material-symbols-outlined text-[#006c49] text-[18px]">partly_cloudy_day</span>
+                                </div>
+                                <div>
+                                    <div class="text-[11px] font-bold text-[#006c49]">Hujan Ringan (24°C)</div>
+                                    <div class="text-[10px] text-on-surface-variant font-medium">Penyesuaian Jadwal Otomatis</div>
+                                </div>
+                            </div>
+                            <span class="bg-[#006c49] text-white text-[9px] font-black px-2.5 py-0.5 rounded-full shadow-xs tracking-wider flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-[#6ffbbe] animate-pulse"></span> LIVE
+                            </span>
+                        </div>
 
-                {{-- Visual Preview: Status Chips --}}
-                <div class="flex flex-wrap gap-2">
-                    <span class="inline-flex items-center gap-1.5 bg-error-container text-on-error-container text-xs font-semibold px-3 py-1.5 rounded-full">
-                        <span class="material-symbols-outlined" style="font-size: 14px;">warning</span>
-                        Butuh Air
-                    </span>
-                    <span class="inline-flex items-center gap-1.5 bg-primary-fixed text-on-primary-fixed text-xs font-semibold px-3 py-1.5 rounded-full">
-                        <span class="material-symbols-outlined" style="font-size: 14px;">check_circle</span>
-                        Sehat
-                    </span>
+                        <div class="flex flex-col gap-2">
+                            <div class="flex items-center justify-between bg-[#ffdad6]/80 text-[#410002] text-[11px] font-bold px-3 py-2 rounded-xl border border-[#ffdad6] shadow-xs">
+                                <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[#ba1a1a] text-[15px]">warning</span> Penyiraman Ditunda</span>
+                                <span class="text-[9px] bg-white/60 px-2 py-0.5 rounded-md font-semibold text-[#ba1a1a]">Karena Hujan</span>
+                            </div>
+                            <div class="flex items-center justify-between bg-[#fff8d6] text-[#7c6300] text-[11px] font-bold px-3 py-2 rounded-xl border border-[#fff8d6] shadow-xs">
+                                <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[#7c6300] text-[15px]">science</span> Tunda Pemupukan</span>
+                                <span class="text-[9px] bg-white/60 px-2 py-0.5 rounded-md font-semibold text-[#7c6300]">Bilas Nutrisi</span>
+                            </div>
+                            <div class="flex items-center justify-between bg-[#e6f4ea] text-[#006c49] text-[11px] font-bold px-3 py-2 rounded-xl border border-[#006c49]/20 shadow-xs">
+                                <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[#006c49] text-[15px]">check_circle</span> Kondisi Kebun</span>
+                                <span class="text-[9px] bg-[#006c49] text-white px-2 py-0.5 rounded-md font-bold">Optimal</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 

@@ -289,18 +289,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::put('/weather/activity-rules/{activityRule}', [\App\Http\Controllers\Admin\AdminController::class, 'updateActivityRule'])->name('admin.weather.activity.update');
     Route::delete('/weather/activity-rules/{activityRule}', [\App\Http\Controllers\Admin\AdminController::class, 'destroyActivityRule'])->name('admin.weather.activity.destroy');
 
-    Route::get('/settings', function () {
-        return view('admin.settings');
-    });
+    Route::get('/settings', [\App\Http\Controllers\Admin\AdminController::class, 'settings'])->name('admin.settings');
+    Route::get('/settings/error-logs', [\App\Http\Controllers\Admin\AdminController::class, 'errorLogs']);
+    Route::get('/settings/activity-logs', [\App\Http\Controllers\Admin\AdminController::class, 'activityLogs']);
+    Route::get('/settings/login-logs', [\App\Http\Controllers\Admin\AdminController::class, 'loginLogs']);
+    Route::post('/settings/clear-error-logs', [\App\Http\Controllers\Admin\AdminController::class, 'clearErrorLogs']);
     
-    Route::get('/settings/password', function () {
-        return view('admin.settings-password');
-    });
-
-    Route::post('/settings/password', function () {
-        // Implement password update logic here
-        return redirect('/admin/settings');
-    });
+    Route::get('/settings/password', [\App\Http\Controllers\SettingsController::class, 'showPassword'])->name('admin.settings.password');
+    Route::post('/settings/password', [\App\Http\Controllers\SettingsController::class, 'updatePassword'])->name('admin.settings.password.update');
 });
 
 // Static Pages

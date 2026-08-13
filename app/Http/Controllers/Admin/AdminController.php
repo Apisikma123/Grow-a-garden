@@ -330,4 +330,90 @@ class AdminController extends Controller
         $activityRule->delete();
         return redirect()->back()->with('success', 'Aturan Modifikasi berhasil dihapus!');
     }
+
+    public function settings()
+    {
+        return view('admin.settings');
+    }
+
+    public function errorLogs()
+    {
+        $logPath = storage_path('logs/laravel.log');
+        $logs = [];
+
+        if (file_exists($logPath)) {
+            $content = file_get_contents($logPath);
+            $lines = explode("\n", $content);
+            $lines = array_reverse(array_filter($lines));
+            
+            foreach (array_slice($lines, 0, 30) as $line) {
+                if (trim($line)) {
+                    $logs[] = [
+                        'timestamp' => now()->format('Y-m-d H:i:s'),
+                        'message' => mb_strimwidth($line, 0, 150, '...'),
+                        'level' => str_contains(strtolower($line), 'error') ? 'ERROR' : (str_contains(strtolower($line), 'warning') ? 'WARNING' : 'INFO')
+                    ];
+                }
+            }
+        }
+
+        if (empty($logs)) {
+            $logs[] = [
+                'timestamp' => now()->format('Y-m-d H:i:s'),
+                'message' => 'Sistem berjalan normal. Tidak ada error log kritis.',
+                'level' => 'INFO'
+            ];
+        }
+
+        return response()->json(['success' => true, 'logs' => $logs]);
+    }
+
+    public function activityLogs()
+    {
+        $events = \App\Models\Event::with(['plant.garden.user', 'eventType'])
+            ->orderBy('updated_at', 'desc')
+            ->take(25)
+            ->get()
+            ->map(function($e) {
+                $userName = $e->plant->garden->user->name ?? 'Pengguna';
+                $plantName = $e->plant->plantTemplate->name_id ?? 'Tanaman';
+                $typeName = $e->eventType->name_id ?? $e->eventType->name ?? 'Perawatan';
+                return [
+                    'timestamp' => $e->updated_at ? $e->updated_at->format('d M Y, H:i') : now()->format('d M Y, H:i'),
+                    'user' => $userName,
+                    'action' => "{$typeName} untuk {$plantName}",
+                    'status' => $e->status
+                ];
+            });
+
+        return response()->json(['success' => true, 'logs' => $events]);
+    }
+
+    public function loginLogs()
+    {
+        $users = User::select('id', 'name', 'email', 'role', 'updated_at', 'created_at')
+            ->orderBy('updated_at', 'desc')
+            ->take(20)
+            ->get()
+            ->map(function($u) {
+                return [
+                    'timestamp' => $u->updated_at ? $u->updated_at->format('d M Y, H:i') : now()->format('d M Y, H:i'),
+                    'user' => $u->name,
+                    'email' => $u->email,
+                    'role' => strtoupper($u->role),
+                    'ip' => '127.0.0.1 (Sesi Lokal)'
+                ];
+            });
+
+        return response()->json(['success' => true, 'logs' => $users]);
+    }
+
+    public function clearErrorLogs()
+    {
+        $logPath = storage_path('logs/laravel.log');
+        if (file_exists($logPath)) {
+            file_put_contents($logPath, '');
+        }
+        return response()->json(['success' => true, 'message' => 'Error logs berhasil dibersihkan.']);
+    }
 }

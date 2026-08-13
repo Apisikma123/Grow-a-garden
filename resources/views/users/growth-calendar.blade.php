@@ -79,31 +79,40 @@
                 </div>
                 
                 {{-- Stepper Timeline --}}
-                <div class="relative pl-8 md:pl-12 space-y-[40px]">
+                <div class="relative pl-12 md:pl-14 space-y-[40px]">
                     {{-- Vertical dashed line --}}
-                    <div class="absolute left-[15px] md:left-[23px] top-4 bottom-8 w-[2px] border-l-2 border-dashed border-outline-variant/50"></div>
+                    <div class="absolute left-[20px] md:left-[24px] top-4 bottom-8 w-[2px] border-l-2 border-dashed border-primary/30"></div>
 
                     @foreach($timeline as $index => $stage)
                         @if($stage['status'] === 'completed')
                             <div class="relative group cursor-pointer transition-transform duration-300 hover:translate-x-1">
-                                <div class="absolute -left-[45px] md:-left-[53px] top-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-[0_4px_12px_rgba(0,108,73,0.3)] z-10 group-hover:scale-110 transition-transform duration-300">
-                                    <span class="material-symbols-outlined text-[16px] text-white font-bold">check</span>
+                                <div class="absolute -left-[45px] md:-left-[49px] top-0.5 w-8 h-8 rounded-full bg-[#006c49] text-white flex items-center justify-center shadow-xs z-10 group-hover:scale-110 transition-transform">
+                                    <svg class="w-4 h-4 text-white stroke-[3.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                    </svg>
                                 </div>
-                                <div class="ml-4 md:ml-6">
-                                    <h3 class="text-[16px] font-bold text-primary mb-0.5">{{ $stage['label'] }} <span class="text-[12px] opacity-70 font-semibold">(Selesai)</span></h3>
+                                <div class="ml-2 md:ml-4">
+                                    <h3 class="text-[16px] font-bold text-[#006c49] mb-0.5 flex items-center gap-2">
+                                        {{ $stage['label'] }} 
+                                        <span class="inline-flex items-center gap-1 text-[11px] font-bold text-[#006c49] bg-[#e6f4ea] px-2.5 py-0.5 rounded-full border border-[#006c49]/20">
+                                            (Selesai)
+                                        </span>
+                                    </h3>
                                     <p class="text-[13px] text-on-surface-variant font-medium">{{ $stage['date']->isoFormat('D MMM YYYY') }} • {{ $stage['desc'] }}</p>
                                 </div>
                             </div>
                         @elseif($stage['status'] === 'active')
                             <div class="relative group">
-                                {{-- Pulsing Ring --}}
-                                <div class="absolute -left-[53px] md:-left-[61px] top-3 w-12 h-12 rounded-full bg-primary/20 animate-ping"></div>
-                                <div class="absolute -left-[49px] md:-left-[57px] top-4 w-10 h-10 rounded-full bg-primary flex items-center justify-center shadow-[0_8px_24px_rgba(0,108,73,0.4)] ring-4 ring-white z-10">
-                                    <span class="material-symbols-outlined text-[20px] text-white">eco</span>
+                                {{-- Hero Active Node --}}
+                                <div class="absolute -left-[46px] md:-left-[50px] top-1 w-9 h-9 rounded-full bg-[#e6f4ea] border border-[#006c49]/30 flex items-center justify-center shadow-xs z-10 group-hover:scale-110 transition-transform duration-300">
+                                    <span class="material-symbols-outlined text-[20px] text-[#006c49]" style="font-variation-settings: 'FILL' 1;">eco</span>
                                 </div>
                                 <div class="ml-4 md:ml-6 bg-gradient-to-br from-white to-[#006c49]/5 border border-primary/20 rounded-[20px] p-[24px] shadow-[0_8px_32px_rgba(0,108,73,0.08)] relative overflow-hidden transition-all duration-300 hover:shadow-[0_12px_48px_rgba(0,108,73,0.12)] hover:-translate-y-1">
                                     <div class="absolute top-0 left-0 w-1.5 h-full bg-primary"></div>
-                                    <h3 class="text-[18px] font-black text-primary mb-1">{{ $stage['label'] }} <span class="text-[13px] bg-primary text-white px-2 py-0.5 rounded-full ml-2 font-bold tracking-wide">AKTIF</span></h3>
+                                    <h3 class="text-[18px] font-black text-primary mb-1 flex items-center gap-2">
+                                        {{ $stage['label'] }} 
+                                        <span class="text-[12px] bg-gradient-to-r from-[#006c49] to-[#10b981] text-white px-3 py-0.5 rounded-full font-bold tracking-wider shadow-xs">AKTIF</span>
+                                    </h3>
                                     <p class="text-[14px] text-on-surface-variant font-medium mb-4 leading-relaxed">{{ $stage['desc'] }}</p>
                                     
                                     @if(isset($stageWeatherAdvice) && $stageWeatherAdvice)
@@ -121,7 +130,7 @@
                                                 <div class="absolute inset-0 bg-white/20 w-full h-full" style="background-image: linear-gradient(45deg, rgba(255,255,255,.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.15) 75%, transparent 75%, transparent); background-size: 1rem 1rem;"></div>
                                             </div>
                                         </div>
-                                        <span class="text-[12px] text-primary font-black whitespace-nowrap bg-primary/10 px-3 py-1 rounded-full">
+                                        <span class="text-[12px] text-primary font-black whitespace-nowrap bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
                                             @if($stage['daysLeft'] > 0)
                                                 {{ $stage['daysLeft'] }} hari lagi
                                             @else
@@ -132,16 +141,16 @@
                                 </div>
                             </div>
                         @else
-                            <div class="relative opacity-60 hover:opacity-100 transition-all duration-300 cursor-pointer group hover:translate-x-1">
-                                <div class="absolute -left-[45px] md:-left-[53px] top-0 w-8 h-8 rounded-full bg-surface border-2 border-dashed border-outline-variant flex items-center justify-center z-10 group-hover:border-primary group-hover:border-solid group-hover:bg-primary/10 group-hover:shadow-[0_0_16px_rgba(0,108,73,0.2)] transition-all duration-300">
-                                    <span class="material-symbols-outlined text-[16px] text-outline-variant group-hover:text-primary transition-colors">
+                            <div class="relative opacity-70 hover:opacity-100 transition-all duration-300 cursor-pointer group hover:translate-x-1">
+                                <div class="absolute -left-[46px] md:-left-[50px] top-0.5 w-9 h-9 rounded-full bg-white border border-outline-variant/60 flex items-center justify-center z-10 shadow-[0_2px_8px_rgba(0,0,0,0.04)] ring-4 ring-white group-hover:border-primary group-hover:bg-primary/10 group-hover:shadow-[0_4px_16px_rgba(0,108,73,0.2)] group-hover:scale-110 transition-all duration-300">
+                                    <span class="material-symbols-outlined text-[18px] text-slate-400 group-hover:text-primary transition-colors">
                                         @if($stage['key'] === 'FLOWERING') local_florist 
                                         @elseif($stage['key'] === 'FRUITING') nutrition 
                                         @elseif($stage['key'] === 'HARVEST') shopping_basket 
                                         @else schedule @endif
                                     </span>
                                 </div>
-                                <div class="ml-4 md:ml-6">
+                                <div class="ml-2 md:ml-4">
                                     <div class="flex items-center gap-2 flex-wrap mb-0.5">
                                         <h3 class="text-[16px] font-bold text-on-surface-variant group-hover:text-primary transition-colors">{{ $stage['label'] }}</h3>
                                         @if(isset($stage['weatherBadge']) && $stage['weatherBadge'])
