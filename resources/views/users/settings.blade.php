@@ -76,7 +76,7 @@
                                             Lokasi Kebun (Weather Adjustment)
                                         </label>
                                         @if($isWeatherLocked)
-                                            <a href="/checkout?plan=pro" class="inline-flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container border border-error/30 hover:opacity-80 transition-opacity">
+                                            <a href="/checkout?plan=subur&from=settings" class="inline-flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container border border-error/30 hover:opacity-80 transition-opacity">
                                                 <span class="material-symbols-outlined text-[13px]">lock</span>
                                                 Terkunci (Paket Subur)
                                             </a>
@@ -89,7 +89,7 @@
                                                 <span class="material-symbols-outlined text-error text-[18px]">lock</span>
                                                 <span>Weather Adjustment & penyesuaian penyiraman cuaca ekstrem khusus untuk pengguna <strong>Subur (Pro)</strong>.</span>
                                             </div>
-                                            <a href="/checkout?plan=pro" class="bg-primary text-on-primary font-bold px-3 py-1 rounded-full text-[11px] whitespace-nowrap hover:bg-primary/90 transition-colors shrink-0">Upgrade</a>
+                                            <a href="/checkout?plan=subur&from=settings" class="bg-primary text-on-primary font-bold px-3 py-1 rounded-full text-[11px] whitespace-nowrap hover:bg-primary/90 transition-colors shrink-0">Upgrade</a>
                                         </div>
                                     @endif
 
