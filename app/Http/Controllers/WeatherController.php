@@ -12,12 +12,27 @@ class WeatherController extends Controller
     public function live(Request $request, WeatherService $weatherService)
     {
         $user = Auth::user();
-        $lat = 3.58;
-        $lng = 98.67;
+        $lat = $request->query('lat', 3.58);
+        $lng = $request->query('lng', 98.67);
+        $locationName = null;
 
-        if ($user) {
-            $garden = Garden::where('user_id', $user->id)->first();
+        $gardenId = $request->query('garden_id');
+        if ($gardenId && $user) {
+            $garden = Garden::where('user_id', $user->id)->find($gardenId);
             if ($garden) {
+                $locationName = $garden->location_name;
+                if ($garden->latitude && $garden->longitude) {
+                    $lat = $garden->latitude;
+                    $lng = $garden->longitude;
+                }
+            }
+        } elseif ($user) {
+            $garden = Garden::where('user_id', $user->id)->whereNotNull('latitude')->whereNotNull('longitude')->first();
+            if (!$garden) {
+                $garden = Garden::where('user_id', $user->id)->first();
+            }
+            if ($garden) {
+                $locationName = $garden->location_name;
                 $lat = $garden->latitude ?? $lat;
                 $lng = $garden->longitude ?? $lng;
             }
@@ -43,8 +58,9 @@ class WeatherController extends Controller
         return response()->json([
             'success' => true,
             'location' => [
-                'latitude' => $lat,
-                'longitude' => $lng,
+                'name' => $locationName,
+                'latitude' => (float)$lat,
+                'longitude' => (float)$lng,
             ],
             'agronomic' => $agronomic
         ]);
