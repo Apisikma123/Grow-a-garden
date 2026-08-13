@@ -260,19 +260,22 @@
                 </div>
                 <div>
                     <label class="block text-[13px] font-bold text-on-surface mb-2">Lokasi Kebun <span class="text-[12px] font-normal text-on-surface-variant">(Opsional)</span></label>
-                    <div class="flex gap-2">
-                        <input type="text" name="location" id="add-garden-location-input" placeholder="Contoh: Gaharu, Medan..."
-                            class="flex-1 px-4 py-3 rounded-xl border border-outline-variant/50 bg-surface text-on-surface text-[14px] focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
-                        <button type="button" onclick="GardenApp.detectLocationForModal('add')" id="btn-detect-add" class="px-4 py-3 rounded-xl bg-primary/10 text-primary font-bold text-[13px] hover:bg-primary/20 transition-all shrink-0 flex items-center gap-1.5 cursor-pointer">
-                            <span class="material-symbols-outlined text-[18px]">my_location</span>
-                            <span class="hidden sm:inline">Deteksi</span>
+                    <div class="flex items-center gap-2.5 w-full">
+                        <div class="relative flex-1 min-w-0">
+                            <input type="text" name="location" id="add-garden-location-input" placeholder="Contoh: Gaharu, Medan..."
+                                class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 bg-surface text-on-surface text-[14px] focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all truncate">
+                        </div>
+                        <button type="button" onclick="GardenApp.detectLocationForModal('add')" id="btn-detect-add" class="h-[46px] px-3.5 sm:px-4 rounded-xl bg-primary/10 text-primary font-bold text-[13px] hover:bg-primary/20 transition-all shrink-0 flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-[95px] sm:min-w-[110px]">
+                            <span class="material-symbols-outlined text-[18px] shrink-0">my_location</span>
+                            <span class="text-[13px]">Deteksi</span>
                         </button>
                     </div>
                     <input type="hidden" name="latitude" id="add-garden-lat">
                     <input type="hidden" name="longitude" id="add-garden-lng">
-                    <p class="text-[11px] text-on-surface-variant mt-1.5 flex items-center gap-1" id="add-location-status">
-                        <span class="material-symbols-outlined text-[13px] text-primary">info</span> Klik Deteksi untuk mengisi koordinat & nama lokasi dari GPS.
-                    </p>
+                    <div class="mt-2 text-[12px] text-on-surface-variant flex items-start gap-1.5 w-full min-w-0 break-words leading-snug" id="add-location-status">
+                        <span class="material-symbols-outlined text-[14px] text-primary shrink-0 mt-0.5">info</span>
+                        <span class="flex-1 min-w-0">Klik Deteksi untuk mengisi nama lokasi dari GPS.</span>
+                    </div>
                 </div>
                 <div class="flex items-center justify-end gap-3 pt-2">
                     <button type="button" onclick="GardenApp.closeAddGardenModal()" class="px-5 py-2.5 rounded-full text-[14px] font-bold text-on-surface-variant hover:bg-surface-container-high transition-colors">
@@ -294,12 +297,12 @@
         <div class="w-full shrink-0 min-w-full sm:min-w-[400px] max-w-md mx-auto bg-surface rounded-[28px] p-6 sm:p-8 ambient-shadow-lg border border-outline-variant/30 pointer-events-auto relative self-stretch" style="white-space: normal; word-break: normal;">
             <div class="flex items-center justify-between mb-6">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                    <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
                         <span class="material-symbols-outlined text-[22px]">edit</span>
                     </div>
                     <h3 class="text-[20px] font-bold text-on-surface">Edit Kebun</h3>
                 </div>
-                <button type="button" onclick="GardenApp.closeEditGardenModal()" class="w-9 h-9 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:bg-error/10 hover:text-error transition-colors">
+                <button type="button" onclick="GardenApp.closeEditGardenModal()" class="w-9 h-9 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:bg-error/10 hover:text-error transition-colors shrink-0">
                     <span class="material-symbols-outlined text-[20px]">close</span>
                 </button>
             </div>
@@ -313,19 +316,22 @@
                 </div>
                 <div>
                     <label class="block text-[13px] font-bold text-on-surface mb-2">Lokasi Kebun</label>
-                    <div class="flex gap-2">
-                        <input type="text" name="location" id="edit-garden-location-input" placeholder="Contoh: Gaharu, Medan..."
-                            class="flex-1 px-4 py-3 rounded-xl border border-outline-variant/50 bg-surface text-on-surface text-[14px] focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
-                        <button type="button" onclick="GardenApp.detectLocationForModal('edit')" id="btn-detect-edit" class="px-4 py-3 rounded-xl bg-primary/10 text-primary font-bold text-[13px] hover:bg-primary/20 transition-all shrink-0 flex items-center gap-1.5 cursor-pointer">
-                            <span class="material-symbols-outlined text-[18px]">my_location</span>
-                            <span class="hidden sm:inline">Deteksi</span>
+                    <div class="flex items-center gap-2.5 w-full">
+                        <div class="relative flex-1 min-w-0">
+                            <input type="text" name="location" id="edit-garden-location-input" placeholder="Contoh: Gaharu, Medan..."
+                                class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 bg-surface text-on-surface text-[14px] focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all truncate">
+                        </div>
+                        <button type="button" onclick="GardenApp.detectLocationForModal('edit')" id="btn-detect-edit" class="h-[46px] px-3.5 sm:px-4 rounded-xl bg-primary/10 text-primary font-bold text-[13px] hover:bg-primary/20 transition-all shrink-0 flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-[95px] sm:min-w-[110px]">
+                            <span class="material-symbols-outlined text-[18px] shrink-0">my_location</span>
+                            <span class="text-[13px]">Deteksi</span>
                         </button>
                     </div>
                     <input type="hidden" name="latitude" id="edit-garden-lat">
                     <input type="hidden" name="longitude" id="edit-garden-lng">
-                    <p class="text-[11px] text-on-surface-variant mt-1.5 flex items-center gap-1" id="edit-location-status">
-                        <span class="material-symbols-outlined text-[13px] text-primary">info</span> Klik Deteksi untuk auto-update koordinat GPS kebun ini.
-                    </p>
+                    <div class="mt-2 text-[12px] text-on-surface-variant flex items-start gap-1.5 w-full min-w-0 break-words leading-snug" id="edit-location-status">
+                        <span class="material-symbols-outlined text-[14px] text-primary shrink-0 mt-0.5">info</span>
+                        <span class="flex-1 min-w-0">Klik Deteksi untuk auto-update lokasi GPS kebun ini.</span>
+                    </div>
                 </div>
                 <div class="flex items-center justify-end gap-3 pt-2">
                     <button type="button" onclick="GardenApp.closeEditGardenModal()" class="px-5 py-2.5 rounded-full text-[14px] font-bold text-on-surface-variant hover:bg-surface-container-high transition-colors">
@@ -522,6 +528,14 @@ window.GardenApp = (() => {
     function escAttr(str) {
         return escHtml(str);
     }
+    function cleanLocationName(name) {
+        if (!name) return '';
+        let cleaned = String(name).replace(/\s*\([\d\.\,\s\-]+\)/gi, '').trim();
+        if (cleaned === 'Lokasi Terdeteksi' || cleaned === 'Kota Terdeteksi' || !cleaned) {
+            return 'Lokasi Kebun';
+        }
+        return cleaned;
+    }
 
     // ── Init ──
     async function init() {
@@ -619,6 +633,7 @@ window.GardenApp = (() => {
 
         list.innerHTML = gardens.map((g, idx) => {
             const isLocked = idx >= USER_PLAN_CONFIG.maxGardens;
+            const cleanLoc = cleanLocationName(g.location_name);
             return `
             <button type="button" onclick="GardenApp.selectGarden(${g.id})"
                 class="garden-card w-full text-left bg-surface rounded-[20px] p-4 sm:p-5 ambient-shadow hover:-translate-y-0.5 hover:ambient-shadow-lg transition-all duration-200 border-2 ${selectedGardenId === g.id ? (isLocked ? 'border-error bg-error-container/20' : 'border-[#006c49]') : 'border-transparent'} ${isLocked ? 'bg-surface-container-low opacity-80' : ''}" data-garden-id="${g.id}">
@@ -628,7 +643,7 @@ window.GardenApp = (() => {
                     </div>
                     <div class="flex-1 min-w-0">
                         <h3 class="text-[14px] sm:text-[15px] font-bold ${isLocked ? 'text-on-surface-variant line-through opacity-70' : 'text-on-surface'} truncate">${escHtml(g.name)}</h3>
-                        ${g.location_name ? `<p class="text-[11px] sm:text-[12px] text-on-surface-variant truncate flex items-center gap-1 mt-0.5"><span class="material-symbols-outlined text-[12px]">location_on</span>${escHtml(g.location_name)}</p>` : ''}
+                        ${cleanLoc ? `<p class="text-[11px] sm:text-[12px] text-on-surface-variant truncate flex items-center gap-1 mt-0.5"><span class="material-symbols-outlined text-[12px]">location_on</span>${escHtml(cleanLoc)}</p>` : ''}
                         ${isLocked ? `<div class="mt-1"><span class="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container border border-error/30 whitespace-nowrap inline-block">Terkunci</span></div>` : ''}
                     </div>
                     <span class="material-symbols-outlined text-[20px] ${isLocked ? 'text-error' : 'text-on-surface-variant'}">chevron_right</span>
@@ -715,9 +730,10 @@ window.GardenApp = (() => {
         }
 
         const locEl = document.getElementById('detail-garden-location');
-        if (garden.location_name) {
+        const cleanLoc = cleanLocationName(garden.location_name);
+        if (cleanLoc) {
             locEl.classList.remove('hidden');
-            locEl.querySelector('span:last-child').textContent = garden.location_name;
+            locEl.querySelector('span:last-child').textContent = cleanLoc;
         } else {
             locEl.classList.add('hidden');
         }
@@ -861,8 +877,8 @@ window.GardenApp = (() => {
             return {
                 lat: coords.lat,
                 lon: coords.lon,
-                name: `Lokasi Terdeteksi (${coords.lat.toFixed(2)}, ${coords.lon.toFixed(2)})`,
-                formatted: `Lokasi Terdeteksi`
+                name: 'Lokasi Terdeteksi',
+                formatted: 'Lokasi Terdeteksi'
             };
         }
 
@@ -904,10 +920,10 @@ window.GardenApp = (() => {
 
         if (btn) {
             btn.disabled = true;
-            btn.innerHTML = `<span class="material-symbols-outlined text-[18px] animate-spin">sync</span> <span class="hidden sm:inline">Mendeteksi...</span>`;
+            btn.innerHTML = `<span class="material-symbols-outlined text-[18px] animate-spin shrink-0">sync</span> <span class="text-[13px]">Proses...</span>`;
         }
         if (status) {
-            status.innerHTML = `<span class="material-symbols-outlined text-[13px] text-primary animate-spin">progress_activity</span> Mencari titik lokasi GPS & nama lokasi...`;
+            status.innerHTML = `<span class="material-symbols-outlined text-[14px] text-primary animate-spin shrink-0 mt-0.5">progress_activity</span> <span class="flex-1 min-w-0">Mencari titik lokasi GPS & nama lokasi...</span>`;
         }
 
         try {
@@ -917,16 +933,17 @@ window.GardenApp = (() => {
             if (lngInput) lngInput.value = locData.lon;
 
             if (status) {
-                status.innerHTML = `<span class="material-symbols-outlined text-[13px] text-emerald-600">check_circle</span> Lokasi terdeteksi: <strong>${escHtml(locData.name)}</strong> (${locData.lat.toFixed(4)}, ${locData.lon.toFixed(4)})`;
+                const displayName = escHtml(locData.name || 'Lokasi Terdeteksi');
+                status.innerHTML = `<span class="material-symbols-outlined text-[14px] text-emerald-600 shrink-0 mt-0.5">check_circle</span> <span class="flex-1 min-w-0">Lokasi terdeteksi: <strong class="text-on-surface font-semibold">${displayName}</strong></span>`;
             }
         } catch (e) {
             if (status) {
-                status.innerHTML = `<span class="material-symbols-outlined text-[13px] text-error">error</span> Gagal mendeteksi lokasi otomatis. Anda dapat mengetik lokasi secara manual.`;
+                status.innerHTML = `<span class="material-symbols-outlined text-[14px] text-error shrink-0 mt-0.5">error</span> <span class="flex-1 min-w-0">Gagal mendeteksi lokasi otomatis. Anda dapat mengetik lokasi secara manual.</span>`;
             }
         } finally {
             if (btn) {
                 btn.disabled = false;
-                btn.innerHTML = `<span class="material-symbols-outlined text-[18px]">my_location</span> <span class="hidden sm:inline">Deteksi</span>`;
+                btn.innerHTML = `<span class="material-symbols-outlined text-[18px] shrink-0">my_location</span> <span class="text-[13px]">Deteksi</span>`;
             }
         }
     }
@@ -1024,7 +1041,7 @@ window.GardenApp = (() => {
                 }
 
                 if (locEl && data.location) {
-                    const dispLoc = garden && garden.location_name ? garden.location_name : `${data.location.latitude.toFixed(2)}, ${data.location.longitude.toFixed(2)}`;
+                    const dispLoc = garden && garden.location_name ? garden.location_name : (data.location.name || 'Lokasi Kebun');
                     locEl.textContent = dispLoc;
                 }
             }
@@ -1058,7 +1075,7 @@ window.GardenApp = (() => {
         if (lngEl) lngEl.value = '';
         const statusEl = document.getElementById('add-location-status');
         if (statusEl) {
-            statusEl.innerHTML = `<span class="material-symbols-outlined text-[13px] text-primary">info</span> Klik Deteksi untuk mengisi koordinat & nama lokasi dari GPS.`;
+            statusEl.innerHTML = `<span class="material-symbols-outlined text-[14px] text-primary shrink-0 mt-0.5">info</span> <span class="flex-1 min-w-0">Klik Deteksi untuk mengisi nama lokasi dari GPS.</span>`;
         }
     }
 
@@ -1113,9 +1130,10 @@ window.GardenApp = (() => {
         const status = document.getElementById('edit-location-status');
         if (status) {
             if (garden.latitude && garden.longitude) {
-                status.innerHTML = `<span class="material-symbols-outlined text-[13px] text-emerald-600">check_circle</span> Koordinat tersimpan: (${garden.latitude}, ${garden.longitude})`;
+                const locText = escHtml(garden.location_name || garden.name);
+                status.innerHTML = `<span class="material-symbols-outlined text-[14px] text-emerald-600 shrink-0 mt-0.5">check_circle</span> <span class="flex-1 min-w-0">Lokasi tersimpan: <strong class="text-on-surface font-semibold">${locText}</strong></span>`;
             } else {
-                status.innerHTML = `<span class="material-symbols-outlined text-[13px] text-primary">info</span> Klik Deteksi untuk auto-update koordinat GPS kebun ini.`;
+                status.innerHTML = `<span class="material-symbols-outlined text-[14px] text-primary shrink-0 mt-0.5">info</span> <span class="flex-1 min-w-0">Klik Deteksi untuk auto-update lokasi GPS kebun ini.</span>`;
             }
         }
 

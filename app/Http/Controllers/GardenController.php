@@ -8,11 +8,24 @@ use Illuminate\Support\Facades\Auth;
 
 class GardenController extends Controller
 {
+    private function cleanLocationName(?string $location): ?string
+    {
+        if (!$location) return null;
+        $cleaned = trim(preg_replace('/\s*\([\d\.\,\s\-]+\)/i', '', $location));
+        return ($cleaned === 'Lokasi Terdeteksi' || $cleaned === 'Kota Terdeteksi' || !$cleaned) ? 'Lokasi Kebun' : $cleaned;
+    }
+
     public function index()
     {
         $gardens = Garden::where('user_id', Auth::id())
             ->withCount('plants')
-            ->get();
+            ->get()
+            ->map(function ($g) {
+                if ($g->location_name) {
+                    $g->location_name = $this->cleanLocationName($g->location_name);
+                }
+                return $g;
+            });
 
         return response()->json($gardens);
     }
@@ -42,7 +55,7 @@ class GardenController extends Controller
         $garden = Garden::create([
             'user_id' => $user->id,
             'name' => $request->name,
-            'location_name' => $request->location,
+            'location_name' => $this->cleanLocationName($request->location),
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
         ]);
@@ -78,7 +91,7 @@ class GardenController extends Controller
 
         $garden->update([
             'name' => $request->name,
-            'location_name' => $request->location,
+            'location_name' => $this->cleanLocationName($request->location),
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
         ]);
