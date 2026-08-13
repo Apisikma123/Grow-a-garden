@@ -418,7 +418,7 @@
                     </div>
                 </div>
 
-                <a href="/checkout?plan=subur" class="w-full block text-center bg-yellow-400 text-yellow-900 font-bold py-3 rounded-xl hover:bg-yellow-300 active:scale-[0.98] hover:shadow-lg transition-all duration-300 shadow-md mb-2 text-[15px]">Mulai 7-Day Free Trial</a>
+                <a href="/checkout?plan=subur&from=/" class="w-full block text-center bg-yellow-400 text-yellow-900 font-bold py-3 rounded-xl hover:bg-yellow-300 active:scale-[0.98] hover:shadow-lg transition-all duration-300 shadow-md mb-2 text-[15px]">Mulai 7-Day Free Trial</a>
                 <p class="text-center text-[11px] text-white/70">Cancel anytime. Bebas risiko.</p>
             </div>
 
@@ -479,7 +479,7 @@
                     </div>
                 </div>
 
-                <a href="/checkout?plan=pro" class="w-full block text-center bg-primary text-white font-bold py-3 rounded-xl hover:bg-primary-container active:scale-[0.98] hover:shadow-lg transition-all duration-300 shadow-md relative z-10">Upgrade ke Pro</a>
+                <a href="/checkout?plan=pro&from=/" class="w-full block text-center bg-primary text-white font-bold py-3 rounded-xl hover:bg-primary-container active:scale-[0.98] hover:shadow-lg transition-all duration-300 shadow-md relative z-10">Upgrade ke Pro</a>
             </div>
 
         </div>

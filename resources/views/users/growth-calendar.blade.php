@@ -23,10 +23,10 @@
                         Fitur Growth Calendar khusus untuk pengguna Paket Subur (Pro) dan Panen Raya (Premium). Upgrade akun Anda sekarang untuk membuka grafik & estimasi fase pertumbuhan tanaman secara detail.
                     </p>
                 </div>
-                <a href="/settings#subscription" class="w-full bg-yellow-400 text-yellow-900 font-bold text-[15px] sm:text-[16px] py-3.5 sm:py-4 rounded-xl hover:bg-yellow-300 active:scale-95 transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer">
+                <button type="button" onclick="document.getElementById('pricing-modal').classList.remove('hidden')" class="w-full bg-yellow-400 text-yellow-900 font-bold text-[15px] sm:text-[16px] py-3.5 sm:py-4 rounded-xl hover:bg-yellow-300 active:scale-95 transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer">
                     <span class="material-symbols-outlined text-[20px] sm:text-[22px]">star</span>
                     Upgrade Sekarang
-                </a>
+                </button>
             </div>
         </div>
     @endif

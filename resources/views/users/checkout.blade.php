@@ -58,6 +58,9 @@
                         if ($fromPath === 'settings') {
                             $backUrl = '/settings#subscription';
                             $backText = 'Kembali ke Pengaturan';
+                        } elseif ($fromPath === '/' || $fromPath === '') {
+                            $backUrl = '/';
+                            $backText = 'Kembali ke Landing Page';
                         } else {
                             $backUrl = '/' . ltrim($fromPath, '/');
                             if (str_contains($fromPath, 'growth-calendar')) {
@@ -66,8 +69,10 @@
                                 $backText = 'Kembali ke Perawatan';
                             } elseif (str_contains($fromPath, 'gardens')) {
                                 $backText = 'Kembali ke Kebun Saya';
+                            } elseif (str_contains($fromPath, 'dashboard')) {
+                                $backText = 'Kembali ke Dashboard';
                             } else {
-                                $backText = 'Kembali ke Pengaturan';
+                                $backText = 'Kembali';
                             }
                         }
                     }
