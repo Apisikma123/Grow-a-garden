@@ -14,20 +14,21 @@ class WeatherService
      */
     public function getTodayWeather(float $latitude, float $longitude): ?array
     {
-        // Round lat/long to 2 decimal places to increase cache hit rate for nearby locations
-        $lat = round($latitude, 2);
-        $lng = round($longitude, 2);
+        // Round lat/long to 4 decimal places for ~11m micro-location precision
+        $lat = round($latitude, 4);
+        $lng = round($longitude, 4);
         
-        // Cache per hour for 15 minutes to guarantee fresh precision weather updates
-        $cacheKey = "weather_v4_{$lat}_{$lng}_" . now()->format('Y-m-d_H_i');
+        // Cache in 10-minute blocks for fresh & fast updates
+        $tenMinBlock = floor((int) now()->format('i') / 10);
+        $cacheKey = "weather_v5_{$lat}_{$lng}_" . now()->format('Y-m-d_H') . "_{$tenMinBlock}";
         
-        return Cache::remember($cacheKey, now()->addMinutes(15), function () use ($lat, $lng) {
+        return Cache::remember($cacheKey, now()->addMinutes(10), function () use ($lat, $lng) {
             try {
                 $response = Http::withoutVerifying()->timeout(10)->get('https://api.open-meteo.com/v1/forecast', [
                     'latitude' => $lat,
                     'longitude' => $lng,
                     'current' => 'temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,rain,showers,weather_code,cloud_cover,wind_speed_10m',
-                    'hourly' => 'temperature_2m,relative_humidity_2m,precipitation_probability,precipitation,weather_code,wind_speed_10m',
+                    'hourly' => 'temperature_2m,relative_humidity_2m,precipitation_probability,precipitation,weather_code,wind_speed_10m,cloud_cover',
                     'daily' => 'weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max',
                     'timezone' => 'auto',
                     'forecast_days' => 1
@@ -40,30 +41,42 @@ class WeatherService
                     $hourly = $data['hourly'] ?? [];
                     $daily = $data['daily'] ?? [];
 
-                    $currentCode = $current['weather_code'] ?? ($daily['weather_code'][0] ?? 0);
-                    $currentTemp = $current['temperature_2m'] ?? ($daily['temperature_2m_max'][0] ?? 29);
-                    $apparentTemp = $current['apparent_temperature'] ?? $currentTemp;
-                    $currentHumidity = $current['relative_humidity_2m'] ?? ($daily['relative_humidity_2m_mean'][0] ?? 70);
-                    $currentWind = $current['wind_speed_10m'] ?? 10;
-                    $currentPrecip = $current['precipitation'] ?? 0;
-
-                    // Get current real-time hour precipitation probability
+                    // Match current hour index in forecast
                     $currentHour = (int) now()->format('H');
+                    $hourlyTimes = $hourly['time'] ?? [];
+                    $hourIndex = $currentHour;
+                    $nowIsoHour = now()->format('Y-m-d\TH:00');
+                    foreach ($hourlyTimes as $idx => $timeStr) {
+                        if (str_contains($timeStr, $nowIsoHour)) {
+                            $hourIndex = $idx;
+                            break;
+                        }
+                    }
+
+                    $hourlyCode = isset($hourly['weather_code'][$hourIndex]) ? (int) $hourly['weather_code'][$hourIndex] : null;
+                    $currentCode = (int) ($current['weather_code'] ?? ($hourlyCode ?? ($daily['weather_code'][0] ?? 0)));
+                    $currentTemp = (float) ($current['temperature_2m'] ?? ($hourly['temperature_2m'][$hourIndex] ?? ($daily['temperature_2m_max'][0] ?? 29)));
+                    $apparentTemp = (float) ($current['apparent_temperature'] ?? $currentTemp);
+                    $currentHumidity = (int) ($current['relative_humidity_2m'] ?? ($hourly['relative_humidity_2m'][$hourIndex] ?? 70));
+                    $currentWind = (float) ($current['wind_speed_10m'] ?? ($hourly['wind_speed_10m'][$hourIndex] ?? 10));
+                    $currentPrecip = (float) ($current['precipitation'] ?? ($hourly['precipitation'][$hourIndex] ?? 0));
+                    $currentCloud = (int) ($current['cloud_cover'] ?? ($hourly['cloud_cover'][$hourIndex] ?? 0));
+
                     $hourlyProbs = $hourly['precipitation_probability'] ?? [];
-                    $currentRainProb = isset($hourlyProbs[$currentHour]) ? (int) $hourlyProbs[$currentHour] : (int) ($daily['precipitation_probability_max'][0] ?? 0);
+                    $currentRainProb = isset($hourlyProbs[$hourIndex]) ? (int) $hourlyProbs[$hourIndex] : (int) ($daily['precipitation_probability_max'][0] ?? 0);
                     $rainProb24h = (int) ($daily['precipitation_probability_max'][0] ?? 0);
 
                     return [
-                        'weather_code' => (int) $currentCode,
-                        'temperature' => (float) $currentTemp,
-                        'apparent_temperature' => (float) $apparentTemp,
-                        'rain_probability' => (int) $currentRainProb,
-                        'rain_probability_24h' => (int) $rainProb24h,
-                        'wind_speed' => (float) $currentWind,
-                        'humidity' => (int) $currentHumidity,
-                        'precipitation' => (float) $currentPrecip,
+                        'weather_code' => $currentCode,
+                        'temperature' => round($currentTemp, 1),
+                        'apparent_temperature' => round($apparentTemp, 1),
+                        'rain_probability' => $currentRainProb,
+                        'rain_probability_24h' => $rainProb24h,
+                        'wind_speed' => round($currentWind, 1),
+                        'humidity' => $currentHumidity,
+                        'precipitation' => round($currentPrecip, 2),
                         'is_day' => (int) ($current['is_day'] ?? 1),
-                        'cloud_cover' => (int) ($current['cloud_cover'] ?? 0),
+                        'cloud_cover' => $currentCloud,
                     ];
                 }
                 
@@ -78,15 +91,6 @@ class WeatherService
 
     /**
      * Analyze weather parameters using realistic agricultural/farming principles.
-     * Evaluates Smart Irrigation decision based on strict real-time current conditions:
-     * 1. CURRENT RAIN / HEAVY_RAIN / THUNDERSTORM -> SKIP
-     * 2. RECENT HEAVY RAIN TODAY -> SKIP
-     * 3. CURRENT RAIN PROBABILITY >= 70% -> SKIP
-     * 4. CURRENT RAIN PROBABILITY 50% - 69% -> REDUCE
-     * 5. TEMPERATURE >= 33°C (without rain) -> NORMAL_PLUS
-     * 6. DRIZZLE -> REDUCE
-     * 7. FOG -> REDUCE
-     * 8. DEFAULT (CLEAR, PARTLY_CLOUDY, CLOUDY) -> NORMAL
      */
     public function analyzeAgronomicConditions(?array $weather, bool $hasRecentRain = false): array
     {
@@ -96,8 +100,9 @@ class WeatherService
         $humidity = $weather['humidity'] ?? 70;
         $code = $weather['weather_code'] ?? 0;
         $precip = $weather['precipitation'] ?? 0;
+        $cloud = $weather['cloud_cover'] ?? 0;
 
-        // 8 Weather Condition Spectrum Categories
+        // Enhanced WMO Weather Condition Categories
         $conditionCategory = 'PARTLY_CLOUDY';
         $title = 'Cerah Berawan';
         $icon = 'partly_cloudy_day';
@@ -106,7 +111,7 @@ class WeatherService
 
         if (in_array($code, [95, 96, 99])) {
             $conditionCategory = 'THUNDERSTORM';
-            $title = 'Hujan Petir';
+            $title = 'Hujan Petir & Badai';
             $icon = 'thunderstorm';
             $badgeBg = 'bg-purple-100 text-purple-900 border border-purple-300';
             $summary = "WASPADA Hujan Badai & Angin Kencang ({$windSpeed} km/j)! Amankan pot gantung dan bibit muda.";
@@ -115,37 +120,49 @@ class WeatherService
             $title = 'Hujan Lebat';
             $icon = 'rainy';
             $badgeBg = 'bg-blue-200 text-blue-900 border border-blue-300';
-            $summary = "Hujan Lebat terdeteksi saat ini (Curah hujan {$precip} mm, Peluang {$rainProb}%). Penyiraman otomatis dilewati.";
-        } elseif (in_array($code, [61, 63, 80, 81]) || $precip > 0 || $rainProb >= 70) {
+            $summary = "Hujan lebat terdeteksi saat ini (Curah hujan {$precip} mm, Peluang {$rainProb}%). Penyiraman otomatis dilewati.";
+        } elseif (in_array($code, [63, 81])) {
             $conditionCategory = 'RAIN';
-            $title = 'Hujan';
+            $title = 'Hujan Sedang';
             $icon = 'rainy';
             $badgeBg = 'bg-blue-100 text-blue-800 border border-blue-200';
-            $summary = "Hujan terdeteksi saat ini (Peluang Hujan saat ini {$rainProb}%). Tunda penyiraman & pemupukan cair.";
-        } elseif (in_array($code, [51, 53, 55])) {
+            $summary = "Hujan sedang terdeteksi saat ini (Peluang hujan {$rainProb}%). Tunda penyiraman & pemupukan cair.";
+        } elseif (in_array($code, [61, 80]) || $precip > 0.2 || $rainProb >= 70) {
+            $conditionCategory = 'LIGHT_RAIN';
+            $title = 'Hujan Ringan';
+            $icon = 'rainy';
+            $badgeBg = 'bg-sky-100 text-sky-900 border border-sky-300';
+            $summary = "Hujan ringan terdeteksi (Peluang hujan {$rainProb}%). Penyiraman dapat dilewati atau dikurangi.";
+        } elseif (in_array($code, [51, 53, 55, 56, 57])) {
             $conditionCategory = 'DRIZZLE';
             $title = 'Gerimis';
             $icon = 'water_drop';
             $badgeBg = 'bg-sky-100 text-sky-800 border border-sky-200';
-            $summary = "Gerimis terdeteksi di sekitar lokasi kebun. Kurangi volume air atau pertimbangkan tunda.";
+            $summary = "Gerimis terdeteksi di sekitar kebun. Kurangi volume air penyiraman.";
         } elseif (in_array($code, [45, 48])) {
             $conditionCategory = 'FOG';
             $title = 'Berkabut';
             $icon = 'foggy';
             $badgeBg = 'bg-stone-100 text-stone-800 border border-stone-200';
             $summary = "Kondisi berkabut saat ini. Kelembapan udara tinggi, pertimbangkan pengurangan penyiraman.";
-        } elseif ($code === 3 || ($humidity >= 75 && $rainProb >= 30)) {
+        } elseif ($code === 3 || $cloud >= 80) {
+            $conditionCategory = 'OVERCAST';
+            $title = 'Mendung';
+            $icon = 'cloud';
+            $badgeBg = 'bg-slate-200 text-slate-900 border border-slate-300';
+            $summary = "Langit mendung berawan tebal. Kelembapan tanah terawat, siram secukupnya.";
+        } elseif ($code === 2 || ($cloud >= 40 && $cloud < 80)) {
             $conditionCategory = 'CLOUDY';
             $title = 'Berawan';
             $icon = 'cloud';
             $badgeBg = 'bg-slate-100 text-slate-800 border border-slate-200';
-            $summary = "Berawan saat ini. Kelembapan tanah stabil & sejuk, waktu ideal untuk perawatan harian.";
-        } elseif ($code === 0 || $code === 1 || $temp >= 33) {
-            $conditionCategory = 'CLEAR';
-            $title = $temp >= 33 ? 'Sangat Panas' : 'Cerah';
+            $summary = "Cuaca berawan saat ini. Kelembapan tanah stabil & sejuk, waktu ideal untuk perawatan harian.";
+        } elseif ($temp >= 33 && $code <= 1) {
+            $conditionCategory = 'VERY_HOT';
+            $title = 'Sangat Panas';
             $icon = 'wb_sunny';
-            $badgeBg = $temp >= 33 ? 'bg-amber-100 text-amber-900 border border-amber-300' : 'bg-yellow-100 text-yellow-800 border border-yellow-200';
-            $summary = "Cuaca cerah saat ini dengan suhu {$temp}°C. Risiko penguapan tinggi jika terik.";
+            $badgeBg = 'bg-amber-100 text-amber-900 border border-amber-300';
+            $summary = "Cuaca terik sangat panas dengan suhu {$temp}°C. Risiko penguapan tinggi, lakukan penyiraman ekstra.";
         } else {
             $conditionCategory = 'PARTLY_CLOUDY';
             $title = 'Cerah Berawan';
@@ -159,8 +176,8 @@ class WeatherService
         $decision = 'NORMAL';
         $waterStatus = 'WAITING';
 
-        // 1. Current Weather is HEAVY_RAIN, THUNDERSTORM, or RAIN -> SKIP
-        if (in_array($conditionCategory, ['HEAVY_RAIN', 'THUNDERSTORM', 'RAIN'])) {
+        // 1. Current Weather is HEAVY_RAIN, THUNDERSTORM, RAIN, or LIGHT_RAIN -> SKIP
+        if (in_array($conditionCategory, ['HEAVY_RAIN', 'THUNDERSTORM', 'RAIN', 'LIGHT_RAIN'])) {
             $decision = 'SKIP';
             $waterStatus = 'RAINED';
             $watering = [

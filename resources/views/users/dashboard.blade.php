@@ -22,7 +22,17 @@
                     }
                     $userName = auth()->check() ? explode(' ', auth()->user()->name)[0] : 'Guest';
                 @endphp
-                <h1 class="text-[26px] sm:text-[32px] md:text-[40px] font-bold text-on-surface tracking-tight leading-tight mb-2 break-words">{{ $greeting }}, {{ $userName }}!</h1>
+                <div class="flex items-center gap-3 flex-wrap mb-1">
+                    <h1 class="text-[26px] sm:text-[32px] md:text-[40px] font-bold text-on-surface tracking-tight leading-tight break-words">{{ $greeting }}, {{ $userName }}!</h1>
+                    @if(auth()->check())
+                        <a href="/settings#subscription" class="text-[12px] font-extrabold px-3.5 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-all flex items-center gap-1.5 shrink-0 cursor-pointer" title="Kelola Paket Langganan">
+                            <span class="material-symbols-outlined text-[14px]">
+                                {{ auth()->user()->role === 'premium' ? 'workspace_premium' : (auth()->user()->role === 'pro' ? 'star' : 'eco') }}
+                            </span>
+                            Paket {{ auth()->user()->planName() }}
+                        </a>
+                    @endif
+                </div>
                 <p class="text-[14px] sm:text-[16px] text-on-surface-variant leading-relaxed">Kebun Anda tumbuh dengan baik. Mari lihat apa yang perlu dirawat hari ini.</p>
             </div>
             
@@ -441,116 +451,121 @@ function initDashboard() {
         return null;
     }
 
-    async function applyWeather(locationData) {
-        const province = locationData.region || '';
-        const cityName = locationData.city || province || 'Wilayah Anda';
+    function cleanLocationName(name) {
+        if (!name) return 'Lokasi Kebun';
+        let cleaned = String(name).replace(/\s*\([\d\.\,\s\-]+\)/gi, '').trim();
+        if (cleaned === 'Lokasi Terdeteksi' || cleaned === 'Kota Terdeteksi' || !cleaned) {
+            return 'Lokasi Kebun';
+        }
+        return cleaned;
+    }
+
+    async function applyWeather(locationData = null) {
+        showWeatherState('loading');
+        let queryStr = '';
+        if (locationData && locationData.lat && locationData.lon) {
+            queryStr = `?lat=${locationData.lat}&lng=${locationData.lon}`;
+        }
 
         try {
-            const resp = await fetch('/api/weather/live');
+            const resp = await fetch(`/api/weather/live${queryStr}`);
             if (resp.ok) {
                 const apiData = await resp.json();
                 if (apiData.success && apiData.agronomic) {
                     const agro = apiData.agronomic;
                     const temp = agro.temperature || 29;
+                    const rawName = (apiData.location && apiData.location.name) 
+                        ? apiData.location.name 
+                        : (locationData ? (locationData.formatted || locationData.name || locationData.city) : 'Lokasi Kebun');
+                    const locName = cleanLocationName(rawName);
 
                     document.getElementById('weather-icon-main').textContent = agro.icon || 'partly_cloudy_day';
                     document.getElementById('weather-title').textContent = `Cuaca: ${agro.condition_title || 'Cerah Berawan'}`;
-                    document.getElementById('weather-desc').textContent = `${agro.summary} Sistem penyiraman otomatis menyesuaikan keputusan secara pintar.`;
-                    document.getElementById('weather-location').textContent = locationData.formatted || `${cityName}, ${province}`;
+                    document.getElementById('weather-desc').textContent = `${agro.summary} ${agro.watering ? agro.watering.advice : ''}`;
+                    document.getElementById('weather-location').textContent = locName;
 
                     const badgeElem = document.getElementById('weather-badge');
                     badgeElem.textContent = `${agro.condition_title} (${temp}°C)`;
                     badgeElem.className = `text-[10px] sm:text-[11px] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap ${agro.badge_bg}`;
 
                     showWeatherState('active');
+
+                    // Sync to local storage for consistency
+                    if (!locationData && apiData.location) {
+                        const syncLoc = {
+                            lat: apiData.location.latitude,
+                            lon: apiData.location.longitude,
+                            name: apiData.location.name || 'Lokasi Kebun',
+                            formatted: apiData.location.name || 'Lokasi Kebun'
+                        };
+                        localStorage.setItem('garden_location', JSON.stringify(syncLoc));
+                    }
                     return;
                 }
             }
         } catch(e) {
-            console.warn('Backend live weather API fallback to client fetch', e);
+            console.warn('Backend live weather fetch error:', e);
         }
 
-        let lat = locationData.lat || 3.58;
-        let lon = locationData.lon || 98.67;
-
-        const live = await fetchLiveWeather(lat, lon);
-
-        let title = 'Cuaca: Cerah Berawan';
-        let iconMain = 'partly_cloudy_day';
-        let badge = 'Cerah Berawan (29°C)';
-        let badgeBg = 'bg-emerald-100 text-emerald-800 border border-emerald-200';
-        let desc = 'Kondisi cuaca sejuk & stabil. Jadwal penyiraman otomatis berjalan sesuai standar.';
-
-        if (live) {
-            const code = live.wCode;
-            const temp = live.temp;
-            const rainProb = live.rainProb;
-
-            if ([95, 96, 99].includes(code)) {
-                title = 'Cuaca: Hujan Badai & Petir';
-                iconMain = 'thunderstorm';
-                badge = `Badai & Petir (${temp}°C)`;
-                badgeBg = 'bg-purple-100 text-purple-900 border border-purple-300';
-                desc = `WASPADA Hujan Badai & Angin Kencang di ${cityName}! Amankan tanaman outdoor.`;
-            } else if ([65, 82, 61, 63, 80, 81].includes(code) || rainProb >= 70) {
-                title = 'Cuaca: Hujan';
-                iconMain = 'rainy';
-                badge = `Hujan (${temp}°C)`;
-                badgeBg = 'bg-blue-100 text-blue-800 border border-blue-200';
-                desc = `Hujan terdeteksi di ${cityName} (Peluang ${rainProb}%). Penyesuaian penyiraman otomatis aktif.`;
-            } else if (temp >= 33) {
-                title = 'Cuaca: Panas Terik';
-                iconMain = 'wb_sunny';
-                badge = `Panas Terik (${temp}°C)`;
-                badgeBg = 'bg-amber-100 text-amber-900 border border-amber-300';
-                desc = `Suhu tinggi ${temp}°C terdeteksi di ${cityName}. Perlindungan ekstra dari penguapan disarankan.`;
-            } else {
-                title = 'Cuaca: Cerah Berawan';
-                iconMain = 'partly_cloudy_day';
-                badge = `Cerah Berawan (${temp}°C)`;
-                badgeBg = 'bg-emerald-100 text-emerald-800 border border-emerald-200';
-                desc = `Kondisi cuaca sejuk & sinar matahari cukup di ${cityName}. Ideal untuk pertumbuhan tanaman.`;
-            }
-        }
-
-        document.getElementById('weather-icon-main').textContent = iconMain;
-        document.getElementById('weather-title').textContent = title;
-        document.getElementById('weather-desc').textContent = desc;
-        document.getElementById('weather-location').textContent = locationData.formatted || province;
-        
-        const badgeElem = document.getElementById('weather-badge');
-        badgeElem.textContent = badge;
-        badgeElem.className = `text-[10px] sm:text-[11px] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap ${badgeBg}`;
-
-        showWeatherState('active');
-    }
-
-    const userProvince = @json(Auth::user()->province);
-    const saved = localStorage.getItem('garden_location');
-    if (saved) {
-        try {
-            applyWeather(JSON.parse(saved));
-        } catch(e) {
-            showWeatherState('ask');
-        }
-    } else if (userProvince) {
-        const userLoc = {
-            region: userProvince,
-            formatted: `${userProvince}, Indonesia`
-        };
-        localStorage.setItem('garden_location', JSON.stringify(userLoc));
-        applyWeather(userLoc);
-    } else {
         showWeatherState('ask');
     }
 
-    // Automatic Live Weather Background Sync (Every 2 minutes, no page refresh!)
+    // Auto-load on startup: load garden weather from DB or local storage or auto-detect
+    async function loadInitialWeather() {
+        const saved = localStorage.getItem('garden_location');
+        if (saved) {
+            try {
+                await applyWeather(JSON.parse(saved));
+                return;
+            } catch(e){}
+        }
+
+        // Try DB live weather directly
+        try {
+            const resp = await fetch('/api/weather/live');
+            if (resp.ok) {
+                const apiData = await resp.json();
+                if (apiData.success && apiData.agronomic) {
+                    await applyWeather(null);
+                    return;
+                }
+            }
+        } catch(e){}
+
+        // Auto-detect fast location fallback
+        try {
+            const locData = await getFastLocation();
+            localStorage.setItem('garden_location', JSON.stringify(locData));
+            await applyWeather(locData);
+        } catch(e) {
+            showWeatherState('ask');
+        }
+    }
+
+    loadInitialWeather();
+
+    // Listen to real-time location changes across tabs or pages
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'garden_location' && e.newValue) {
+            try { applyWeather(JSON.parse(e.newValue)); } catch(err){}
+        }
+    });
+
+    window.addEventListener('garden_location_updated', (e) => {
+        if (e.detail) {
+            try { applyWeather(e.detail); } catch(err){}
+        }
+    });
+
+    // Automatic Live Weather Background Sync (Every 2 minutes)
     setInterval(async () => {
         const currentLoc = localStorage.getItem('garden_location');
         if (currentLoc) {
             try {
                 await applyWeather(JSON.parse(currentLoc));
             } catch(e){}
+        } else {
+            await applyWeather(null);
         }
     }, 120000);
 

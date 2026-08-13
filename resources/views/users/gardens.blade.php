@@ -86,10 +86,15 @@
                             </div>
                             <div class="min-w-0">
                                 <h2 id="detail-garden-name" class="text-[22px] font-bold text-on-surface truncate"></h2>
-                                <p id="detail-garden-location" class="text-[13px] text-on-surface-variant flex items-center gap-1 mt-0.5 truncate">
-                                    <span class="material-symbols-outlined text-[14px] shrink-0">location_on</span>
-                                    <span class="truncate"></span>
-                                </p>
+                                <div class="flex items-center gap-2 mt-0.5 min-w-0 flex-wrap">
+                                    <p id="detail-garden-location" class="text-[13px] text-on-surface-variant flex items-center gap-1 truncate">
+                                        <span class="material-symbols-outlined text-[14px] shrink-0 text-primary">location_on</span>
+                                        <span class="truncate"></span>
+                                    </p>
+                                    <button type="button" onclick="GardenApp.quickDetectLocation()" class="text-[11px] font-bold text-primary hover:underline flex items-center gap-0.5 shrink-0" title="Deteksi Lokasi GPS Kebun">
+                                        <span class="material-symbols-outlined text-[13px]">my_location</span> Deteksi
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div class="flex items-center gap-2 shrink-0">
@@ -97,10 +102,85 @@
                                 <span class="material-symbols-outlined text-[16px]">add</span>
                                 Tambah Tanaman
                             </button>
+                            <button type="button" onclick="GardenApp.openEditGardenModal()" class="p-2.5 text-on-surface-variant hover:text-primary hover:bg-primary/10 rounded-full transition-colors" title="Edit Kebun & Lokasi">
+                                <span class="material-symbols-outlined text-[20px]">edit</span>
+                            </button>
                             <button type="button" onclick="GardenApp.deleteCurrentGarden()" class="p-2.5 text-on-surface-variant hover:text-error hover:bg-error/10 rounded-full transition-colors" title="Hapus Kebun">
                                 <span class="material-symbols-outlined text-[20px]">delete</span>
                             </button>
                         </div>
+                    </div>
+                </div>
+
+                {{-- Garden Live Weather & Smart Adaptation Card --}}
+                <div id="garden-weather-card" class="bg-surface rounded-[24px] p-5 sm:p-6 ambient-shadow border border-outline-variant/20 w-full flex flex-col gap-4">
+                    <div class="flex items-center justify-between gap-3 flex-wrap border-b border-outline-variant/20 pb-3">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <div class="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                                <span class="material-symbols-outlined text-[20px]" id="garden-weather-icon">cloud</span>
+                            </div>
+                            <div class="min-w-0">
+                                <h4 class="text-[15px] font-bold text-on-surface truncate" id="garden-weather-title">Memuat Cuaca Kebun...</h4>
+                                <p class="text-[11px] text-on-surface-variant flex items-center gap-1 truncate">
+                                    <span class="material-symbols-outlined text-[12px] text-primary">location_on</span>
+                                    <span id="garden-weather-location">Mendeteksi koordinat...</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <span id="garden-weather-badge" class="text-[11px] font-bold px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
+                                Deteksi Real-Time
+                            </span>
+                            <button type="button" onclick="GardenApp.quickDetectLocation()" class="flex items-center gap-1.5 text-[12px] font-bold text-primary bg-primary/10 hover:bg-primary/20 px-3.5 py-1.5 rounded-full transition-all active:scale-95 cursor-pointer" title="Perbarui Cuaca & Lokasi GPS Kebun">
+                                <span class="material-symbols-outlined text-[15px]">my_location</span>
+                                <span>Deteksi Lokasi</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- Weather Metrics Grid --}}
+                    <div id="garden-weather-metrics" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <div class="bg-surface-container-low p-3.5 rounded-2xl flex flex-col">
+                            <span class="text-[11px] text-on-surface-variant font-medium flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[14px] text-error">thermostat</span> Suhu
+                            </span>
+                            <span id="gweather-temp" class="text-[18px] sm:text-[20px] font-black text-on-surface mt-0.5">--°C</span>
+                        </div>
+                        <div class="bg-surface-container-low p-3.5 rounded-2xl flex flex-col">
+                            <span class="text-[11px] text-on-surface-variant font-medium flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[14px] text-primary">water_drop</span> Kelembapan
+                            </span>
+                            <span id="gweather-humidity" class="text-[18px] sm:text-[20px] font-black text-on-surface mt-0.5">--%</span>
+                        </div>
+                        <div class="bg-surface-container-low p-3.5 rounded-2xl flex flex-col">
+                            <span class="text-[11px] text-on-surface-variant font-medium flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[14px] text-sky-600">rainy</span> Peluang Hujan
+                            </span>
+                            <span id="gweather-rain" class="text-[18px] sm:text-[20px] font-black text-on-surface mt-0.5">--%</span>
+                        </div>
+                        <div class="bg-surface-container-low p-3.5 rounded-2xl flex flex-col">
+                            <span class="text-[11px] text-on-surface-variant font-medium flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[14px] text-stone-600">air</span> Angin
+                            </span>
+                            <span id="gweather-wind" class="text-[18px] sm:text-[20px] font-black text-on-surface mt-0.5">-- km/j</span>
+                        </div>
+                    </div>
+
+                    {{-- Agronomic Advice Box --}}
+                    <div id="garden-weather-advice" class="bg-surface-container-low rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border border-outline-variant/15">
+                        <div class="flex items-start gap-3 min-w-0">
+                            <span class="material-symbols-outlined text-primary text-[22px] shrink-0 mt-0.5" id="gweather-advice-icon">lightbulb</span>
+                            <div class="min-w-0">
+                                <div class="flex items-center gap-2 mb-0.5 flex-wrap">
+                                    <span class="text-[11px] font-extrabold uppercase tracking-wider text-primary flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-[13px]">auto_awesome</span> Adaptasi Irigasi Pintar
+                                    </span>
+                                    <span id="gweather-advice-title" class="text-[13px] font-bold text-on-surface"></span>
+                                </div>
+                                <p id="gweather-advice-text" class="text-[12.5px] text-on-surface-variant leading-relaxed"></p>
+                            </div>
+                        </div>
+                        <span id="gweather-advice-badge" class="text-[11px] font-extrabold px-3 py-1 rounded-full whitespace-nowrap shrink-0"></span>
                     </div>
                 </div>
 
@@ -179,9 +259,23 @@
                         class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 bg-surface text-on-surface text-[14px] focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
                 </div>
                 <div>
-                    <label class="block text-[13px] font-bold text-on-surface mb-2">Lokasi <span class="text-[12px] font-normal text-on-surface-variant">(Opsional)</span></label>
-                    <input type="text" name="location" placeholder="Contoh: Bandung, Jawa Barat"
-                        class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 bg-surface text-on-surface text-[14px] focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+                    <label class="block text-[13px] font-bold text-on-surface mb-2">Lokasi Kebun <span class="text-[12px] font-normal text-on-surface-variant">(Opsional)</span></label>
+                    <div class="flex items-center gap-2.5 w-full">
+                        <div class="relative flex-1 min-w-0">
+                            <input type="text" name="location" id="add-garden-location-input" placeholder="Contoh: Gaharu, Medan..."
+                                class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 bg-surface text-on-surface text-[14px] focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all truncate">
+                        </div>
+                        <button type="button" onclick="GardenApp.detectLocationForModal('add')" id="btn-detect-add" class="h-[46px] px-3.5 sm:px-4 rounded-xl bg-primary/10 text-primary font-bold text-[13px] hover:bg-primary/20 transition-all shrink-0 flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-[95px] sm:min-w-[110px]">
+                            <span class="material-symbols-outlined text-[18px] shrink-0">my_location</span>
+                            <span class="text-[13px]">Deteksi</span>
+                        </button>
+                    </div>
+                    <input type="hidden" name="latitude" id="add-garden-lat">
+                    <input type="hidden" name="longitude" id="add-garden-lng">
+                    <div class="mt-2 text-[12px] text-on-surface-variant flex items-start gap-1.5 w-full min-w-0 break-words leading-snug" id="add-location-status">
+                        <span class="material-symbols-outlined text-[14px] text-primary shrink-0 mt-0.5">info</span>
+                        <span class="flex-1 min-w-0">Klik Deteksi untuk mengisi nama lokasi dari GPS.</span>
+                    </div>
                 </div>
                 <div class="flex items-center justify-end gap-3 pt-2">
                     <button type="button" onclick="GardenApp.closeAddGardenModal()" class="px-5 py-2.5 rounded-full text-[14px] font-bold text-on-surface-variant hover:bg-surface-container-high transition-colors">
@@ -189,6 +283,62 @@
                     </button>
                     <button type="submit" id="add-garden-submit" class="bg-primary text-on-primary font-bold text-[14px] px-6 py-2.5 rounded-full hover:bg-primary/90 active:scale-95 transition-all shadow-sm">
                         Buat Kebun
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- ── Edit Garden Modal ── --}}
+<div id="edit-garden-modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="GardenApp.closeEditGardenModal()"></div>
+    <div class="w-full min-h-screen px-4 py-8 flex flex-col items-center justify-center pointer-events-none">
+        <div class="w-full shrink-0 min-w-full sm:min-w-[400px] max-w-md mx-auto bg-surface rounded-[28px] p-6 sm:p-8 ambient-shadow-lg border border-outline-variant/30 pointer-events-auto relative self-stretch" style="white-space: normal; word-break: normal;">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                        <span class="material-symbols-outlined text-[22px]">edit</span>
+                    </div>
+                    <h3 class="text-[20px] font-bold text-on-surface">Edit Kebun</h3>
+                </div>
+                <button type="button" onclick="GardenApp.closeEditGardenModal()" class="w-9 h-9 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:bg-error/10 hover:text-error transition-colors shrink-0">
+                    <span class="material-symbols-outlined text-[20px]">close</span>
+                </button>
+            </div>
+
+            <form id="edit-garden-form" onsubmit="GardenApp.submitEditGarden(event)" class="flex flex-col gap-5">
+                <input type="hidden" name="garden_id" id="edit-garden-id">
+                <div>
+                    <label class="block text-[13px] font-bold text-on-surface mb-2">Nama Kebun <span class="text-error">*</span></label>
+                    <input type="text" name="name" id="edit-garden-name-input" required placeholder="Nama Kebun"
+                        class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 bg-surface text-on-surface text-[14px] focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+                </div>
+                <div>
+                    <label class="block text-[13px] font-bold text-on-surface mb-2">Lokasi Kebun</label>
+                    <div class="flex items-center gap-2.5 w-full">
+                        <div class="relative flex-1 min-w-0">
+                            <input type="text" name="location" id="edit-garden-location-input" placeholder="Contoh: Gaharu, Medan..."
+                                class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 bg-surface text-on-surface text-[14px] focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all truncate">
+                        </div>
+                        <button type="button" onclick="GardenApp.detectLocationForModal('edit')" id="btn-detect-edit" class="h-[46px] px-3.5 sm:px-4 rounded-xl bg-primary/10 text-primary font-bold text-[13px] hover:bg-primary/20 transition-all shrink-0 flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-[95px] sm:min-w-[110px]">
+                            <span class="material-symbols-outlined text-[18px] shrink-0">my_location</span>
+                            <span class="text-[13px]">Deteksi</span>
+                        </button>
+                    </div>
+                    <input type="hidden" name="latitude" id="edit-garden-lat">
+                    <input type="hidden" name="longitude" id="edit-garden-lng">
+                    <div class="mt-2 text-[12px] text-on-surface-variant flex items-start gap-1.5 w-full min-w-0 break-words leading-snug" id="edit-location-status">
+                        <span class="material-symbols-outlined text-[14px] text-primary shrink-0 mt-0.5">info</span>
+                        <span class="flex-1 min-w-0">Klik Deteksi untuk auto-update lokasi GPS kebun ini.</span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-end gap-3 pt-2">
+                    <button type="button" onclick="GardenApp.closeEditGardenModal()" class="px-5 py-2.5 rounded-full text-[14px] font-bold text-on-surface-variant hover:bg-surface-container-high transition-colors">
+                        Batal
+                    </button>
+                    <button type="submit" id="edit-garden-submit" class="bg-primary text-on-primary font-bold text-[14px] px-6 py-2.5 rounded-full hover:bg-primary/90 active:scale-95 transition-all shadow-sm">
+                        Simpan Perubahan
                     </button>
                 </div>
             </form>
@@ -385,6 +535,14 @@ window.GardenApp = (() => {
     function escAttr(str) {
         return escHtml(str);
     }
+    function cleanLocationName(name) {
+        if (!name) return '';
+        let cleaned = String(name).replace(/\s*\([\d\.\,\s\-]+\)/gi, '').trim();
+        if (cleaned === 'Lokasi Terdeteksi' || cleaned === 'Kota Terdeteksi' || !cleaned) {
+            return 'Lokasi Kebun';
+        }
+        return cleaned;
+    }
 
     // ── Init ──
     async function init() {
@@ -482,6 +640,7 @@ window.GardenApp = (() => {
 
         list.innerHTML = gardens.map((g, idx) => {
             const isLocked = idx >= USER_PLAN_CONFIG.maxGardens;
+            const cleanLoc = cleanLocationName(g.location_name);
             return `
             <button type="button" onclick="GardenApp.selectGarden(${g.id})"
                 class="garden-card w-full text-left bg-surface rounded-[20px] p-4 sm:p-5 ambient-shadow hover:-translate-y-0.5 hover:ambient-shadow-lg transition-all duration-200 border-2 ${selectedGardenId === g.id ? (isLocked ? 'border-error bg-error-container/20' : 'border-[#006c49]') : 'border-transparent'} ${isLocked ? 'bg-surface-container-low opacity-80' : ''}" data-garden-id="${g.id}">
@@ -491,7 +650,7 @@ window.GardenApp = (() => {
                     </div>
                     <div class="flex-1 min-w-0">
                         <h3 class="text-[14px] sm:text-[15px] font-bold ${isLocked ? 'text-on-surface-variant line-through opacity-70' : 'text-on-surface'} truncate">${escHtml(g.name)}</h3>
-                        ${g.location_name ? `<p class="text-[11px] sm:text-[12px] text-on-surface-variant truncate flex items-center gap-1 mt-0.5"><span class="material-symbols-outlined text-[12px]">location_on</span>${escHtml(g.location_name)}</p>` : ''}
+                        ${cleanLoc ? `<p class="text-[11px] sm:text-[12px] text-on-surface-variant truncate flex items-center gap-1 mt-0.5"><span class="material-symbols-outlined text-[12px]">location_on</span>${escHtml(cleanLoc)}</p>` : ''}
                         ${isLocked ? `<div class="mt-1"><span class="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container border border-error/30 whitespace-nowrap inline-block">Terkunci</span></div>` : ''}
                     </div>
                     <span class="material-symbols-outlined text-[20px] ${isLocked ? 'text-error' : 'text-on-surface-variant'}">chevron_right</span>
@@ -578,14 +737,16 @@ window.GardenApp = (() => {
         }
 
         const locEl = document.getElementById('detail-garden-location');
-        if (garden.location_name) {
+        const cleanLoc = cleanLocationName(garden.location_name);
+        if (cleanLoc) {
             locEl.classList.remove('hidden');
-            locEl.querySelector('span:last-child').textContent = garden.location_name;
+            locEl.querySelector('span:last-child').textContent = cleanLoc;
         } else {
             locEl.classList.add('hidden');
         }
 
-        // Load plants for this garden
+        // Load weather & plants for this garden
+        loadGardenWeather(gardenId);
         await loadPlants(gardenId, isGardenLocked);
     }
 
@@ -679,6 +840,225 @@ window.GardenApp = (() => {
         });
     }
 
+    // ── Geolocation & Weather Helpers ──
+    async function fetchFastLocation() {
+        let coords = null;
+        if (navigator.geolocation) {
+            coords = await new Promise((resolve) => {
+                let done = false;
+                const timer = setTimeout(() => { if (!done) { done = true; resolve(null); } }, 4000);
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => { if (!done) { done = true; clearTimeout(timer); resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }); } },
+                    () => { if (!done) { done = true; clearTimeout(timer); resolve(null); } },
+                    { enableHighAccuracy: true, timeout: 3500, maximumAge: 60000 }
+                );
+            });
+        }
+
+        if (coords) {
+            try {
+                const controller = new AbortController();
+                const fetchTimer = setTimeout(() => controller.abort(), 3500);
+                const resp = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.lat}&lon=${coords.lon}&zoom=14`, {
+                    headers: { 'Accept-Language': 'id, en' },
+                    signal: controller.signal
+                });
+                clearTimeout(fetchTimer);
+                if (resp.ok) {
+                    const data = await resp.json();
+                    const addr = data.address || {};
+                    const district = addr.suburb || addr.village || addr.neighbourhood || addr.city_district || addr.quarter || '';
+                    const city = addr.city || addr.town || addr.municipality || addr.county || 'Kota Terdeteksi';
+                    const state = addr.state || addr.region || city;
+                    const locationName = district ? `${district}, ${city}` : `${city}, ${state}`;
+                    return {
+                        lat: coords.lat,
+                        lon: coords.lon,
+                        name: locationName,
+                        formatted: locationName
+                    };
+                }
+            } catch (e) {
+                console.warn('Reverse geocode timeout/fail, using coordinates', e);
+            }
+            return {
+                lat: coords.lat,
+                lon: coords.lon,
+                name: 'Lokasi Terdeteksi',
+                formatted: 'Lokasi Terdeteksi'
+            };
+        }
+
+        // IP Geolocation fallback via ipwho.is
+        try {
+            const controller = new AbortController();
+            const fetchTimer = setTimeout(() => controller.abort(), 3000);
+            const resp = await fetch('https://ipwho.is/', { signal: controller.signal });
+            clearTimeout(fetchTimer);
+            if (resp.ok) {
+                const ipData = await resp.json();
+                if (ipData.success) {
+                    const city = ipData.city || 'Kota Terdeteksi';
+                    const region = ipData.region || '';
+                    return {
+                        lat: ipData.latitude || 3.58,
+                        lon: ipData.longitude || 98.67,
+                        name: region ? `${city}, ${region}` : city,
+                        formatted: city
+                    };
+                }
+            }
+        } catch (e) {}
+
+        return {
+            lat: 3.58,
+            lon: 98.67,
+            name: 'Gaharu, Medan',
+            formatted: 'Gaharu, Medan'
+        };
+    }
+
+    async function detectLocationForModal(prefix) {
+        const btn = document.getElementById(`btn-detect-${prefix}`);
+        const status = document.getElementById(`${prefix}-location-status`);
+        const locInput = document.getElementById(`${prefix}-garden-location-input`);
+        const latInput = document.getElementById(`${prefix}-garden-lat`);
+        const lngInput = document.getElementById(`${prefix}-garden-lng`);
+
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = `<span class="material-symbols-outlined text-[18px] animate-spin shrink-0">sync</span> <span class="text-[13px]">Proses...</span>`;
+        }
+        if (status) {
+            status.innerHTML = `<span class="material-symbols-outlined text-[14px] text-primary animate-spin shrink-0 mt-0.5">progress_activity</span> <span class="flex-1 min-w-0">Mencari titik lokasi GPS & nama lokasi...</span>`;
+        }
+
+        try {
+            const locData = await fetchFastLocation();
+            if (locInput) locInput.value = locData.name;
+            if (latInput) latInput.value = locData.lat;
+            if (lngInput) lngInput.value = locData.lon;
+
+            if (status) {
+                const displayName = escHtml(locData.name || 'Lokasi Terdeteksi');
+                status.innerHTML = `<span class="material-symbols-outlined text-[14px] text-emerald-600 shrink-0 mt-0.5">check_circle</span> <span class="flex-1 min-w-0">Lokasi terdeteksi: <strong class="text-on-surface font-semibold">${displayName}</strong></span>`;
+            }
+        } catch (e) {
+            if (status) {
+                status.innerHTML = `<span class="material-symbols-outlined text-[14px] text-error shrink-0 mt-0.5">error</span> <span class="flex-1 min-w-0">Gagal mendeteksi lokasi otomatis. Anda dapat mengetik lokasi secara manual.</span>`;
+            }
+        } finally {
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = `<span class="material-symbols-outlined text-[18px] shrink-0">my_location</span> <span class="text-[13px]">Deteksi</span>`;
+            }
+        }
+    }
+
+    async function quickDetectLocation() {
+        if (!selectedGardenId) return;
+        const garden = gardens.find(g => g.id === selectedGardenId);
+        if (!garden) return;
+
+        const badge = document.getElementById('garden-weather-badge');
+        if (badge) {
+            badge.textContent = 'Mendeteksi...';
+        }
+
+        try {
+            const locData = await fetchFastLocation();
+            const updatedGarden = await api(`/api/gardens/${selectedGardenId}`, {
+                method: 'PUT',
+                body: JSON.stringify({
+                    name: garden.name,
+                    location: locData.name,
+                    latitude: locData.lat,
+                    longitude: locData.lon
+                })
+            });
+
+            const idx = gardens.findIndex(g => g.id === selectedGardenId);
+            if (idx > -1) {
+                gardens[idx] = updatedGarden;
+            }
+
+            // Sync to local storage & broadcast to other components (like Beranda / Dashboard)
+            localStorage.setItem('garden_location', JSON.stringify(locData));
+            window.dispatchEvent(new CustomEvent('garden_location_updated', { detail: locData }));
+
+            renderGardens();
+            if (window.Alert && Alert.toast) {
+                Alert.toast.success(`Lokasi kebun diperbarui: ${locData.name}`);
+            }
+            await loadGardenWeather(selectedGardenId);
+        } catch (e) {
+            console.error('Quick detect failed:', e);
+            if (window.Alert && Alert.modal) {
+                Alert.modal.error('Gagal Deteksi Lokasi', e.message);
+            }
+        }
+    }
+
+    async function loadGardenWeather(gardenId) {
+        const titleEl = document.getElementById('garden-weather-title');
+        const locEl = document.getElementById('garden-weather-location');
+        const badgeEl = document.getElementById('garden-weather-badge');
+        const iconEl = document.getElementById('garden-weather-icon');
+        const tempEl = document.getElementById('gweather-temp');
+        const humidityEl = document.getElementById('gweather-humidity');
+        const rainEl = document.getElementById('gweather-rain');
+        const windEl = document.getElementById('gweather-wind');
+        const adviceTitleEl = document.getElementById('gweather-advice-title');
+        const adviceTextEl = document.getElementById('gweather-advice-text');
+        const adviceBadgeEl = document.getElementById('gweather-advice-badge');
+        const adviceIconEl = document.getElementById('gweather-advice-icon');
+
+        if (!gardenId) return;
+        const garden = gardens.find(g => g.id === gardenId);
+
+        if (titleEl) titleEl.textContent = 'Memuat Data Cuaca...';
+        if (locEl) locEl.textContent = garden ? (garden.location_name || 'Lokasi Belum Diatur') : 'Lokasi Kebun';
+
+        try {
+            const data = await api(`/api/weather/live?garden_id=${gardenId}`);
+            if (data && data.success && data.agronomic) {
+                const ag = data.agronomic;
+                if (titleEl) titleEl.textContent = `Cuaca Saat Ini: ${ag.condition_title}`;
+                if (badgeEl) {
+                    badgeEl.textContent = ag.condition_title;
+                    badgeEl.className = `text-[11px] font-bold px-3 py-1 rounded-full ${ag.badge_bg}`;
+                }
+                if (iconEl) iconEl.textContent = ag.icon || 'cloud';
+
+                if (tempEl) tempEl.textContent = `${ag.temperature}°C`;
+                if (humidityEl) humidityEl.textContent = `${ag.humidity}%`;
+                if (rainEl) rainEl.textContent = `${ag.rain_probability}%`;
+                if (windEl) windEl.textContent = `${ag.wind_speed} km/j`;
+
+                if (ag.watering) {
+                    if (adviceTitleEl) adviceTitleEl.textContent = ag.watering.title;
+                    if (adviceTextEl) adviceTextEl.textContent = ag.watering.advice;
+                    if (adviceBadgeEl) {
+                        adviceBadgeEl.textContent = ag.watering.badge;
+                        adviceBadgeEl.className = `text-[11px] font-extrabold px-3 py-1 rounded-full ${ag.watering.badge_bg}`;
+                    }
+                }
+                if (adviceIconEl) {
+                    adviceIconEl.textContent = ag.irrigation_decision === 'SKIP' ? 'shower' : (ag.irrigation_decision === 'REDUCE' ? 'water_drop' : 'wb_sunny');
+                }
+
+                if (locEl && data.location) {
+                    const dispLoc = garden && garden.location_name ? garden.location_name : (data.location.name || 'Lokasi Kebun');
+                    locEl.textContent = dispLoc;
+                }
+            }
+        } catch (e) {
+            console.error('Failed to load garden weather:', e);
+            if (titleEl) titleEl.textContent = 'Data Cuaca Tidak Tersedia';
+            if (locEl) locEl.textContent = garden ? (garden.location_name || 'Lokasi Kebun') : 'Lokasi Kebun';
+        }
+    }
+
     // ── Add Garden ──
     function openAddGardenModal() {
         if (gardens.length >= USER_PLAN_CONFIG.maxGardens) {
@@ -696,6 +1076,14 @@ window.GardenApp = (() => {
         }
         document.getElementById('add-garden-modal').classList.remove('hidden');
         document.getElementById('add-garden-form').reset();
+        const latEl = document.getElementById('add-garden-lat');
+        const lngEl = document.getElementById('add-garden-lng');
+        if (latEl) latEl.value = '';
+        if (lngEl) lngEl.value = '';
+        const statusEl = document.getElementById('add-location-status');
+        if (statusEl) {
+            statusEl.innerHTML = `<span class="material-symbols-outlined text-[14px] text-primary shrink-0 mt-0.5">info</span> <span class="flex-1 min-w-0">Klik Deteksi untuk mengisi nama lokasi dari GPS.</span>`;
+        }
     }
 
     function closeAddGardenModal() {
@@ -713,6 +1101,8 @@ window.GardenApp = (() => {
             const data = {
                 name: form.name.value,
                 location: form.location.value || null,
+                latitude: form.latitude && form.latitude.value ? parseFloat(form.latitude.value) : null,
+                longitude: form.longitude && form.longitude.value ? parseFloat(form.longitude.value) : null,
             };
             const garden = await api('/api/gardens', { method: 'POST', body: JSON.stringify(data) });
             gardens.push(garden);
@@ -730,6 +1120,82 @@ window.GardenApp = (() => {
             btn.disabled = false;
             btn.textContent = 'Buat Kebun';
             isProcessing = false;
+        }
+    }
+
+    // ── Edit Garden ──
+    function openEditGardenModal() {
+        if (!selectedGardenId) return;
+        const garden = gardens.find(g => g.id === selectedGardenId);
+        if (!garden) return;
+
+        document.getElementById('edit-garden-id').value = garden.id;
+        document.getElementById('edit-garden-name-input').value = garden.name;
+        document.getElementById('edit-garden-location-input').value = garden.location_name || '';
+        document.getElementById('edit-garden-lat').value = garden.latitude || '';
+        document.getElementById('edit-garden-lng').value = garden.longitude || '';
+
+        const status = document.getElementById('edit-location-status');
+        if (status) {
+            if (garden.latitude && garden.longitude) {
+                const locText = escHtml(garden.location_name || garden.name);
+                status.innerHTML = `<span class="material-symbols-outlined text-[14px] text-emerald-600 shrink-0 mt-0.5">check_circle</span> <span class="flex-1 min-w-0">Lokasi tersimpan: <strong class="text-on-surface font-semibold">${locText}</strong></span>`;
+            } else {
+                status.innerHTML = `<span class="material-symbols-outlined text-[14px] text-primary shrink-0 mt-0.5">info</span> <span class="flex-1 min-w-0">Klik Deteksi untuk auto-update lokasi GPS kebun ini.</span>`;
+            }
+        }
+
+        document.getElementById('edit-garden-modal').classList.remove('hidden');
+    }
+
+    function closeEditGardenModal() {
+        document.getElementById('edit-garden-modal').classList.add('hidden');
+    }
+
+    async function submitEditGarden(e) {
+        e.preventDefault();
+        const form = e.target;
+        const btn = document.getElementById('edit-garden-submit');
+        btn.disabled = true;
+        btn.textContent = 'Menyimpan...';
+
+        try {
+            const gardenId = form.garden_id.value;
+            const data = {
+                name: form.name.value,
+                location: form.location.value || null,
+                latitude: form.latitude && form.latitude.value ? parseFloat(form.latitude.value) : null,
+                longitude: form.longitude && form.longitude.value ? parseFloat(form.longitude.value) : null,
+            };
+            const updated = await api(`/api/gardens/${gardenId}`, { method: 'PUT', body: JSON.stringify(data) });
+            
+            const idx = gardens.findIndex(g => g.id === parseInt(gardenId));
+            if (idx > -1) {
+                gardens[idx] = updated;
+            }
+
+            if (updated.latitude && updated.longitude) {
+                const syncLoc = {
+                    lat: updated.latitude,
+                    lon: updated.longitude,
+                    name: updated.location_name || updated.name,
+                    formatted: updated.location_name || updated.name
+                };
+                localStorage.setItem('garden_location', JSON.stringify(syncLoc));
+                window.dispatchEvent(new CustomEvent('garden_location_updated', { detail: syncLoc }));
+            }
+
+            closeEditGardenModal();
+            renderGardens();
+            if (window.Alert && Alert.toast) {
+                Alert.toast.success('Kebun berhasil diperbarui!');
+            }
+            await loadGardenWeather(selectedGardenId);
+        } catch (e) {
+            Alert.modal.error('Gagal memperbarui kebun', e.message);
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Simpan Perubahan';
         }
     }
 
@@ -1108,6 +1574,12 @@ window.GardenApp = (() => {
         openAddGardenModal,
         closeAddGardenModal,
         submitAddGarden,
+        openEditGardenModal,
+        closeEditGardenModal,
+        submitEditGarden,
+        detectLocationForModal,
+        quickDetectLocation,
+        loadGardenWeather,
         deleteCurrentGarden,
         selectGarden,
         openAddPlantModal,
