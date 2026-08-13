@@ -408,3 +408,49 @@ window.Alert = {
         }
     }
 };
+
+// ── Global Native Alert & Form Confirm Overrides ─────────────
+window.alert = function (message) {
+    if (window.Alert && window.Alert.modal) {
+        window.Alert.modal.error('Pemberitahuan', String(message));
+    } else if (typeof Swal !== 'undefined') {
+        Swal.fire({ title: 'Pemberitahuan', text: String(message), icon: 'info' });
+    }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Intercept form submissions that have onsubmit="return confirm(...)" or data-confirm
+    document.addEventListener('submit', function (e) {
+        const form = e.target;
+        if (!form) return;
+
+        const confirmMsg = form.getAttribute('data-confirm');
+        const onsubmitAttr = form.getAttribute('onsubmit');
+
+        if (confirmMsg || (onsubmitAttr && onsubmitAttr.includes('confirm('))) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            let msg = confirmMsg;
+            if (!msg && onsubmitAttr) {
+                const match = onsubmitAttr.match(/confirm\(['"](.*?)['"]\)/);
+                if (match && match[1]) msg = match[1];
+            }
+            if (!msg) msg = 'Apakah Anda yakin ingin melanjutkan tindakan ini?';
+
+            form.removeAttribute('onsubmit');
+
+            if (window.Alert && window.Alert.modal) {
+                window.Alert.modal.confirm('Konfirmasi Aksi', msg, 'Ya, Lanjutkan', true).then(result => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            } else {
+                if (confirm(msg)) {
+                    form.submit();
+                }
+            }
+        }
+    }, true);
+});

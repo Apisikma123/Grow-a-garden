@@ -14,9 +14,9 @@
 
 .sticky-bg {
     position: sticky;
-    top: 0; 
+    top: 64px; 
     width: 100%; 
-    height: 100vh;
+    height: calc(100vh - 64px);
     z-index: 0;
     background-color: #f8f9fa;
     overflow: hidden;
@@ -48,7 +48,7 @@
 #hero-sequence.ready, #hero-sequence-bg.ready { opacity: 1; }
 
 .content-wrap {
-    margin-top: -100vh;
+    margin-top: calc(-100vh + 64px);
     position: relative;
     z-index: 1;
 }
@@ -255,7 +255,7 @@
     </div>
 </header>
 
-<div id="scroll-wrap" style="margin-top: 0;">
+<div id="scroll-wrap" style="margin-top: 64px;">
     <div class="sticky-bg relative">
         <canvas id="hero-sequence-bg"></canvas>
         <canvas id="hero-sequence"></canvas>
@@ -363,54 +363,16 @@
         
         let currentFrame = 0;
         let targetFrame = 0;
-        const easeFactor = 0.1; // Smooth Lerp factor
-        let lastDrawnFrame = -1;
+        const easeFactor = 0.08; // Lerp smoothing factor
         let canvasSetupDone = false;
         
-        // 1. Canvas DPR & Resizing Logic (Mimic Object-Fit Cover in JS)
-        function resizeCanvases() {
-            const dpr = Math.min(window.devicePixelRatio || 1, 2); // Cap at 2 to prevent 4K GPU lag
-            const container = canvas.parentElement;
-            if (!container) return;
-
-            const rect = container.getBoundingClientRect();
-            canvas.width = Math.floor(rect.width * dpr);
-            canvas.height = Math.floor(rect.height * dpr);
-            
-            canvasBg.width = Math.max(1, Math.floor(rect.width * 0.1 * dpr));
-            canvasBg.height = Math.max(1, Math.floor(rect.height * 0.1 * dpr));
-            
-            // Force redraw on resize
-            lastDrawnFrame = -1;
-        }
-
-        // 5. Sizing Logic: JS Math to mimic object-fit: contain/cover with a Zoom-Out scale factor (0.85)
-        function drawCover(context, img, targetW, targetH) {
-            if (!img || !img.complete) return;
-            const imgRatio = img.naturalWidth / img.naturalHeight;
-            const targetRatio = targetW / targetH;
-            let renderW, renderH, offsetX, offsetY;
-
-            // Zoom-out scale factor so the 3D model isn't cropped or overly large
-            const scaleFactor = 0.85;
-
-            if (targetRatio > imgRatio) {
-                renderH = targetH * scaleFactor;
-                renderW = renderH * imgRatio;
-            } else {
-                renderW = targetW * scaleFactor;
-                renderH = renderW / imgRatio;
-            }
-
-            offsetX = (targetW - renderW) / 2;
-            offsetY = (targetH - renderH) / 2;
-
-            context.drawImage(img, offsetX, offsetY, renderW, renderH);
-        }
-
-        // 2. Full Preloading & Caching
+        // 1. Tangani Retina/HiDPI display
+        const dpr = window.devicePixelRatio || 1;
+        
+        // 4. Image Preloading & Caching
         const assetBaseUrl = "{{ asset('images/3d') }}";
         
+        // Optional: Element untuk persentase loading
         const loadingStatus = document.createElement('div');
         loadingStatus.style.cssText = "position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); color:#006c49; font-weight:bold; font-size:1.2rem; z-index:50;";
         canvas.parentElement.appendChild(loadingStatus);
@@ -433,25 +395,30 @@
         }
         
         function initEngine() {
-            resizeCanvases();
+            const firstImg = images[0];
+            
+            // Sesuaikan ukuran dengan devicePixelRatio agar tidak buram
+            canvas.width = firstImg.naturalWidth * dpr;
+            canvas.height = firstImg.naturalHeight * dpr;
+            ctx.scale(dpr, dpr);
+            
+            canvasBg.width = (firstImg.naturalWidth * 0.1) * dpr;
+            canvasBg.height = (firstImg.naturalHeight * 0.1) * dpr;
+            ctxBg.scale(dpr, dpr);
             
             canvas.classList.add("ready");
             canvasBg.classList.add("ready");
             canvasSetupDone = true;
             
-            // Start render loop
+            // Mulai requestAnimationFrame loop
             requestAnimationFrame(renderLoop);
             
-            // Event listeners
+            // 5. Passive Event Listener & Scroll Offloading
             window.addEventListener('scroll', onScroll, { passive: true });
-            window.addEventListener('resize', () => {
-                resizeCanvases();
-                onScroll();
-            }, { passive: true });
+            window.addEventListener('resize', onScroll, { passive: true });
+            onScroll(); // Inisialisasi posisi frame pertama
             
-            onScroll(); // Initialize first position
-            
-            // GSAP Panel animations
+            // Inisialisasi GSAP hanya untuk teks interaktif
             if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
                 gsap.registerPlugin(ScrollTrigger);
                 const panels = document.querySelectorAll('.s-panel');
@@ -475,33 +442,47 @@
             let progress = -rect.top / scrollDistance;
             
             progress = Math.max(0, Math.min(1, progress));
+            // Hanya perbarui targetFrame
             targetFrame = progress * (frameCount - 1);
         }
         
-        // 3. Decoupled Scroll & LERP & 4. Render Optimization
+        // 2. Interpolation (Lerp) & requestAnimationFrame Loop
         function renderLoop() {
             requestAnimationFrame(renderLoop);
             if (!canvasSetupDone) return;
             
-            // Decoupled LERP Smoothing
+            // Implementasi Linear Interpolation (Lerp)
             currentFrame += (targetFrame - currentFrame) * easeFactor;
             
-            // 4. Render Optimization: Only draw when calculated frame index actually changes!
-            const frameIndex = Math.round(currentFrame);
-            if (frameIndex === lastDrawnFrame) return;
+            // 3. Cross-Fading / Frame Blending
+            const baseFrame = Math.floor(currentFrame);
+            const nextFrame = Math.min(baseFrame + 1, frameCount - 1);
+            const fraction = currentFrame - baseFrame;
             
-            const img = images[frameIndex];
-            if (!img || !img.complete) return;
+            const img1 = images[baseFrame];
+            const img2 = images[nextFrame];
             
-            // Layer 0: Background Blur (Fast Low-res Fill)
-            ctxBg.drawImage(img, 0, 0, canvasBg.width, canvasBg.height);
+            if (!img1 || !img1.complete) return;
             
-            // Layer 1: Main High-Res Canvas (Sharp HD Cover Fit)
-            drawCover(ctx, img, canvas.width, canvas.height);
+            const width = img1.naturalWidth;
+            const height = img1.naturalHeight;
             
-            lastDrawnFrame = frameIndex;
+            // Gambar Layer 0 (Blur Background)
+            ctxBg.globalAlpha = 1;
+            ctxBg.drawImage(img1, 0, 0, width * 0.1, height * 0.1);
+            
+            // Gambar Layer 1 (Frame Dasar)
+            ctx.globalAlpha = 1;
+            ctx.drawImage(img1, 0, 0, width, height);
+            
+            // Gambar Layer 2 (Cross-fade Fraction) untuk menahan patah-patah saat scroll cepat
+            if (fraction > 0.001 && img2 && img2.complete) {
+                ctx.globalAlpha = fraction;
+                ctx.drawImage(img2, 0, 0, width, height);
+            }
         }
         
+        // Mulai preloading semua gambar
         preloadAllImages();
     });
 </script>

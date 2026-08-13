@@ -256,11 +256,11 @@
             if (res.ok) {
                 window.location.reload();
             } else {
-                alert('Gagal menyimpan aturan perawatan.');
+                Alert.modal.error('Gagal', 'Gagal menyimpan aturan perawatan.');
             }
         } catch (e) {
             console.error(e);
-            alert('Terjadi kesalahan saat menyimpan.');
+            Alert.modal.error('Gagal', 'Terjadi kesalahan saat menyimpan.');
         }
     }
 
