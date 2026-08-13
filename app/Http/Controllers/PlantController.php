@@ -146,6 +146,51 @@ class PlantController extends Controller
         ], 201);
     }
 
+    public function harvest($id)
+    {
+        $plant = Plant::whereHas('garden', function ($q) {
+            $q->where('user_id', Auth::id());
+        })->findOrFail($id);
+
+        if ($plant->status === 'FINISHED') {
+            return response()->json(['error' => 'Tanaman ini sudah dipanen.'], 400);
+        }
+
+        $plant->update([
+            'status' => 'FINISHED',
+            'stage' => 'HARVEST',
+        ]);
+
+        // Cari tipe event HARVEST_READY jika ada, kalau tidak ya buat activity log dummy
+        $harvestEventType = \App\Models\EventType::where('code', 'HARVEST_READY')->first();
+        if ($harvestEventType) {
+            \App\Models\Event::create([
+                'plant_id' => $plant->id,
+                'event_type_id' => $harvestEventType->id,
+                'scheduled_date' => now(),
+                'status' => 'COMPLETED',
+                'priority' => 'HIGH',
+                'message' => 'Berhasil memanen tanaman ini!',
+                'completed_at' => now(),
+            ]);
+        }
+
+        // Trigger badges (e.g. Panen Pertama)
+        $user = Auth::user();
+        $sync = \App\Services\BadgeService::syncUserBadges($user);
+        $newBadge = null;
+        if (!empty($sync['newlyAwardedIds'])) {
+            $badge = \App\Models\Badge::find($sync['newlyAwardedIds'][0]);
+            $newBadge = [
+                'name' => $badge->name,
+                'description' => $badge->description,
+                'icon_url' => $badge->icon_url,
+            ];
+        }
+
+        return response()->json(['success' => true, 'new_badge' => $newBadge]);
+    }
+
     public function destroy($id)
     {
         $plant = Plant::whereHas('garden', function ($q) {

@@ -321,15 +321,21 @@
             </div>
 
             {{-- Actions --}}
-            <div class="flex items-center justify-between pt-2 border-t border-outline-variant/30">
-                <a id="detail-plant-calendar-link" href="/growth-calendar" class="flex items-center gap-2 text-primary font-bold text-[13px] hover:underline">
-                    <span class="material-symbols-outlined text-[18px]">calendar_month</span>
-                    Lihat di Kalender
-                </a>
-                <button type="button" onclick="GardenApp.deleteCurrentPlant()" class="flex items-center gap-2 text-error font-bold text-[13px] px-4 py-2 rounded-xl hover:bg-error/10 transition-colors">
-                    <span class="material-symbols-outlined text-[18px]">delete</span>
-                    Hapus Tanaman
+            <div class="flex flex-col gap-3 pt-2 border-t border-outline-variant/30">
+                <button type="button" id="btn-harvest-plant" onclick="GardenApp.harvestCurrentPlant()" style="display: none;" class="w-full flex items-center justify-center gap-2 bg-[#006c49] text-white font-bold text-[14px] px-4 py-3 rounded-xl hover:bg-[#005236] transition-colors shadow-sm mb-1">
+                    <span class="material-symbols-outlined text-[20px]">agriculture</span>
+                    Panen Sekarang!
                 </button>
+                <div class="flex items-center justify-between">
+                    <a id="detail-plant-calendar-link" href="/growth-calendar" class="flex items-center gap-2 text-primary font-bold text-[13px] hover:underline">
+                        <span class="material-symbols-outlined text-[18px]">calendar_month</span>
+                        Lihat di Kalender
+                    </a>
+                    <button type="button" onclick="GardenApp.deleteCurrentPlant()" class="flex items-center gap-2 text-error font-bold text-[13px] px-4 py-2 rounded-xl hover:bg-error/10 transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">delete</span>
+                        Hapus Tanaman
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -350,6 +356,7 @@ window.GardenApp = (() => {
     let templateCategories = [];
     let selectedTemplateId = null;
     let currentPlantDetail = null;
+    let isProcessing = false;
 
     const STAGE_CONFIG = {
         'SEED':        { label: 'Benih',       color: '#78a994', icon: 'grain' },
@@ -722,15 +729,17 @@ window.GardenApp = (() => {
         } finally {
             btn.disabled = false;
             btn.textContent = 'Buat Kebun';
+            isProcessing = false;
         }
     }
 
     // ── Delete Garden ──
     async function deleteCurrentGarden() {
-        if (!selectedGardenId) return;
+        if (isProcessing || !selectedGardenId) return;
         const result = await Alert.modal.confirm('Hapus Kebun?', 'Hapus kebun ini beserta seluruh tanamannya?', 'Ya, Hapus', true);
         if (!result.isConfirmed) return;
 
+        isProcessing = true;
         try {
             await api(`/api/gardens/${selectedGardenId}`, { method: 'DELETE' });
             gardens = gardens.filter(g => g.id !== selectedGardenId);
@@ -740,6 +749,8 @@ window.GardenApp = (() => {
             Alert.toast.success('Kebun berhasil dihapus');
         } catch (e) {
             Alert.modal.error('Gagal menghapus kebun', e.message);
+        } finally {
+            isProcessing = false;
         }
     }
 
@@ -933,8 +944,9 @@ window.GardenApp = (() => {
             quantity: selectedBatch[id]
         })).filter(item => item.quantity > 0);
 
-        if (items.length === 0 || !selectedGardenId) return;
+        if (items.length === 0 || !selectedGardenId || isProcessing) return;
 
+        isProcessing = true;
         const btn = document.getElementById('add-plant-submit');
         btn.disabled = true;
         btn.textContent = 'Menanam...';
@@ -967,6 +979,7 @@ window.GardenApp = (() => {
             Alert.modal.error('Gagal Menambah Tanaman', err.message);
         } finally {
             btn.disabled = false;
+            isProcessing = false;
             updateBatchUI();
         }
     }
@@ -1033,6 +1046,13 @@ window.GardenApp = (() => {
         document.getElementById('detail-plant-water').textContent = formatWaterRequirement(t.water_requirement);
         document.getElementById('detail-plant-sunlight').textContent = formatSunlight(t.sunlight);
 
+        const btnHarvest = document.getElementById('btn-harvest-plant');
+        if (plant.status === 'ACTIVE' && plant.estimated_harvest_days !== null && plant.estimated_harvest_days <= 0) {
+            btnHarvest.style.display = 'flex';
+        } else {
+            btnHarvest.style.display = 'none';
+        }
+
         modal.classList.remove('hidden');
     }
 
@@ -1042,18 +1062,44 @@ window.GardenApp = (() => {
     }
 
     async function deleteCurrentPlant() {
-        if (!currentPlantDetail) return;
+        if (!currentPlantDetail || isProcessing) return;
         const result = await Alert.modal.confirm('Hapus Tanaman?', `Hapus ${currentPlantDetail.template_name} dari kebun ini?`, 'Ya, Hapus', true);
         if (!result.isConfirmed) return;
 
+        isProcessing = true;
         try {
             await api(`/api/plants/${currentPlantDetail.id}`, { method: 'DELETE' });
             closePlantDetailModal();
             const gardenIdx = gardens.findIndex(g => g.id === selectedGardenId);
             await loadPlants(selectedGardenId, gardenIdx >= USER_PLAN_CONFIG.maxGardens);
+            if (window.AppState) window.AppState.usage.plants--;
             Alert.toast.success('Tanaman berhasil dihapus.');
         } catch (e) {
             Alert.modal.error('Gagal menghapus tanaman', e.message);
+        } finally {
+            isProcessing = false;
+        }
+    }
+
+    async function harvestCurrentPlant() {
+        if (!currentPlantDetail || isProcessing) return;
+        const result = await Alert.modal.confirm('Panen Tanaman?', `Selamat! Kamu akan memanen ${currentPlantDetail.template_name}. Lanjutkan?`, 'Ya, Panen!', false);
+        if (!result.isConfirmed) return;
+
+        isProcessing = true;
+        try {
+            const res = await api(`/api/plants/${currentPlantDetail.id}/harvest`, { method: 'POST' });
+            closePlantDetailModal();
+            const gardenIdx = gardens.findIndex(g => g.id === selectedGardenId);
+            await loadPlants(selectedGardenId, gardenIdx >= USER_PLAN_CONFIG.maxGardens);
+            Alert.toast.success('Berhasil dipanen!');
+            if (res.new_badge) {
+                Alert.modal.badge(res.new_badge);
+            }
+        } catch (e) {
+            Alert.modal.error('Gagal Memanen', e.message);
+        } finally {
+            isProcessing = false;
         }
     }
 
@@ -1076,6 +1122,7 @@ window.GardenApp = (() => {
         openPlantDetail,
         closePlantDetailModal,
         deleteCurrentPlant,
+        harvestCurrentPlant,
         showPlantLockedAlert,
     };
 })();
