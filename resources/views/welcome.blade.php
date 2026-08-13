@@ -40,7 +40,7 @@
 {{-- ============================================
      NAVIGATION BAR
      ============================================ --}}
-<header id="navbar" class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-outline-variant/30">
+<header id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-white/30 backdrop-blur-xl border-b border-white/20 transition-all duration-300">
     <div class="max-w-[1280px] mx-auto flex items-center justify-between px-5 lg:px-8 h-16">
         {{-- Logo --}}
         <a href="/" class="flex items-center gap-2 group" id="nav-logo">
@@ -51,7 +51,7 @@
         {{-- Desktop Nav Links --}}
         <nav class="hidden md:flex items-center gap-8" id="nav-links">
             <a href="#features" class="nav-link active text-sm font-semibold text-primary transition-colors duration-200">Fitur</a>
-            <a href="#how-it-works" class="nav-link text-sm font-medium text-on-surface-variant hover:text-primary transition-colors duration-200">How It Works</a>
+            <a href="/learn" class="nav-link text-sm font-medium text-on-surface-variant hover:text-primary transition-colors duration-200">How It Works</a>
             <a href="#pricing" class="nav-link text-sm font-medium text-on-surface-variant hover:text-primary transition-colors duration-200">Harga</a>
         </nav>
 
@@ -69,7 +69,7 @@
     {{-- Mobile Menu Dropdown --}}
     <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-outline-variant/30 px-5 py-4 space-y-2">
         <a href="#features" class="block text-sm font-semibold text-primary py-2 px-4 rounded-lg bg-primary/5">Fitur</a>
-        <a href="#how-it-works" class="block text-sm font-medium text-on-surface-variant py-2 px-4 rounded-lg hover:bg-surface-container-high transition-colors">How It Works</a>
+        <a href="/learn" class="block text-sm font-medium text-on-surface-variant py-2 px-4 rounded-lg hover:bg-surface-container-high transition-colors">How It Works</a>
         <a href="#pricing" class="block text-sm font-medium text-on-surface-variant py-2 px-4 rounded-lg hover:bg-surface-container-high transition-colors">Harga</a>
         <a href="/login" class="block text-center bg-primary text-on-primary text-sm font-semibold px-6 py-2.5 rounded-full mt-2">Mulai Sekarang</a>
     </div>
@@ -85,7 +85,7 @@
         <div class="absolute bottom-0 left-0 w-[40%] h-[60%] bg-gradient-to-tr from-primary/[0.03] to-transparent"></div>
     </div>
 
-    <div class="relative max-w-[1280px] mx-auto px-5 lg:px-8 py-12 md:py-16 lg:py-20">
+    <div class="relative max-w-[1280px] mx-auto px-5 lg:px-8 pt-24 pb-12 md:pt-28 md:pb-16 lg:pt-32 lg:pb-20">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
             {{-- Left: Text Content --}}
             <div class="order-2 lg:order-1 pt-6">
@@ -106,7 +106,7 @@
                         Mulai Berkebun Sekarang
                         <span class="material-symbols-outlined transition-transform duration-300 ease-out group-hover:translate-x-1" style="font-size: 20px;">arrow_forward</span>
                     </a>
-                    <a href="#how-it-works" class="inline-flex items-center gap-2 border-2 border-outline-variant text-on-surface-variant font-semibold px-5 py-3 rounded-full hover:border-primary hover:text-primary hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300 text-sm" id="hero-cta-secondary">
+                    <a href="/learn" class="inline-flex items-center gap-2 border-2 border-outline-variant text-on-surface-variant font-semibold px-5 py-3 rounded-full hover:border-primary hover:text-primary hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300 text-sm" id="hero-cta-secondary">
                         <span class="material-symbols-outlined text-primary" style="font-size: 20px;">play_circle</span>
                         Cara Kerja
                     </a>
@@ -277,7 +277,7 @@
                     Sistem kami terhubung dengan data cuaca lokal. Jika terdeteksi musim hujan, jadwal penyiraman otomatis dikurangi. Saat kemarau, pengingat penyiraman akan lebih sering muncul untuk menjaga kelembaban tanah.
                 </p>
 
-                <a href="#" class="inline-flex items-center gap-2 text-primary font-semibold text-sm hover:gap-3 transition-all duration-200 scroll-trigger scroll-fade-up delay-300">
+                <a href="/learn" class="inline-flex items-center gap-2 text-primary font-semibold text-sm hover:gap-3 transition-all duration-200 scroll-trigger scroll-fade-up delay-300">
                     Pelajari Sistem Cerdas Kami
                     <span class="material-symbols-outlined" style="font-size: 20px;">arrow_forward</span>
                 </a>
@@ -418,7 +418,7 @@
                     </div>
                 </div>
 
-                <a href="/checkout?plan=subur" class="w-full block text-center bg-yellow-400 text-yellow-900 font-bold py-3 rounded-xl hover:bg-yellow-300 active:scale-[0.98] hover:shadow-lg transition-all duration-300 shadow-md mb-2 text-[15px]">Mulai 7-Day Free Trial</a>
+                <a href="/checkout?plan=subur&from=/" class="w-full block text-center bg-yellow-400 text-yellow-900 font-bold py-3 rounded-xl hover:bg-yellow-300 active:scale-[0.98] hover:shadow-lg transition-all duration-300 shadow-md mb-2 text-[15px]">Mulai 7-Day Free Trial</a>
                 <p class="text-center text-[11px] text-white/70">Cancel anytime. Bebas risiko.</p>
             </div>
 
@@ -479,7 +479,7 @@
                     </div>
                 </div>
 
-                <a href="/checkout?plan=pro" class="w-full block text-center bg-primary text-white font-bold py-3 rounded-xl hover:bg-primary-container active:scale-[0.98] hover:shadow-lg transition-all duration-300 shadow-md relative z-10">Upgrade ke Pro</a>
+                <a href="/checkout?plan=pro&from=/" class="w-full block text-center bg-primary text-white font-bold py-3 rounded-xl hover:bg-primary-container active:scale-[0.98] hover:shadow-lg transition-all duration-300 shadow-md relative z-10">Upgrade ke Pro</a>
             </div>
 
         </div>
@@ -527,6 +527,41 @@
             }
         });
     });
+
+    // ScrollSpy for dynamic navigation highlighting
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('#nav-links a, #mobile-menu a');
+    
+    window.addEventListener('scroll', () => {
+        let current = '';
+        const scrollY = window.pageYOffset;
+        
+        sections.forEach(section => {
+            const sectionHeight = section.offsetHeight;
+            const sectionTop = section.offsetTop - 100; // offset for fixed header
+            if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+                current = section.getAttribute('id');
+            }
+        });
+        
+        navLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (!href.startsWith('#')) return; // ignore /learn
+            
+            if (href === '#' + current) {
+                // Active state
+                link.classList.remove('font-medium', 'text-on-surface-variant');
+                link.classList.add('active', 'font-semibold', 'text-primary');
+                if (link.parentElement.id === 'mobile-menu') {
+                    link.classList.add('bg-primary/10');
+                }
+            } else {
+                // Inactive state
+                link.classList.remove('active', 'font-semibold', 'text-primary', 'bg-primary/10');
+                link.classList.add('font-medium', 'text-on-surface-variant');
+            }
+        });
+    }, { passive: true });
 
     // Premium Scroll Animations
     const observerOptions = {

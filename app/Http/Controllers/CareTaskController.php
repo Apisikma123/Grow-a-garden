@@ -13,12 +13,12 @@ class CareTaskController extends Controller
     {
         $user = Auth::user();
 
-        $isLocked = false;
+        $isLocked = $user && !in_array($user->role, ['pro', 'premium', 'admin']);
         
         $events = collect();
         $weatherAdvice = null;
 
-        if ($user && !$isLocked) {
+        if ($user) {
             // Auto generate care tasks for user active plants if needed
             $autopilot->generateForUser($user);
 
@@ -26,15 +26,6 @@ class CareTaskController extends Controller
             $plants = $gardens->pluck('plants')->flatten();
             $plantIds = $plants->pluck('id');
             
-            // Get location for weather
-            $firstGarden = $gardens->first();
-            $lat = $firstGarden->latitude ?? 3.58;
-            $lng = $firstGarden->longitude ?? 98.67;
-
-            // Fetch today weather & analyze agronomic rules
-            $weather = $weatherService->getTodayWeather((float)$lat, (float)$lng);
-            $agronomic = $weatherService->analyzeAgronomicConditions($weather);
-
             $events = Event::with(['plant', 'eventType', 'plant.plantTemplate'])
                             ->whereIn('plant_id', $plantIds)
                             ->where(function($query) {
@@ -50,40 +41,51 @@ class CareTaskController extends Controller
                             ->orderBy('scheduled_date', 'asc')
                             ->get();
 
-            // Apply Agronomic Weather-Task Synchronization Logic
-            foreach ($events as $event) {
-                $code = strtolower($event->eventType->code ?? '');
+            if (!$isLocked) {
+                // Get location for weather
+                $firstGarden = $gardens->first();
+                $lat = $firstGarden->latitude ?? 3.58;
+                $lng = $firstGarden->longitude ?? 98.67;
 
-                if ($event->status === 'PENDING') {
-                    if (str_contains($code, 'water')) {
-                        $event->weather_tag = $agronomic['watering']['badge'];
-                        $event->weather_badge_bg = $agronomic['watering']['badge_bg'];
-                        $event->weather_reason = $agronomic['watering']['time_window'];
+                // Fetch today weather & analyze agronomic rules
+                $weather = $weatherService->getTodayWeather((float)$lat, (float)$lng);
+                $agronomic = $weatherService->analyzeAgronomicConditions($weather);
 
-                        if ($agronomic['status'] === 'HEAT') {
-                            $event->priority = 'HIGH';
+                // Apply Agronomic Weather-Task Synchronization Logic
+                foreach ($events as $event) {
+                    $code = strtolower($event->eventType->code ?? '');
+
+                    if ($event->status === 'PENDING') {
+                        if (str_contains($code, 'water')) {
+                            $event->weather_tag = $agronomic['watering']['badge'];
+                            $event->weather_badge_bg = $agronomic['watering']['badge_bg'];
+                            $event->weather_reason = $agronomic['watering']['time_window'];
+
+                            if ($agronomic['status'] === 'HEAT') {
+                                $event->priority = 'HIGH';
+                            }
+                        } elseif (str_contains($code, 'fertiliz')) {
+                            $event->weather_tag = $agronomic['fertilization']['badge'];
+                            $event->weather_badge_bg = $agronomic['fertilization']['badge_bg'];
+                            $event->weather_reason = $agronomic['fertilization']['advice'];
+                        } elseif (str_contains($code, 'pest')) {
+                            $event->weather_tag = $agronomic['pest_disease']['badge'];
+                            $event->weather_badge_bg = $agronomic['pest_disease']['badge_bg'];
+                            $event->weather_reason = $agronomic['pest_disease']['advice'];
                         }
-                    } elseif (str_contains($code, 'fertiliz')) {
-                        $event->weather_tag = $agronomic['fertilization']['badge'];
-                        $event->weather_badge_bg = $agronomic['fertilization']['badge_bg'];
-                        $event->weather_reason = $agronomic['fertilization']['advice'];
-                    } elseif (str_contains($code, 'pest')) {
-                        $event->weather_tag = $agronomic['pest_disease']['badge'];
-                        $event->weather_badge_bg = $agronomic['pest_disease']['badge_bg'];
-                        $event->weather_reason = $agronomic['pest_disease']['advice'];
                     }
                 }
-            }
 
-            // Build Comprehensive Agronomic Weather Advice Banner
-            $weatherAdvice = [
-                'title' => $agronomic['watering']['title'] . ' • ' . $agronomic['summary'],
-                'desc' => $agronomic['watering']['advice'] . ' ' . $agronomic['fertilization']['advice'],
-                'icon' => ($agronomic['status'] === 'RAIN') ? 'rainy' : (($agronomic['status'] === 'HEAT') ? 'wb_sunny' : 'eco'),
-                'badge' => $agronomic['watering']['badge'],
-                'time_window' => $agronomic['watering']['time_window'],
-                'agronomic' => $agronomic
-            ];
+                // Build Comprehensive Agronomic Weather Advice Banner
+                $weatherAdvice = [
+                    'title' => $agronomic['watering']['title'] . ' • ' . $agronomic['summary'],
+                    'desc' => $agronomic['watering']['advice'] . ' ' . $agronomic['fertilization']['advice'],
+                    'icon' => ($agronomic['status'] === 'RAIN') ? 'rainy' : (($agronomic['status'] === 'HEAT') ? 'wb_sunny' : 'eco'),
+                    'badge' => $agronomic['watering']['badge'],
+                    'time_window' => $agronomic['watering']['time_window'],
+                    'agronomic' => $agronomic
+                ];
+            }
         }
 
         $pendingTasks = $events->whereIn('status', ['PENDING', 'MISSED']);

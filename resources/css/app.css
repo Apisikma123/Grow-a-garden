@@ -11,7 +11,7 @@
 
 @theme {
     /* ---- Font Family ---- */
-    --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Outfit', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
     /* ---- Colors: Verdant Growth Palette ---- */
     --color-primary: #006c49;
@@ -130,7 +130,9 @@
 
 /* Material Symbols fill style */
 .material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
     font-variation-settings: 'FILL' 1;
+    line-height: 1;
 }
 
 /* Selection color */

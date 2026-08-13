@@ -50,7 +50,7 @@ class GenerateCareTasks extends Command
             $q->where('scheduled_date', $today)->where('status', 'PENDING');
         })->with(['plants.events' => function ($q) use ($today) {
             $q->where('scheduled_date', $today)->where('status', 'PENDING');
-        }])->get();
+        }, 'user'])->get();
 
         $activityRules = ActivityWeatherRule::where('is_active', true)->get();
         $weatherRules = WeatherRule::where('is_active', true)->get();
@@ -67,6 +67,11 @@ class GenerateCareTasks extends Command
             if (!$weather) {
                 $this->warn("Failed to fetch weather for Garden ID: {$garden->id}");
                 continue;
+            }
+
+            $userRole = $garden->user->role ?? 'free';
+            if (!in_array($userRole, ['pro', 'premium', 'admin'])) {
+                continue; // Weather adjustment is a Pro/Premium feature
             }
 
             // Check Activity Rules to modify tasks

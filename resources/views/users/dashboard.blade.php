@@ -37,6 +37,7 @@
             </div>
             
             {{-- Weather Widget (Dynamic - Premium Card Style) --}}
+            @if(in_array(Auth::user()->role ?? 'free', ['pro', 'premium', 'admin']))
             <div id="weather-widget" class="bg-white rounded-3xl p-5 sm:p-6 md:p-8 ambient-shadow max-w-[480px] w-full transition-all duration-500 shrink-0 border border-outline-variant/20">
                 
                 {{-- Default: Ask Location State --}}
@@ -107,6 +108,7 @@
                     </div>
                 </div>
             </div>
+            @endif
         </div>
 
         @if(isset($activeAlerts) && $activeAlerts->count() > 0)
