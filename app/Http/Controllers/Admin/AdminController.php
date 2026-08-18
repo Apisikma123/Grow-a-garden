@@ -8,16 +8,33 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Garden;
 use App\Models\Plant;
+use App\Models\PlantTemplate;
+use App\Services\WeatherService;
 
 class AdminController extends Controller
 {
-    public function dashboard(Request $request)
+    public function dashboard(Request $request, WeatherService $weatherService)
     {
         $totalUsers = User::count();
         $totalGardens = Garden::count();
         $totalPlants = Plant::whereIn('status', ['ACTIVE', 'PRODUCTIVE', 'HARVESTING'])->count();
+        $totalPlantTemplates = PlantTemplate::count();
+        $totalCareTemplates = PlantTemplate::count();
+        $totalBadges = \App\Models\Badge::count();
         $premiumUsers = User::whereIn('role', ['pro', 'premium'])->count();
         
+        // Today Weather for Admin Dashboard
+        try {
+            $weatherData = $weatherService->getTodayWeather(-6.2088, 106.8456);
+            $todayWeather = $weatherService->analyzeAgronomicConditions($weatherData);
+        } catch (\Throwable $e) {
+            $todayWeather = [
+                'temperature' => 29,
+                'condition_title' => 'Cerah Berawan',
+                'icon' => 'partly_cloudy_day',
+            ];
+        }
+
         // Count successful harvests (completed harvest events)
         $successfulHarvests = \App\Models\Event::whereHas('eventType', function($q) {
             $q->where('code', 'like', '%HARVEST%');
@@ -88,8 +105,8 @@ class AdminController extends Controller
         }
 
         return view('admin.dashboard', compact(
-            'totalUsers', 'totalGardens', 'totalPlants', 'premiumUsers', 'successfulHarvests',
-            'popularPlants', 'userGrowth', 'growthLabels', 'period'
+            'totalUsers', 'totalGardens', 'totalPlants', 'totalPlantTemplates', 'totalCareTemplates', 'totalBadges', 'premiumUsers', 'successfulHarvests',
+            'popularPlants', 'userGrowth', 'growthLabels', 'period', 'todayWeather'
         ));
     }
 

@@ -32,50 +32,50 @@
             <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-primary-container/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
         </a>
 
-        {{-- Total Kebun --}}
-        <a href="#" class="block bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group hover:-translate-y-1 hover:shadow-md transition-all">
+        {{-- Template Perawatan --}}
+        <a href="{{ route('admin.care-templates') }}" class="block bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group hover:-translate-y-1 hover:shadow-md transition-all">
             <div class="flex justify-between items-start mb-2 relative z-10">
-                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Total Kebun</div>
+                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Template</div>
                 <div class="w-8 h-8 rounded-full bg-tertiary-container/30 text-tertiary flex items-center justify-center">
-                    <span class="material-symbols-outlined text-[16px]">yard</span>
+                    <span class="material-symbols-outlined text-[16px]">assignment</span>
                 </div>
             </div>
-            <div class="text-[32px] font-black text-on-surface leading-tight mb-2 relative z-10">{{ number_format($totalGardens) }}</div>
+            <div class="text-[32px] font-black text-on-surface leading-tight mb-2 relative z-10">{{ number_format($totalCareTemplates) }}</div>
             <div class="flex items-center gap-1 text-[11px] text-tertiary font-bold relative z-10">
-                <span class="material-symbols-outlined text-[14px]">trending_up</span>
-                +8% bulan ini
+                <span class="material-symbols-outlined text-[14px]">assignment</span>
+                Total template perawatan
             </div>
             <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-tertiary-container/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
         </a>
 
-        {{-- Total Active Plants --}}
-        <a href="/admin/plants" class="block bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group hover:-translate-y-1 hover:shadow-md transition-all">
+        {{-- Database Tanaman --}}
+        <a href="{{ route('admin.plants') }}" class="block bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group hover:-translate-y-1 hover:shadow-md transition-all">
             <div class="flex justify-between items-start mb-2 relative z-10">
-                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Total Tanaman Aktif</div>
+                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Tanaman</div>
                 <div class="w-8 h-8 rounded-full bg-secondary-container/30 text-secondary flex items-center justify-center">
                     <span class="material-symbols-outlined text-[16px]">potted_plant</span>
                 </div>
             </div>
-            <div class="text-[32px] font-black text-on-surface leading-tight mb-2 relative z-10">{{ number_format($totalPlants) }}</div>
+            <div class="text-[32px] font-black text-on-surface leading-tight mb-2 relative z-10">{{ number_format($totalPlantTemplates) }}</div>
             <div class="flex items-center gap-1 text-[11px] text-secondary font-bold relative z-10">
-                <span class="material-symbols-outlined text-[14px]">trending_up</span>
-                +15% this month
+                <span class="material-symbols-outlined text-[14px]">eco</span>
+                Total tanaman terdaftar
             </div>
             <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-secondary-container/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
         </a>
 
-        {{-- Panen Berhasil --}}
-        <a href="#" class="block bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group hover:-translate-y-1 hover:shadow-md transition-all">
+        {{-- Kelola Badge --}}
+        <a href="{{ route('admin.badges') }}" class="block bg-surface-container-lowest rounded-[20px] p-5 ambient-shadow border border-outline-variant/30 relative overflow-hidden group hover:-translate-y-1 hover:shadow-md transition-all">
             <div class="flex justify-between items-start mb-2 relative z-10">
-                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Panen Berhasil</div>
+                <div class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">Badge</div>
                 <div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-                    <span class="material-symbols-outlined text-[16px]">shopping_basket</span>
+                    <span class="material-symbols-outlined text-[16px]">workspace_premium</span>
                 </div>
             </div>
-            <div class="text-[32px] font-black text-on-surface leading-tight mb-2 relative z-10">{{ number_format($successfulHarvests) }}</div>
+            <div class="text-[32px] font-black text-on-surface leading-tight mb-2 relative z-10">{{ number_format($totalBadges) }}</div>
             <div class="flex items-center gap-1 text-[11px] text-primary font-bold relative z-10">
-                <span class="material-symbols-outlined text-[14px]">eco</span>
-                Total panen pengguna
+                <span class="material-symbols-outlined text-[14px]">workspace_premium</span>
+                Total badge sistem
             </div>
             <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-primary/5 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
         </a>
@@ -86,12 +86,12 @@
         {{-- User Growth Line Chart --}}
         <div class="lg:col-span-2 bg-surface-container-lowest rounded-[24px] p-6 ambient-shadow border border-outline-variant/30">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
-                <h3 class="text-[18px] font-bold text-on-surface">User Growth</h3>
+                <h3 class="text-[18px] font-bold text-on-surface">Pertumbuhan Pengguna</h3>
                 <form method="GET" action="{{ route('admin.dashboard') }}" id="growthPeriodForm">
                     <select name="growth_period" onchange="document.getElementById('growthPeriodForm').submit()" class="text-[12px] font-bold text-on-surface bg-surface border border-outline-variant/50 rounded-xl px-3 py-1.5 focus:outline-none focus:border-primary cursor-pointer shadow-sm">
-                        <option value="this_month" {{ $period === 'this_month' ? 'selected' : '' }}>Bulan Ini (This Month)</option>
-                        <option value="last_6_months" {{ $period === 'last_6_months' ? 'selected' : '' }}>6 Bulan Terakhir (Last 6 Months)</option>
-                        <option value="last_12_months" {{ $period === 'last_12_months' ? 'selected' : '' }}>12 Bulan Terakhir (Last 12 Months)</option>
+                        <option value="this_month" {{ $period === 'this_month' ? 'selected' : '' }}>Bulan Ini</option>
+                        <option value="last_6_months" {{ $period === 'last_6_months' ? 'selected' : '' }}>6 Bulan Terakhir</option>
+                        <option value="last_12_months" {{ $period === 'last_12_months' ? 'selected' : '' }}>12 Bulan Terakhir</option>
                     </select>
                 </form>
             </div>
