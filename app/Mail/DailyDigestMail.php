@@ -8,19 +8,29 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Mail\Mailables\Address;
 
-class OtpMail extends Mailable
+class DailyDigestMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $otpCode;
+    public $tasksByGarden;
+    public $user;
+    public $totalTasks;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($otpCode)
+    public function __construct($user, $tasksByGarden)
     {
-        $this->otpCode = $otpCode;
+        $this->user = $user;
+        $this->tasksByGarden = $tasksByGarden;
+        
+        $count = 0;
+        foreach($tasksByGarden as $tasks) {
+            $count += count($tasks);
+        }
+        $this->totalTasks = $count;
     }
 
     /**
@@ -29,7 +39,7 @@ class OtpMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Kode Verifikasi OTP Anda',
+            subject: 'Tugas Perawatan Kebun Hari Ini 🌿 (' . $this->totalTasks . ' Tugas)',
         );
     }
 
@@ -39,8 +49,7 @@ class OtpMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.otp',
-            text: 'emails.otp_plain',
+            view: 'emails.daily_tasks',
         );
     }
 

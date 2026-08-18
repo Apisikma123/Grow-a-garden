@@ -252,6 +252,10 @@ Route::middleware(['auth'])->group(function () {
     // Live Weather API Route
     Route::get('/api/weather/live', [\App\Http\Controllers\WeatherController::class, 'live'])->name('api.weather.live');
 
+    // Notifications
+    Route::post('/notifications/mark-all-read', [\App\Http\Controllers\NotificationController::class, 'markAllRead'])->name('notifications.mark-all-read');
+    Route::post('/notifications/{id}/mark-read', [\App\Http\Controllers\NotificationController::class, 'markRead'])->name('notifications.mark-read');
+
     // Admin API Routes
     Route::middleware(['admin'])->group(function () {
         Route::put('/api/admin/users/{user}/role', [\App\Http\Controllers\Admin\AdminController::class, 'updateRole']);
