@@ -54,6 +54,11 @@ class AuthController extends Controller
                 if ($user->role === 'admin') {
                     return redirect()->intended('/admin/dashboard');
                 }
+
+                if (!$user->hasCompletedOnboarding()) {
+                    return redirect()->route('onboarding');
+                }
+
                 return redirect()->intended('/dashboard');
             }
 
@@ -138,9 +143,13 @@ class AuthController extends Controller
                 Auth::login($user, true); // Google is implicitly remembered
                 $request->session()->regenerate();
                 
-                $response = ($user->role === 'admin') 
-                            ? redirect()->intended('/admin/dashboard') 
-                            : redirect()->intended('/dashboard');
+                if ($user->role === 'admin') {
+                    $response = redirect()->intended('/admin/dashboard');
+                } elseif (!$user->hasCompletedOnboarding()) {
+                    $response = redirect()->route('onboarding');
+                } else {
+                    $response = redirect()->intended('/dashboard');
+                }
                             
                 // Trust this device for 30 days (43200 minutes)
                 $response->cookie('trusted_device_user_' . $user->id, true, 43200);
@@ -158,7 +167,7 @@ class AuthController extends Controller
                 
                 Auth::login($user, true);
                 $request->session()->regenerate();
-                return redirect()->intended('/dashboard');
+                return redirect()->route('onboarding');
             }
             
         } catch (\Exception $e) {
@@ -249,9 +258,13 @@ class AuthController extends Controller
             $request->session()->regenerate();
             session()->forget(['otp_user_id', 'otp_remember']);
 
-            $response = ($user->role === 'admin') 
-                        ? redirect()->intended('/admin/dashboard') 
-                        : redirect()->intended('/dashboard');
+            if ($user->role === 'admin') {
+                $response = redirect()->intended('/admin/dashboard');
+            } elseif (!$user->hasCompletedOnboarding()) {
+                $response = redirect()->route('onboarding');
+            } else {
+                $response = redirect()->intended('/dashboard');
+            }
 
             return $response;
         }

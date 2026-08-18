@@ -31,6 +31,10 @@ class User extends Authenticatable
         'otp_expires_at',
         'avatar',
         'province',
+        'gardening_experience',
+        'gardening_scale',
+        'gardening_goal',
+        'onboarding_completed_at',
         'language',
         'email_notifications',
         'push_notifications',
@@ -55,8 +59,17 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'onboarding_completed_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Whether the user has finished their onboarding questionnaire.
+     */
+    public function hasCompletedOnboarding(): bool
+    {
+        return !is_null($this->onboarding_completed_at) || $this->gardens()->count() > 0;
     }
 
     public function subscriptions(): HasMany

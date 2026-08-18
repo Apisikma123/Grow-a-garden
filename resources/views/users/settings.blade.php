@@ -108,6 +108,75 @@
                     </form>
                 </div>
 
+                {{-- Gardening Profile & Onboarding Questionnaire Card --}}
+                <div class="bg-surface rounded-[24px] p-[24px] ambient-shadow-lg border border-outline-variant/20 hover:shadow-xl transition-shadow duration-300">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                        <div>
+                            <h2 class="text-[24px] font-bold text-on-surface flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary text-[28px]">psychology</span>
+                                Profil & Preferensi Berkebun
+                            </h2>
+                            <p class="text-[14px] text-on-surface-variant">Preferensi hasil kuesioner onboarding untuk personalisasi panduan perawatan.</p>
+                        </div>
+                        <a href="{{ route('onboarding') }}?force=1" class="bg-primary/10 text-primary hover:bg-primary/20 px-5 py-2.5 rounded-full text-[13px] font-bold border border-primary/20 transition-all flex items-center gap-2 shrink-0 self-start sm:self-auto active:scale-95">
+                            <span class="material-symbols-outlined text-[18px]">tune</span>
+                            Ubah Preferensi / Ulangi Kuesioner
+                        </a>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="bg-surface-container-low p-4 rounded-2xl flex flex-col">
+                            <span class="text-[12px] font-medium text-on-surface-variant flex items-center gap-1.5 mb-1">
+                                <span class="material-symbols-outlined text-[16px] text-primary">history_edu</span> Pengalaman
+                            </span>
+                            <span class="text-[15px] font-extrabold text-on-surface capitalize">
+                                @php
+                                    $expMap = [
+                                        'beginner' => 'Pemula (< 3 Bulan)',
+                                        'learning' => 'Menengah (3–12 Bulan)',
+                                        'intermediate' => 'Berpengalaman (1–3 Tahun)',
+                                        'pro' => 'Pengelola Kebun (> 3 Tahun)',
+                                    ];
+                                @endphp
+                                {{ $expMap[Auth::user()->gardening_experience] ?? 'Belum Diatur' }}
+                            </span>
+                        </div>
+
+                        <div class="bg-surface-container-low p-4 rounded-2xl flex flex-col">
+                            <span class="text-[12px] font-medium text-on-surface-variant flex items-center gap-1.5 mb-1">
+                                <span class="material-symbols-outlined text-[16px] text-emerald-700">equalizer</span> Target Kapasitas
+                            </span>
+                            <span class="text-[15px] font-extrabold text-on-surface">
+                                @php
+                                    $scaleMap = [
+                                        '1-10' => '1 – 10 Tanaman (Bibit)',
+                                        '10-50' => '10 – 50 Tanaman (Subur)',
+                                        '50+' => '> 50 Tanaman (Panen Raya)',
+                                    ];
+                                @endphp
+                                {{ $scaleMap[Auth::user()->gardening_scale] ?? 'Belum Diatur' }}
+                            </span>
+                        </div>
+
+                        <div class="bg-surface-container-low p-4 rounded-2xl flex flex-col">
+                            <span class="text-[12px] font-medium text-on-surface-variant flex items-center gap-1.5 mb-1">
+                                <span class="material-symbols-outlined text-[16px] text-orange-700">troubleshoot</span> Fokus Fitur
+                            </span>
+                            <span class="text-[15px] font-extrabold text-on-surface">
+                                @php
+                                    $goalMap = [
+                                        'automation' => 'Jadwal Perawatan Otomatis',
+                                        'weather' => 'Penyesuaian Cuaca Otomatis',
+                                        'pest' => 'Katalog Hama & Penyakit',
+                                        'tracking' => 'Kalender Pertumbuhan',
+                                    ];
+                                @endphp
+                                {{ $goalMap[Auth::user()->gardening_goal] ?? 'Jadwal Perawatan' }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
                 {{-- Prestasi & Badge Kebun (Gamification Showcase) --}}
                 <div class="bg-surface rounded-[24px] p-[24px] ambient-shadow-lg border border-outline-variant/20 hover:shadow-xl transition-shadow duration-300">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
