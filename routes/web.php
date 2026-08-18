@@ -35,7 +35,7 @@ Route::get('/checkout', function () {
 })->middleware('auth');
 
 // Protected User Routes
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'user'])->group(function () {
     Route::get('/dashboard', function () {
         $gardens = \App\Models\Garden::where('user_id', Auth::id())->get();
         $gardenIds = $gardens->pluck('id');
