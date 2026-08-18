@@ -129,11 +129,11 @@
                 window.location.reload();
             } else {
                 const data = await response.json();
-                alert(data.error || 'Failed to update role');
+                Alert.modal.error('Gagal', data.error || 'Gagal memperbarui role pengguna.');
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('An error occurred');
+            Alert.modal.error('Gagal', 'Terjadi kesalahan sistem.');
         }
     }
 

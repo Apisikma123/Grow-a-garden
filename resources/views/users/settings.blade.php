@@ -65,23 +65,49 @@
                                     <label class="block text-[14px] font-bold text-on-surface mb-2 group-focus-within:text-primary transition-colors">Alamat Email</label>
                                     <input type="email" value="{{ Auth::user()->email }}" class="w-full surface-recessed border border-outline-variant/50 bg-surface-container-lowest rounded-[12px] px-4 py-3 text-[16px] text-on-surface-variant focus:outline-none transition-all cursor-not-allowed" readonly>
                                 </div>
+                                @php
+                                    $userRole = strtolower(Auth::user()->role ?? 'free');
+                                    $isWeatherLocked = !in_array($userRole, ['pro', 'subur', 'premium', 'panen raya', 'admin']);
+                                @endphp
+
                                 <div class="group">
-                                    <label class="block text-[14px] font-bold text-on-surface mb-2 group-focus-within:text-primary transition-colors">Lokasi Kebun (Weather Adjustment)</label>
+                                    <div class="flex items-center justify-between mb-2">
+                                        <label class="text-[14px] font-bold text-on-surface group-focus-within:text-primary transition-colors {{ $isWeatherLocked ? 'line-through opacity-70' : '' }}">
+                                            Lokasi Kebun (Weather Adjustment)
+                                        </label>
+                                        @if($isWeatherLocked)
+                                            <a href="/checkout?plan=subur&from=settings" class="inline-flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container border border-error/30 hover:opacity-80 transition-opacity">
+                                                <span class="material-symbols-outlined text-[13px]">lock</span>
+                                                Terkunci (Paket Subur)
+                                            </a>
+                                        @endif
+                                    </div>
+
+                                    @if($isWeatherLocked)
+                                        <div class="bg-error-container/20 border border-error/30 rounded-[12px] p-3 text-xs text-on-error-container flex items-center justify-between gap-2 mb-3">
+                                            <div class="flex items-center gap-2">
+                                                <span class="material-symbols-outlined text-error text-[18px]">lock</span>
+                                                <span>Weather Adjustment & penyesuaian penyiraman cuaca ekstrem khusus untuk pengguna <strong>Subur (Pro)</strong>.</span>
+                                            </div>
+                                            <a href="/checkout?plan=subur&from=settings" class="bg-primary text-on-primary font-bold px-3 py-1 rounded-full text-[11px] whitespace-nowrap hover:bg-primary/90 transition-colors shrink-0">Upgrade</a>
+                                        </div>
+                                    @endif
+
                                     <div class="flex gap-2">
                                         <div class="relative flex-1">
                                             <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant/70 text-[20px] pointer-events-none">location_on</span>
-                                            <input type="text" id="garden-location" placeholder="Pilih atau deteksi lokasi..." value="{{ Auth::user()->province ? Auth::user()->province . ', Indonesia' : '' }}" class="w-full surface-recessed border border-outline-variant rounded-[12px] pl-11 pr-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" readonly>
+                                            <input type="text" id="garden-location" placeholder="{{ $isWeatherLocked ? 'Fitur terkunci untuk Paket Bibit (Gratis)' : 'Pilih atau deteksi lokasi...' }}" value="{{ Auth::user()->province ? Auth::user()->province . ', Indonesia' : '' }}" class="w-full surface-recessed border border-outline-variant rounded-[12px] pl-11 pr-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all {{ $isWeatherLocked ? 'opacity-60 cursor-not-allowed' : '' }}" readonly>
                                             <input type="hidden" name="province" id="hidden-province" value="{{ Auth::user()->province }}">
                                         </div>
-                                        <button type="button" id="btn-detect-location" class="bg-surface-container-high text-primary hover:bg-primary/10 border border-outline-variant rounded-[12px] px-4 flex items-center justify-center gap-1.5 transition-all duration-300 font-bold text-[14px] whitespace-nowrap active:scale-95">
+                                        <button type="button" id="btn-detect-location" {{ $isWeatherLocked ? 'disabled' : '' }} class="bg-surface-container-high text-primary hover:bg-primary/10 border border-outline-variant rounded-[12px] px-4 flex items-center justify-center gap-1.5 transition-all duration-300 font-bold text-[14px] whitespace-nowrap active:scale-95 {{ $isWeatherLocked ? 'opacity-50 cursor-not-allowed' : '' }}">
                                             <span class="material-symbols-outlined text-[20px]" id="detect-icon">my_location</span>
                                             Deteksi
                                         </button>
                                     </div>
                                 </div>
                                 <div class="group">
-                                    <label class="block text-[14px] font-bold text-on-surface mb-2 group-focus-within:text-primary transition-colors">Pilih Provinsi Manual (Alternatif)</label>
-                                    <select id="manual-province" class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+                                    <label class="block text-[14px] font-bold text-on-surface mb-2 group-focus-within:text-primary transition-colors {{ $isWeatherLocked ? 'line-through opacity-70' : '' }}">Pilih Provinsi Manual (Alternatif)</label>
+                                    <select id="manual-province" {{ $isWeatherLocked ? 'disabled' : '' }} class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all {{ $isWeatherLocked ? 'opacity-60 cursor-not-allowed' : '' }}">
                                         <option value="">-- Pilih Provinsi --</option>
                                         @php
                                             $provinces = ['Aceh', 'Sumatera Utara', 'Sumatera Barat', 'Riau', 'Kepulauan Riau', 'Jambi', 'Sumatera Selatan', 'Bangka Belitung', 'Bengkulu', 'Lampung', 'DKI Jakarta', 'Jawa Barat', 'Banten', 'Jawa Tengah', 'DI Yogyakarta', 'Jawa Timur', 'Bali', 'Nusa Tenggara Barat', 'Nusa Tenggara Timur', 'Kalimantan Barat', 'Kalimantan Tengah', 'Kalimantan Selatan', 'Kalimantan Timur', 'Kalimantan Utara', 'Sulawesi Utara', 'Gorontalo', 'Sulawesi Tengah', 'Sulawesi Barat', 'Sulawesi Selatan', 'Sulawesi Tenggara', 'Maluku', 'Maluku Utara', 'Papua Barat', 'Papua'];
@@ -89,13 +115,6 @@
                                         @foreach($provinces as $prov)
                                             <option value="{{ $prov }}" {{ Auth::user()->province == $prov ? 'selected' : '' }}>{{ $prov }}</option>
                                         @endforeach
-                                    </select>
-                                </div>
-                                <div class="group">
-                                    <label class="block text-[14px] font-bold text-on-surface mb-2 group-focus-within:text-primary transition-colors">Bahasa / Language</label>
-                                    <select name="language" id="app-language" class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
-                                        <option value="id" {{ Auth::user()->language == 'id' ? 'selected' : '' }}>Bahasa Indonesia</option>
-                                        <option value="en" {{ Auth::user()->language == 'en' ? 'selected' : '' }}>English</option>
                                     </select>
                                 </div>
                                 <div class="group">
@@ -323,17 +342,6 @@
                                 <div class="w-11 h-6 bg-outline-variant/30 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
                             </label>
                         </div>
-                        <div class="h-px w-full bg-outline-variant/30"></div>
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <h3 class="text-[16px] font-bold text-on-surface">Push Notifications</h3>
-                                <p class="text-[13px] text-on-surface-variant">Dapatkan notifikasi langsung di perangkat Anda untuk peringatan kritis.</p>
-                            </div>
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" id="push-notif-toggle" class="sr-only peer" {{ Auth::user()->push_notifications ? 'checked' : '' }}>
-                                <div class="w-11 h-6 bg-outline-variant/30 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                            </label>
-                        </div>
                     </div>
                 </div>
 
@@ -382,11 +390,232 @@
             </div>
         </div>
     </div>
+
+    {{-- Cropper Modal --}}
+    <div id="cropper-modal" class="fixed inset-0 z-[9999] hidden flex items-center justify-center bg-on-surface/60 backdrop-blur-md p-4 transition-all duration-300">
+        <div class="bg-surface border border-outline-variant/20 rounded-[24px] max-w-[500px] w-full p-6 shadow-2xl flex flex-col gap-5 transform transition-all duration-300">
+            <div class="flex items-center justify-between border-b border-outline-variant/20 pb-3">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">crop</span>
+                    <h3 class="text-[18px] font-bold text-on-surface">Potong & Sesuaikan Foto</h3>
+                </div>
+                <button type="button" id="cropper-close-btn" class="text-on-surface-variant hover:text-on-surface p-1 rounded-full hover:bg-surface-container-high transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+
+            <div class="w-full h-[320px] overflow-hidden rounded-[16px] bg-surface-container-lowest flex items-center justify-center border border-outline-variant/30 relative">
+                <img id="cropper-image" src="" alt="Crop Preview" class="max-h-full block">
+            </div>
+
+            {{-- Cropper Toolbar Controls --}}
+            <div class="flex items-center justify-center gap-2 bg-surface-container-low p-2 rounded-2xl border border-outline-variant/20">
+                <button type="button" id="cropper-zoom-in" class="p-2.5 bg-surface hover:bg-primary/10 hover:text-primary text-on-surface-variant rounded-xl transition-all font-semibold flex items-center gap-1 text-xs shadow-sm active:scale-95" title="Perbesar">
+                    <span class="material-symbols-outlined text-[20px]">zoom_in</span>
+                </button>
+                <button type="button" id="cropper-zoom-out" class="p-2.5 bg-surface hover:bg-primary/10 hover:text-primary text-on-surface-variant rounded-xl transition-all font-semibold flex items-center gap-1 text-xs shadow-sm active:scale-95" title="Perkecil">
+                    <span class="material-symbols-outlined text-[20px]">zoom_out</span>
+                </button>
+                <div class="w-[1px] h-6 bg-outline-variant/30 mx-1"></div>
+                <button type="button" id="cropper-rotate-left" class="p-2.5 bg-surface hover:bg-primary/10 hover:text-primary text-on-surface-variant rounded-xl transition-all font-semibold flex items-center gap-1 text-xs shadow-sm active:scale-95" title="Putar Kiri (-90°)">
+                    <span class="material-symbols-outlined text-[20px]">rotate_left</span>
+                </button>
+                <button type="button" id="cropper-rotate-right" class="p-2.5 bg-surface hover:bg-primary/10 hover:text-primary text-on-surface-variant rounded-xl transition-all font-semibold flex items-center gap-1 text-xs shadow-sm active:scale-95" title="Putar Kanan (+90°)">
+                    <span class="material-symbols-outlined text-[20px]">rotate_right</span>
+                </button>
+                <button type="button" id="cropper-reset" class="p-2.5 bg-surface hover:bg-primary/10 hover:text-primary text-on-surface-variant rounded-xl transition-all font-semibold flex items-center gap-1 text-xs shadow-sm active:scale-95" title="Reset Frame">
+                    <span class="material-symbols-outlined text-[20px]">restart_alt</span>
+                </button>
+            </div>
+
+            <div class="flex items-center justify-end gap-3 pt-2 border-t border-outline-variant/20">
+                <button type="button" id="cropper-cancel-btn" class="px-5 py-2.5 border border-outline-variant rounded-xl text-on-surface-variant font-bold text-[14px] hover:bg-surface-container-high transition-colors">
+                    Batal
+                </button>
+                <button type="button" id="cropper-confirm-btn" class="px-6 py-2.5 bg-primary text-on-primary rounded-xl font-bold text-[14px] hover:bg-primary/90 active:scale-95 transition-all shadow-md flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">check</span>
+                    Gunakan Foto
+                </button>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('scripts')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // --- CROPPER.JS PROFILE PHOTO HANDLER ---
+        const avatarInput = document.getElementById('avatar-input');
+        const cropperModal = document.getElementById('cropper-modal');
+        const cropperImage = document.getElementById('cropper-image');
+        let cropperInstance = null;
+
+        if (avatarInput) {
+            avatarInput.addEventListener('change', function(e) {
+                const files = e.target.files;
+                if (!files || !files.length) return;
+
+                const file = files[0];
+                if (!file.type.startsWith('image/')) return;
+
+                openCropperModal(file);
+            });
+        }
+
+        function openCropperModal(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                if (cropperInstance) {
+                    cropperInstance.destroy();
+                    cropperInstance = null;
+                }
+
+                // Show modal cleanly
+                cropperModal.classList.remove('hidden');
+                cropperModal.classList.add('flex');
+
+                // Wait for cropperImage to finish loading src before initializing Cropper.js
+                cropperImage.onload = function() {
+                    if (cropperInstance) {
+                        cropperInstance.destroy();
+                    }
+
+                    cropperInstance = new Cropper(cropperImage, {
+                        aspectRatio: 1,
+                        viewMode: 1,
+                        autoCropArea: 1,
+                        responsive: true,
+                        restore: false,
+                        guides: true,
+                        center: true,
+                        highlight: false,
+                        cropBoxMovable: true,
+                        cropBoxResizable: true,
+                        toggleDragModeOnDblclick: false,
+                    });
+                };
+
+                cropperImage.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function closeCropperModal() {
+            cropperModal.classList.add('hidden');
+            cropperModal.classList.remove('flex');
+
+            if (cropperInstance) {
+                cropperInstance.destroy();
+                cropperInstance = null;
+            }
+            cropperImage.onload = null;
+            cropperImage.src = '';
+            
+            // Reset input so selecting same file works again
+            if (avatarInput) {
+                avatarInput.value = '';
+            }
+        }
+
+        document.getElementById('cropper-close-btn')?.addEventListener('click', closeCropperModal);
+        document.getElementById('cropper-cancel-btn')?.addEventListener('click', closeCropperModal);
+
+        document.getElementById('cropper-zoom-in')?.addEventListener('click', () => cropperInstance?.zoom(0.1));
+        document.getElementById('cropper-zoom-out')?.addEventListener('click', () => cropperInstance?.zoom(-0.1));
+        document.getElementById('cropper-rotate-left')?.addEventListener('click', () => cropperInstance?.rotate(-90));
+        document.getElementById('cropper-rotate-right')?.addEventListener('click', () => cropperInstance?.rotate(90));
+        document.getElementById('cropper-reset')?.addEventListener('click', () => cropperInstance?.reset());
+
+        document.getElementById('cropper-confirm-btn')?.addEventListener('click', function() {
+            if (!cropperInstance) return;
+
+            const confirmBtn = this;
+            confirmBtn.disabled = true;
+            confirmBtn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span> Menyimpan...';
+
+            // Render high-quality 300x300 canvas for profile avatar
+            const canvas = cropperInstance.getCroppedCanvas({
+                width: 300,
+                height: 300,
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high',
+            });
+
+            if (!canvas) {
+                confirmBtn.disabled = false;
+                confirmBtn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check</span> Gunakan Foto';
+                return;
+            }
+
+            // Compress & Export to WebP format (Super lightweight ~20-30KB)
+            canvas.toBlob(function(blob) {
+                if (!blob) {
+                    confirmBtn.disabled = false;
+                    confirmBtn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check</span> Gunakan Foto';
+                    return;
+                }
+
+                const webpFile = new File([blob], 'avatar_' + Date.now() + '.webp', { type: 'image/webp' });
+
+                // Instant background upload via AJAX (No need to click "Simpan Perubahan")
+                const formData = new FormData();
+                formData.append('avatar', webpFile);
+                formData.append('_token', '{{ csrf_token() }}');
+
+                fetch("{{ route('settings.profile') }}", {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update UI preview
+                        const avatarPreview = document.getElementById('avatar-preview');
+                        const avatarIcon = document.getElementById('avatar-icon');
+
+                        if (avatarPreview) {
+                            avatarPreview.src = data.avatar_url;
+                            avatarPreview.classList.remove('hidden');
+                        }
+                        if (avatarIcon) {
+                            avatarIcon.classList.add('hidden');
+                        }
+
+                        // Update all navbar/sidebar avatar images on page
+                        document.querySelectorAll('img[alt="Profile"]').forEach(img => {
+                            img.src = data.avatar_url;
+                        });
+
+                        if (window.Alert && window.Alert.toast) {
+                            window.Alert.toast.success(data.message || 'Foto profil berhasil diperbarui!');
+                        }
+                    } else {
+                        throw new Error(data.message || 'Gagal mengunggah foto profil.');
+                    }
+                })
+                .catch(err => {
+                    console.error('Avatar upload error:', err);
+                    if (window.Alert && window.Alert.toast) {
+                        window.Alert.toast.error('Gagal mengunggah foto profil.');
+                    }
+                })
+                .finally(() => {
+                    confirmBtn.disabled = false;
+                    confirmBtn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check</span> Gunakan Foto';
+                    closeCropperModal();
+                });
+            }, 'image/webp', 0.82);
+        });
+
+        // --- END CROPPER HANDLER ---
+
         const deleteAccountForm = document.getElementById('delete-account-form');
         if (deleteAccountForm) {
             deleteAccountForm.addEventListener('submit', function(e) {
@@ -404,25 +633,6 @@
         const manualProvince = document.getElementById('manual-province');
         const hiddenProvince = document.getElementById('hidden-province');
         const detectBtn = document.getElementById('btn-detect-location');
-        
-        // Avatar preview
-        const avatarInput = document.getElementById('avatar-input');
-        const avatarPreview = document.getElementById('avatar-preview');
-        const avatarIcon = document.getElementById('avatar-icon');
-        
-        if (avatarInput) {
-            avatarInput.addEventListener('change', function(e) {
-                if (this.files && this.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        avatarPreview.src = e.target.result;
-                        avatarPreview.classList.remove('hidden');
-                        if (avatarIcon) avatarIcon.classList.add('hidden');
-                    }
-                    reader.readAsDataURL(this.files[0]);
-                }
-            });
-        }
 
         const INDONESIA_PROVINCES = [
             'Aceh', 'Sumatera Utara', 'Sumatera Barat', 'Riau', 'Kepulauan Riau', 'Jambi', 
@@ -705,7 +915,14 @@
         const cancelBtn = document.getElementById('btn-cancel-sub');
         if (cancelBtn) {
             cancelBtn.addEventListener('click', async () => {
-                if (!confirm('Apakah Anda yakin ingin membatalkan langganan? Anda akan kembali ke Paket Bibit (Gratis) dan kehilangan akses ke fitur Jadwal Otomatis dan Weather Adjustment.')) {
+                const confirmResult = await Alert.modal.confirm(
+                    'Batalkan Langganan?', 
+                    'Apakah Anda yakin ingin membatalkan langganan? Anda akan kembali ke Paket Bibit (Gratis) dan kehilangan akses ke fitur Jadwal Otomatis dan Weather Adjustment.', 
+                    'Ya, Batalkan', 
+                    true
+                );
+
+                if (!confirmResult.isConfirmed) {
                     return;
                 }
 
@@ -725,11 +942,7 @@
                     const data = await response.json();
 
                     if (data.success) {
-                        if (window.Alert) {
-                            window.Alert.toast.success(data.message);
-                        } else {
-                            alert(data.message);
-                        }
+                        Alert.toast.success(data.message);
                         // Reload page to reflect changes
                         setTimeout(() => window.location.reload(), 1000);
                     } else {
@@ -738,11 +951,7 @@
                 } catch (error) {
                     cancelBtn.disabled = false;
                     cancelBtn.innerHTML = '<span class="material-symbols-outlined text-[18px]">cancel</span> Batalkan Langganan';
-                    if (window.Alert) {
-                        window.Alert.toast.error(error.message);
-                    } else {
-                        alert('Error: ' + error.message);
-                    }
+                    Alert.modal.error('Gagal Membatalkan', error.message);
                 }
             });
         }

@@ -40,18 +40,41 @@ class SettingsController extends Controller
     {
         $user = Auth::user();
 
+        // Handle AJAX Instant Avatar Upload
+        if ($request->wantsJson() || $request->ajax()) {
+            $request->validate([
+                'avatar' => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+            ]);
+
+            if ($user->avatar) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+            
+            $path = $request->file('avatar')->store('avatars', 'public');
+            $user->avatar = $path;
+            $user->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Foto profil berhasil diperbarui!',
+                'avatar_url' => Storage::url($path),
+            ]);
+        }
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:20'],
             'province' => ['nullable', 'string', 'max:100'],
-            'language' => ['required', 'string', 'in:id,en'],
+            'language' => ['nullable', 'string', 'in:id,en'],
             'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
         ]);
 
         $user->name = $request->name;
         $user->phone = $request->phone;
         $user->province = self::normalizeProvince($request->province);
-        $user->language = $request->language;
+        if ($request->has('language')) {
+            $user->language = $request->language;
+        }
 
         if ($request->hasFile('avatar')) {
             // Delete old avatar if exists
