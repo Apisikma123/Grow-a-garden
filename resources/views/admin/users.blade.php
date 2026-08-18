@@ -34,8 +34,12 @@
                     <tr class="hover:bg-surface-container-lowest/50 transition-colors">
                         <td class="py-4 px-6">
                             <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 rounded-full bg-primary-container/40 text-primary-container font-bold text-[13px] flex items-center justify-center shrink-0 uppercase">
-                                    {{ substr($user->name, 0, 2) }}
+                                <div class="w-10 h-10 rounded-full bg-primary-container/30 overflow-hidden flex items-center justify-center shrink-0 border border-outline-variant/30">
+                                    @if($user->avatar)
+                                        <img src="{{ filter_var($user->avatar, FILTER_VALIDATE_URL) ? $user->avatar : asset('storage/' . $user->avatar) }}" class="w-full h-full object-cover" alt="{{ $user->name }}">
+                                    @else
+                                        <span class="text-primary font-bold text-[13px] uppercase">{{ strtoupper(substr($user->name, 0, 2)) }}</span>
+                                    @endif
                                 </div>
                                 <div>
                                     <div class="text-[14px] font-bold text-on-surface">{{ $user->name }}</div>

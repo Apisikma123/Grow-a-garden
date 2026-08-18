@@ -48,13 +48,8 @@
                         <div class="flex flex-col items-center gap-4 shrink-0">
                             <div class="relative group cursor-pointer" onclick="document.getElementById('admin-avatar-input').click()">
                                 <div class="w-24 h-24 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden border-4 border-surface shadow-md group-hover:border-primary transition-colors duration-300">
-                                    @if(Auth::user()->avatar)
-                                        <img id="admin-avatar-preview" src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="Avatar" class="w-full h-full object-cover">
-                                        <span id="admin-avatar-icon" class="material-symbols-outlined text-[40px] text-on-surface-variant hidden">person</span>
-                                    @else
-                                        <img id="admin-avatar-preview" src="" alt="Avatar" class="w-full h-full object-cover hidden">
-                                        <span id="admin-avatar-icon" class="material-symbols-outlined text-[40px] text-on-surface-variant group-hover:scale-110 transition-transform duration-300">person</span>
-                                    @endif
+                                    <img id="admin-avatar-preview" src="{{ Auth::user()->avatar ? (filter_var(Auth::user()->avatar, FILTER_VALIDATE_URL) ? Auth::user()->avatar : asset('storage/' . Auth::user()->avatar)) : '' }}" alt="Avatar" class="w-full h-full object-cover {{ Auth::user()->avatar ? '' : 'hidden' }}">
+                                    <span id="admin-avatar-icon" class="material-symbols-outlined text-[40px] text-on-surface-variant group-hover:scale-110 transition-transform duration-300 {{ Auth::user()->avatar ? 'hidden' : '' }}">person</span>
                                 </div>
                                 <div class="absolute inset-0 bg-on-surface/30 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-xs">
                                     <span class="material-symbols-outlined text-white text-[24px]">photo_camera</span>

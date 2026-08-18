@@ -16,9 +16,18 @@
                 <span class="text-[10px] text-on-surface-variant font-medium mt-0.5">Admin Console</span>
             </div>
         </a>
-        <button id="mobile-menu-btn" class="text-on-surface-variant active:opacity-80 transition-opacity p-1" aria-label="Menu">
-            <span class="material-symbols-outlined text-[24px]">menu</span>
-        </button>
+        <div class="flex items-center gap-3">
+            <a href="/admin/settings" class="w-9 h-9 rounded-full bg-surface-container-highest flex items-center justify-center text-primary font-bold text-sm shadow-sm active:scale-95 transition-transform overflow-hidden" aria-label="Profile and Settings">
+                @if(Auth::user()->avatar)
+                    <img src="{{ filter_var(Auth::user()->avatar, FILTER_VALIDATE_URL) ? Auth::user()->avatar : asset('storage/' . Auth::user()->avatar) }}" class="w-full h-full object-cover" alt="Profile">
+                @else
+                    {{ strtoupper(substr(Auth::user()->name ?? 'AD', 0, 2)) }}
+                @endif
+            </a>
+            <button id="mobile-menu-btn" class="text-on-surface-variant active:opacity-80 transition-opacity p-1" aria-label="Menu">
+                <span class="material-symbols-outlined text-[24px]">menu</span>
+            </button>
+        </div>
     </header>
 
     {{-- ============================================
@@ -80,16 +89,20 @@
 
             {{-- Profile & Pengaturan Box --}}
             <div class="bg-surface-container-low border border-outline-variant/30 rounded-[24px] p-3 flex items-center justify-between shadow-sm">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-outline-variant/20 flex items-center justify-center text-[#006c49] font-black text-[14px]">
-                        AU
+                <a href="/admin/settings" class="flex items-center gap-3 min-w-0 group flex-1">
+                    <div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden border border-outline-variant/40 shrink-0 group-hover:border-primary transition-colors">
+                        @if(Auth::user()->avatar)
+                            <img src="{{ filter_var(Auth::user()->avatar, FILTER_VALIDATE_URL) ? Auth::user()->avatar : asset('storage/' . Auth::user()->avatar) }}" class="w-full h-full object-cover" alt="Profile">
+                        @else
+                            <span class="text-[#006c49] font-black text-[14px] uppercase">{{ strtoupper(substr(Auth::user()->name ?? 'AD', 0, 2)) }}</span>
+                        @endif
                     </div>
-                    <div class="flex flex-col">
-                        <span class="text-[14px] font-bold text-on-surface leading-tight">Admin User</span>
+                    <div class="flex flex-col min-w-0">
+                        <span class="text-[14px] font-bold text-on-surface leading-tight truncate group-hover:text-primary transition-colors">{{ Auth::user()->name }}</span>
                         <span class="text-[11px] text-on-surface-variant font-medium">Profile & Pengaturan</span>
                     </div>
-                </div>
-                <a href="/admin/settings" class="p-2 text-on-surface-variant hover:text-[#006c49] transition-colors flex items-center justify-center rounded-full hover:bg-black/5">
+                </a>
+                <a href="/admin/settings" class="p-2 text-on-surface-variant hover:text-[#006c49] transition-colors flex items-center justify-center rounded-full hover:bg-black/5 shrink-0" title="Pengaturan">
                     <span class="material-symbols-outlined text-[22px] font-bold">settings</span>
                 </a>
             </div>
@@ -108,6 +121,21 @@
                 <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
                 <input type="text" id="admin-global-search" placeholder="Search users, plants, or activity..." class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-full pl-12 pr-4 py-2.5 text-[14px] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all ambient-shadow text-on-surface placeholder:text-on-surface-variant/60" />
             </div>
+
+            {{-- Admin Profile Chip / Avatar in Top Bar --}}
+            <a href="/admin/settings" class="flex items-center gap-3 bg-surface-container-lowest hover:bg-surface-container-low border border-outline-variant/30 rounded-full py-1.5 pl-2 pr-4 transition-all duration-200 shadow-2xs hover:shadow-xs group">
+                <div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden border border-outline-variant/40 shrink-0">
+                    @if(Auth::user()->avatar)
+                        <img src="{{ filter_var(Auth::user()->avatar, FILTER_VALIDATE_URL) ? Auth::user()->avatar : asset('storage/' . Auth::user()->avatar) }}" class="w-full h-full object-cover" alt="Profile">
+                    @else
+                        <span class="text-[#006c49] font-black text-[12px] uppercase">{{ strtoupper(substr(Auth::user()->name ?? 'AD', 0, 2)) }}</span>
+                    @endif
+                </div>
+                <div class="flex flex-col text-left">
+                    <span class="text-[13px] font-bold text-on-surface group-hover:text-primary transition-colors leading-tight">{{ Auth::user()->name }}</span>
+                    <span class="text-[10px] text-on-surface-variant font-medium uppercase tracking-wider">Admin</span>
+                </div>
+            </a>
         </header>
         @else
         <div class="mb-8 hidden md:block"></div>
