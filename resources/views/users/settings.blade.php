@@ -79,25 +79,7 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div class="group">
-                                    <label class="block text-[14px] font-bold text-on-surface mb-2 group-focus-within:text-primary transition-colors">Pilih Provinsi Manual (Alternatif)</label>
-                                    <select id="manual-province" class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
-                                        <option value="">-- Pilih Provinsi --</option>
-                                        @php
-                                            $provinces = ['Aceh', 'Sumatera Utara', 'Sumatera Barat', 'Riau', 'Kepulauan Riau', 'Jambi', 'Sumatera Selatan', 'Bangka Belitung', 'Bengkulu', 'Lampung', 'DKI Jakarta', 'Jawa Barat', 'Banten', 'Jawa Tengah', 'DI Yogyakarta', 'Jawa Timur', 'Bali', 'Nusa Tenggara Barat', 'Nusa Tenggara Timur', 'Kalimantan Barat', 'Kalimantan Tengah', 'Kalimantan Selatan', 'Kalimantan Timur', 'Kalimantan Utara', 'Sulawesi Utara', 'Gorontalo', 'Sulawesi Tengah', 'Sulawesi Barat', 'Sulawesi Selatan', 'Sulawesi Tenggara', 'Maluku', 'Maluku Utara', 'Papua Barat', 'Papua'];
-                                        @endphp
-                                        @foreach($provinces as $prov)
-                                            <option value="{{ $prov }}" {{ Auth::user()->province == $prov ? 'selected' : '' }}>{{ $prov }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="group">
-                                    <label class="block text-[14px] font-bold text-on-surface mb-2 group-focus-within:text-primary transition-colors">Bahasa / Language</label>
-                                    <select name="language" id="app-language" class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
-                                        <option value="id" {{ Auth::user()->language == 'id' ? 'selected' : '' }}>Bahasa Indonesia</option>
-                                        <option value="en" {{ Auth::user()->language == 'en' ? 'selected' : '' }}>English</option>
-                                    </select>
-                                </div>
+                                <input type="hidden" name="language" value="{{ Auth::user()->language ?? 'id' }}">
                                 <div class="group">
                                     <label class="block text-[14px] font-bold text-on-surface mb-2">Role Akun</label>
                                     <div class="flex items-center gap-2 mt-1">
@@ -323,17 +305,6 @@
                                 <div class="w-11 h-6 bg-outline-variant/30 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
                             </label>
                         </div>
-                        <div class="h-px w-full bg-outline-variant/30"></div>
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <h3 class="text-[16px] font-bold text-on-surface">Push Notifications</h3>
-                                <p class="text-[13px] text-on-surface-variant">Dapatkan notifikasi langsung di perangkat Anda untuk peringatan kritis.</p>
-                            </div>
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" id="push-notif-toggle" class="sr-only peer" {{ Auth::user()->push_notifications ? 'checked' : '' }}>
-                                <div class="w-11 h-6 bg-outline-variant/30 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                            </label>
-                        </div>
                     </div>
                 </div>
 
@@ -382,11 +353,19 @@
             </div>
         </div>
     </div>
+
+    {{-- Reusable Cropper Modal --}}
+    <x-cropper-modal />
 @endsection
 
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // Initialize Profile Avatar Cropper (1:1 Ratio)
+        if (window.ProfileCropper) {
+            ProfileCropper.attach('avatar-input', 'avatar-preview', 'avatar-icon');
+        }
+
         const deleteAccountForm = document.getElementById('delete-account-form');
         if (deleteAccountForm) {
             deleteAccountForm.addEventListener('submit', function(e) {
@@ -404,25 +383,6 @@
         const manualProvince = document.getElementById('manual-province');
         const hiddenProvince = document.getElementById('hidden-province');
         const detectBtn = document.getElementById('btn-detect-location');
-        
-        // Avatar preview
-        const avatarInput = document.getElementById('avatar-input');
-        const avatarPreview = document.getElementById('avatar-preview');
-        const avatarIcon = document.getElementById('avatar-icon');
-        
-        if (avatarInput) {
-            avatarInput.addEventListener('change', function(e) {
-                if (this.files && this.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        avatarPreview.src = e.target.result;
-                        avatarPreview.classList.remove('hidden');
-                        if (avatarIcon) avatarIcon.classList.add('hidden');
-                    }
-                    reader.readAsDataURL(this.files[0]);
-                }
-            });
-        }
 
         const INDONESIA_PROVINCES = [
             'Aceh', 'Sumatera Utara', 'Sumatera Barat', 'Riau', 'Kepulauan Riau', 'Jambi', 
@@ -666,7 +626,6 @@
 
         // Handle Notifications API
         const emailToggle = document.getElementById('email-notif-toggle');
-        const pushToggle = document.getElementById('push-notif-toggle');
 
         function updateNotifications(data) {
             fetch("{{ route('settings.notifications') }}", {
@@ -695,17 +654,18 @@
             });
         }
 
-        if (pushToggle) {
-            pushToggle.addEventListener('change', function() {
-                updateNotifications({ push_notifications: this.checked ? 1 : 0 });
-            });
-        }
-
         // Cancel Subscription Handler
         const cancelBtn = document.getElementById('btn-cancel-sub');
         if (cancelBtn) {
             cancelBtn.addEventListener('click', async () => {
-                if (!confirm('Apakah Anda yakin ingin membatalkan langganan? Anda akan kembali ke Paket Bibit (Gratis) dan kehilangan akses ke fitur Jadwal Otomatis dan Weather Adjustment.')) {
+                const result = await Alert.confirm(
+                    'Batalkan Langganan?',
+                    'Apakah Anda yakin ingin membatalkan langganan? Anda akan kembali ke Paket Bibit (Gratis) dan kehilangan akses ke fitur Kalender Tanam dan Weather Adjustment.',
+                    'Ya, Batalkan',
+                    true
+                );
+
+                if (!result || !result.isConfirmed) {
                     return;
                 }
 
@@ -725,12 +685,7 @@
                     const data = await response.json();
 
                     if (data.success) {
-                        if (window.Alert) {
-                            window.Alert.toast.success(data.message);
-                        } else {
-                            alert(data.message);
-                        }
-                        // Reload page to reflect changes
+                        Alert.toast.success(data.message || 'Langganan berhasil dibatalkan.');
                         setTimeout(() => window.location.reload(), 1000);
                     } else {
                         throw new Error(data.message || 'Gagal membatalkan langganan');
@@ -738,11 +693,7 @@
                 } catch (error) {
                     cancelBtn.disabled = false;
                     cancelBtn.innerHTML = '<span class="material-symbols-outlined text-[18px]">cancel</span> Batalkan Langganan';
-                    if (window.Alert) {
-                        window.Alert.toast.error(error.message);
-                    } else {
-                        alert('Error: ' + error.message);
-                    }
+                    Alert.toast.error(error.message || 'Terjadi kesalahan');
                 }
             });
         }

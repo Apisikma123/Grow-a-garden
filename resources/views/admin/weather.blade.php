@@ -49,9 +49,9 @@
                         <button onclick='editActivityRule(@json($rule))' class="text-on-surface-variant hover:text-primary transition-colors">
                             <span class="material-symbols-outlined text-[20px]">edit</span>
                         </button>
-                        <form action="{{ route('admin.weather.activity.destroy', $rule) }}" method="POST" class="inline" onsubmit="return confirm('Hapus aturan ini?');">
+                        <form action="{{ route('admin.weather.activity.destroy', $rule) }}" method="POST" class="inline delete-form">
                             @csrf @method('DELETE')
-                            <button type="submit" class="text-on-surface-variant hover:text-error transition-colors">
+                            <button type="button" onclick="confirmDelete(event, this.form, 'Hapus Aturan Modifikasi?', 'Apakah Anda yakin ingin menghapus aturan modifikasi aktivitas ini?')" class="text-on-surface-variant hover:text-error transition-colors">
                                 <span class="material-symbols-outlined text-[20px]">delete</span>
                             </button>
                         </form>
@@ -99,9 +99,9 @@
                         <button onclick='editWeatherRule(@json($rule))' class="text-on-surface-variant hover:text-primary transition-colors">
                             <span class="material-symbols-outlined text-[20px]">edit</span>
                         </button>
-                        <form action="{{ route('admin.weather.rules.destroy', $rule) }}" method="POST" class="inline" onsubmit="return confirm('Hapus peringatan ini?');">
+                        <form action="{{ route('admin.weather.rules.destroy', $rule) }}" method="POST" class="inline delete-form">
                             @csrf @method('DELETE')
-                            <button type="submit" class="text-on-surface-variant hover:text-error transition-colors">
+                            <button type="button" onclick="confirmDelete(event, this.form, 'Hapus Peringatan Cuaca?', 'Apakah Anda yakin ingin menghapus aturan peringatan cuaca ini?')" class="text-on-surface-variant hover:text-error transition-colors">
                                 <span class="material-symbols-outlined text-[20px]">delete</span>
                             </button>
                         </form>
@@ -327,6 +327,14 @@
 
         document.getElementById('weatherRuleModal').classList.remove('hidden');
         document.getElementById('weatherRuleModal').classList.add('flex');
+    }
+
+    async function confirmDelete(event, form, title, text) {
+        event.preventDefault();
+        const result = await Alert.confirm(title || 'Konfirmasi Hapus', text || 'Apakah Anda yakin ingin menghapus data ini?', 'Ya, Hapus', true);
+        if (result && result.isConfirmed) {
+            form.submit();
+        }
     }
 </script>
 @endsection

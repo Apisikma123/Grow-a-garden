@@ -128,50 +128,27 @@
         </div>
     </div>
 </div>
+
+{{-- Reusable Cropper Modal --}}
+<x-cropper-modal />
 @endsection
 
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // Initialize Admin Profile Avatar Cropper (1:1 Ratio)
+        if (window.ProfileCropper) {
+            ProfileCropper.attach('admin-avatar-input', 'admin-avatar-preview', 'admin-avatar-icon');
+        }
+
         // Delete Admin Account Confirm
         const deleteForm = document.getElementById('delete-admin-account-form');
         if (deleteForm) {
-            deleteForm.addEventListener('submit', function(e) {
+            deleteForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
-                if (window.Alert && window.Alert.modal) {
-                    window.Alert.modal.confirm('Hapus Akun Admin', 'Apakah Anda yakin ingin menghapus akun admin Anda selamanya? Semua hak akses akan dicabut.', 'Ya, Hapus Akun', true)
-                        .then((result) => {
-                            if (result && result.isConfirmed) {
-                                this.submit();
-                            }
-                        });
-                } else {
-                    if (confirm('Apakah Anda yakin ingin menghapus akun admin Anda?')) {
-                        this.submit();
-                    }
-                }
-            });
-        }
-
-        // Avatar Preview Handler
-        const avatarInput = document.getElementById('admin-avatar-input');
-        const avatarPreview = document.getElementById('admin-avatar-preview');
-        const avatarIcon = document.getElementById('admin-avatar-icon');
-
-        if (avatarInput) {
-            avatarInput.addEventListener('change', function() {
-                if (this.files && this.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        if (avatarPreview) {
-                            avatarPreview.src = e.target.result;
-                            avatarPreview.classList.remove('hidden');
-                        }
-                        if (avatarIcon) {
-                            avatarIcon.classList.add('hidden');
-                        }
-                    };
-                    reader.readAsDataURL(this.files[0]);
+                const result = await Alert.confirm('Hapus Akun Admin', 'Apakah Anda yakin ingin menghapus akun admin Anda selamanya? Semua hak akses akan dicabut.', 'Ya, Hapus Akun', true);
+                if (result && result.isConfirmed) {
+                    this.submit();
                 }
             });
         }

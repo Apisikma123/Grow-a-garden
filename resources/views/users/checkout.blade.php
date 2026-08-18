@@ -477,7 +477,7 @@ document.addEventListener('DOMContentLoaded', () => {
             paymentLoading.classList.remove('flex');
             paymentForm.classList.remove('hidden');
 
-            alert('Error: ' + error.message);
+            Alert.error('Pembayaran Gagal', error.message || 'Terjadi kesalahan saat memproses pembayaran.');
         }
     });
 

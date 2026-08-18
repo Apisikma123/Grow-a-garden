@@ -57,10 +57,10 @@
                             <span class="material-symbols-outlined text-[20px]">edit</span>
                         </button>
 
-                        <form action="{{ route('admin.badges.destroy', $badge->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus badge ini?')">
+                        <form id="delete-badge-form-{{ $badge->id }}" action="{{ route('admin.badges.destroy', $badge->id) }}" method="POST">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus Badge">
+                            <button type="button" onclick="confirmDeleteBadge(event, {{ $badge->id }}, '{{ addslashes($badge->name) }}')" class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer" title="Hapus Badge">
                                 <span class="material-symbols-outlined text-[20px]">delete</span>
                             </button>
                         </form>
@@ -213,6 +213,14 @@
             document.getElementById('edit-target_count').value = badge.target_count || 1;
             document.getElementById('edit-description').value = badge.description || '';
             document.getElementById('edit-badge-modal').classList.remove('hidden');
+        }
+
+        async function confirmDeleteBadge(event, badgeId, badgeName) {
+            event.preventDefault();
+            const result = await Alert.confirm('Hapus Badge?', `Apakah Anda yakin ingin menghapus badge "${badgeName}"?`, 'Ya, Hapus', true);
+            if (result && result.isConfirmed) {
+                document.getElementById(`delete-badge-form-${badgeId}`).submit();
+            }
         }
     </script>
 @endsection

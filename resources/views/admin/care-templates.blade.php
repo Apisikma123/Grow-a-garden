@@ -254,13 +254,14 @@
             });
 
             if (res.ok) {
-                window.location.reload();
+                Alert.toast.success('Aturan perawatan berhasil disimpan!');
+                setTimeout(() => window.location.reload(), 800);
             } else {
-                alert('Gagal menyimpan aturan perawatan.');
+                Alert.toast.error('Gagal menyimpan aturan perawatan.');
             }
         } catch (e) {
             console.error(e);
-            alert('Terjadi kesalahan saat menyimpan.');
+            Alert.toast.error('Terjadi kesalahan saat menyimpan.');
         }
     }
 

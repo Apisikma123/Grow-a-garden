@@ -126,14 +126,15 @@
             });
             
             if (response.ok) {
-                window.location.reload();
+                Alert.toast.success('Role pengguna berhasil diperbarui!');
+                setTimeout(() => window.location.reload(), 800);
             } else {
                 const data = await response.json();
-                alert(data.error || 'Failed to update role');
+                Alert.error('Gagal', data.error || 'Gagal memperbarui role pengguna');
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('An error occurred');
+            Alert.error('Error', 'Terjadi kesalahan saat memperbarui role.');
         }
     }
 

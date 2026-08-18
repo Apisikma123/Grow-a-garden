@@ -44,14 +44,14 @@ class SettingsController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:20'],
             'province' => ['nullable', 'string', 'max:100'],
-            'language' => ['required', 'string', 'in:id,en'],
+            'language' => ['nullable', 'string', 'in:id,en'],
             'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
         ]);
 
         $user->name = $request->name;
         $user->phone = $request->phone;
         $user->province = self::normalizeProvince($request->province);
-        $user->language = $request->language;
+        $user->language = $request->language ?? 'id';
 
         if ($request->hasFile('avatar')) {
             // Delete old avatar if exists
@@ -66,6 +66,30 @@ class SettingsController extends Controller
         $user->save();
 
         return redirect()->back()->with('success', 'Pengaturan profil berhasil disimpan.');
+    }
+
+    public function updateAvatar(Request $request)
+    {
+        $request->validate([
+            'avatar' => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+        ]);
+
+        $user = Auth::user();
+        if ($user->avatar) {
+            Storage::disk('public')->delete($user->avatar);
+        }
+
+        $path = $request->file('avatar')->store('avatars', 'public');
+        $user->avatar = $path;
+        $user->save();
+
+        $avatarUrl = asset('storage/' . $path);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Foto profil berhasil diperbarui!',
+            'avatar_url' => $avatarUrl,
+        ]);
     }
 
     public static function normalizeProvince(?string $input): ?string
@@ -148,18 +172,10 @@ class SettingsController extends Controller
         $user = Auth::user();
 
         $request->validate([
-            'email_notifications' => ['boolean'],
-            'push_notifications' => ['boolean'],
+            'email_notifications' => ['required', 'boolean'],
         ]);
 
-        if ($request->has('email_notifications')) {
-            $user->email_notifications = $request->email_notifications;
-        }
-
-        if ($request->has('push_notifications')) {
-            $user->push_notifications = $request->push_notifications;
-        }
-
+        $user->email_notifications = $request->email_notifications;
         $user->save();
 
         return response()->json(['success' => true, 'message' => 'Pengaturan notifikasi berhasil disimpan.']);

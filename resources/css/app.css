@@ -190,3 +190,201 @@ html {
         transform: translateY(-12px) scale(0.99);
     }
 }
+
+/* ============================================
+   Cropper.js Verdant Growth Theme
+   ============================================ */
+.cropper-view-box {
+    outline: 2.5px solid #006c49 !important;
+    outline-color: #006c49 !important;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4);
+    border-radius: 4px;
+}
+.cropper-line {
+    background-color: #006c49 !important;
+}
+.cropper-point {
+    background-color: #006c49 !important;
+    width: 8px !important;
+    height: 8px !important;
+    border-radius: 50% !important;
+    opacity: 0.9 !important;
+}
+.cropper-point.point-se {
+    width: 10px !important;
+    height: 10px !important;
+}
+.cropper-dashed {
+    border-color: rgba(255, 255, 255, 0.4) !important;
+}
+.cropper-modal {
+    background-color: rgba(0, 0, 0, 0.65) !important;
+}
+
+/* ============================================
+   SweetAlert2 Verdant Growth Theme (DESIGN.md)
+   ============================================ */
+.swal2-verdant-popup {
+    background: #ffffff !important;
+    border: 1px solid rgba(187, 202, 191, 0.4) !important;
+    border-radius: 28px !important;
+    padding: 28px 24px !important;
+    box-shadow: 0 20px 50px -12px rgba(0, 108, 73, 0.18), 0 0 1px 1px rgba(0, 108, 73, 0.05) !important;
+    font-family: 'Outfit', ui-sans-serif, system-ui, sans-serif !important;
+    color: #191c1d !important;
+    max-width: 440px !important;
+    width: 90% !important;
+}
+
+.swal2-verdant-title {
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    color: #191c1d !important;
+    letter-spacing: -0.02em !important;
+    margin-bottom: 8px !important;
+    padding: 0 !important;
+    font-family: 'Outfit', ui-sans-serif, system-ui, sans-serif !important;
+}
+
+.swal2-verdant-html {
+    font-size: 14.5px !important;
+    color: #3c4a42 !important;
+    line-height: 1.6 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-family: 'Outfit', ui-sans-serif, system-ui, sans-serif !important;
+}
+
+.swal2-verdant-actions {
+    margin-top: 24px !important;
+    gap: 12px !important;
+    width: 100% !important;
+    justify-content: center !important;
+}
+
+.swal2-verdant-btn-primary {
+    background-color: #006c49 !important;
+    color: #ffffff !important;
+    padding: 12px 26px !important;
+    border-radius: 9999px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    border: none !important;
+    box-shadow: 0 4px 14px rgba(0, 108, 73, 0.25) !important;
+    transition: all 0.25s ease !important;
+    cursor: pointer !important;
+}
+.swal2-verdant-btn-primary:hover {
+    background-color: #005236 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 18px rgba(0, 108, 73, 0.35) !important;
+}
+.swal2-verdant-btn-primary:active {
+    transform: scale(0.96) !important;
+}
+
+.swal2-verdant-btn-cancel {
+    background-color: #e7e8e9 !important;
+    color: #191c1d !important;
+    padding: 12px 24px !important;
+    border-radius: 9999px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    border: none !important;
+    transition: all 0.25s ease !important;
+    cursor: pointer !important;
+}
+.swal2-verdant-btn-cancel:hover {
+    background-color: #d9dadb !important;
+}
+.swal2-verdant-btn-cancel:active {
+    transform: scale(0.96) !important;
+}
+
+.swal2-verdant-btn-danger {
+    background-color: #ba1a1a !important;
+    color: #ffffff !important;
+    padding: 12px 26px !important;
+    border-radius: 9999px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    border: none !important;
+    box-shadow: 0 4px 14px rgba(186, 26, 26, 0.25) !important;
+    transition: all 0.25s ease !important;
+    cursor: pointer !important;
+}
+.swal2-verdant-btn-danger:hover {
+    background-color: #93000a !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 18px rgba(186, 26, 26, 0.35) !important;
+}
+.swal2-verdant-btn-danger:active {
+    transform: scale(0.96) !important;
+}
+
+.swal2-verdant-icon {
+    border: none !important;
+    margin: 0 auto 16px auto !important;
+    width: 68px !important;
+    height: 68px !important;
+    border-radius: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+.swal2-verdant-icon.swal2-success {
+    background: rgba(0, 108, 73, 0.1) !important;
+}
+.swal2-verdant-icon.swal2-error {
+    background: rgba(186, 26, 26, 0.1) !important;
+}
+.swal2-verdant-icon.swal2-warning {
+    background: rgba(148, 74, 35, 0.1) !important;
+}
+.swal2-verdant-icon.swal2-info {
+    background: rgba(27, 107, 81, 0.1) !important;
+}
+
+.swal-icon-symbol {
+    font-size: 38px !important;
+}
+
+.swal2-verdant-close-btn {
+    color: #6c7a71 !important;
+    border-radius: 50% !important;
+    transition: all 0.2s ease !important;
+}
+.swal2-verdant-close-btn:hover {
+    color: #191c1d !important;
+    background: #e7e8e9 !important;
+}
+
+/* Toast Theme */
+.swal2-verdant-toast {
+    background: #ffffff !important;
+    border: 1px solid rgba(187, 202, 191, 0.35) !important;
+    border-radius: 16px !important;
+    padding: 12px 18px !important;
+    box-shadow: 0 10px 30px -6px rgba(0, 108, 73, 0.15) !important;
+    margin-right: 16px !important;
+    margin-bottom: 16px !important;
+    font-family: 'Outfit', ui-sans-serif, system-ui, sans-serif !important;
+    align-items: center !important;
+}
+
+.swal2-verdant-toast-title {
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    color: #191c1d !important;
+    margin-left: 8px !important;
+    padding: 0 !important;
+    font-family: 'Outfit', ui-sans-serif, system-ui, sans-serif !important;
+}
+
+.swal2-verdant-toast-icon {
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+
