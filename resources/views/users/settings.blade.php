@@ -40,13 +40,14 @@
                         <div class="flex flex-col md:flex-row gap-[32px]">
                             <div class="flex flex-col items-center gap-4">
                                 <div class="relative group cursor-pointer" onclick="document.getElementById('avatar-input').click()">
-                                    <div class="w-24 h-24 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden border-4 border-surface shadow-sm group-hover:border-primary-container transition-colors duration-300">
-                                        @if(Auth::user()->avatar)
-                                            <img id="avatar-preview" src="{{ Storage::url(Auth::user()->avatar) }}" alt="Avatar" class="w-full h-full object-cover">
-                                        @else
-                                            <img id="avatar-preview" src="" alt="Avatar" class="w-full h-full object-cover hidden">
-                                            <span id="avatar-icon" class="material-symbols-outlined text-[40px] text-on-surface-variant group-hover:scale-110 transition-transform duration-300">person</span>
-                                        @endif
+                                    <div class="relative w-24 h-24 rounded-full bg-surface-container-high overflow-hidden border-4 border-surface shadow-sm group-hover:border-primary-container transition-colors duration-300">
+                                        @php
+                                            $userAvatarUrl = Auth::user()->avatar ? (filter_var(Auth::user()->avatar, FILTER_VALIDATE_URL) ? Auth::user()->avatar : asset('storage/' . Auth::user()->avatar)) : null;
+                                        @endphp
+                                        <img id="avatar-preview" src="{{ $userAvatarUrl ?? '' }}" alt="Avatar" class="w-full h-full object-cover {{ $userAvatarUrl ? 'block' : 'hidden' }}" style="{{ $userAvatarUrl ? '' : 'display: none;' }}">
+                                        <div id="avatar-icon" class="absolute inset-0 flex items-center justify-center {{ $userAvatarUrl ? 'hidden' : 'flex' }}" style="{{ $userAvatarUrl ? 'display: none;' : '' }}">
+                                            <span class="material-symbols-outlined text-[40px] text-on-surface-variant group-hover:scale-110 transition-transform duration-300">person</span>
+                                        </div>
                                     </div>
                                     <div class="absolute inset-0 bg-on-surface/20 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm">
                                         <span class="material-symbols-outlined text-surface">photo_camera</span>

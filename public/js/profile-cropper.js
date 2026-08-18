@@ -203,9 +203,13 @@ window.ProfileCropper = (function () {
                             if (currentPreviewImg) {
                                 currentPreviewImg.src = newAvatarUrl;
                                 currentPreviewImg.classList.remove('hidden');
+                                currentPreviewImg.classList.add('block');
+                                currentPreviewImg.style.display = 'block';
                             }
                             if (currentIconEl) {
                                 currentIconEl.classList.add('hidden');
+                                currentIconEl.classList.remove('flex');
+                                currentIconEl.style.display = 'none';
                             }
 
                             // Update header / sidebar profile pictures if available

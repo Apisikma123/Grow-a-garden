@@ -47,9 +47,14 @@
                         {{-- Avatar Upload Section --}}
                         <div class="flex flex-col items-center gap-4 shrink-0">
                             <div class="relative group cursor-pointer" onclick="document.getElementById('admin-avatar-input').click()">
-                                <div class="w-24 h-24 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden border-4 border-surface shadow-md group-hover:border-primary transition-colors duration-300">
-                                    <img id="admin-avatar-preview" src="{{ Auth::user()->avatar ? (filter_var(Auth::user()->avatar, FILTER_VALIDATE_URL) ? Auth::user()->avatar : asset('storage/' . Auth::user()->avatar)) : '' }}" alt="Avatar" class="w-full h-full object-cover {{ Auth::user()->avatar ? '' : 'hidden' }}">
-                                    <span id="admin-avatar-icon" class="material-symbols-outlined text-[40px] text-on-surface-variant group-hover:scale-110 transition-transform duration-300 {{ Auth::user()->avatar ? 'hidden' : '' }}">person</span>
+                                <div class="relative w-24 h-24 rounded-full bg-surface-container-high overflow-hidden border-4 border-surface shadow-md group-hover:border-primary transition-colors duration-300">
+                                    @php
+                                        $adminAvatar = Auth::user()->avatar ? (filter_var(Auth::user()->avatar, FILTER_VALIDATE_URL) ? Auth::user()->avatar : asset('storage/' . Auth::user()->avatar)) : null;
+                                    @endphp
+                                    <img id="admin-avatar-preview" src="{{ $adminAvatar ?? '' }}" alt="Avatar" class="w-full h-full object-cover {{ $adminAvatar ? 'block' : 'hidden' }}" style="{{ $adminAvatar ? '' : 'display: none;' }}">
+                                    <div id="admin-avatar-icon" class="absolute inset-0 flex items-center justify-center {{ $adminAvatar ? 'hidden' : 'flex' }}" style="{{ $adminAvatar ? 'display: none;' : '' }}">
+                                        <span class="material-symbols-outlined text-[40px] text-on-surface-variant group-hover:scale-110 transition-transform duration-300">person</span>
+                                    </div>
                                 </div>
                                 <div class="absolute inset-0 bg-on-surface/30 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-xs">
                                     <span class="material-symbols-outlined text-white text-[24px]">photo_camera</span>
