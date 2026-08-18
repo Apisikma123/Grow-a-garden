@@ -37,7 +37,7 @@
         {{-- Badge List Grid --}}
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse($badges as $badge)
-                <div class="bg-white rounded-2xl p-6 ambient-shadow border border-slate-200 flex flex-col justify-between relative overflow-hidden group hover:border-[#006c49]/40 transition-all">
+                <div class="searchable-item bg-white rounded-2xl p-6 ambient-shadow border border-slate-200 flex flex-col justify-between relative overflow-hidden group hover:border-[#006c49]/40 transition-all">
                     <div class="flex items-start justify-between mb-4 z-10">
                         <div class="w-14 h-14 rounded-2xl bg-[#006c49]/10 border border-[#006c49]/20 text-[#006c49] flex items-center justify-center shadow-sm shrink-0">
                             <span class="material-symbols-outlined text-[32px]">{{ $badge->icon_url ?? 'military_tech' }}</span>

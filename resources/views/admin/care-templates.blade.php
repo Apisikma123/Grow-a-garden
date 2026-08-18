@@ -35,7 +35,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-8">
         
         @foreach($templates as $template)
-        <div class="searchable-item bg-white rounded-[32px] p-7 ambient-shadow border border-outline-variant/20 flex flex-col gap-6 hover:ambient-shadow-lg transition-shadow">
+        <div class="searchable-item bg-white rounded-[32px] p-7 ambient-shadow border border-outline-variant/20 flex flex-col gap-6 hover:ambient-shadow-lg transition-shadow" data-search="{{ $template->name_id }} {{ $template->scientific_name }}">
             
             {{-- Top Info --}}
             <div class="flex gap-5 relative">

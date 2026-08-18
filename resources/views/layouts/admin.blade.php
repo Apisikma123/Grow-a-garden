@@ -52,20 +52,20 @@
         <div class="flex-1 flex flex-col gap-2 overflow-y-auto no-scrollbar px-5">
             @php
                 $navItems = [
-                    ['route' => 'admin.dashboard', 'label' => 'Beranda', 'icon' => 'dashboard', 'url' => '/admin/dashboard'],
-                    ['route' => 'admin.users', 'label' => 'Manajemen Pengguna', 'icon' => 'group', 'url' => '/admin/users'],
-                    ['route' => 'admin.plants', 'label' => 'Database Tanaman', 'icon' => 'local_florist', 'url' => '/admin/plants'],
-                    ['route' => 'admin.care-templates', 'label' => 'Template Perawatan', 'icon' => 'assignment', 'url' => '/admin/care-templates'],
-                    ['route' => 'admin.badges', 'label' => 'Kelola Badge', 'icon' => 'workspace_premium', 'url' => '/admin/badges'],
-                    ['route' => 'admin.weather', 'label' => 'Aturan Cuaca', 'icon' => 'partly_cloudy_day', 'url' => '/admin/weather'],
-                    ['route' => 'admin.settings', 'label' => 'Pengaturan', 'icon' => 'settings', 'url' => '/admin/settings'],
+                    ['route' => 'admin.dashboard', 'label' => 'Dashboard', 'icon' => 'dashboard', 'url' => '/admin/dashboard'],
+                    ['route' => 'admin.users', 'label' => 'Users', 'icon' => 'group', 'url' => '/admin/users'],
+                    ['route' => 'admin.plants', 'label' => 'Plants', 'icon' => 'local_florist', 'url' => '/admin/plants'],
+                    ['route' => 'admin.care-templates', 'label' => 'Care Template', 'icon' => 'assignment', 'url' => '/admin/care-templates'],
+                    ['route' => 'admin.badges', 'label' => 'Badge', 'icon' => 'workspace_premium', 'url' => '/admin/badges'],
+                    ['route' => 'admin.weather', 'label' => 'Weather Rules', 'icon' => 'partly_cloudy_day', 'url' => '/admin/weather'],
+                    ['route' => 'admin.settings', 'label' => 'Settings', 'icon' => 'settings', 'url' => '/admin/settings'],
                 ];
                 $currentRoute = request()->path();
             @endphp
 
             @foreach($navItems as $item)
                 @php
-                    $isActive = ltrim($item['url'], '/') === $currentRoute || ($item['label'] === 'Beranda' && str_contains($currentRoute, 'admin/dashboard'));
+                    $isActive = ltrim($item['url'], '/') === $currentRoute || ($item['label'] === 'Dashboard' && str_contains($currentRoute, 'admin/dashboard'));
                 @endphp
                 <a href="{{ $item['url'] }}" class="{{ $isActive ? 'text-[#006c49] font-bold' : 'text-[#334155] font-semibold hover:bg-black/5' }} rounded-xl px-4 py-3 flex items-center gap-4 transition-all duration-200">
                     <span class="material-symbols-outlined text-[24px] {{ $isActive ? 'text-[#006c49]' : 'text-[#475569]' }}">{{ $item['icon'] }}</span>
@@ -114,12 +114,12 @@
          ============================================ --}}
     <main class="flex-1 md:ml-64 p-5 md:p-8 overflow-y-auto no-scrollbar w-full min-h-screen flex flex-col">
         {{-- Top Header Bar --}}
-        @if(!request()->is('admin/settings') && !request()->is('admin/dashboard'))
+        @if(!request()->is('admin/settings*') && !request()->is('admin/dashboard*') && !request()->is('admin/weather*') && !request()->is('admin/plants*'))
         <header class="hidden md:flex justify-between items-center mb-8 gap-6">
             {{-- Search Bar --}}
             <div class="relative w-full max-w-[400px]">
                 <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
-                <input type="text" id="admin-global-search" placeholder="Search users, plants, or activity..." class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-full pl-12 pr-4 py-2.5 text-[14px] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all ambient-shadow text-on-surface placeholder:text-on-surface-variant/60" />
+                <input type="text" id="admin-global-search" placeholder="Search users, plants, or badges..." class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-full pl-12 pr-4 py-2.5 text-[14px] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all ambient-shadow text-on-surface placeholder:text-on-surface-variant/60" />
             </div>
 
             {{-- Admin Profile Chip / Avatar in Top Bar --}}
@@ -171,13 +171,16 @@
         const searchInput = document.getElementById('admin-global-search');
         if (searchInput) {
             searchInput.addEventListener('input', function(e) {
-                const term = e.target.value.toLowerCase();
+                const term = e.target.value.toLowerCase().trim();
                 
                 // Find all searchable items (table rows or explicitly marked items)
                 const searchableElements = document.querySelectorAll('main tbody tr, main .searchable-item');
                 
                 searchableElements.forEach(el => {
-                    const text = el.textContent.toLowerCase();
+                    const searchTarget = el.hasAttribute('data-search') 
+                        ? el.getAttribute('data-search') 
+                        : el.textContent;
+                    const text = searchTarget.toLowerCase();
                     el.style.display = text.includes(term) ? '' : 'none';
                 });
             });

@@ -120,8 +120,16 @@ class AdminController extends Controller
     {
         $query = \App\Models\PlantTemplate::with('category');
 
-        if ($request->has('search') && $request->search != '') {
-            $query->where('name_id', 'like', '%'.$request->search.'%');
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name_id', 'like', '%'.$search.'%')
+                  ->orWhere('scientific_name', 'like', '%'.$search.'%');
+            });
+        }
+
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
         }
 
         $plants = $query->paginate(15)->withQueryString();

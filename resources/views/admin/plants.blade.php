@@ -9,10 +9,26 @@
             <h1 class="text-[28px] font-bold text-on-surface tracking-tight">Katalog Tanaman</h1>
             <p class="text-[14px] text-on-surface-variant">Kelola database tanaman global termasuk taksonomi, kondisi ideal, dan status.</p>
         </div>
-        <div class="flex items-center gap-3 shrink-0">
-            <form action="{{ route('admin.plants') }}" method="GET" class="relative">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari tanaman..." class="pl-9 pr-4 py-2 bg-surface-container-highest border border-outline-variant/30 rounded-lg text-[13px] text-on-surface focus:outline-none focus:ring-2 focus:ring-primary w-64">
-                <span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-on-surface-variant">search</span>
+        <div class="flex flex-wrap items-center gap-3 shrink-0">
+            <form action="{{ route('admin.plants') }}" method="GET" class="flex flex-wrap items-center gap-2">
+                <div class="relative">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama atau nama ilmiah..." class="pl-9 pr-4 py-2 bg-surface-container-highest border border-outline-variant/30 rounded-lg text-[13px] text-on-surface focus:outline-none focus:ring-2 focus:ring-primary w-64" onchange="this.form.submit()">
+                    <span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-on-surface-variant">search</span>
+                </div>
+                <select name="category_id" onchange="this.form.submit()" class="px-3 py-2 bg-surface-container-highest border border-outline-variant/30 rounded-lg text-[13px] text-on-surface focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer">
+                    <option value="">Semua Kategori</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @if(request('search') || request('category_id'))
+                    <a href="{{ route('admin.plants') }}" class="p-2 text-on-surface-variant hover:text-error transition-colors flex items-center gap-1 text-[12px] font-semibold" title="Reset Filter">
+                        <span class="material-symbols-outlined text-[18px]">filter_alt_off</span>
+                        Reset
+                    </a>
+                @endif
             </form>
             <button onclick="openPlantModal()" class="flex items-center gap-2 bg-primary text-on-primary font-bold text-[14px] px-5 py-2.5 rounded-lg hover:bg-primary/90 active:scale-[0.98] transition-all shadow-sm">
                 <span class="material-symbols-outlined text-[18px]">add_circle</span>
@@ -33,7 +49,6 @@
                         <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">Nama Ilmiah</th>
                         <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">Kategori</th>
                         <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">Masa Panen</th>
-                        <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">pH Ideal</th>
                         <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase text-right">Actions</th>
                     </tr>
                 </thead>
@@ -54,9 +69,6 @@
                         <td class="py-4 px-6">
                             <span class="text-[12px] font-medium text-on-surface-variant">{{ $template->harvest_start_day }} Hari</span>
                         </td>
-                        <td class="py-4 px-6">
-                            <span class="text-[12px] font-medium text-on-surface-variant">{{ $template->soil_ph_min }} - {{ $template->soil_ph_max }}</span>
-                        </td>
                         <td class="py-4 px-6 text-right">
                             <div class="flex items-center justify-end gap-1">
                                 <button onclick='editPlantModal(@json($template))' class="p-2 text-on-surface-variant hover:text-primary hover:bg-primary/5 rounded-lg transition-colors">
@@ -70,7 +82,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="py-8 text-center text-on-surface-variant">
+                        <td colspan="5" class="py-8 text-center text-on-surface-variant">
                             Belum ada tanaman di katalog.
                         </td>
                     </tr>

@@ -9,9 +9,6 @@
             <h1 class="text-[28px] font-bold text-on-surface tracking-tight mb-1">Ringkasan Beranda</h1>
             <p class="text-[14px] text-on-surface-variant">Berikut ringkasan aktivitas kebun hari ini.</p>
         </div>
-        <button class="px-5 py-2 rounded-full border-2 border-secondary/40 text-secondary font-bold text-[14px] hover:bg-secondary/5 transition-colors">
-            Ekspor Laporan
-        </button>
     </div>
 
     {{-- Stats Row --}}
