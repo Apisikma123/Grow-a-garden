@@ -278,7 +278,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::post('/badges', [\App\Http\Controllers\Admin\AdminController::class, 'storeBadge'])->name('admin.badges.store');
     Route::put('/badges/{badge}', [\App\Http\Controllers\Admin\AdminController::class, 'updateBadge'])->name('admin.badges.update');
     Route::delete('/badges/{badge}', [\App\Http\Controllers\Admin\AdminController::class, 'destroyBadge'])->name('admin.badges.destroy');
-    Route::post('/badges/award', [\App\Http\Controllers\Admin\AdminController::class, 'awardBadgeToUser'])->name('admin.badges.award');
 
     Route::get('/weather', [\App\Http\Controllers\Admin\AdminController::class, 'weather'])->name('admin.weather');
     Route::post('/weather/rules', [\App\Http\Controllers\Admin\AdminController::class, 'storeWeatherRule'])->name('admin.weather.rules.store');

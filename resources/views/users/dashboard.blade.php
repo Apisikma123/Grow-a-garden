@@ -62,19 +62,8 @@
                 </div>
 
                 {{-- Loading State --}}
-                <div id="weather-loading" class="hidden flex flex-col gap-4">
-                    <div class="flex items-center justify-between mb-2 border-b border-outline-variant/30 pb-4">
-                        <div class="flex items-center gap-3">
-                            <span class="material-symbols-outlined text-primary animate-spin" style="font-size: 24px;">sync</span>
-                            <span class="text-xs sm:text-sm font-bold text-on-surface">Mendeteksi...</span>
-                        </div>
-                    </div>
-                    <div class="bg-surface-container-low rounded-xl p-4 flex flex-col items-center text-center justify-center min-h-[140px]">
-                        <h3 class="font-bold text-[13px] sm:text-[14px] text-on-surface mb-2">Mencari Koordinat</h3>
-                        <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
-                            Sedang mencari data cuaca regional Anda.
-                        </p>
-                    </div>
+                <div id="weather-loading" class="hidden flex flex-col items-center justify-center p-6 bg-surface-container-low rounded-xl">
+                    <x-brand-loader size="sm" text="Mendeteksi data cuaca & lokasi Anda..." />
                 </div>
 
                 {{-- Active Weather State --}}

@@ -13,12 +13,7 @@
                 <p class="text-sm text-slate-500 font-medium">Buat badge baru atau berikan apresiasi prestasi secara manual kepada pengguna.</p>
             </div>
             
-            <div class="flex items-center gap-3">
-                <button onclick="document.getElementById('award-badge-modal').classList.remove('hidden')" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-bold text-sm px-5 py-2.5 rounded-xl transition-all shadow-sm flex items-center gap-2 active:scale-95 cursor-pointer">
-                    <span class="material-symbols-outlined text-[20px]">workspace_premium</span>
-                    Berikan Badge ke User
-                </button>
-
+            <div>
                 <button onclick="document.getElementById('create-badge-modal').classList.remove('hidden')" class="bg-[#006c49] hover:bg-[#005236] text-white font-bold text-sm px-5 py-2.5 rounded-xl transition-all shadow-sm flex items-center gap-2 active:scale-95 cursor-pointer">
                     <span class="material-symbols-outlined text-[20px]">add</span>
                     Tambah Badge
@@ -207,50 +202,7 @@
         </div>
     </div>
 
-    {{-- Award Badge Modal --}}
-    <div id="award-badge-modal" class="fixed inset-0 z-[100] hidden overflow-y-auto">
-        <div class="fixed inset-0 bg-slate-900/60 transition-opacity" onclick="document.getElementById('award-badge-modal').classList.add('hidden')"></div>
-        <div class="min-h-screen px-4 py-8 flex items-center justify-center">
-            <div class="w-full max-w-lg bg-white rounded-3xl p-6 md:p-8 ambient-shadow-lg relative z-10">
-                <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
-                    <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-[#006c49]">military_tech</span> Berikan Badge Manual
-                    </h3>
-                    <button onclick="document.getElementById('award-badge-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
-                        <span class="material-symbols-outlined">close</span>
-                    </button>
-                </div>
 
-                <form action="{{ route('admin.badges.award') }}" method="POST" class="space-y-4">
-                    @csrf
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Pilih Pengguna</label>
-                        <select name="user_id" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#006c49] text-sm">
-                            <option value="">-- Pilih Pengguna --</option>
-                            @foreach($users as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Pilih Badge</label>
-                        <select name="badge_id" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#006c49] text-sm">
-                            <option value="">-- Pilih Badge --</option>
-                            @foreach($badges as $badge)
-                                <option value="{{ $badge->id }}">{{ $badge->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="flex justify-end gap-3 pt-4">
-                        <button type="button" onclick="document.getElementById('award-badge-modal').classList.add('hidden')" class="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-100">Batal</button>
-                        <button type="submit" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-[#006c49] hover:bg-[#005236]">Berikan Badge</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 
     <script>
         function editBadge(badge) {

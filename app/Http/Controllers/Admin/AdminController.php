@@ -11,7 +11,7 @@ use App\Models\Plant;
 
 class AdminController extends Controller
 {
-    public function dashboard()
+    public function dashboard(Request $request)
     {
         $totalUsers = User::count();
         $totalGardens = Garden::count();
@@ -31,49 +31,65 @@ class AdminController extends Controller
             ->with('plantTemplate')
             ->get();
 
-        // Top activities
-        $topActivities = \App\Models\Event::select('event_type_id', \Illuminate\Support\Facades\DB::raw('count(*) as total'))
-            ->where('status', 'COMPLETED')
-            ->groupBy('event_type_id')
-            ->orderBy('total', 'desc')
-            ->take(4)
-            ->with('eventType')
-            ->get();
-        $totalCompletedEvents = \App\Models\Event::where('status', 'COMPLETED')->count();
-
-        // Today's activities
-        $todayActivities = \App\Models\Event::with(['plant.garden.user', 'eventType'])
-            ->whereDate('scheduled_date', today())
-            ->orderBy('updated_at', 'desc')
-            ->take(5)
-            ->get();
-
-        // Average Harvest Age
-        $avgHarvestAge = \App\Models\PlantTemplate::avg('harvest_start_day') ?? 0;
-        $avgHarvestAge = round($avgHarvestAge);
-
-        // User Growth (Last 6 months)
-        $sixMonthsAgo = now()->subMonths(5)->startOfMonth();
-        $monthlyUsers = User::where('created_at', '>=', $sixMonthsAgo)
-            ->selectRaw('YEAR(created_at) year, MONTH(created_at) month, count(*) data')
-            ->groupBy('year', 'month')
-            ->orderBy('year', 'asc')
-            ->orderBy('month', 'asc')
-            ->get();
-
+        // User Growth Filter Period (this_month, last_6_months, last_12_months)
+        $period = $request->query('growth_period', 'last_6_months');
         $userGrowth = [];
-        $currentMonth = $sixMonthsAgo->copy();
-        for ($i = 0; $i < 6; $i++) {
-            $month = $currentMonth->month;
-            $year = $currentMonth->year;
-            $count = $monthlyUsers->where('year', $year)->where('month', $month)->first()->data ?? 0;
-            $userGrowth[] = $count;
-            $currentMonth->addMonth();
+        $growthLabels = [];
+
+        if ($period === 'this_month') {
+            // Group by 4 weeks of the current month
+            $startOfMonth = now()->startOfMonth();
+            for ($week = 1; $week <= 4; $week++) {
+                $wStart = $startOfMonth->copy()->addDays(($week - 1) * 7);
+                $wEnd = $week === 4 ? now()->endOfMonth() : $wStart->copy()->addDays(6)->endOfDay();
+                
+                $count = User::whereBetween('created_at', [$wStart, $wEnd])->count();
+                $userGrowth[] = $count;
+                $growthLabels[] = "W$week";
+            }
+        } elseif ($period === 'last_12_months') {
+            $start = now()->subMonths(11)->startOfMonth();
+            $monthlyUsers = User::where('created_at', '>=', $start)
+                ->selectRaw('YEAR(created_at) year, MONTH(created_at) month, count(*) data')
+                ->groupBy('year', 'month')
+                ->orderBy('year', 'asc')
+                ->orderBy('month', 'asc')
+                ->get();
+
+            $currentMonth = $start->copy();
+            for ($i = 0; $i < 12; $i++) {
+                $month = $currentMonth->month;
+                $year = $currentMonth->year;
+                $count = $monthlyUsers->where('year', $year)->where('month', $month)->first()->data ?? 0;
+                $userGrowth[] = $count;
+                $growthLabels[] = $currentMonth->format('M');
+                $currentMonth->addMonth();
+            }
+        } else {
+            // Default: last_6_months
+            $period = 'last_6_months';
+            $start = now()->subMonths(5)->startOfMonth();
+            $monthlyUsers = User::where('created_at', '>=', $start)
+                ->selectRaw('YEAR(created_at) year, MONTH(created_at) month, count(*) data')
+                ->groupBy('year', 'month')
+                ->orderBy('year', 'asc')
+                ->orderBy('month', 'asc')
+                ->get();
+
+            $currentMonth = $start->copy();
+            for ($i = 0; $i < 6; $i++) {
+                $month = $currentMonth->month;
+                $year = $currentMonth->year;
+                $count = $monthlyUsers->where('year', $year)->where('month', $month)->first()->data ?? 0;
+                $userGrowth[] = $count;
+                $growthLabels[] = $currentMonth->format('M');
+                $currentMonth->addMonth();
+            }
         }
 
         return view('admin.dashboard', compact(
             'totalUsers', 'totalGardens', 'totalPlants', 'premiumUsers', 'successfulHarvests',
-            'popularPlants', 'topActivities', 'todayActivities', 'totalCompletedEvents', 'avgHarvestAge', 'userGrowth'
+            'popularPlants', 'userGrowth', 'growthLabels', 'period'
         ));
     }
 
@@ -194,8 +210,7 @@ class AdminController extends Controller
     public function badges()
     {
         $badges = \App\Models\Badge::withCount('users')->get();
-        $users = User::orderBy('name')->get();
-        return view('admin.badges', compact('badges', 'users'));
+        return view('admin.badges', compact('badges'));
     }
 
     public function storeBadge(Request $request)
@@ -232,21 +247,7 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'Badge berhasil dihapus!');
     }
 
-    public function awardBadgeToUser(Request $request)
-    {
-        $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'badge_id' => 'required|exists:badges,id',
-        ]);
 
-        $user = User::findOrFail($validated['user_id']);
-        if (!$user->badges()->where('badge_id', $validated['badge_id'])->exists()) {
-            $user->badges()->attach($validated['badge_id'], ['awarded_at' => now()]);
-            return redirect()->back()->with('success', "Badge berhasil diberikan ke {$user->name}!");
-        }
-
-        return redirect()->back()->with('info', "Pengguna sudah memiliki badge ini.");
-    }
 
     public function weather()
     {

@@ -184,21 +184,4 @@ window.addEventListener('pageshow', function (e) {
         window.GardenLoader.hide();
     }
 });
-
-// Intercept link clicks to show loader BEFORE the browser freezes the page for navigation
-document.addEventListener('click', function (e) {
-    const link = e.target.closest('a');
-    if (link && link.href && !link.href.startsWith('javascript:') && !link.getAttribute('href').startsWith('#') && link.target !== '_blank') {
-        // Only trigger for internal links
-        if (link.hostname === window.location.hostname) {
-            if (window.GardenLoader) window.GardenLoader.show();
-        }
-    }
-});
-
-document.addEventListener('submit', function (e) {
-    if (!e.defaultPrevented && (!e.target.target || e.target.target !== '_blank')) {
-        if (window.GardenLoader) window.GardenLoader.show();
-    }
-});
 </script>

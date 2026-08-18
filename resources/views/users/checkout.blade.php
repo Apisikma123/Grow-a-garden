@@ -186,9 +186,7 @@
 
             {{-- Loading State --}}
             <div id="payment-loading" class="hidden flex-col items-center justify-center py-12 w-full">
-                <span class="material-symbols-outlined text-[48px] text-primary animate-spin mb-4">progress_activity</span>
-                <p class="text-[16px] font-bold text-slate-700">Memproses pembayaran...</p>
-                <p class="text-[13px] text-slate-400 mt-1">Mohon tunggu sebentar</p>
+                <x-brand-loader size="lg" text="Memproses transaksi & aktivasi paket..." />
             </div>
 
             {{-- Success State --}}

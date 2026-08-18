@@ -32,11 +32,8 @@
     </div>
 
     {{-- Loading State --}}
-    <div id="gardens-loading" class="w-full flex items-center justify-center py-20" style="width: 100% !important;">
-        <div class="flex flex-col items-center gap-3 text-center">
-            <span class="material-symbols-outlined text-[48px] text-primary animate-spin">progress_activity</span>
-            <span class="text-[14px] text-on-surface-variant font-medium">Memuat kebun Anda...</span>
-        </div>
+    <div id="gardens-loading" class="w-full flex items-center justify-center py-12" style="width: 100% !important;">
+        <x-brand-loader size="md" text="Memuat kebun Anda..." />
     </div>
 
     {{-- Empty State --}}
@@ -205,8 +202,8 @@
                     </div>
 
                     {{-- Plants Loading --}}
-                    <div id="plants-loading" class="w-full flex items-center justify-center py-16" style="width: 100% !important;">
-                        <span class="material-symbols-outlined text-[36px] text-primary animate-spin">progress_activity</span>
+                    <div id="plants-loading" class="w-full flex items-center justify-center py-10" style="width: 100% !important;">
+                        <x-brand-loader size="sm" text="Memuat tanaman..." />
                     </div>
 
                     {{-- Plants Empty --}}
