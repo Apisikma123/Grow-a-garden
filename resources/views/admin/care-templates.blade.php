@@ -9,22 +9,25 @@
             <h1 class="text-[32px] font-black text-on-surface tracking-tight">Template Pertumbuhan & Perawatan</h1>
             <p class="text-[15px] text-on-surface-variant max-w-[600px] leading-relaxed">Konfigurasi siklus hidup otomatis, instruksi perawatan, dan aturan cuaca untuk setiap tanaman.</p>
         </div>
-        <div class="flex gap-3 shrink-0">
-
-            <div class="relative group">
-                <button class="flex items-center gap-2 bg-white border border-outline-variant/30 text-on-surface font-bold text-[13px] px-5 py-2.5 rounded-full hover:bg-surface-container-lowest transition-all shadow-sm">
-                    <span class="material-symbols-outlined text-[18px] text-[#10b981]">sort</span>
-                    Urutkan
-                </button>
-                <div class="absolute right-0 top-full mt-2 w-48 bg-white border border-outline-variant/20 rounded-xl shadow-lg hidden group-hover:block z-50">
-                    <div class="py-2">
-                        <a href="?sort=newest" class="block px-4 py-2 text-[13px] text-on-surface hover:bg-surface-container-lowest">Terbaru</a>
-                        <a href="?sort=name" class="block px-4 py-2 text-[13px] text-on-surface hover:bg-surface-container-lowest">Nama (A-Z)</a>
-                        <a href="?sort=category" class="block px-4 py-2 text-[13px] text-on-surface hover:bg-surface-container-lowest">Kategori</a>
-                    </div>
+        <div class="flex flex-wrap items-center gap-3 shrink-0">
+            <form action="{{ route('admin.care-templates') }}" method="GET" class="flex flex-wrap items-center gap-2">
+                <div class="relative">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari template tanaman..." class="pl-9 pr-4 py-2 bg-surface-container-highest border border-outline-variant/30 rounded-lg text-[13px] text-on-surface focus:outline-none focus:ring-2 focus:ring-primary w-56" onchange="this.form.submit()">
+                    <span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-on-surface-variant">search</span>
                 </div>
-            </div>
-            <a href="{{ route('admin.plants') }}" class="flex items-center gap-2 bg-[#006c49] text-white font-bold text-[13px] px-5 py-2.5 rounded-full hover:bg-[#005c3a] transition-all shadow-sm">
+                <select name="sort" onchange="this.form.submit()" class="px-3 py-2 bg-surface-container-highest border border-outline-variant/30 rounded-lg text-[13px] text-on-surface focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer font-medium">
+                    <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Terbaru</option>
+                    <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>Nama (A-Z)</option>
+                    <option value="category" {{ request('sort') == 'category' ? 'selected' : '' }}>Kategori</option>
+                </select>
+                @if(request('search') || request('sort'))
+                    <a href="{{ route('admin.care-templates') }}" class="p-2 text-on-surface-variant hover:text-error transition-colors flex items-center gap-1 text-[12px] font-semibold" title="Reset Filter">
+                        <span class="material-symbols-outlined text-[18px]">filter_alt_off</span>
+                        Reset
+                    </a>
+                @endif
+            </form>
+            <a href="{{ route('admin.plants') }}" class="flex items-center gap-2 bg-[#006c49] text-white font-bold text-[13px] px-5 py-2.5 rounded-lg hover:bg-[#005c3a] transition-all shadow-sm">
                 <span class="material-symbols-outlined text-[18px]">add</span>
                 Tambah Data Tanaman
             </a>
@@ -34,7 +37,7 @@
     {{-- Grid of Templates --}}
     <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-8">
         
-        @foreach($templates as $template)
+        @forelse($templates as $template)
         <div class="searchable-item bg-white rounded-[32px] p-7 ambient-shadow border border-outline-variant/20 flex flex-col gap-6 hover:ambient-shadow-lg transition-shadow" data-search="{{ $template->name_id }} {{ $template->scientific_name }}">
             
             {{-- Top Info --}}
@@ -53,9 +56,6 @@
                         {{ $template->scientific_name }}
                     </div>
                 </div>
-                <button class="absolute top-0 right-0 text-on-surface-variant hover:text-on-surface transition-colors">
-                    <span class="material-symbols-outlined text-[24px]">more_horiz</span>
-                </button>
             </div>
 
             {{-- Middle: Lifecycle Milestones --}}
@@ -155,38 +155,55 @@
                 </div>
             </div>
         </div>
-        @endforeach
+        @empty
+        <div class="col-span-full bg-white rounded-3xl p-12 text-center text-on-surface-variant border border-outline-variant/30">
+            <span class="material-symbols-outlined text-[48px] mb-2 opacity-40">assignment</span>
+            <p class="font-bold text-on-surface">Tidak ada template tanaman yang ditemukan.</p>
+        </div>
+        @endforelse
 
     </div>
+
+    {{-- Pagination --}}
+    @if($templates->hasPages())
+    <div class="p-5 bg-surface-container-lowest rounded-2xl border border-outline-variant/30 ambient-shadow">
+        {{ $templates->links() }}
+    </div>
+    @endif
 
 </div>
 
 {{-- Edit Care Rules Modal --}}
-<div id="careModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
-    <div class="bg-surface-container-lowest w-full max-w-lg rounded-2xl shadow-xl flex flex-col max-h-[90vh]">
-        <div class="p-6 border-b border-outline-variant/20 flex justify-between items-center">
-            <h2 class="text-[20px] font-bold text-on-surface">Edit Instruksi Perawatan</h2>
-            <button onclick="closeCareModal()" class="text-on-surface-variant hover:text-on-surface">
-                <span class="material-symbols-outlined">close</span>
-            </button>
-        </div>
-        <div class="p-6 overflow-y-auto flex-1">
-            <form id="careForm" class="flex flex-col gap-4">
-                <input type="hidden" id="edit_plant_id">
-                
-                <div id="rulesList" class="flex flex-col gap-3">
-                    <!-- Rules dynamically inserted here -->
-                </div>
-
-                <button type="button" onclick="addRuleField()" class="flex items-center gap-2 justify-center w-full py-2 border-2 border-dashed border-outline-variant/50 rounded-lg text-on-surface-variant font-bold text-[13px] hover:bg-surface-container-lowest transition-colors mt-2">
-                    <span class="material-symbols-outlined text-[18px]">add</span>
-                    Tambah Aturan
+<div id="careModal" class="fixed inset-0 z-[100] hidden overflow-y-auto">
+    <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity" onclick="closeCareModal()"></div>
+    <div class="min-h-screen px-4 py-8 flex items-center justify-center">
+        <div class="w-full max-w-lg bg-surface-container-lowest rounded-3xl p-6 sm:p-8 ambient-shadow-lg relative z-10 border border-outline-variant/30 flex flex-col gap-6 text-left">
+            <div class="flex items-center justify-between pb-4 border-b border-outline-variant/20">
+                <h2 class="text-xl font-bold text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">assignment</span> Edit Instruksi Perawatan
+                </h2>
+                <button onclick="closeCareModal()" class="text-on-surface-variant hover:text-on-surface p-1">
+                    <span class="material-symbols-outlined text-[22px]">close</span>
                 </button>
-            </form>
-        </div>
-        <div class="p-6 border-t border-outline-variant/20 flex justify-end gap-3 bg-surface-container-lowest">
-            <button onclick="closeCareModal()" class="px-5 py-2.5 rounded-lg font-bold text-on-surface-variant hover:bg-surface-container-highest transition-colors">Batal</button>
-            <button onclick="saveCareRules()" class="px-5 py-2.5 rounded-lg bg-[#006c49] text-white font-bold hover:bg-[#005c3a] transition-colors">Simpan</button>
+            </div>
+            <div class="overflow-y-auto max-h-[60vh] pr-1">
+                <form id="careForm" class="flex flex-col gap-4">
+                    <input type="hidden" id="edit_plant_id">
+                    
+                    <div id="rulesList" class="flex flex-col gap-3">
+                        <!-- Rules dynamically inserted here -->
+                    </div>
+
+                    <button type="button" onclick="addRuleField()" class="flex items-center gap-2 justify-center w-full py-2.5 border-2 border-dashed border-outline-variant/50 rounded-xl text-on-surface-variant font-bold text-sm hover:bg-surface-container-highest transition-colors mt-2">
+                        <span class="material-symbols-outlined text-[18px]">add</span>
+                        Tambah Aturan
+                    </button>
+                </form>
+            </div>
+            <div class="pt-4 border-t border-outline-variant/20 flex justify-end gap-3 w-full">
+                <button onclick="closeCareModal()" class="px-5 py-2.5 rounded-xl font-bold text-on-surface-variant hover:bg-surface-container-highest transition-colors text-sm">Batal</button>
+                <button onclick="saveCareRules()" class="px-5 py-2.5 rounded-xl bg-[#006c49] text-white font-bold hover:bg-[#005c3a] transition-colors text-sm shadow-sm">Simpan</button>
+            </div>
         </div>
     </div>
 </div>
@@ -208,12 +225,10 @@
         }
 
         careModal.classList.remove('hidden');
-        careModal.classList.add('flex');
     }
 
     function closeCareModal() {
         careModal.classList.add('hidden');
-        careModal.classList.remove('flex');
     }
 
     function addRuleField(key = '', value = '') {

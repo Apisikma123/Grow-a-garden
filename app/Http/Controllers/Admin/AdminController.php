@@ -110,9 +110,23 @@ class AdminController extends Controller
         ));
     }
 
-    public function users()
+    public function users(Request $request)
     {
-        $users = User::withCount('gardens')->orderBy('created_at', 'desc')->paginate(10);
+        $query = User::withCount('gardens');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', '%'.$search.'%')
+                  ->orWhere('email', 'like', '%'.$search.'%');
+            });
+        }
+
+        if ($request->filled('role')) {
+            $query->where('role', $request->role);
+        }
+
+        $users = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
         return view('admin.users', compact('users'));
     }
 
@@ -132,8 +146,8 @@ class AdminController extends Controller
             $query->where('category_id', $request->category_id);
         }
 
-        $plants = $query->paginate(15)->withQueryString();
-        $categories = \App\Models\PlantCategory::all();
+        $plants = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
+        $categories = \App\Models\PlantCategory::withCount('templates')->get();
 
         return view('admin.plants', compact('plants', 'categories'));
     }
@@ -142,6 +156,14 @@ class AdminController extends Controller
     {
         $query = \App\Models\PlantTemplate::with('category');
         
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name_id', 'like', '%'.$search.'%')
+                  ->orWhere('scientific_name', 'like', '%'.$search.'%');
+            });
+        }
+
         if ($request->has('sort') && $request->sort == 'name') {
             $query->orderBy('name_id', 'asc');
         } elseif ($request->has('sort') && $request->sort == 'category') {
@@ -152,7 +174,7 @@ class AdminController extends Controller
             $query->orderBy('created_at', 'desc');
         }
         
-        $templates = $query->get();
+        $templates = $query->paginate(6)->withQueryString();
         return view('admin.care-templates', compact('templates'));
     }
 
@@ -208,6 +230,26 @@ class AdminController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function storeCategory(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:plant_categories,name',
+        ]);
+
+        $category = \App\Models\PlantCategory::create($validated);
+        return response()->json(['success' => true, 'category' => $category]);
+    }
+
+    public function destroyCategory(\App\Models\PlantCategory $category)
+    {
+        if ($category->templates()->count() > 0) {
+            return response()->json(['message' => 'Kategori tidak dapat dihapus karena masih terikat pada tanaman.'], 422);
+        }
+
+        $category->delete();
+        return response()->json(['success' => true]);
+    }
+
     public function updateRole(Request $request, User $user)
     {
         $request->validate([
@@ -232,9 +274,20 @@ class AdminController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function badges()
+    public function badges(Request $request)
     {
-        $badges = \App\Models\Badge::withCount('users')->get();
+        $query = \App\Models\Badge::withCount('users');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where('name', 'like', '%'.$search.'%');
+        }
+
+        if ($request->filled('metric_type')) {
+            $query->where('metric_type', $request->metric_type);
+        }
+
+        $badges = $query->orderBy('created_at', 'desc')->paginate(9)->withQueryString();
         return view('admin.badges', compact('badges'));
     }
 

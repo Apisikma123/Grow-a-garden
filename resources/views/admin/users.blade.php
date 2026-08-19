@@ -4,9 +4,32 @@
 <div class="flex flex-col gap-6">
 
     {{-- Page Header --}}
-    <div class="flex flex-col gap-1 mb-2">
-        <h1 class="text-[28px] font-bold text-on-surface tracking-tight">Manajemen Pengguna</h1>
-        <p class="text-[14px] text-on-surface-variant">Kelola anggota komunitas, atur akses, dan pantau keterlibatan.</p>
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-2">
+        <div class="flex flex-col gap-1">
+            <h1 class="text-[28px] font-bold text-on-surface tracking-tight">Manajemen Pengguna</h1>
+            <p class="text-[14px] text-on-surface-variant">Kelola anggota komunitas, atur akses, dan pantau keterlibatan.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-3 shrink-0">
+            <form action="{{ route('admin.users') }}" method="GET" class="flex flex-wrap items-center gap-2">
+                <div class="relative">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama atau email..." class="pl-9 pr-4 py-2 bg-surface-container-highest border border-outline-variant/30 rounded-lg text-[13px] text-on-surface focus:outline-none focus:ring-2 focus:ring-primary w-64" onchange="this.form.submit()">
+                    <span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-on-surface-variant">search</span>
+                </div>
+                <select name="role" onchange="this.form.submit()" class="px-3 py-2 bg-surface-container-highest border border-outline-variant/30 rounded-lg text-[13px] text-on-surface focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer font-medium">
+                    <option value="">Semua Peran (Role)</option>
+                    <option value="free" {{ request('role') == 'free' ? 'selected' : '' }}>Bibit (Gratis)</option>
+                    <option value="pro" {{ request('role') == 'pro' ? 'selected' : '' }}>Subur (Pro)</option>
+                    <option value="premium" {{ request('role') == 'premium' ? 'selected' : '' }}>Panen Raya (Premium)</option>
+                    <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                </select>
+                @if(request('search') || request('role'))
+                    <a href="{{ route('admin.users') }}" class="p-2 text-on-surface-variant hover:text-error transition-colors flex items-center gap-1 text-[12px] font-semibold" title="Reset Filter">
+                        <span class="material-symbols-outlined text-[18px]">filter_alt_off</span>
+                        Reset
+                    </a>
+                @endif
+            </form>
+        </div>
     </div>
 
     {{-- Main Container --}}
@@ -15,6 +38,7 @@
         {{-- Toolbar --}}
         <div class="p-5 flex justify-between items-center border-b border-outline-variant/20">
             <h2 class="text-[16px] font-bold text-on-surface">Daftar Pengguna Aktif</h2>
+            <div class="text-xs text-on-surface-variant font-medium">Total: {{ $users->total() }} Pengguna</div>
         </div>
 
         {{-- Table --}}
@@ -30,7 +54,7 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-outline-variant/10">
-                    @foreach($users as $user)
+                    @forelse($users as $user)
                     <tr class="hover:bg-surface-container-lowest/50 transition-colors">
                         <td class="py-4 px-6">
                             <div class="flex items-center gap-4">
@@ -49,13 +73,13 @@
                         </td>
                         <td class="py-4 px-6">
                             @if($user->role === 'admin')
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold bg-blue-500 text-white">Admin</span>
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold bg-primary text-on-primary shadow-2xs">Admin</span>
                             @elseif($user->role === 'premium')
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold bg-[#fd9e70] text-white">Premium</span>
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold bg-secondary text-on-secondary shadow-2xs">Panen Raya (Premium)</span>
                             @elseif($user->role === 'pro')
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold bg-[#10b981] text-white">Pro</span>
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold bg-[#10b981] text-white shadow-2xs">Subur (Pro)</span>
                             @else
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold bg-surface-container-highest text-on-surface-variant">Free</span>
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold bg-surface-container-highest text-on-surface-variant border border-outline-variant/30">Bibit (Gratis)</span>
                             @endif
                         </td>
                         <td class="py-4 px-6 text-[13px] text-on-surface-variant font-medium">
@@ -74,17 +98,23 @@
                             </button>
                             
                             {{-- Dropdown Action Menu --}}
-                            <div id="dropdown-{{ $user->id }}" class="hidden absolute right-6 top-10 w-40 bg-white rounded-xl shadow-lg border border-outline-variant/20 z-20 py-2">
-                                <button onclick="changeRole({{ $user->id }}, 'free')" class="w-full text-left px-4 py-2 text-[13px] text-on-surface hover:bg-surface-container-lowest hover:text-primary transition-colors">Ubah ke Free</button>
-                                <button onclick="changeRole({{ $user->id }}, 'pro')" class="w-full text-left px-4 py-2 text-[13px] text-on-surface hover:bg-surface-container-lowest hover:text-primary transition-colors">Ubah ke Pro</button>
-                                <button onclick="changeRole({{ $user->id }}, 'premium')" class="w-full text-left px-4 py-2 text-[13px] text-on-surface hover:bg-surface-container-lowest hover:text-primary transition-colors">Ubah ke Premium</button>
+                            <div id="dropdown-{{ $user->id }}" class="hidden absolute right-6 top-10 w-48 bg-white rounded-xl shadow-lg border border-outline-variant/20 z-20 py-2">
+                                <button onclick="changeRole({{ $user->id }}, 'free')" class="w-full text-left px-4 py-2 text-[13px] text-on-surface hover:bg-surface-container-lowest hover:text-primary transition-colors">Ubah ke Bibit (Free)</button>
+                                <button onclick="changeRole({{ $user->id }}, 'pro')" class="w-full text-left px-4 py-2 text-[13px] text-on-surface hover:bg-surface-container-lowest hover:text-primary transition-colors">Ubah ke Subur (Pro)</button>
+                                <button onclick="changeRole({{ $user->id }}, 'premium')" class="w-full text-left px-4 py-2 text-[13px] text-on-surface hover:bg-surface-container-lowest hover:text-primary transition-colors">Ubah ke Panen Raya</button>
                                 <hr class="my-1 border-outline-variant/20">
                                 <button onclick="deleteUser({{ $user->id }})" class="w-full text-left px-4 py-2 text-[13px] text-red-500 hover:bg-red-50 transition-colors">Hapus Akun</button>
                             </div>
                             @endif
                         </td>
                     </tr>
-                    @endforeach
+                    @empty
+                    <tr>
+                        <td colspan="5" class="py-10 text-center text-on-surface-variant font-medium text-sm">
+                            Tidak ada pengguna yang sesuai dengan filter.
+                        </td>
+                    </tr>
+                    @endforelse
 
                 </tbody>
             </table>

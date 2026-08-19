@@ -269,6 +269,9 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/api/admin/plants/{plant}', [\App\Http\Controllers\Admin\AdminController::class, 'updatePlant']);
         Route::put('/api/admin/plants/{plant}/care-rules', [\App\Http\Controllers\Admin\AdminController::class, 'updateCareRules']);
         Route::delete('/api/admin/plants/{plant}', [\App\Http\Controllers\Admin\AdminController::class, 'destroyPlant']);
+
+        Route::post('/api/admin/categories', [\App\Http\Controllers\Admin\AdminController::class, 'storeCategory']);
+        Route::delete('/api/admin/categories/{category}', [\App\Http\Controllers\Admin\AdminController::class, 'destroyCategory']);
     });
 });
 

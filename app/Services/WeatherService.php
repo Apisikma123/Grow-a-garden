@@ -20,7 +20,7 @@ class WeatherService
         
         // Cache in 10-minute blocks for fresh & fast updates
         $tenMinBlock = floor((int) now()->format('i') / 10);
-        $cacheKey = "weather_v5_{$lat}_{$lng}_" . now()->format('Y-m-d_H') . "_{$tenMinBlock}";
+        $cacheKey = "weather_v6_{$lat}_{$lng}_" . now()->format('Y-m-d_H') . "_{$tenMinBlock}";
         
         return Cache::remember($cacheKey, now()->addMinutes(10), function () use ($lat, $lng) {
             try {
@@ -29,8 +29,9 @@ class WeatherService
                     'longitude' => $lng,
                     'current' => 'temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,rain,showers,weather_code,cloud_cover,wind_speed_10m',
                     'hourly' => 'temperature_2m,relative_humidity_2m,precipitation_probability,precipitation,weather_code,wind_speed_10m,cloud_cover',
-                    'daily' => 'weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max',
+                    'daily' => 'weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum',
                     'timezone' => 'auto',
+                    'past_days' => 1,
                     'forecast_days' => 1
                 ]);
 
@@ -44,18 +45,15 @@ class WeatherService
                     // Match current hour index in forecast
                     $currentHour = (int) now()->format('H');
                     $hourlyTimes = $hourly['time'] ?? [];
-                    $hourIndex = $currentHour;
                     $nowIsoHour = now()->format('Y-m-d\TH:00');
-                    foreach ($hourlyTimes as $idx => $timeStr) {
-                        if (str_contains($timeStr, $nowIsoHour)) {
-                            $hourIndex = $idx;
-                            break;
-                        }
+                    $hourIndex = array_search($nowIsoHour, $hourlyTimes);
+                    if ($hourIndex === false) {
+                        $hourIndex = count($hourlyTimes) > 0 ? count($hourlyTimes) - 1 : $currentHour;
                     }
 
                     $hourlyCode = isset($hourly['weather_code'][$hourIndex]) ? (int) $hourly['weather_code'][$hourIndex] : null;
-                    $currentCode = (int) ($current['weather_code'] ?? ($hourlyCode ?? ($daily['weather_code'][0] ?? 0)));
-                    $currentTemp = (float) ($current['temperature_2m'] ?? ($hourly['temperature_2m'][$hourIndex] ?? ($daily['temperature_2m_max'][0] ?? 29)));
+                    $currentCode = (int) ($current['weather_code'] ?? ($hourlyCode ?? ($daily['weather_code'][1] ?? 0)));
+                    $currentTemp = (float) ($current['temperature_2m'] ?? ($hourly['temperature_2m'][$hourIndex] ?? ($daily['temperature_2m_max'][1] ?? 29)));
                     $apparentTemp = (float) ($current['apparent_temperature'] ?? $currentTemp);
                     $currentHumidity = (int) ($current['relative_humidity_2m'] ?? ($hourly['relative_humidity_2m'][$hourIndex] ?? 70));
                     $currentWind = (float) ($current['wind_speed_10m'] ?? ($hourly['wind_speed_10m'][$hourIndex] ?? 10));
@@ -63,8 +61,27 @@ class WeatherService
                     $currentCloud = (int) ($current['cloud_cover'] ?? ($hourly['cloud_cover'][$hourIndex] ?? 0));
 
                     $hourlyProbs = $hourly['precipitation_probability'] ?? [];
-                    $currentRainProb = isset($hourlyProbs[$hourIndex]) ? (int) $hourlyProbs[$hourIndex] : (int) ($daily['precipitation_probability_max'][0] ?? 0);
-                    $rainProb24h = (int) ($daily['precipitation_probability_max'][0] ?? 0);
+                    $currentRainProb = isset($hourlyProbs[$hourIndex]) ? (int) $hourlyProbs[$hourIndex] : (int) ($daily['precipitation_probability_max'][1] ?? 0);
+                    $rainProb24h = (int) ($daily['precipitation_probability_max'][1] ?? ($daily['precipitation_probability_max'][0] ?? 0));
+                    $dailyPrecipSum = (float) ($daily['precipitation_sum'][1] ?? ($daily['precipitation_sum'][0] ?? 0));
+
+                    // Calculate precipitation & storm occurrence in the past 12-24 hours
+                    $startPastIdx = max(0, $hourIndex - 12);
+                    $past12hPrecip = 0.0;
+                    $hadRecentStorm = false;
+                    $recentStormCode = null;
+
+                    for ($i = $startPastIdx; $i <= $hourIndex; $i++) {
+                        $p = (float) ($hourly['precipitation'][$i] ?? 0);
+                        $c = (int) ($hourly['weather_code'][$i] ?? 0);
+                        $past12hPrecip += $p;
+                        if (in_array($c, [95, 96, 99])) {
+                            $hadRecentStorm = true;
+                            $recentStormCode = $c;
+                        } elseif (in_array($c, [65, 82]) || $p >= 3.0) {
+                            $hadRecentStorm = true;
+                        }
+                    }
 
                     return [
                         'weather_code' => $currentCode,
@@ -77,6 +94,10 @@ class WeatherService
                         'precipitation' => round($currentPrecip, 2),
                         'is_day' => (int) ($current['is_day'] ?? 1),
                         'cloud_cover' => $currentCloud,
+                        'past_precipitation_12h' => round($past12hPrecip, 2),
+                        'had_recent_storm' => $hadRecentStorm,
+                        'recent_storm_code' => $recentStormCode,
+                        'daily_precipitation_sum' => round($dailyPrecipSum, 2),
                     ];
                 }
                 
@@ -101,6 +122,9 @@ class WeatherService
         $code = $weather['weather_code'] ?? 0;
         $precip = $weather['precipitation'] ?? 0;
         $cloud = $weather['cloud_cover'] ?? 0;
+        $past12hPrecip = (float) ($weather['past_precipitation_12h'] ?? 0);
+        $hadRecentStorm = (bool) ($weather['had_recent_storm'] ?? false);
+        $dailyPrecipSum = (float) ($weather['daily_precipitation_sum'] ?? 0);
 
         // Enhanced WMO Weather Condition Categories
         $conditionCategory = 'PARTLY_CLOUDY';
@@ -168,7 +192,7 @@ class WeatherService
             $title = 'Cerah Berawan';
             $icon = 'partly_cloudy_day';
             $badgeBg = 'bg-emerald-100 text-emerald-800 border border-emerald-200';
-            $summary = "Cuaca sejuk & sinar matahari cukup. Kondisi ideal untuk pertumbuhan tanaman.";
+            $summary = 'Cuaca sejuk & sinar matahari cukup. Kondisi ideal untuk pertumbuhan tanaman.';
         }
 
         // Priority Evaluation Chain for Smart Irrigation
@@ -189,20 +213,34 @@ class WeatherService
                 'badge_bg' => 'bg-red-100 text-red-800 border border-red-200'
             ];
         }
-        // 2. Recent Heavy Rain Today -> SKIP
-        elseif ($hasRecentRain) {
+        // 2. Recent Storm or Heavy Rain in past 12-24h / Logged Rain Today -> SKIP
+        elseif ($hadRecentStorm || $past12hPrecip >= 5.0 || $hasRecentRain) {
             $decision = 'SKIP';
             $waterStatus = 'RAINED';
+            $stormDetail = $hadRecentStorm ? "Terjadi badai/hujan lebat beberapa jam lalu" : "Akumulasi curah hujan {$past12hPrecip} mm dalam 12 jam terakhir";
             $watering = [
                 'action' => 'SKIP',
-                'title' => 'Lewati Penyiraman',
+                'title' => 'Lewati Penyiraman (Pasca Hujan/Badai)',
                 'time_window' => $fixedWindow,
-                'advice' => "Hujan baru saja terjadi hari ini. Tanaman telah mendapatkan air dari hujan sehingga penyiraman sesi ini dilewati.",
-                'badge' => 'Penyiraman Dilewati (Hujan Sebelumnya)',
+                'advice' => "{$stormDetail}. Tanah masih sangat lembap & jenuh air, sehingga penyiraman sesi ini dilewati untuk mencegah pembusukan akar.",
+                'badge' => 'Penyiraman Dilewati (Pasca Hujan/Badai)',
                 'badge_bg' => 'bg-purple-100 text-purple-800 border border-purple-200'
             ];
         }
-        // 3. Rain Probability >= 70% -> SKIP
+        // 3. Moderate Past Rain (1.5mm - 5mm) in past 12h -> REDUCE
+        elseif ($past12hPrecip >= 1.5) {
+            $decision = 'REDUCE';
+            $waterStatus = 'DRY';
+            $watering = [
+                'action' => 'REDUCE',
+                'title' => 'Kurangi Volume Siram',
+                'time_window' => $fixedWindow,
+                'advice' => "Tercatat hujan {$past12hPrecip} mm beberapa jam lalu. Tanah masih agak lembap, kurangi volume air penyiraman.",
+                'badge' => 'Kurangi Volume (Lembap Pasca Hujan)',
+                'badge_bg' => 'bg-blue-100 text-blue-800 border border-blue-200'
+            ];
+        }
+        // 4. Rain Probability >= 70% -> SKIP
         elseif ($rainProb >= 70) {
             $decision = 'SKIP';
             $waterStatus = 'WAITING';
@@ -215,7 +253,7 @@ class WeatherService
                 'badge_bg' => 'bg-red-100 text-red-800 border border-red-200'
             ];
         }
-        // 4. Rain Probability 50% - 69% -> REDUCE
+        // 5. Rain Probability 50% - 69% -> REDUCE
         elseif ($rainProb >= 50) {
             $decision = 'REDUCE';
             $waterStatus = 'DRY';

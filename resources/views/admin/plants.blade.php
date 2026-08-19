@@ -30,6 +30,10 @@
                     </a>
                 @endif
             </form>
+            <button onclick="openCategoryModal()" class="flex items-center gap-2 bg-secondary text-on-secondary font-bold text-[14px] px-4 py-2.5 rounded-lg hover:bg-secondary/90 active:scale-[0.98] transition-all shadow-sm">
+                <span class="material-symbols-outlined text-[18px]">category</span>
+                Tambah Kategori
+            </button>
             <button onclick="openPlantModal()" class="flex items-center gap-2 bg-primary text-on-primary font-bold text-[14px] px-5 py-2.5 rounded-lg hover:bg-primary/90 active:scale-[0.98] transition-all shadow-sm">
                 <span class="material-symbols-outlined text-[18px]">add_circle</span>
                 Tambah Tanaman Baru
@@ -100,29 +104,33 @@
 </div>
 
 {{-- Modal Form Tambah/Edit --}}
-<div id="plantModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
-    <div class="bg-surface-container-lowest w-full max-w-2xl rounded-2xl shadow-xl flex flex-col max-h-[90vh]">
-        <div class="p-6 border-b border-outline-variant/20 flex justify-between items-center">
-            <h2 class="text-[20px] font-bold text-on-surface" id="plantModalTitle">Tambah Tanaman</h2>
-            <button onclick="closePlantModal()" class="text-on-surface-variant hover:text-on-surface">
-                <span class="material-symbols-outlined">close</span>
-            </button>
-        </div>
-        <div class="p-6 overflow-y-auto">
-            <form id="plantForm" class="flex flex-col gap-5">
+<div id="plantModal" class="fixed inset-0 z-[100] hidden overflow-y-auto">
+    <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity" onclick="closePlantModal()"></div>
+    <div class="min-h-screen px-4 py-8 flex items-center justify-center">
+        <div class="w-full max-w-2xl bg-surface-container-lowest rounded-3xl p-6 sm:p-8 ambient-shadow-lg relative z-10 border border-outline-variant/30 flex flex-col gap-6 text-left">
+            <div class="flex items-center justify-between pb-4 border-b border-outline-variant/20">
+                <h2 class="text-xl font-bold text-on-surface flex items-center gap-2" id="plantModalTitle">
+                    <span class="material-symbols-outlined text-primary">local_florist</span> Tambah Tanaman Baru
+                </h2>
+                <button onclick="closePlantModal()" class="text-on-surface-variant hover:text-on-surface p-1">
+                    <span class="material-symbols-outlined text-[22px]">close</span>
+                </button>
+            </div>
+            
+            <form id="plantForm" class="flex flex-col gap-5 w-full">
                 <input type="hidden" id="plant_id">
-                <div class="grid grid-cols-2 gap-5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
                     <div>
-                        <label class="block text-[12px] font-bold text-on-surface-variant mb-1">Nama Tanaman (Indonesia)</label>
-                        <input type="text" id="name_id" required class="w-full px-3 py-2 border border-outline-variant/40 rounded-xl focus:ring-2 focus:ring-primary outline-none">
+                        <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Nama Tanaman (Indonesia)</label>
+                        <input type="text" id="name_id" required class="w-full px-4 py-2.5 rounded-xl border border-outline-variant/40 bg-surface focus:outline-none focus:border-primary text-sm text-on-surface">
                     </div>
                     <div>
-                        <label class="block text-[12px] font-bold text-on-surface-variant mb-1">Nama Ilmiah</label>
-                        <input type="text" id="scientific_name" required class="w-full px-3 py-2 border border-outline-variant/40 rounded-xl focus:ring-2 focus:ring-primary outline-none">
+                        <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Nama Ilmiah</label>
+                        <input type="text" id="scientific_name" required class="w-full px-4 py-2.5 rounded-xl border border-outline-variant/40 bg-surface focus:outline-none focus:border-primary text-sm text-on-surface">
                     </div>
-                    <div class="col-span-2">
-                        <label class="block text-[12px] font-bold text-on-surface-variant mb-1">Kategori</label>
-                        <select id="category_id" required class="w-full px-3 py-2 border border-outline-variant/40 rounded-xl focus:ring-2 focus:ring-primary outline-none">
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Kategori</label>
+                        <select id="category_id" required class="w-full px-4 py-2.5 rounded-xl border border-outline-variant/40 bg-surface focus:outline-none focus:border-primary text-sm text-on-surface">
                             <option value="">Pilih Kategori</option>
                             @foreach($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -131,42 +139,101 @@
                     </div>
                 </div>
                 
-                <h3 class="text-[14px] font-bold text-on-surface border-b border-outline-variant/20 pb-2 mt-2">Siklus Pertumbuhan (Hari Tanam)</h3>
-                <div class="grid grid-cols-4 gap-5">
+                <h3 class="text-sm font-bold text-on-surface border-b border-outline-variant/20 pb-2 mt-2 w-full">Siklus Pertumbuhan (Hari Tanam)</h3>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full">
                     <div>
-                        <label class="block text-[12px] font-bold text-on-surface-variant mb-1">Semai</label>
-                        <input type="number" id="germination_day" class="w-full px-3 py-2 border border-outline-variant/40 rounded-xl focus:ring-2 focus:ring-primary outline-none" placeholder="Hari ke-">
+                        <label class="block text-xs font-bold text-on-surface-variant mb-1">Semai</label>
+                        <input type="number" id="germination_day" class="w-full px-3 py-2 rounded-xl border border-outline-variant/40 bg-surface focus:outline-none focus:border-primary text-sm text-on-surface" placeholder="Hari ke-">
                     </div>
                     <div>
-                        <label class="block text-[12px] font-bold text-on-surface-variant mb-1">Persemaian</label>
-                        <input type="number" id="seedling_day" class="w-full px-3 py-2 border border-outline-variant/40 rounded-xl focus:ring-2 focus:ring-primary outline-none" placeholder="Hari ke-">
+                        <label class="block text-xs font-bold text-on-surface-variant mb-1">Persemaian</label>
+                        <input type="number" id="seedling_day" class="w-full px-3 py-2 rounded-xl border border-outline-variant/40 bg-surface focus:outline-none focus:border-primary text-sm text-on-surface" placeholder="Hari ke-">
                     </div>
                     <div>
-                        <label class="block text-[12px] font-bold text-on-surface-variant mb-1">Awal Panen</label>
-                        <input type="number" id="harvest_start_day" required class="w-full px-3 py-2 border border-outline-variant/40 rounded-xl focus:ring-2 focus:ring-primary outline-none" placeholder="Hari ke-">
+                        <label class="block text-xs font-bold text-on-surface-variant mb-1">Awal Panen</label>
+                        <input type="number" id="harvest_start_day" required class="w-full px-3 py-2 rounded-xl border border-outline-variant/40 bg-surface focus:outline-none focus:border-primary text-sm text-on-surface" placeholder="Hari ke-">
                     </div>
                     <div>
-                        <label class="block text-[12px] font-bold text-on-surface-variant mb-1">Akhir Panen</label>
-                        <input type="number" id="harvest_end_day" required class="w-full px-3 py-2 border border-outline-variant/40 rounded-xl focus:ring-2 focus:ring-primary outline-none" placeholder="Hari ke-">
+                        <label class="block text-xs font-bold text-on-surface-variant mb-1">Akhir Panen</label>
+                        <input type="number" id="harvest_end_day" required class="w-full px-3 py-2 rounded-xl border border-outline-variant/40 bg-surface focus:outline-none focus:border-primary text-sm text-on-surface" placeholder="Hari ke-">
                     </div>
                 </div>
 
-                <h3 class="text-[14px] font-bold text-on-surface border-b border-outline-variant/20 pb-2 mt-2">Kondisi Lingkungan</h3>
-                <div class="grid grid-cols-2 gap-5">
+                <h3 class="text-sm font-bold text-on-surface border-b border-outline-variant/20 pb-2 mt-2 w-full">Kondisi Lingkungan</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
                     <div>
-                        <label class="block text-[12px] font-bold text-on-surface-variant mb-1">pH Tanah Minimal</label>
-                        <input type="number" step="0.1" id="soil_ph_min" required class="w-full px-3 py-2 border border-outline-variant/40 rounded-xl focus:ring-2 focus:ring-primary outline-none" placeholder="Misal: 5.5">
+                        <label class="block text-xs font-bold text-on-surface-variant mb-1">pH Tanah Minimal</label>
+                        <input type="number" step="0.1" id="soil_ph_min" required class="w-full px-3 py-2 rounded-xl border border-outline-variant/40 bg-surface focus:outline-none focus:border-primary text-sm text-on-surface" placeholder="Misal: 5.5">
                     </div>
                     <div>
-                        <label class="block text-[12px] font-bold text-on-surface-variant mb-1">pH Tanah Maksimal</label>
-                        <input type="number" step="0.1" id="soil_ph_max" required class="w-full px-3 py-2 border border-outline-variant/40 rounded-xl focus:ring-2 focus:ring-primary outline-none" placeholder="Misal: 6.5">
+                        <label class="block text-xs font-bold text-on-surface-variant mb-1">pH Tanah Maksimal</label>
+                        <input type="number" step="0.1" id="soil_ph_max" required class="w-full px-3 py-2 rounded-xl border border-outline-variant/40 bg-surface focus:outline-none focus:border-primary text-sm text-on-surface" placeholder="Misal: 6.5">
                     </div>
+                </div>
+
+                <div class="pt-4 border-t border-outline-variant/20 flex justify-end gap-3 w-full">
+                    <button type="button" onclick="closePlantModal()" class="px-5 py-2.5 rounded-xl font-bold text-on-surface-variant hover:bg-surface-container-highest transition-colors text-sm">Batal</button>
+                    <button type="button" onclick="savePlant()" class="px-5 py-2.5 rounded-xl bg-[#006c49] text-white font-bold hover:bg-[#005c3a] transition-colors text-sm shadow-sm">Simpan Data</button>
                 </div>
             </form>
         </div>
-        <div class="p-6 border-t border-outline-variant/20 flex justify-end gap-3 bg-surface-container-lowest">
-            <button type="button" onclick="closePlantModal()" class="px-5 py-2.5 rounded-lg font-bold text-on-surface-variant hover:bg-surface-container-highest transition-colors">Batal</button>
-            <button type="button" onclick="savePlant()" class="px-5 py-2.5 rounded-lg bg-[#006c49] text-white font-bold hover:bg-[#005236] transition-colors">Simpan Data</button>
+    </div>
+</div>
+
+{{-- Modal Kelola / Tambah Kategori --}}
+<div id="categoryModal" class="fixed inset-0 z-[100] hidden overflow-y-auto">
+    <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity" onclick="closeCategoryModal()"></div>
+    <div class="min-h-screen px-4 py-8 flex items-center justify-center">
+        <div class="w-full max-w-lg bg-surface-container-lowest rounded-3xl p-6 sm:p-8 ambient-shadow-lg relative z-10 border border-outline-variant/30 flex flex-col gap-6 text-left">
+            <div class="flex items-center justify-between pb-4 border-b border-outline-variant/20">
+                <h3 class="text-xl font-bold text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[#006c49]">category</span> Kelola Kategori Tanaman
+                </h3>
+                <button onclick="closeCategoryModal()" class="text-on-surface-variant hover:text-on-surface p-1">
+                    <span class="material-symbols-outlined text-[22px]">close</span>
+                </button>
+            </div>
+
+            {{-- Form Tambah Kategori Baru --}}
+            <form id="categoryForm" onsubmit="event.preventDefault(); saveCategory();" class="flex flex-col gap-2 w-full">
+                <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider">Nama Kategori Baru</label>
+                <div class="flex items-center gap-2 w-full">
+                    <input type="text" id="category_name" placeholder="Misal: Sayuran Buah, Rempah" required class="flex-1 min-w-0 px-4 py-2.5 rounded-xl border border-outline-variant/40 bg-surface focus:outline-none focus:border-primary text-sm text-on-surface">
+                    <button type="submit" class="bg-[#006c49] text-white font-bold text-sm px-5 py-2.5 rounded-xl hover:bg-[#005c3a] transition-all shrink-0 shadow-sm">
+                        Tambah
+                    </button>
+                </div>
+            </form>
+
+            {{-- Daftar Kategori Saat Ini --}}
+            <div class="flex flex-col gap-3 w-full">
+                <h4 class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Daftar Kategori</h4>
+                <div class="flex flex-col divide-y divide-outline-variant/20 max-h-[260px] overflow-y-auto pr-1 rounded-xl border border-outline-variant/20 px-4 bg-surface/50">
+                    @forelse($categories as $cat)
+                        <div class="py-3 flex justify-between items-center text-sm w-full gap-2">
+                            <div class="flex items-center gap-2 min-w-0 flex-1">
+                                <span class="font-semibold text-on-surface truncate">{{ $cat->name }}</span>
+                                <span class="text-xs bg-surface-container-high text-on-surface-variant px-2.5 py-0.5 rounded-full font-medium shrink-0">
+                                    {{ $cat->templates_count ?? 0 }} tanaman
+                                </span>
+                            </div>
+                            @if(($cat->templates_count ?? 0) === 0)
+                                <button onclick="deleteCategory({{ $cat->id }})" class="p-1.5 text-on-surface-variant hover:text-error hover:bg-error/10 transition-colors rounded-lg shrink-0" title="Hapus Kategori">
+                                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                                </button>
+                            @else
+                                <span class="material-symbols-outlined text-[18px] text-on-surface-variant/40 cursor-not-allowed shrink-0 p-1.5" title="Kategori sedang digunakan oleh tanaman">lock</span>
+                            @endif
+                        </div>
+                    @empty
+                        <div class="text-sm text-on-surface-variant py-6 text-center w-full">Belum ada kategori.</div>
+                    @endforelse
+                </div>
+            </div>
+
+            <div class="pt-2 flex justify-end w-full">
+                <button type="button" onclick="closeCategoryModal()" class="px-5 py-2.5 rounded-xl font-bold text-on-surface-variant hover:bg-surface-container-highest transition-colors text-sm">Tutup</button>
+            </div>
         </div>
     </div>
 </div>
@@ -175,9 +242,8 @@
     function openPlantModal() {
         document.getElementById('plantForm').reset();
         document.getElementById('plant_id').value = '';
-        document.getElementById('plantModalTitle').innerText = 'Tambah Tanaman Baru';
+        document.getElementById('plantModalTitle').innerHTML = '<span class="material-symbols-outlined text-primary">local_florist</span> Tambah Tanaman Baru';
         document.getElementById('plantModal').classList.remove('hidden');
-        document.getElementById('plantModal').classList.add('flex');
     }
 
     function editPlantModal(plant) {
@@ -185,21 +251,19 @@
         document.getElementById('name_id').value = plant.name_id;
         document.getElementById('scientific_name').value = plant.scientific_name;
         document.getElementById('category_id').value = plant.category_id;
-        document.getElementById('germination_day').value = plant.germination_day;
-        document.getElementById('seedling_day').value = plant.seedling_day;
+        document.getElementById('germination_day').value = plant.germination_day || '';
+        document.getElementById('seedling_day').value = plant.seedling_day || '';
         document.getElementById('harvest_start_day').value = plant.harvest_start_day;
         document.getElementById('harvest_end_day').value = plant.harvest_end_day;
         document.getElementById('soil_ph_min').value = plant.soil_ph_min;
         document.getElementById('soil_ph_max').value = plant.soil_ph_max;
 
-        document.getElementById('plantModalTitle').innerText = 'Edit Tanaman';
+        document.getElementById('plantModalTitle').innerHTML = '<span class="material-symbols-outlined text-primary">edit</span> Edit Tanaman';
         document.getElementById('plantModal').classList.remove('hidden');
-        document.getElementById('plantModal').classList.add('flex');
     }
 
     function closePlantModal() {
         document.getElementById('plantModal').classList.add('hidden');
-        document.getElementById('plantModal').classList.remove('flex');
     }
 
     async function savePlant() {
@@ -259,6 +323,68 @@
                 setTimeout(() => window.location.reload(), 1000);
             } else {
                 Alert.modal.error('Gagal', 'Tidak dapat menghapus tanaman.');
+            }
+        } catch (e) {
+            console.error(e);
+            Alert.modal.error('Error Sistem', 'Terjadi kesalahan sistem.');
+        }
+    }
+
+    function openCategoryModal() {
+        document.getElementById('categoryForm').reset();
+        document.getElementById('categoryModal').classList.remove('hidden');
+    }
+
+    function closeCategoryModal() {
+        document.getElementById('categoryModal').classList.add('hidden');
+    }
+
+    async function saveCategory() {
+        const nameInput = document.getElementById('category_name');
+        const name = nameInput.value.trim();
+        if (!name) return;
+
+        try {
+            const res = await fetch('/api/admin/categories', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ name: name })
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                Alert.toast.success('Kategori berhasil ditambahkan!');
+                setTimeout(() => window.location.reload(), 800);
+            } else {
+                Alert.modal.error('Gagal Tambah Kategori', data.message || 'Nama kategori sudah ada atau tidak valid.');
+            }
+        } catch (e) {
+            console.error(e);
+            Alert.modal.error('Error Sistem', 'Terjadi kesalahan saat menyambung ke server.');
+        }
+    }
+
+    async function deleteCategory(id) {
+        const result = await Alert.modal.confirm('Hapus Kategori?', 'Kategori yang dihapus tidak bisa dikembalikan.', 'Ya, Hapus', true);
+        if (!result.isConfirmed) return;
+
+        try {
+            const res = await fetch(`/api/admin/categories/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                Alert.toast.success('Kategori berhasil dihapus!');
+                setTimeout(() => window.location.reload(), 800);
+            } else {
+                Alert.modal.error('Gagal Hapus', data.message || 'Tidak dapat menghapus kategori.');
             }
         } catch (e) {
             console.error(e);

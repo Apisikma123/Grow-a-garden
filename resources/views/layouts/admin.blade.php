@@ -119,7 +119,7 @@
             {{-- Search Bar --}}
             <div class="relative w-full max-w-[400px]">
                 <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
-                <input type="text" id="admin-global-search" placeholder="Search users, plants, or badges..." class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-full pl-12 pr-4 py-2.5 text-[14px] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all ambient-shadow text-on-surface placeholder:text-on-surface-variant/60" />
+                <input type="text" id="admin-global-search" placeholder="Search users, templates, or badges..." class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-full pl-12 pr-4 py-2.5 text-[14px] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all ambient-shadow text-on-surface placeholder:text-on-surface-variant/60" />
             </div>
 
             {{-- Admin Profile Chip / Avatar in Top Bar --}}

@@ -9,12 +9,33 @@
         {{-- Header --}}
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-                <h1 class="text-2xl md:text-3xl font-bold text-[#0f172a] tracking-tight mb-1">Kelola Badge & Prestasi</h1>
-                <p class="text-sm text-slate-500 font-medium">Buat badge baru atau berikan apresiasi prestasi secara manual kepada pengguna.</p>
+                <h1 class="text-2xl md:text-3xl font-bold text-on-surface tracking-tight mb-1">Kelola Badge & Prestasi</h1>
+                <p class="text-sm text-on-surface-variant font-medium">Buat badge baru atau berikan apresiasi prestasi secara manual kepada pengguna.</p>
             </div>
             
-            <div>
-                <button onclick="document.getElementById('create-badge-modal').classList.remove('hidden')" class="bg-[#006c49] hover:bg-[#005236] text-white font-bold text-sm px-5 py-2.5 rounded-xl transition-all shadow-sm flex items-center gap-2 active:scale-95 cursor-pointer">
+            <div class="flex flex-wrap items-center gap-3">
+                <form action="{{ route('admin.badges') }}" method="GET" class="flex flex-wrap items-center gap-2">
+                    <div class="relative">
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama badge..." class="pl-9 pr-4 py-2 bg-surface-container-highest border border-outline-variant/30 rounded-lg text-[13px] text-on-surface focus:outline-none focus:ring-2 focus:ring-primary w-52" onchange="this.form.submit()">
+                        <span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-on-surface-variant">search</span>
+                    </div>
+                    <select name="metric_type" onchange="this.form.submit()" class="px-3 py-2 bg-surface-container-highest border border-outline-variant/30 rounded-lg text-[13px] text-on-surface focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer font-medium">
+                        <option value="">Semua Metrik</option>
+                        <option value="total_tasks" {{ request('metric_type') == 'total_tasks' ? 'selected' : '' }}>Total Tugas</option>
+                        <option value="watering" {{ request('metric_type') == 'watering' ? 'selected' : '' }}>Penyiraman</option>
+                        <option value="fertilizing" {{ request('metric_type') == 'fertilizing' ? 'selected' : '' }}>Pemupukan</option>
+                        <option value="harvest" {{ request('metric_type') == 'harvest' ? 'selected' : '' }}>Panen</option>
+                        <option value="plants" {{ request('metric_type') == 'plants' ? 'selected' : '' }}>Tambah Tanaman</option>
+                    </select>
+                    @if(request('search') || request('metric_type'))
+                        <a href="{{ route('admin.badges') }}" class="p-2 text-on-surface-variant hover:text-error transition-colors flex items-center gap-1 text-[12px] font-semibold" title="Reset Filter">
+                            <span class="material-symbols-outlined text-[18px]">filter_alt_off</span>
+                            Reset
+                        </a>
+                    @endif
+                </form>
+
+                <button onclick="document.getElementById('create-badge-modal').classList.remove('hidden')" class="bg-[#006c49] hover:bg-[#005236] text-white font-bold text-sm px-5 py-2.5 rounded-xl transition-all shadow-sm flex items-center gap-2 active:scale-95 cursor-pointer shrink-0">
                     <span class="material-symbols-outlined text-[20px]">add</span>
                     Tambah Badge
                 </button>
@@ -73,6 +94,13 @@
                 </div>
             @endforelse
         </div>
+
+        {{-- Pagination --}}
+        @if($badges->hasPages())
+        <div class="p-5 bg-surface-container-lowest rounded-2xl border border-outline-variant/30 ambient-shadow">
+            {{ $badges->links() }}
+        </div>
+        @endif
     </div>
 
     {{-- Create Badge Modal --}}
