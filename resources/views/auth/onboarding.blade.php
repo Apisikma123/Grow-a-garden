@@ -170,8 +170,9 @@
                                 type="text" 
                                 id="garden_location" 
                                 name="location" 
-                                placeholder="Contoh: Jakarta Selatan, DKI Jakarta" 
-                                class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl pl-11 pr-4 py-3 text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all font-medium truncate"
+                                placeholder="Klik tombol 'Deteksi GPS' untuk mendeteksi lokasi..." 
+                                class="w-full bg-surface-container-low/50 border border-outline-variant rounded-xl pl-11 pr-4 py-3 text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all font-medium truncate cursor-default select-none"
+                                readonly
                                 required
                             />
                         </div>
@@ -185,7 +186,7 @@
                     
                     <p class="text-[11.5px] sm:text-[12px] text-on-surface-variant flex items-center gap-1.5 mt-0.5" id="location-hint">
                         <span class="material-symbols-outlined text-[15px] text-primary shrink-0">info</span>
-                        <span>Gunakan tombol Deteksi GPS untuk mengisi nama kota dan koordinat cuaca secara otomatis.</span>
+                        <span>Lokasi dideteksi otomatis via GPS atau IP untuk keakuratan data cuaca kebun Anda.</span>
                     </p>
                 </div>
 
@@ -684,7 +685,7 @@
         } catch (err) {
             console.warn('GPS error:', err);
             input.value = 'Jakarta Selatan, DKI Jakarta';
-            hint.textContent = 'Gagal mendeteksi otomatis. Anda dapat mengetik lokasi secara manual.';
+            hint.innerHTML = '<span class="material-symbols-outlined text-[15px] text-error shrink-0">warning</span> Lokasi default digunakan. Silakan klik Deteksi GPS untuk mencoba kembali.';
             btnText.textContent = 'Deteksi GPS';
             icon.classList.remove('animate-spin');
             btn.disabled = false;
