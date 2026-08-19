@@ -137,6 +137,16 @@
                     </div>
                 </div>
             </div>
+
+            @if(!empty($agronomic['watering']['warning']))
+            <div class="mt-4 bg-amber-500/10 border border-amber-500/30 text-amber-900 rounded-xl p-3.5 flex items-start gap-2.5">
+                <span class="material-symbols-outlined text-amber-700 text-[20px] shrink-0 mt-0.5">warning</span>
+                <div>
+                    <span class="font-bold text-amber-950 block mb-0.5">Peringatan Penting Agronomi</span>
+                    <p class="text-xs sm:text-sm text-amber-900 leading-relaxed font-medium">{{ $agronomic['watering']['warning'] }}</p>
+                </div>
+            </div>
+            @endif
         </div>
         @endif
 
@@ -170,19 +180,66 @@
                     @endif
 
                     @forelse($pendingTasks as $task)
-                    <div class="bg-surface rounded-[24px] p-[20px] flex flex-col sm:flex-row items-start sm:items-center justify-between ambient-shadow hover:ambient-shadow-lg hover:-translate-y-0.5 transition-all duration-300 gap-4 sm:gap-0">
+                    <div class="bg-surface rounded-[24px] p-[20px] flex flex-col sm:flex-row items-start sm:items-center justify-between ambient-shadow hover:ambient-shadow-lg hover:-translate-y-0.5 transition-all duration-300 gap-4 sm:gap-0 border border-outline-variant/20">
                         <div class="flex items-center gap-4">
                             @php
                                 $bgClass = 'bg-[#ecfdf5]';
                                 $textClass = 'text-[#059669]';
                                 $icon = 'eco';
+                                $code = strtolower($task->eventType->code ?? '');
                                 
-                                if($task->eventType && str_contains(strtolower($task->eventType->code), 'water')) {
+                                if(str_contains($code, 'water')) {
                                     $icon = 'water_drop';
-                                } elseif($task->eventType && str_contains(strtolower($task->eventType->code), 'pest')) {
-                                    $bgClass = 'bg-[#fff7ed]';
-                                    $textClass = 'text-[#ea580c]';
+                                    $bgClass = 'bg-sky-100';
+                                    $textClass = 'text-sky-700';
+                                } elseif(str_contains($code, 'pest')) {
+                                    $bgClass = 'bg-amber-100';
+                                    $textClass = 'text-amber-800';
                                     $icon = 'bug_report';
+                                } elseif(str_contains($code, 'fertiliz')) {
+                                    $bgClass = 'bg-emerald-100';
+                                    $textClass = 'text-emerald-800';
+                                    $icon = 'psychiatry';
+                                } elseif(str_contains($code, 'drain')) {
+                                    $bgClass = 'bg-purple-100';
+                                    $textClass = 'text-purple-800';
+                                    $icon = 'water_damage';
+                                } elseif(str_contains($code, 'weather_protect') || str_contains($code, 'heat')) {
+                                    $bgClass = 'bg-rose-100';
+                                    $textClass = 'text-rose-800';
+                                    $icon = 'air';
+                                } elseif(str_contains($code, 'fungus')) {
+                                    $bgClass = 'bg-teal-100';
+                                    $textClass = 'text-teal-800';
+                                    $icon = 'sanitizer';
+                                } elseif(str_contains($code, 'weed')) {
+                                    $bgClass = 'bg-lime-100';
+                                    $textClass = 'text-lime-800';
+                                    $icon = 'grass';
+                                } elseif(str_contains($code, 'stak')) {
+                                    $bgClass = 'bg-orange-100';
+                                    $textClass = 'text-orange-800';
+                                    $icon = 'yard';
+                                } elseif(str_contains($code, 'prun')) {
+                                    $bgClass = 'bg-rose-100';
+                                    $textClass = 'text-rose-800';
+                                    $icon = 'content_cut';
+                                }
+
+                                $taskDisplayTitle = $task->eventType->label ?? 'Tugas Perawatan';
+                                if (!empty($task->message)) {
+                                    if (str_contains($task->message, '—')) {
+                                        $mainPart = trim(explode('—', $task->message)[0]);
+                                        if (str_contains($mainPart, ':')) {
+                                            $taskDisplayTitle = trim(explode(':', $mainPart, 2)[1]);
+                                        } else {
+                                            $taskDisplayTitle = $mainPart;
+                                        }
+                                    } elseif (str_contains($task->message, ':')) {
+                                        $taskDisplayTitle = trim(explode(':', $task->message, 2)[1]);
+                                    } else {
+                                        $taskDisplayTitle = $task->message;
+                                    }
                                 }
                             @endphp
                             <div class="w-14 h-14 rounded-[16px] {{ $bgClass }} {{ $textClass }} flex items-center justify-center shadow-sm shrink-0">
@@ -190,7 +247,7 @@
                             </div>
                             <div>
                                 <div class="flex items-center gap-2 mb-0.5 flex-wrap">
-                                    <h3 class="text-[18px] font-bold text-on-surface">{{ $task->eventType->label ?? $task->message ?? 'Tugas Perawatan' }}</h3>
+                                    <h3 class="text-[17px] font-bold text-on-surface">{{ $taskDisplayTitle }}</h3>
                                     
                                     @if(isset($task->weather_tag))
                                     <span class="text-[10px] font-bold px-2 py-0.5 rounded-[4px] {{ $task->weather_badge_bg }}">{{ $task->weather_tag }}</span>
@@ -205,18 +262,18 @@
                                     @endif
                                 </div>
                                 <div class="flex items-center gap-2 flex-wrap">
-                                    <p class="text-[13px] text-on-surface-variant font-medium">{{ $task->plant->garden->name ?? 'Kebun' }}: {{ $task->plant->plantTemplate->name_id }}</p>
+                                    <p class="text-[13px] text-on-surface-variant font-semibold">{{ $task->plant->garden->name ?? 'Kebun' }}: {{ $task->plant->plantTemplate->name_id }}</p>
                                     @if(isset($task->weather_reason))
-                                    <span class="text-[11px] font-semibold text-primary/80 italic">— {{ $task->weather_reason }}</span>
+                                    <span class="text-[11px] font-medium text-on-surface-variant/90">— {{ $task->weather_reason }}</span>
                                     @endif
                                     <a href="{{ route('growth-calendar', ['plant_id' => $task->plant->id]) }}" class="text-[11px] font-bold text-primary hover:underline flex items-center gap-0.5" title="Lihat di Kalender"><span class="material-symbols-outlined text-[14px]">calendar_month</span></a>
                                 </div>
                             </div>
                         </div>
-                        <div class="flex items-center gap-6 w-full sm:w-auto justify-end">
+                        <div class="flex items-center gap-4 sm:gap-6 w-full sm:w-auto justify-end">
                             <div class="text-right hidden sm:block">
                                 <div class="text-[13px] font-bold text-[#dc2626]">Pending</div>
-                                <div class="text-[11px] text-on-surface-variant">{{ $task->scheduled_date->isoFormat('D MMM') }}</div>
+                                <div class="text-[11px] text-on-surface-variant">{{ $task->scheduled_date ? \Carbon\Carbon::parse($task->scheduled_date)->isoFormat('D MMM') : 'Hari Ini' }}</div>
                             </div>
                             <div class="flex items-center gap-2">
                                 <form action="{{ route('care-tasks.complete', $task->id) }}" method="POST" class="inline" onsubmit="return preventDoubleSubmit(this)">

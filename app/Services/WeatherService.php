@@ -20,7 +20,7 @@ class WeatherService
         
         // Cache in 10-minute blocks for fresh & fast updates
         $tenMinBlock = floor((int) now()->format('i') / 10);
-        $cacheKey = "weather_v6_{$lat}_{$lng}_" . now()->format('Y-m-d_H') . "_{$tenMinBlock}";
+        $cacheKey = "weather_v8_{$lat}_{$lng}_" . now()->format('Y-m-d_H') . "_{$tenMinBlock}";
         
         return Cache::remember($cacheKey, now()->addMinutes(10), function () use ($lat, $lng) {
             try {
@@ -64,22 +64,45 @@ class WeatherService
                     $currentRainProb = isset($hourlyProbs[$hourIndex]) ? (int) $hourlyProbs[$hourIndex] : (int) ($daily['precipitation_probability_max'][1] ?? 0);
                     $rainProb24h = (int) ($daily['precipitation_probability_max'][1] ?? ($daily['precipitation_probability_max'][0] ?? 0));
                     $dailyPrecipSum = (float) ($daily['precipitation_sum'][1] ?? ($daily['precipitation_sum'][0] ?? 0));
+                    $todayDailyCode = (int) ($daily['weather_code'][1] ?? ($daily['weather_code'][0] ?? 0));
 
-                    // Calculate precipitation & storm occurrence in the past 12-24 hours
-                    $startPastIdx = max(0, $hourIndex - 12);
-                    $past12hPrecip = 0.0;
+                    // 1. Scan Past 24 Hours for Storm or Rain
+                    $startPastIdx = max(0, $hourIndex - 24);
+                    $past24hPrecip = 0.0;
                     $hadRecentStorm = false;
-                    $recentStormCode = null;
 
                     for ($i = $startPastIdx; $i <= $hourIndex; $i++) {
                         $p = (float) ($hourly['precipitation'][$i] ?? 0);
                         $c = (int) ($hourly['weather_code'][$i] ?? 0);
-                        $past12hPrecip += $p;
+                        $past24hPrecip += $p;
                         if (in_array($c, [95, 96, 99])) {
                             $hadRecentStorm = true;
-                            $recentStormCode = $c;
                         } elseif (in_array($c, [65, 82]) || $p >= 3.0) {
                             $hadRecentStorm = true;
+                        }
+                    }
+                    $yesterdayCode = (int) ($daily['weather_code'][0] ?? 0);
+                    $yesterdayPrecip = (float) ($daily['precipitation_sum'][0] ?? 0);
+                    if (in_array($yesterdayCode, [95, 96, 99, 65, 82]) || $yesterdayPrecip >= 5.0) {
+                        $hadRecentStorm = true;
+                    }
+
+                    // 2. Scan Upcoming 12 Hours for Impending Storm / Rain
+                    $endFutureIdx = min(count($hourlyTimes) - 1, $hourIndex + 12);
+                    $upcomingMaxProb = $currentRainProb;
+                    $upcomingMaxPrecip = $currentPrecip;
+                    $upcomingHasStorm = in_array($todayDailyCode, [95, 96, 99]);
+                    $upcomingStormTime = null;
+
+                    for ($i = $hourIndex; $i <= $endFutureIdx; $i++) {
+                        $prob = (int) ($hourly['precipitation_probability'][$i] ?? 0);
+                        $p = (float) ($hourly['precipitation'][$i] ?? 0);
+                        $c = (int) ($hourly['weather_code'][$i] ?? 0);
+                        if ($prob > $upcomingMaxProb) $upcomingMaxProb = $prob;
+                        if ($p > $upcomingMaxPrecip) $upcomingMaxPrecip = $p;
+                        if (in_array($c, [95, 96, 99, 65, 81, 82]) || $p >= 2.0) {
+                            $upcomingHasStorm = true;
+                            if (!$upcomingStormTime) $upcomingStormTime = $hourlyTimes[$i] ?? null;
                         }
                     }
 
@@ -94,10 +117,16 @@ class WeatherService
                         'precipitation' => round($currentPrecip, 2),
                         'is_day' => (int) ($current['is_day'] ?? 1),
                         'cloud_cover' => $currentCloud,
-                        'past_precipitation_12h' => round($past12hPrecip, 2),
+                        'past_precipitation_12h' => round($past24hPrecip, 2),
+                        'past_precipitation_24h' => round($past24hPrecip, 2),
                         'had_recent_storm' => $hadRecentStorm,
-                        'recent_storm_code' => $recentStormCode,
+                        'yesterday_precip' => $yesterdayPrecip,
+                        'upcoming_has_storm' => $upcomingHasStorm,
+                        'upcoming_max_rain_prob' => $upcomingMaxProb,
+                        'upcoming_max_precip' => round($upcomingMaxPrecip, 2),
+                        'upcoming_storm_time' => $upcomingStormTime,
                         'daily_precipitation_sum' => round($dailyPrecipSum, 2),
+                        'today_daily_code' => $todayDailyCode,
                     ];
                 }
                 
@@ -122,9 +151,12 @@ class WeatherService
         $code = $weather['weather_code'] ?? 0;
         $precip = $weather['precipitation'] ?? 0;
         $cloud = $weather['cloud_cover'] ?? 0;
-        $past12hPrecip = (float) ($weather['past_precipitation_12h'] ?? 0);
+        $past24hPrecip = (float) ($weather['past_precipitation_24h'] ?? 0);
         $hadRecentStorm = (bool) ($weather['had_recent_storm'] ?? false);
+        $upcomingHasStorm = (bool) ($weather['upcoming_has_storm'] ?? false);
+        $upcomingMaxProb = (int) ($weather['upcoming_max_rain_prob'] ?? $rainProb);
         $dailyPrecipSum = (float) ($weather['daily_precipitation_sum'] ?? 0);
+        $todayDailyCode = (int) ($weather['today_daily_code'] ?? $code);
 
         // Enhanced WMO Weather Condition Categories
         $conditionCategory = 'PARTLY_CLOUDY';
@@ -200,7 +232,7 @@ class WeatherService
         $decision = 'NORMAL';
         $waterStatus = 'WAITING';
 
-        // 1. Current Weather is HEAVY_RAIN, THUNDERSTORM, RAIN, or LIGHT_RAIN -> SKIP
+        // 1. Current Weather is Active Rain or Thunderstorm -> SKIP
         if (in_array($conditionCategory, ['HEAVY_RAIN', 'THUNDERSTORM', 'RAIN', 'LIGHT_RAIN'])) {
             $decision = 'SKIP';
             $waterStatus = 'RAINED';
@@ -209,64 +241,85 @@ class WeatherService
                 'title' => 'Lewati Penyiraman',
                 'time_window' => $fixedWindow,
                 'advice' => "Sedang {$title} (Peluang Hujan {$rainProb}% saat ini). Penyiraman dilewati untuk mencegah pembusukan akar.",
+                'warning' => "Sedang terjadi hujan/badai saat ini. Jangan menyiram tanaman agar akar tidak terendam air berlebih.",
                 'badge' => 'Penyiraman Dilewati (Hujan)',
                 'badge_bg' => 'bg-red-100 text-red-800 border border-red-200'
             ];
         }
-        // 2. Recent Storm or Heavy Rain in past 12-24h / Logged Rain Today -> SKIP
-        elseif ($hadRecentStorm || $past12hPrecip >= 5.0 || $hasRecentRain) {
+        // 2. Recent Storm / Heavy Rain in Past 24h / Logged Rain Today -> SKIP
+        elseif ($hadRecentStorm || $past24hPrecip >= 5.0 || $hasRecentRain) {
             $decision = 'SKIP';
             $waterStatus = 'RAINED';
-            $stormDetail = $hadRecentStorm ? "Terjadi badai/hujan lebat beberapa jam lalu" : "Akumulasi curah hujan {$past12hPrecip} mm dalam 12 jam terakhir";
+            $stormDetail = $hadRecentStorm ? "Terjadi badai/hujan lebat dalam 24 jam terakhir" : "Akumulasi curah hujan {$past24hPrecip} mm dalam 24 jam terakhir";
+            
+            if ($temp >= 32) {
+                $advice = "{$stormDetail} dan cuaca saat ini terik panas ({$temp}°C). Lapisan tanah bawah masih basah—HINDARI menyiram di siang terik agar akar tidak melepuh/terkukus. Cukup cek kembali kelembapan di sore hari (16.00–18.00).";
+                $warning = "HINDARI MENYIRAM DI SIANG TERIK ({$temp}°C)! Tanah masih basah akibat badai semalam. Menyiram saat matahari panas terik akan merebus akar (root scalding) dan membuat tanaman layu mendadak.";
+                $badge = 'Lewati (Pasca Badai + Siang Terik)';
+            } else {
+                $advice = "{$stormDetail}. Tanah masih sangat lembap & jenuh air, sehingga penyiraman sesi ini dilewati untuk mencegah pembusukan akar.";
+                $warning = "Tanah masih jenuh air pasca hujan/badai semalam. Lewati sesi penyiraman ini untuk mencegah pembusukan akar.";
+                $badge = 'Penyiraman Dilewati (Pasca Hujan/Badai)';
+            }
+
             $watering = [
                 'action' => 'SKIP',
                 'title' => 'Lewati Penyiraman (Pasca Hujan/Badai)',
                 'time_window' => $fixedWindow,
-                'advice' => "{$stormDetail}. Tanah masih sangat lembap & jenuh air, sehingga penyiraman sesi ini dilewati untuk mencegah pembusukan akar.",
-                'badge' => 'Penyiraman Dilewati (Pasca Hujan/Badai)',
+                'advice' => $advice,
+                'warning' => $warning,
+                'badge' => $badge,
                 'badge_bg' => 'bg-purple-100 text-purple-800 border border-purple-200'
             ];
         }
-        // 3. Moderate Past Rain (1.5mm - 5mm) in past 12h -> REDUCE
-        elseif ($past12hPrecip >= 1.5) {
-            $decision = 'REDUCE';
-            $waterStatus = 'DRY';
-            $watering = [
-                'action' => 'REDUCE',
-                'title' => 'Kurangi Volume Siram',
-                'time_window' => $fixedWindow,
-                'advice' => "Tercatat hujan {$past12hPrecip} mm beberapa jam lalu. Tanah masih agak lembap, kurangi volume air penyiraman.",
-                'badge' => 'Kurangi Volume (Lembap Pasca Hujan)',
-                'badge_bg' => 'bg-blue-100 text-blue-800 border border-blue-200'
-            ];
-        }
-        // 4. Rain Probability >= 70% -> SKIP
-        elseif ($rainProb >= 70) {
+        // 3. Impending Storm / Heavy Rain Today (upcoming storm or daily code 95/81 or daily prob >= 70% or daily sum >= 5mm) -> SKIP
+        elseif ($upcomingHasStorm || in_array($todayDailyCode, [95, 96, 99, 65, 81, 82]) || $upcomingMaxProb >= 70 || $dailyPrecipSum >= 5.0) {
             $decision = 'SKIP';
             $waterStatus = 'WAITING';
             $watering = [
                 'action' => 'SKIP',
-                'title' => 'Lewati Penyiraman',
+                'title' => 'Lewati Penyiraman (Prakiraan Hujan/Badai)',
                 'time_window' => $fixedWindow,
-                'advice' => "Kemungkinan hujan sangat tinggi ({$rainProb}% saat ini). Penyiraman dilewati untuk menghemat air.",
-                'badge' => 'Penyiraman Dilewati (Peluang Hujan ≥ 70%)',
-                'badge_bg' => 'bg-red-100 text-red-800 border border-red-200'
+                'advice' => "Prakiraan cuaca mendeteksi potensi hujan lebat/badai hari ini (Peluang {$upcomingMaxProb}%, estimasi curah hujan {$dailyPrecipSum} mm). Penyiraman dilewati.",
+                'warning' => "WASPADA BADAI/HUJAN LEBAT: Prakiraan mendeteksi potensi hujan lebat/badai (Peluang {$upcomingMaxProb}%). Jangan menyiram tanah dan amankan pot dari angin kencang.",
+                'badge' => 'Penyiraman Dilewati (Prakiraan Badai/Hujan)',
+                'badge_bg' => 'bg-purple-100 text-purple-800 border border-purple-200'
+            ];
+        }
+        // 4. Moderate Past Rain (1.5mm - 5mm) in past 24h -> REDUCE
+        elseif ($past24hPrecip >= 1.5) {
+            $decision = 'REDUCE';
+            $waterStatus = 'DRY';
+            $warningText = ($temp >= 32)
+                ? "Cuaca terik ({$temp}°C) namun tanah masih menyimpan kelembapan hujan kemarin ({$past24hPrecip} mm). Jangan menyiram di siang bolong, siram secukupnya hanya pada sore hari (16.00-18.00)."
+                : "Tercatat hujan {$past24hPrecip} mm dalam 24 jam terakhir. Kurangi volume air siram agar media tanam tidak becek.";
+
+            $watering = [
+                'action' => 'REDUCE',
+                'title' => 'Kurangi Volume Siram',
+                'time_window' => $fixedWindow,
+                'advice' => "Tercatat hujan {$past24hPrecip} mm dalam 24 jam terakhir. Tanah masih agak lembap, kurangi volume air penyiraman.",
+                'warning' => $warningText,
+                'badge' => 'Kurangi Volume (Lembap Pasca Hujan)',
+                'badge_bg' => 'bg-blue-100 text-blue-800 border border-blue-200'
             ];
         }
         // 5. Rain Probability 50% - 69% -> REDUCE
-        elseif ($rainProb >= 50) {
+        elseif ($upcomingMaxProb >= 50 || $rainProb >= 50) {
+            $maxP = max($upcomingMaxProb, $rainProb);
             $decision = 'REDUCE';
             $waterStatus = 'DRY';
             $watering = [
                 'action' => 'REDUCE',
                 'title' => 'Kurangi Volume Siram',
                 'time_window' => $fixedWindow,
-                'advice' => "Kemungkinan hujan 50–69% ({$rainProb}%). Kurangi volume air penyiraman atau pertimbangkan tunda.",
-                'badge' => 'Kurangi Volume (Peluang Hujan 50–69%)',
+                'advice' => "Kemungkinan hujan hari ini {$maxP}%. Kurangi volume air penyiraman atau pertimbangkan tunda.",
+                'warning' => "Peluang hujan cukup tinggi ({$maxP}%). Kurangi volume penyiraman atau tunda sesi penyiraman jika langit mulai mendung gelap.",
+                'badge' => "Kurangi Volume (Peluang Hujan {$maxP}%)",
                 'badge_bg' => 'bg-blue-100 text-blue-800 border border-blue-200'
             ];
         }
-        // 5. Temperature >= 33°C -> NORMAL_PLUS
+        // 6. Temperature >= 33°C -> NORMAL_PLUS
         elseif ($temp >= 33) {
             $decision = 'NORMAL_PLUS';
             $waterStatus = 'DRY';
@@ -274,12 +327,13 @@ class WeatherService
                 'action' => 'NORMAL_PLUS',
                 'title' => 'Penyiraman Normal + Ekstra',
                 'time_window' => $fixedWindow,
-                'advice' => "Suhu sangat panas ({$temp}°C). Lakukan penyiraman normal pada sesi Pagi/Sore dengan sedikit tambahan volume air.",
+                'advice' => "Suhu sangat panas ({$temp}°C). Lakukan penyiraman ekstra pada sesi Pagi (06.00-09.00) atau Sore (16.00-18.00).",
+                'warning' => "HINDARI MENYIRAM DI SIANG HARI ({$temp}°C)! Suhu sangat panas. Lakukan penyiraman hanya di pagi atau sore hari, dan berikan mulsa/naungan pada tanaman.",
                 'badge' => 'Penyiraman Normal + Extra (≥ 33°C)',
                 'badge_bg' => 'bg-amber-100 text-amber-900 border border-amber-300'
             ];
         }
-        // 6. Drizzle -> REDUCE
+        // 7. Drizzle -> REDUCE
         elseif ($conditionCategory === 'DRIZZLE') {
             $decision = 'REDUCE';
             $waterStatus = 'DRY';
@@ -288,11 +342,12 @@ class WeatherService
                 'title' => 'Kurangi Volume Siram',
                 'time_window' => $fixedWindow,
                 'advice' => "Gerimis terdeteksi. Kurangi volume air penyiraman karena kelembapan udara meningkat.",
+                'warning' => "Gerimis meningkatkan kelembapan tanah. Kurangi takaran air agar media tidak terlalu basah.",
                 'badge' => 'Kurangi Volume (Gerimis)',
                 'badge_bg' => 'bg-sky-100 text-sky-800 border border-sky-200'
             ];
         }
-        // 7. Fog -> REDUCE
+        // 8. Fog -> REDUCE
         elseif ($conditionCategory === 'FOG') {
             $decision = 'REDUCE';
             $waterStatus = 'DRY';
@@ -301,11 +356,12 @@ class WeatherService
                 'title' => 'Kurangi Volume Siram',
                 'time_window' => $fixedWindow,
                 'advice' => "Kondisi berkabut. Kurangi sedikit volume penyiraman karena embun meningkatkan kelembapan media tanam.",
+                'warning' => "Kabut tebal menghasilkan embun alami. Kurangi penyiraman media tanam.",
                 'badge' => 'Kurangi Volume (Berkabut)',
                 'badge_bg' => 'bg-stone-100 text-stone-800 border border-stone-200'
             ];
         }
-        // 8. Default (CLEAR, PARTLY_CLOUDY, CLOUDY) -> NORMAL
+        // 9. Default (CLEAR, PARTLY_CLOUDY, CLOUDY) -> NORMAL
         else {
             $decision = 'NORMAL';
             $waterStatus = 'DRY';
@@ -314,6 +370,7 @@ class WeatherService
                 'title' => 'Penyiraman Normal',
                 'time_window' => $fixedWindow,
                 'advice' => 'Kondisi cuaca ideal. Lakukan penyiraman normal sesuai jadwal tetap (Pagi 06.00–09.00 & Sore 16.00–18.00).',
+                'warning' => null,
                 'badge' => 'Penyiraman Normal',
                 'badge_bg' => 'bg-emerald-100 text-emerald-800 border border-emerald-200'
             ];

@@ -101,52 +101,27 @@ class AutopilotService
 
     /**
      * Generate maintenance events (watering, fertilizing, etc.) based on care_rules.
-     * Generates tasks for the next 14 days from today.
+     * Generates tasks for the next 14 days from today with strict spacing.
      */
     private function generateMaintenanceEvents(Plant $plant, $template, Carbon $plantedDate): int
     {
         $careRules = $template->care_rules;
         if (!$careRules || !is_array($careRules)) {
-            // If no care_rules defined, generate basic default tasks
             return $this->generateDefaultMaintenanceTasks($plant, $template, $plantedDate);
         }
 
         $generated = 0;
         $today = Carbon::today();
         $endDate = $today->copy()->addDays(14);
-        $hst = (int) now()->diffInDays($plantedDate);
+        $hst = max(0, (int) $today->diffInDays($plantedDate));
 
-        // Parse care rules and generate events
         foreach ($careRules as $key => $ruleDescription) {
             $eventTypeCode = $this->mapRuleKeyToEventType($key);
             $eventType = EventType::where('code', $eventTypeCode)->first();
             if (!$eventType) continue;
 
-            $intervalDays = $this->parseIntervalFromRule($key, $ruleDescription);
-
-            // Generate events at the parsed interval
-            $currentDate = $today->copy();
-            while ($currentDate->lte($endDate)) {
-                // Check this task doesn't already exist
-                $exists = Event::where('plant_id', $plant->id)
-                    ->where('event_type_id', $eventType->id)
-                    ->where('scheduled_date', $currentDate->toDateString())
-                    ->exists();
-
-                if (!$exists) {
-                    Event::create([
-                        'plant_id' => $plant->id,
-                        'event_type_id' => $eventType->id,
-                        'scheduled_date' => $currentDate->toDateString(),
-                        'status' => 'PENDING',
-                        'priority' => $eventType->default_priority ?? 'MEDIUM',
-                        'message' => "{$template->name_id}: {$eventType->label}",
-                    ]);
-                    $generated++;
-                }
-
-                $currentDate->addDays($intervalDays);
-            }
+            $intervalDays = max(1, $this->parseIntervalFromRule($key, $ruleDescription));
+            $generated += $this->scheduleEventsForType($plant, $template, $eventType, $intervalDays, $plantedDate, $today, $endDate);
         }
 
         return $generated;
@@ -154,7 +129,7 @@ class AutopilotService
 
     /**
      * Generate default maintenance tasks when no care_rules are defined.
-     * Default: water every day, fertilize every 7 days, pest check every 14 days.
+     * Default: water daily, fertilize every 7-10 days, pest check every 7 days.
      */
     private function generateDefaultMaintenanceTasks(Plant $plant, $template, Carbon $plantedDate): int
     {
@@ -163,39 +138,110 @@ class AutopilotService
         $endDate = $today->copy()->addDays(14);
 
         $defaults = [
-            'WATERING_REMINDER' => 1,   // Every day
-            'FERTILIZER_REMINDER' => 7, // Every 7 days
-            'PEST_INSPECTION' => 14,    // Every 14 days
+            'WATERING_REMINDER' => 1,    // Every day
+            'FERTILIZER_REMINDER' => 7,  // Every 7 days
+            'PEST_INSPECTION' => 7,     // Every 7 days
+            'WEEDING' => 12,            // Every 12 days
         ];
 
         foreach ($defaults as $code => $intervalDays) {
             $eventType = EventType::where('code', $code)->first();
             if (!$eventType) continue;
 
-            $currentDate = $today->copy();
-            while ($currentDate->lte($endDate)) {
-                $exists = Event::where('plant_id', $plant->id)
-                    ->where('event_type_id', $eventType->id)
-                    ->where('scheduled_date', $currentDate->toDateString())
-                    ->exists();
+            $generated += $this->scheduleEventsForType($plant, $template, $eventType, $intervalDays, $plantedDate, $today, $endDate);
+        }
 
-                if (!$exists) {
-                    Event::create([
-                        'plant_id' => $plant->id,
-                        'event_type_id' => $eventType->id,
-                        'scheduled_date' => $currentDate->toDateString(),
-                        'status' => 'PENDING',
-                        'priority' => $eventType->default_priority ?? 'MEDIUM',
-                        'message' => "{$template->name_id}: {$eventType->label}",
-                    ]);
-                    $generated++;
-                }
+        return $generated;
+    }
 
+    /**
+     * Smart scheduler ensuring no duplicate/consecutive tasks and realistic spacing.
+     */
+    private function scheduleEventsForType(Plant $plant, $template, EventType $eventType, int $intervalDays, Carbon $plantedDate, Carbon $today, Carbon $endDate): int
+    {
+        $generated = 0;
+        $code = $eventType->code;
+
+        // Find the latest scheduled event of this type
+        $latestEvent = Event::where('plant_id', $plant->id)
+            ->where('event_type_id', $eventType->id)
+            ->orderBy('scheduled_date', 'desc')
+            ->first();
+
+        if ($latestEvent) {
+            $currentDate = Carbon::parse($latestEvent->scheduled_date)->addDays($intervalDays);
+            // If the calculated next date is in the past, advance it forward in steps of intervalDays
+            while ($currentDate->lt($today)) {
+                $currentDate->addDays($intervalDays);
+            }
+        } else {
+            // First time scheduling: offset initial date based on task nature
+            $initialOffset = match ($code) {
+                'WATERING_REMINDER' => 0,
+                'PEST_INSPECTION' => 5,
+                'FERTILIZER_REMINDER' => 7,
+                'WEEDING' => 12,
+                'PRUNING' => 16,
+                default => 0,
+            };
+
+            $currentDate = $plantedDate->copy()->addDays($initialOffset);
+            while ($currentDate->lt($today)) {
                 $currentDate->addDays($intervalDays);
             }
         }
 
+        while ($currentDate->lte($endDate)) {
+            $exists = Event::where('plant_id', $plant->id)
+                ->where('event_type_id', $eventType->id)
+                ->where('scheduled_date', $currentDate->toDateString())
+                ->exists();
+
+            if (!$exists) {
+                $taskHst = max(0, (int) $currentDate->diffInDays($plantedDate));
+                $message = $this->buildRichTaskMessage($code, $template, $taskHst);
+
+                Event::create([
+                    'plant_id' => $plant->id,
+                    'event_type_id' => $eventType->id,
+                    'scheduled_date' => $currentDate->toDateString(),
+                    'status' => 'PENDING',
+                    'priority' => $eventType->default_priority ?? 'MEDIUM',
+                    'message' => $message,
+                ]);
+                $generated++;
+            }
+
+            $currentDate->addDays($intervalDays);
+        }
+
         return $generated;
+    }
+
+    /**
+     * Build informative, educational, and diverse task quest messages based on plant HST.
+     */
+    private function buildRichTaskMessage(string $code, $template, int $hst): string
+    {
+        $plantName = $template->name_id;
+
+        return match ($code) {
+            'WATERING_REMINDER' => "{$plantName}: Penyiraman Rutin Pagi & Sore",
+            'FERTILIZER_REMINDER' => match (true) {
+                $hst <= 12 => "{$plantName}: Nutrisi Awal Pembibitan (Pupuk Organik / NPK Daun Encer)",
+                $hst <= 25 => "{$plantName}: Nutrisi Fase Vegetatif (Pembentukan Daun & Batang Kokoh)",
+                default => "{$plantName}: Nutrisi Bobot Panen & Pembungaan (Tinggi Fosfor & Kalium)",
+            },
+            'PEST_INSPECTION' => match (true) {
+                $hst <= 10 => "{$plantName}: Inspeksi Kutu Daun (Aphids) & Pangkal Batang Bibit",
+                $hst <= 22 => "{$plantName}: Inspeksi Ulat Grayak & Daun Berlubang",
+                default => "{$plantName}: Inspeksi Kutu Putih (Mealybugs) & Cek Jamur Daun",
+            },
+            'WEEDING' => "{$plantName}: Penyiangan Gulma & Penggemburan Media Tanam",
+            'PRUNING' => "{$plantName}: Sanitasi Daun Kuning & Perempelan Tunas Air",
+            'STAKING' => "{$plantName}: Pemasangan & Pengikatan Ajir Penyangga",
+            default => "{$plantName}: {$code}",
+        };
     }
 
     /**
@@ -251,7 +297,7 @@ class AutopilotService
         // Defaults based on key type
         if (str_contains($key, 'water') || str_contains($key, 'siram')) return 1;
         if (str_contains($key, 'fertilizer') || str_contains($key, 'pupuk')) return 7;
-        if (str_contains($key, 'pest') || str_contains($key, 'hama')) return 14;
+        if (str_contains($key, 'pest') || str_contains($key, 'hama')) return 7;
         if (str_contains($key, 'prun') || str_contains($key, 'pangkas')) return 14;
 
         return 7; // Default fallback
