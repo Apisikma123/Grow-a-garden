@@ -18,3 +18,7 @@
 - **Pro Plan (`Subur (Pro)`)**: Max 10 Kebun, Max 100 Tanaman.
 - **Premium Plan (`Panen Raya (Premium)`)**: Max 100 Kebun (Tak Terbatas), Tanaman Tak Terbatas.
 - **Locked Visuals**: Display strikethrough titles (`line-through opacity-70`), lock icon badges, and error-container warning banners when user exceeds plan limits, triggering the pricing upgrade modal on click.
+
+## 4. Browser Automation & Review Policy (Strictly Disabled)
+- **NO Automated Browser Review / Subagent**: NEVER launch the `browser_subagent` or open, control, or record the browser in any circumstances.
+- **Pure Code & CLI Workflow**: Perform all task execution, syntax checks, migrations, and build validations strictly through local code edits, static analysis, and CLI commands (`php artisan`, `npm run build`, etc.) without opening the browser.
