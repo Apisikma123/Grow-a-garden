@@ -10,6 +10,7 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('care:generate-tasks')->dailyAt('00:00');
+Schedule::command('tasks:daily-notify')->dailyAt('00:05');
 
 Artisan::command('garden:fix-template-text', function () {
     \Illuminate\Support\Facades\DB::table('plant_templates')

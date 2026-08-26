@@ -42,7 +42,7 @@ Route::get('/checkout', function () {
 })->middleware('auth');
 
 // Protected User Routes
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'user'])->group(function () {
     Route::get('/dashboard', function () {
         $gardens = \App\Models\Garden::where('user_id', Auth::id())->get();
         $gardenIds = $gardens->pluck('id');
@@ -259,6 +259,10 @@ Route::middleware(['auth'])->group(function () {
 
     // Live Weather API Route
     Route::get('/api/weather/live', [\App\Http\Controllers\WeatherController::class, 'live'])->name('api.weather.live');
+
+    // Notifications
+    Route::post('/notifications/mark-all-read', [\App\Http\Controllers\NotificationController::class, 'markAllRead'])->name('notifications.mark-all-read');
+    Route::post('/notifications/{id}/mark-read', [\App\Http\Controllers\NotificationController::class, 'markRead'])->name('notifications.mark-read');
 
     // Admin API Routes
     Route::middleware(['admin'])->group(function () {

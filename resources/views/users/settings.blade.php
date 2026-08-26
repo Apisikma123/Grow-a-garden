@@ -66,21 +66,59 @@
                                     <label class="block text-[14px] font-bold text-on-surface mb-2 group-focus-within:text-primary transition-colors">Alamat Email</label>
                                     <input type="email" value="{{ Auth::user()->email }}" class="w-full surface-recessed border border-outline-variant/50 bg-surface-container-lowest rounded-[12px] px-4 py-3 text-[16px] text-on-surface-variant focus:outline-none transition-all cursor-not-allowed" readonly>
                                 </div>
+                                @php
+                                    $userRole = strtolower(Auth::user()->role ?? 'free');
+                                    $isWeatherLocked = !in_array($userRole, ['pro', 'subur', 'premium', 'panen raya', 'admin']);
+                                @endphp
+
                                 <div class="group">
-                                    <label class="block text-[14px] font-bold text-on-surface mb-2 group-focus-within:text-primary transition-colors">Lokasi Kebun (Weather Adjustment)</label>
+                                    <div class="flex items-center justify-between mb-2">
+                                        <label class="text-[14px] font-bold text-on-surface group-focus-within:text-primary transition-colors {{ $isWeatherLocked ? 'line-through opacity-70' : '' }}">
+                                            Lokasi Kebun (Weather Adjustment)
+                                        </label>
+                                        @if($isWeatherLocked)
+                                            <a href="/checkout?plan=subur&from=settings" class="inline-flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container border border-error/30 hover:opacity-80 transition-opacity">
+                                                <span class="material-symbols-outlined text-[13px]">lock</span>
+                                                Terkunci (Paket Subur)
+                                            </a>
+                                        @endif
+                                    </div>
+
+                                    @if($isWeatherLocked)
+                                        <div class="bg-error-container/20 border border-error/30 rounded-[12px] p-3 text-xs text-on-error-container flex items-center justify-between gap-2 mb-3">
+                                            <div class="flex items-center gap-2">
+                                                <span class="material-symbols-outlined text-error text-[18px]">lock</span>
+                                                <span>Weather Adjustment & penyesuaian penyiraman cuaca ekstrem khusus untuk pengguna <strong>Subur (Pro)</strong>.</span>
+                                            </div>
+                                            <a href="/checkout?plan=subur&from=settings" class="bg-primary text-on-primary font-bold px-3 py-1 rounded-full text-[11px] whitespace-nowrap hover:bg-primary/90 transition-colors shrink-0">Upgrade</a>
+                                        </div>
+                                    @endif
+
                                     <div class="flex gap-2">
                                         <div class="relative flex-1">
                                             <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant/70 text-[20px] pointer-events-none">location_on</span>
-                                            <input type="text" id="garden-location" placeholder="Pilih atau deteksi lokasi..." value="{{ Auth::user()->province ? Auth::user()->province . ', Indonesia' : '' }}" class="w-full surface-recessed border border-outline-variant rounded-[12px] pl-11 pr-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" readonly>
+                                            <input type="text" id="garden-location" placeholder="{{ $isWeatherLocked ? 'Fitur terkunci untuk Paket Bibit (Gratis)' : 'Pilih atau deteksi lokasi...' }}" value="{{ Auth::user()->province ? Auth::user()->province . ', Indonesia' : '' }}" class="w-full surface-recessed border border-outline-variant rounded-[12px] pl-11 pr-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all {{ $isWeatherLocked ? 'opacity-60 cursor-not-allowed' : '' }}" readonly>
                                             <input type="hidden" name="province" id="hidden-province" value="{{ Auth::user()->province }}">
                                         </div>
-                                        <button type="button" id="btn-detect-location" class="bg-surface-container-high text-primary hover:bg-primary/10 border border-outline-variant rounded-[12px] px-4 flex items-center justify-center gap-1.5 transition-all duration-300 font-bold text-[14px] whitespace-nowrap active:scale-95">
+                                        <button type="button" id="btn-detect-location" {{ $isWeatherLocked ? 'disabled' : '' }} class="bg-surface-container-high text-primary hover:bg-primary/10 border border-outline-variant rounded-[12px] px-4 flex items-center justify-center gap-1.5 transition-all duration-300 font-bold text-[14px] whitespace-nowrap active:scale-95 {{ $isWeatherLocked ? 'opacity-50 cursor-not-allowed' : '' }}">
                                             <span class="material-symbols-outlined text-[20px]" id="detect-icon">my_location</span>
                                             Deteksi
                                         </button>
                                     </div>
                                 </div>
                                 <input type="hidden" name="language" value="{{ Auth::user()->language ?? 'id' }}">
+                                <div class="group">
+                                    <label class="block text-[14px] font-bold text-on-surface mb-2 group-focus-within:text-primary transition-colors {{ $isWeatherLocked ? 'line-through opacity-70' : '' }}">Pilih Provinsi Manual (Alternatif)</label>
+                                    <select id="manual-province" {{ $isWeatherLocked ? 'disabled' : '' }} class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all {{ $isWeatherLocked ? 'opacity-60 cursor-not-allowed' : '' }}">
+                                        <option value="">-- Pilih Provinsi --</option>
+                                        @php
+                                            $provinces = ['Aceh', 'Sumatera Utara', 'Sumatera Barat', 'Riau', 'Kepulauan Riau', 'Jambi', 'Sumatera Selatan', 'Bangka Belitung', 'Bengkulu', 'Lampung', 'DKI Jakarta', 'Jawa Barat', 'Banten', 'Jawa Tengah', 'DI Yogyakarta', 'Jawa Timur', 'Bali', 'Nusa Tenggara Barat', 'Nusa Tenggara Timur', 'Kalimantan Barat', 'Kalimantan Tengah', 'Kalimantan Selatan', 'Kalimantan Timur', 'Kalimantan Utara', 'Sulawesi Utara', 'Gorontalo', 'Sulawesi Tengah', 'Sulawesi Barat', 'Sulawesi Selatan', 'Sulawesi Tenggara', 'Maluku', 'Maluku Utara', 'Papua Barat', 'Papua'];
+                                        @endphp
+                                        @foreach($provinces as $prov)
+                                            <option value="{{ $prov }}" {{ Auth::user()->province == $prov ? 'selected' : '' }}>{{ $prov }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <div class="group">
                                     <label class="block text-[14px] font-bold text-on-surface mb-2">Role Akun</label>
                                     <div class="flex items-center gap-2 mt-1">
@@ -429,13 +467,15 @@
 @endsection
 
 @push('scripts')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         // Initialize Profile Avatar Cropper (1:1 Ratio)
         if (window.ProfileCropper) {
             ProfileCropper.attach('avatar-input', 'avatar-preview', 'avatar-icon');
         }
-
         const deleteAccountForm = document.getElementById('delete-account-form');
         if (deleteAccountForm) {
             deleteAccountForm.addEventListener('submit', function(e) {
@@ -728,14 +768,14 @@
         const cancelBtn = document.getElementById('btn-cancel-sub');
         if (cancelBtn) {
             cancelBtn.addEventListener('click', async () => {
-                const result = await Alert.confirm(
-                    'Batalkan Langganan?',
-                    'Apakah Anda yakin ingin membatalkan langganan? Anda akan kembali ke Paket Bibit (Gratis) dan kehilangan akses ke fitur Kalender Tanam dan Weather Adjustment.',
-                    'Ya, Batalkan',
+                const confirmResult = await Alert.modal.confirm(
+                    'Batalkan Langganan?', 
+                    'Apakah Anda yakin ingin membatalkan langganan? Anda akan kembali ke Paket Bibit (Gratis) dan kehilangan akses ke fitur Kalender Tanam dan Weather Adjustment.', 
+                    'Ya, Batalkan', 
                     true
                 );
 
-                if (!result || !result.isConfirmed) {
+                if (!confirmResult || !confirmResult.isConfirmed) {
                     return;
                 }
 
@@ -763,7 +803,7 @@
                 } catch (error) {
                     cancelBtn.disabled = false;
                     cancelBtn.innerHTML = '<span class="material-symbols-outlined text-[18px]">cancel</span> Batalkan Langganan';
-                    Alert.toast.error(error.message || 'Terjadi kesalahan');
+                    Alert.modal.error('Gagal Membatalkan', error.message || 'Terjadi kesalahan sistem.');
                 }
             });
         }

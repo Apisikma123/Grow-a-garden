@@ -164,11 +164,11 @@
                 setTimeout(() => window.location.reload(), 800);
             } else {
                 const data = await response.json();
-                Alert.error('Gagal', data.error || 'Gagal memperbarui role pengguna');
+                Alert.modal.error('Gagal', data.error || 'Gagal memperbarui role pengguna.');
             }
         } catch (error) {
             console.error('Error:', error);
-            Alert.error('Error', 'Terjadi kesalahan saat memperbarui role.');
+            Alert.modal.error('Gagal', 'Terjadi kesalahan sistem.');
         }
     }
 

@@ -40,6 +40,27 @@ class SettingsController extends Controller
     {
         $user = Auth::user();
 
+        // Handle AJAX Instant Avatar Upload
+        if ($request->wantsJson() || $request->ajax()) {
+            $request->validate([
+                'avatar' => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+            ]);
+
+            if ($user->avatar) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+            
+            $path = $request->file('avatar')->store('avatars', 'public');
+            $user->avatar = $path;
+            $user->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Foto profil berhasil diperbarui!',
+                'avatar_url' => Storage::url($path),
+            ]);
+        }
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:20'],
