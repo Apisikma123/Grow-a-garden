@@ -68,39 +68,22 @@
                                 </div>
                                 @php
                                     $userRole = strtolower(Auth::user()->role ?? 'free');
-                                    $isWeatherLocked = !in_array($userRole, ['pro', 'subur', 'premium', 'panen raya', 'admin']);
                                 @endphp
 
                                 <div class="group">
                                     <div class="flex items-center justify-between mb-2">
-                                        <label class="text-[14px] font-bold text-on-surface group-focus-within:text-primary transition-colors {{ $isWeatherLocked ? 'line-through opacity-70' : '' }}">
+                                        <label class="text-[14px] font-bold text-on-surface group-focus-within:text-primary transition-colors">
                                             Lokasi Kebun (Weather Adjustment)
                                         </label>
-                                        @if($isWeatherLocked)
-                                            <a href="/checkout?plan=subur&from=settings" class="inline-flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container border border-error/30 hover:opacity-80 transition-opacity">
-                                                <span class="material-symbols-outlined text-[13px]">lock</span>
-                                                Terkunci (Paket Subur)
-                                            </a>
-                                        @endif
                                     </div>
-
-                                    @if($isWeatherLocked)
-                                        <div class="bg-error-container/20 border border-error/30 rounded-[12px] p-3 text-xs text-on-error-container flex items-center justify-between gap-2 mb-3">
-                                            <div class="flex items-center gap-2">
-                                                <span class="material-symbols-outlined text-error text-[18px]">lock</span>
-                                                <span>Weather Adjustment & penyesuaian penyiraman cuaca ekstrem khusus untuk pengguna <strong>Subur (Pro)</strong>.</span>
-                                            </div>
-                                            <a href="/checkout?plan=subur&from=settings" class="bg-primary text-on-primary font-bold px-3 py-1 rounded-full text-[11px] whitespace-nowrap hover:bg-primary/90 transition-colors shrink-0">Upgrade</a>
-                                        </div>
-                                    @endif
 
                                     <div class="flex gap-2">
                                         <div class="relative flex-1">
                                             <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant/70 text-[20px] pointer-events-none">location_on</span>
-                                            <input type="text" id="garden-location" placeholder="{{ $isWeatherLocked ? 'Fitur terkunci untuk Paket Bibit (Gratis)' : 'Pilih atau deteksi lokasi...' }}" value="{{ Auth::user()->province ? Auth::user()->province . ', Indonesia' : '' }}" class="w-full surface-recessed border border-outline-variant rounded-[12px] pl-11 pr-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all {{ $isWeatherLocked ? 'opacity-60 cursor-not-allowed' : '' }}" readonly>
+                                            <input type="text" id="garden-location" placeholder="Pilih atau deteksi lokasi..." value="{{ Auth::user()->province ? Auth::user()->province . ', Indonesia' : '' }}" class="w-full surface-recessed border border-outline-variant rounded-[12px] pl-11 pr-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" readonly>
                                             <input type="hidden" name="province" id="hidden-province" value="{{ Auth::user()->province }}">
                                         </div>
-                                        <button type="button" id="btn-detect-location" {{ $isWeatherLocked ? 'disabled' : '' }} class="bg-surface-container-high text-primary hover:bg-primary/10 border border-outline-variant rounded-[12px] px-4 flex items-center justify-center gap-1.5 transition-all duration-300 font-bold text-[14px] whitespace-nowrap active:scale-95 {{ $isWeatherLocked ? 'opacity-50 cursor-not-allowed' : '' }}">
+                                        <button type="button" id="btn-detect-location" class="bg-surface-container-high text-primary hover:bg-primary/10 border border-outline-variant rounded-[12px] px-4 flex items-center justify-center gap-1.5 transition-all duration-300 font-bold text-[14px] whitespace-nowrap active:scale-95">
                                             <span class="material-symbols-outlined text-[20px]" id="detect-icon">my_location</span>
                                             Deteksi
                                         </button>
@@ -108,8 +91,8 @@
                                 </div>
                                 <input type="hidden" name="language" value="{{ Auth::user()->language ?? 'id' }}">
                                 <div class="group">
-                                    <label class="block text-[14px] font-bold text-on-surface mb-2 group-focus-within:text-primary transition-colors {{ $isWeatherLocked ? 'line-through opacity-70' : '' }}">Pilih Provinsi Manual (Alternatif)</label>
-                                    <select id="manual-province" {{ $isWeatherLocked ? 'disabled' : '' }} class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all {{ $isWeatherLocked ? 'opacity-60 cursor-not-allowed' : '' }}">
+                                    <label class="block text-[14px] font-bold text-on-surface mb-2 group-focus-within:text-primary transition-colors">Pilih Provinsi Manual (Alternatif)</label>
+                                    <select id="manual-province" class="w-full surface-recessed border border-outline-variant rounded-[12px] px-4 py-3 text-[16px] text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
                                         <option value="">-- Pilih Provinsi --</option>
                                         @php
                                             $provinces = ['Aceh', 'Sumatera Utara', 'Sumatera Barat', 'Riau', 'Kepulauan Riau', 'Jambi', 'Sumatera Selatan', 'Bangka Belitung', 'Bengkulu', 'Lampung', 'DKI Jakarta', 'Jawa Barat', 'Banten', 'Jawa Tengah', 'DI Yogyakarta', 'Jawa Timur', 'Bali', 'Nusa Tenggara Barat', 'Nusa Tenggara Timur', 'Kalimantan Barat', 'Kalimantan Tengah', 'Kalimantan Selatan', 'Kalimantan Timur', 'Kalimantan Utara', 'Sulawesi Utara', 'Gorontalo', 'Sulawesi Tengah', 'Sulawesi Barat', 'Sulawesi Selatan', 'Sulawesi Tenggara', 'Maluku', 'Maluku Utara', 'Papua Barat', 'Papua'];
@@ -287,117 +270,8 @@
                     </div>
                 </div>
 
-                {{-- Subscription / Langganan Box --}}
-                <div id="subscription" class="bg-surface rounded-[24px] p-[24px] ambient-shadow-lg border border-outline-variant/20 hover:shadow-xl transition-shadow duration-300">
-                    <div class="flex items-center justify-between mb-6">
-                        <h2 class="text-[24px] font-bold text-on-surface">Paket Langganan</h2>
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-black uppercase tracking-wider
-                            {{ Auth::user()->role === 'premium' ? 'bg-[#3b82f6]/10 text-[#3b82f6] border border-[#3b82f6]/20' : 
-                               (Auth::user()->role === 'pro' ? 'bg-primary/10 text-primary border border-primary/20' : 
-                               'bg-surface-container-high text-on-surface-variant border border-outline-variant/30') }}">
-                            <span class="material-symbols-outlined text-[14px]">
-                                {{ Auth::user()->role === 'premium' ? 'workspace_premium' : (Auth::user()->role === 'pro' ? 'star' : 'eco') }}
-                            </span>
-                            {{ Auth::user()->planName() }}
-                        </span>
-                    </div>
+                {{-- Subscription / Langganan Box: hidden - all features accessible --}}
 
-                    {{-- Current Plan Card --}}
-                    <div class="rounded-2xl p-5 mb-5 border
-                        {{ Auth::user()->role === 'free' ? 'bg-surface-container-low border-outline-variant/20' : 
-                           (Auth::user()->role === 'premium' ? 'bg-gradient-to-r from-[#0f172a] to-[#1e293b] border-[#3b82f6]/30 text-white' : 
-                           'bg-gradient-to-r from-[#004d34] to-[#006c49] border-primary/30 text-white') }}">
-                        
-                        <div class="flex items-start justify-between mb-4">
-                            <div>
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="material-symbols-outlined text-[24px] {{ Auth::user()->role === 'free' ? 'text-on-surface-variant' : 'text-yellow-400' }}">
-                                        {{ Auth::user()->role === 'premium' ? 'workspace_premium' : (Auth::user()->role === 'pro' ? 'star' : 'eco') }}
-                                    </span>
-                                    <h3 class="text-[18px] font-black {{ Auth::user()->role === 'free' ? 'text-on-surface' : '' }}">
-                                        {{ Auth::user()->planName() }}
-                                    </h3>
-                                </div>
-                                <p class="text-[13px] {{ Auth::user()->role === 'free' ? 'text-on-surface-variant' : 'text-white/70' }}">
-                                    @if(Auth::user()->role === 'free')
-                                        Paket gratis dengan fitur dasar.
-                                    @elseif(Auth::user()->role === 'pro')
-                                        Kalender Tanam aktif · Weather Adjustment aktif
-                                    @else
-                                        Unlimited · Semua fitur premium
-                                    @endif
-                                </p>
-                            </div>
-
-                            @if(Auth::user()->role === 'free')
-                                <span class="text-[20px] font-black text-on-surface">Gratis</span>
-                            @endif
-                        </div>
-
-                        {{-- Plan Limits --}}
-                        <div class="grid grid-cols-3 gap-3 mb-4">
-                            <div class="rounded-xl p-3 text-center {{ Auth::user()->role === 'free' ? 'bg-surface-container-high' : 'bg-white/10' }}">
-                                <div class="text-[18px] font-black {{ Auth::user()->role === 'free' ? 'text-on-surface' : '' }}">{{ Auth::user()->maxGardens() }}</div>
-                                <div class="text-[10px] font-bold uppercase tracking-wider {{ Auth::user()->role === 'free' ? 'text-on-surface-variant' : 'text-white/60' }}">Maks Kebun</div>
-                            </div>
-                            <div class="rounded-xl p-3 text-center {{ Auth::user()->role === 'free' ? 'bg-surface-container-high' : 'bg-white/10' }}">
-                                <div class="text-[18px] font-black {{ Auth::user()->role === 'free' ? 'text-on-surface' : '' }}">{{ Auth::user()->maxPlants() === PHP_INT_MAX ? '∞' : Auth::user()->maxPlants() }}</div>
-                                <div class="text-[10px] font-bold uppercase tracking-wider {{ Auth::user()->role === 'free' ? 'text-on-surface-variant' : 'text-white/60' }}">Maks Tanaman</div>
-                            </div>
-                            <div class="rounded-xl p-3 text-center {{ Auth::user()->role === 'free' ? 'bg-surface-container-high' : 'bg-white/10' }}">
-                                <div class="text-[18px] font-black {{ Auth::user()->role === 'free' ? 'text-on-surface' : '' }}">
-                                    <span class="material-symbols-outlined text-[18px] {{ Auth::user()->canUseAutopilot() ? (Auth::user()->role === 'free' ? 'text-primary' : 'text-yellow-400') : 'text-on-surface-variant' }}">
-                                        {{ Auth::user()->canUseAutopilot() ? 'check_circle' : 'cancel' }}
-                                    </span>
-                                </div>
-                                <div class="text-[10px] font-bold uppercase tracking-wider {{ Auth::user()->role === 'free' ? 'text-on-surface-variant' : 'text-white/60' }}">Kalender Tanam</div>
-                            </div>
-                        </div>
-
-                        {{-- Subscription Info (if active) --}}
-                        @php $activeSub = Auth::user()->activeSubscription(); @endphp
-                        @if($activeSub)
-                            <div class="flex items-center justify-between text-[12px] {{ Auth::user()->role === 'free' ? 'text-on-surface-variant' : 'text-white/70' }} border-t {{ Auth::user()->role === 'free' ? 'border-outline-variant/20' : 'border-white/10' }} pt-3">
-                                <div class="flex items-center gap-1.5">
-                                    <span class="material-symbols-outlined text-[14px]">calendar_today</span>
-                                    Berlaku sampai: <strong class="{{ Auth::user()->role === 'free' ? 'text-on-surface' : 'text-white' }}">{{ $activeSub->valid_until->format('d M Y') }}</strong>
-                                </div>
-                                <div class="flex items-center gap-1.5">
-                                    <span class="material-symbols-outlined text-[14px]">autorenew</span>
-                                    {{ ucfirst($activeSub->billing_cycle) }}
-                                </div>
-                            </div>
-                        @endif
-                    </div>
-
-                    {{-- Action Buttons --}}
-                    <div class="flex flex-col sm:flex-row gap-3">
-                        @if(Auth::user()->role === 'free')
-                            <a href="/checkout?plan=subur&from=settings" class="flex-1 flex items-center justify-center gap-2 bg-primary text-on-primary font-bold py-3 rounded-xl hover:bg-primary/90 active:scale-[0.98] transition-all shadow-sm text-[14px]">
-                                <span class="material-symbols-outlined text-[18px]">rocket_launch</span>
-                                Upgrade ke Subur
-                            </a>
-                            <a href="/checkout?plan=pro&from=settings" class="flex-1 flex items-center justify-center gap-2 bg-slate-800 text-white font-bold py-3 rounded-xl hover:bg-slate-700 active:scale-[0.98] transition-all shadow-sm text-[14px]">
-                                <span class="material-symbols-outlined text-[18px]">workspace_premium</span>
-                                Upgrade ke Panen Raya
-                            </a>
-                        @elseif(Auth::user()->role === 'pro')
-                            <a href="/checkout?plan=pro&from=settings" class="flex-1 flex items-center justify-center gap-2 bg-slate-800 text-white font-bold py-3 rounded-xl hover:bg-slate-700 active:scale-[0.98] transition-all shadow-sm text-[14px]">
-                                <span class="material-symbols-outlined text-[18px]">workspace_premium</span>
-                                Upgrade ke Panen Raya
-                            </a>
-                            <button type="button" id="btn-cancel-sub" class="flex-1 flex items-center justify-center gap-2 border-2 border-error/30 text-error font-bold py-3 rounded-xl hover:bg-error/5 active:scale-[0.98] transition-all text-[14px]">
-                                <span class="material-symbols-outlined text-[18px]">cancel</span>
-                                Batalkan Langganan
-                            </button>
-                        @else
-                            <button type="button" id="btn-cancel-sub" class="flex-1 flex items-center justify-center gap-2 border-2 border-error/30 text-error font-bold py-3 rounded-xl hover:bg-error/5 active:scale-[0.98] transition-all text-[14px]">
-                                <span class="material-symbols-outlined text-[18px]">cancel</span>
-                                Batalkan Langganan
-                            </button>
-                        @endif
-                    </div>
-                </div>
 
                 {{-- Notifications Settings Box --}}
                 <div class="bg-surface rounded-[24px] p-[24px] ambient-shadow-lg border border-outline-variant/20 hover:shadow-xl transition-shadow duration-300">

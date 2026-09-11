@@ -52,7 +52,7 @@
         <nav class="hidden md:flex items-center gap-8" id="nav-links">
             <a href="#features" class="nav-link active text-sm font-semibold text-primary transition-colors duration-200">Fitur</a>
             <a href="/learn" class="nav-link text-sm font-medium text-on-surface-variant hover:text-primary transition-colors duration-200">How It Works</a>
-            <a href="#pricing" class="nav-link text-sm font-medium text-on-surface-variant hover:text-primary transition-colors duration-200">Harga</a>
+
         </nav>
 
         {{-- CTA Button --}}
@@ -70,7 +70,7 @@
     <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-outline-variant/30 px-5 py-4 space-y-2">
         <a href="#features" class="block text-sm font-semibold text-primary py-2 px-4 rounded-lg bg-primary/5">Fitur</a>
         <a href="/learn" class="block text-sm font-medium text-on-surface-variant py-2 px-4 rounded-lg hover:bg-surface-container-high transition-colors">How It Works</a>
-        <a href="#pricing" class="block text-sm font-medium text-on-surface-variant py-2 px-4 rounded-lg hover:bg-surface-container-high transition-colors">Harga</a>
+
         <a href="/login" class="block text-center bg-primary text-on-primary text-sm font-semibold px-6 py-2.5 rounded-full mt-2">Mulai Sekarang</a>
     </div>
 </header>
@@ -408,181 +408,6 @@
     </div>
 </section>
 
-{{-- ============================================
-     PRICING SECTION
-     ============================================ --}}
-<section id="pricing" class="bg-surface-container-lowest py-16 md:py-20 lg:py-24 border-t border-outline-variant/20">
-    <div class="max-w-[1280px] mx-auto px-5 lg:px-8">
-        {{-- Section Header --}}
-        <div class="text-center mb-12 md:mb-16 max-w-[672px] mx-auto scroll-trigger scroll-fade-up">
-            <h2 class="text-[28px] md:text-[36px] font-bold text-on-surface tracking-tight mb-4">
-                Pilih Paket Sesuai Kebutuhan Kebun Anda
-            </h2>
-            <p class="text-base text-on-surface-variant leading-relaxed">
-                Mulai dari hobi kecil hingga komunitas hidroponik besar.
-            </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            
-            {{-- Paket 1: Bibit --}}
-            <div class="bg-white rounded-3xl p-8 premium-shadow flex flex-col tactile-card scroll-trigger scroll-fade-up delay-100">
-                <h3 class="text-xl font-bold text-on-surface mb-2">Bibit <span class="text-xs font-semibold bg-surface-container-high px-2 py-1 rounded-full text-on-surface-variant ml-2">Gratis</span></h3>
-                <div class="flex items-baseline gap-1 mb-4">
-                    <span class="text-[32px] font-black text-on-surface">Rp 0</span>
-                </div>
-                <p class="text-sm text-on-surface-variant mb-8 min-h-[40px]">Tetap dipertahankan sebagai umpan (Lead Magnet).</p>
-                
-                <div class="space-y-4 flex-1 mb-8">
-                    <div class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">check_circle</span>
-                        <span class="text-sm text-on-surface">Maks. 1 Kebun & 10 Tanaman Aktif</span>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">check_circle</span>
-                        <span class="text-sm text-on-surface">Akses Tugas Perawatan</span>
-                    </div>
-                    
-                    {{-- Kekurangan Sengaja --}}
-                    <div class="mt-4 pt-4 border-t border-outline-variant/20 space-y-4 opacity-75">
-                        <div class="flex items-start gap-3 text-on-surface-variant">
-                            <span class="material-symbols-outlined text-[20px] mt-0.5">cancel</span>
-                            <span class="text-sm line-through">Otomatisasi Care Template</span>
-                        </div>
-                        <div class="flex items-start gap-3 text-on-surface-variant">
-                            <span class="material-symbols-outlined text-[20px] mt-0.5">warning</span>
-                            <span class="text-sm">Care reminder isi manual</span>
-                        </div>
-                        <div class="flex items-start gap-3 text-on-surface-variant">
-                            <span class="material-symbols-outlined text-[20px] mt-0.5">cancel</span>
-                            <span class="text-sm line-through">Penyesuaian Cuaca Lokal</span>
-                        </div>
-                    </div>
-                </div>
-
-                <a href="/login" class="w-full block text-center border-2 border-outline-variant text-on-surface font-bold py-3 rounded-xl hover:border-primary hover:text-primary hover:shadow-sm active:scale-[0.98] transition-all duration-300">Daftar Gratis</a>
-            </div>
-
-            {{-- Paket 2: Subur --}}
-            <div class="bg-gradient-to-b from-[#006c49] to-[#005236] rounded-3xl p-8 shadow-[0_24px_48px_rgba(0,108,73,0.3)] flex flex-col relative border border-[#008c5f] scroll-trigger scroll-fade-up delay-200 tactile-card-featured">
-                <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-yellow-400 text-yellow-900 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-wider shadow-md whitespace-nowrap flex items-center gap-1.5">
-                    <span class="material-symbols-outlined text-[14px]">star</span>
-                    Paling Populer - Best Value
-                </div>
-                
-                <h3 class="text-xl font-bold text-white mb-2">Subur</h3>
-                
-                <div class="bg-white/10 rounded-xl p-3 mb-4 backdrop-blur-sm">
-                    <div class="mb-2">
-                        <p class="text-[11px] text-white/80 font-medium uppercase tracking-wider mb-0.5">Paket Tahunan (Super Hemat)</p>
-                        <div class="flex items-baseline gap-2">
-                            <span class="text-[28px] font-black text-yellow-400">Rp 199.000</span>
-                            <span class="text-sm text-white/70 line-through">Rp 588.000</span>
-                        </div>
-                        <p class="text-xs text-white/90 font-medium bg-yellow-400/20 inline-block px-2 py-0.5 rounded text-yellow-300 mt-1">Setara Rp 16.500 / bln!</p>
-                    </div>
-                    <div class="h-px bg-white/20 w-full my-2"></div>
-                    <div>
-                        <p class="text-[10px] text-white/70 font-medium uppercase tracking-wider mb-0.5">Paket Bulanan</p>
-                        <div class="flex items-baseline gap-2">
-                            <span class="text-[16px] font-bold text-white">Rp 29.000</span>
-                            <span class="text-[11px] text-white/50 line-through">Rp 49k</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="space-y-4 flex-1 mb-8 mt-2">
-                    <div class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-yellow-400 text-[20px] mt-0.5">check_circle</span>
-                        <span class="text-sm text-white font-medium">Maks. 10 Kebun & 100 Tanaman Aktif</span>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-yellow-400 text-[20px] mt-0.5">calendar_month</span>
-                        <div class="flex flex-col">
-                            <span class="text-sm text-white font-bold">Growth Calendar</span>
-                            <span class="text-xs text-white/80 mt-0.5">Jadwal estimasi tanam hingga panen interaktif untuk seluruh tanaman.</span>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-yellow-400 text-[20px] mt-0.5">cloud_done</span>
-                        <div class="flex flex-col">
-                            <span class="text-sm text-white font-bold">Anti-Gagal Panen</span>
-                            <span class="text-xs text-white/80 mt-0.5">Weather Adjustment (-30% penyiraman hujan, +50% kemarau).</span>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-yellow-400 text-[20px] mt-0.5">emoji_events</span>
-                        <span class="text-sm text-white font-medium">Notifikasi Upcoming Harvest di Dashboard</span>
-                    </div>
-                </div>
-
-                <a href="/checkout?plan=subur&from=/" class="w-full block text-center bg-yellow-400 text-yellow-900 font-bold py-3 rounded-xl hover:bg-yellow-300 active:scale-[0.98] hover:shadow-lg transition-all duration-300 shadow-md mb-2 text-[15px]">Mulai 7-Day Free Trial</a>
-                <p class="text-center text-[11px] text-white/70">Cancel anytime. Bebas risiko.</p>
-            </div>
-
-            {{-- Paket 3: Panen Raya --}}
-            <div class="bg-white rounded-3xl p-8 premium-shadow flex flex-col tactile-card relative overflow-hidden scroll-trigger scroll-fade-up delay-300">
-                <div class="absolute -right-6 -top-6 bg-primary/10 w-24 h-24 rounded-full"></div>
-                <h3 class="text-xl font-bold text-on-surface mb-2 relative z-10">Panen Raya <span class="text-xs font-semibold bg-primary-container text-on-primary-container px-2 py-1 rounded-full ml-2">Premium</span></h3>
-                
-                <div class="bg-surface-container-low rounded-xl p-3 mb-4 mt-2">
-                    <div class="mb-2">
-                        <p class="text-[11px] text-on-surface-variant font-medium uppercase tracking-wider mb-0.5">Paket Tahunan</p>
-                        <div class="flex items-baseline gap-2">
-                            <span class="text-[28px] font-black text-on-surface">Rp 799.000</span>
-                        </div>
-                        <p class="text-xs font-bold text-primary mt-1 bg-primary/10 inline-block px-2 py-0.5 rounded">Hemat hampir 1 Juta Rupiah! (vs Rp 1.788k)</p>
-                    </div>
-                    <div class="h-px bg-outline-variant/30 w-full my-2"></div>
-                    <div>
-                        <p class="text-[10px] text-on-surface-variant font-medium uppercase tracking-wider mb-0.5">Paket Bulanan</p>
-                        <div class="flex items-baseline gap-2">
-                            <span class="text-[16px] font-bold text-on-surface">Rp 99.000</span>
-                            <span class="text-[11px] text-on-surface-variant/60 line-through">Rp 149.000</span>
-                        </div>
-                    </div>
-                </div>
-
-                <p class="text-sm text-on-surface-variant mb-6 relative z-10 font-medium">Skalabilitas maksimal untuk power user.</p>
-                
-                <div class="space-y-4 flex-1 mb-8 relative z-10">
-                    <div class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">all_inclusive</span>
-                        <span class="text-sm text-on-surface font-bold">Maks. 100 Kebun & Tanaman Aktif Tak Terbatas</span>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">calendar_month</span>
-                        <div class="flex flex-col">
-                            <span class="text-sm text-on-surface font-bold">Growth Calendar</span>
-                            <span class="text-xs text-on-surface-variant mt-0.5">Jadwal estimasi tanam hingga panen interaktif untuk seluruh tanaman.</span>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">cloud_done</span>
-                        <div class="flex flex-col">
-                            <span class="text-sm text-on-surface font-bold">Anti-Gagal Panen</span>
-                            <span class="text-xs text-on-surface-variant mt-0.5">Weather Adjustment (-30% penyiraman hujan, +50% kemarau).</span>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">emoji_events</span>
-                        <span class="text-sm text-on-surface font-medium">Notifikasi Upcoming Harvest di Dashboard</span>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">history</span>
-                        <div class="flex flex-col">
-                            <span class="text-sm text-on-surface font-bold">Activity Log Tanpa Batas</span>
-                            <span class="text-xs text-on-surface-variant mt-0.5">Tracking tak terbatas untuk menyiram, memupuk, memangkas, dll.</span>
-                        </div>
-                    </div>
-                </div>
-
-                <a href="/checkout?plan=pro&from=/" class="w-full block text-center bg-primary text-white font-bold py-3 rounded-xl hover:bg-primary-container active:scale-[0.98] hover:shadow-lg transition-all duration-300 shadow-md relative z-10">Upgrade ke Pro</a>
-            </div>
-
-        </div>
-    </div>
-</section>
 
 {{-- ============================================
      FOOTER

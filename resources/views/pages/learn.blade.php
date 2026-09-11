@@ -235,7 +235,6 @@
         <nav class="hidden md:flex items-center gap-8" id="nav-links">
             <a href="/#features" class="nav-link text-sm font-medium text-on-surface-variant hover:text-primary transition-colors duration-200">Fitur</a>
             <a href="/learn" class="nav-link active text-sm font-semibold text-primary transition-colors duration-200">How It Works</a>
-            <a href="/#pricing" class="nav-link text-sm font-medium text-on-surface-variant hover:text-primary transition-colors duration-200">Harga</a>
         </nav>
 
         <a href="/login" class="hidden md:inline-flex items-center gap-2 bg-primary text-on-primary text-sm font-semibold px-6 py-2.5 rounded-full hover:bg-primary/90 active:scale-[0.97] transition-all duration-200 shadow-sm" id="nav-cta">
@@ -250,7 +249,6 @@
     <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-outline-variant/30 px-5 py-4 space-y-2">
         <a href="/#features" class="block text-sm font-medium text-on-surface-variant py-2 px-4 rounded-lg hover:bg-surface-container-high transition-colors">Fitur</a>
         <a href="/learn" class="block text-sm font-semibold text-primary bg-primary/10 py-2 px-4 rounded-lg transition-colors">How It Works</a>
-        <a href="/#pricing" class="block text-sm font-medium text-on-surface-variant py-2 px-4 rounded-lg hover:bg-surface-container-high transition-colors">Harga</a>
         <a href="/login" class="block text-center bg-primary text-on-primary text-sm font-semibold px-6 py-2.5 rounded-full mt-2">Mulai Sekarang</a>
     </div>
 </header>

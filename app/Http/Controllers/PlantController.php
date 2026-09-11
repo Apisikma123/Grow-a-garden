@@ -90,19 +90,7 @@ class PlantController extends Controller
             $totalQuantity += (int) $item['quantity'];
         }
 
-        // Enforce plant limits based on user's plan
-        $plantCount = Plant::whereIn('garden_id', Garden::where('user_id', $user->id)->pluck('id'))->count();
-        $maxPlants = $user->maxPlants();
-        
-        if ($plantCount + $totalQuantity > $maxPlants) {
-            $remaining = max(0, $maxPlants - $plantCount);
-            return response()->json([
-                'error' => "Batas Paket {$user->planName()}: Maksimal {$maxPlants} Tanaman. Sisa kuota Anda: {$remaining} tanaman, namun Anda mencoba menanam {$totalQuantity} tanaman. Upgrade untuk menambah kapasitas.",
-                'limit_reached' => true,
-                'current_plan' => $user->planName(),
-                'remaining' => $remaining,
-            ], 403);
-        }
+
 
         $autopilot = new \App\Services\AutopilotService();
 

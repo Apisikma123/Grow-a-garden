@@ -126,11 +126,8 @@ class User extends Authenticatable
      */
     public function maxGardens(): int
     {
-        return match ($this->role) {
-            'pro' => 10,
-            'premium', 'admin' => 100,
-            default => 1,
-        };
+        // All users get unlimited gardens
+        return PHP_INT_MAX;
     }
 
     /**
@@ -139,11 +136,8 @@ class User extends Authenticatable
      */
     public function maxPlants(): int
     {
-        return match ($this->role) {
-            'pro' => 100,
-            'premium', 'admin' => PHP_INT_MAX,
-            default => 10,
-        };
+        // All users get unlimited plants
+        return PHP_INT_MAX;
     }
 
     /**
@@ -151,7 +145,8 @@ class User extends Authenticatable
      */
     public function canUseAutopilot(): bool
     {
-        return in_array($this->role, ['pro', 'premium', 'admin']);
+        // All users can use autopilot
+        return true;
     }
 
     /**
@@ -159,7 +154,8 @@ class User extends Authenticatable
      */
     public function canUseWeatherAdjustment(): bool
     {
-        return in_array($this->role, ['pro', 'premium', 'admin']);
+        // All users can use weather adjustment
+        return true;
     }
 
     /**
@@ -167,6 +163,7 @@ class User extends Authenticatable
      */
     public function hasUnlimitedActivityLog(): bool
     {
-        return in_array($this->role, ['premium', 'admin']);
+        // All users get unlimited activity log
+        return true;
     }
 }

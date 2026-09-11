@@ -6,33 +6,11 @@
 @section('dashboard-content')
 <div class="relative min-h-[80vh] pb-10">
 
-    {{-- 1-Page Scoped Blur Paywall Overlay for Free Users --}}
-    @if(isset($isLocked) && $isLocked)
-        {{-- Background blur scoped ONLY inside page content canvas (Does NOT blur sidebar/navbar) --}}
-        <div class="absolute -inset-5 md:-inset-8 z-20 bg-slate-900/60 backdrop-blur-md"></div>
 
-        {{-- Fixed Pop-up Card centered in user screen/viewport --}}
-        <div class="fixed inset-0 z-30 flex items-center justify-center p-4 pointer-events-none md:pl-64">
-            <div class="bg-gradient-to-br from-[#0f172a] to-[#1e293b] text-white rounded-[32px] p-6 sm:p-10 text-center shadow-2xl border border-yellow-500/30 max-w-lg w-full pointer-events-auto flex flex-col items-center my-auto">
-                <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center shadow-lg mx-auto mb-5 sm:mb-6 shadow-yellow-500/30 ring-8 ring-yellow-500/10 shrink-0">
-                    <span class="material-symbols-outlined text-[32px] sm:text-[40px] text-white">lock</span>
-                </div>
-                <div class="text-center w-full min-w-full max-w-md mx-auto self-stretch flex flex-col items-center" style="width: 100% !important; min-width: 100% !important; text-align: center !important;">
-                    <h2 class="text-[22px] sm:text-[26px] md:text-[28px] font-black text-white mb-3" style="width: 100% !important; text-align: center !important; display: block !important; white-space: normal !important; word-break: normal !important;">Growth Calendar Terkunci</h2>
-                    <p class="text-[13px] sm:text-[14px] md:text-[15px] text-slate-300 leading-relaxed mb-6 sm:mb-8" style="width: 100% !important; text-align: center !important; display: block !important; white-space: normal !important; word-break: normal !important;">
-                        Fitur Growth Calendar khusus untuk pengguna Paket Subur (Pro) dan Panen Raya (Premium). Upgrade akun Anda sekarang untuk membuka grafik & estimasi fase pertumbuhan tanaman secara detail.
-                    </p>
-                </div>
-                <button type="button" onclick="document.getElementById('pricing-modal').classList.remove('hidden')" class="w-full bg-yellow-400 text-yellow-900 font-bold text-[15px] sm:text-[16px] py-3.5 sm:py-4 rounded-xl hover:bg-yellow-300 active:scale-95 transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer">
-                    <span class="material-symbols-outlined text-[20px] sm:text-[22px]">star</span>
-                    Upgrade Sekarang
-                </button>
-            </div>
-        </div>
-    @endif
 
     {{-- Main Page Content (Blurred if Free user) --}}
-    <div class="flex flex-col gap-[24px] {{ (isset($isLocked) && $isLocked) ? 'filter blur-md opacity-50 pointer-events-none select-none' : '' }}">
+    <div class="flex flex-col gap-[24px]">
+
         {{-- Header Section --}}
         <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-2">
             <div>

@@ -19,9 +19,6 @@
         <div>
             <div class="flex items-center gap-3 flex-wrap">
                 <h1 class="text-[28px] md:text-[36px] font-bold text-on-surface tracking-tight leading-tight">Kebun Saya</h1>
-                <span class="text-[12px] font-extrabold px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
-                    Paket {{ $planName }} (Maks. {{ $maxGardens }} Kebun)
-                </span>
             </div>
             <p class="text-[14px] text-on-surface-variant mt-1">Kelola kebun dan tanaman Anda di satu tempat.</p>
         </div>

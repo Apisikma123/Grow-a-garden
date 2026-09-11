@@ -41,17 +41,6 @@ class GardenController extends Controller
 
         $user = Auth::user();
 
-        // Enforce garden limits based on user's plan
-        $gardenCount = Garden::where('user_id', $user->id)->count();
-        $maxGardens = $user->maxGardens();
-        if ($gardenCount >= $maxGardens) {
-            return response()->json([
-                'error' => "Batas Paket {$user->planName()}: Maksimal {$maxGardens} Kebun. Upgrade untuk menambah kapasitas.",
-                'limit_reached' => true,
-                'current_plan' => $user->planName(),
-            ], 403);
-        }
-
         $garden = Garden::create([
             'user_id' => $user->id,
             'name' => $request->name,

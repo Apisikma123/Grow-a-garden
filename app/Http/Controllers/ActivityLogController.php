@@ -32,19 +32,10 @@ class ActivityLogController extends Controller
                                 ->whereIn('status', ['COMPLETED', 'SKIPPED'])
                                 ->count();
 
-        if ($role === 'free') {
-            // Free users only see the last 3 activities
-            $activities = $query->take(3)->get();
-            $hiddenCount = max(0, $totalActivities - 3);
-        } elseif ($role === 'pro') {
-            // Pro users see the last 10 activities
-            $activities = $query->take(10)->get();
-            $hiddenCount = max(0, $totalActivities - 10);
-        } else {
-            // Premium/Admin see unlimited paginated activity log
-            $activities = $query->paginate(20);
-            $hiddenCount = 0;
-        }
+        // All users get unlimited paginated activity log
+        $activities = $query->paginate(20);
+        $hiddenCount = 0;
+
 
         return view('users.activity-log', [
             'activities' => $activities,
