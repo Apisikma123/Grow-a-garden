@@ -101,7 +101,9 @@
                 <div class="relative group shrink-0">
                     <button type="button" class="p-1.5 text-on-surface-variant hover:text-[#006c49] transition-colors flex items-center justify-center rounded-full hover:bg-black/5 relative" title="Menu" aria-label="Menu">
                         <span class="material-symbols-outlined text-[18px] font-bold">more_vert</span>
-                        <span class="absolute top-1 right-1 w-1.5 h-1.5 bg-error rounded-full ring-2 ring-surface"></span>
+                        @if(Auth::user()->unreadNotifications->count() > 0)
+                            <span id="profile-menu-notif-badge" class="absolute top-1 right-1 w-1.5 h-1.5 bg-error rounded-full ring-2 ring-surface"></span>
+                        @endif
                     </button>
                     
                     <!-- Dropdown -->
@@ -284,6 +286,13 @@
                     if (dBadge) {
                         dBadge.innerText = parseInt(dBadge.innerText) + 1;
                         dBadge.style.display = 'flex';
+                    }
+
+                    const pBadge = document.getElementById('profile-menu-notif-badge');
+                    if (pBadge) pBadge.style.display = 'block';
+                    else {
+                        const pBtn = document.querySelector('.relative.group.shrink-0 button');
+                        if (pBtn) pBtn.innerHTML += '<span id="profile-menu-notif-badge" class="absolute top-1 right-1 w-1.5 h-1.5 bg-error rounded-full ring-2 ring-surface"></span>';
                     }
 
                     // Prepend to list
