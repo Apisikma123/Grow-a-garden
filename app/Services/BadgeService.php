@@ -66,9 +66,6 @@ class BadgeService
 
         $gardensCount = $userGardenIds->count();
         $plantsCount = $userPlantIds->count();
-        $role = strtolower($user->role ?? '');
-        $isPro = in_array($role, ['pro', 'premium', 'admin']) ? 1 : 0;
-        $isPremium = in_array($role, ['premium', 'admin']) ? 1 : 0;
 
         return [
             'total_tasks' => $totalCompletedCount,
@@ -80,8 +77,6 @@ class BadgeService
             'harvest'     => $harvestCount,
             'gardens'     => $gardensCount,
             'plants'      => $plantsCount,
-            'pro'         => $isPro,
-            'premium'     => $isPremium,
         ];
     }
 

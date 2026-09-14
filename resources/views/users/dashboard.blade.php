@@ -24,20 +24,11 @@
                 @endphp
                 <div class="flex items-center gap-3 flex-wrap mb-1">
                     <h1 class="text-[26px] sm:text-[32px] md:text-[40px] font-bold text-on-surface tracking-tight leading-tight break-words">{{ $greeting }}, {{ $userName }}!</h1>
-                    @if(auth()->check())
-                        <a href="/settings#subscription" class="text-[12px] font-extrabold px-3.5 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-all flex items-center gap-1.5 shrink-0 cursor-pointer" title="Kelola Paket Langganan">
-                            <span class="material-symbols-outlined text-[14px]">
-                                {{ auth()->user()->role === 'premium' ? 'workspace_premium' : (auth()->user()->role === 'pro' ? 'star' : 'eco') }}
-                            </span>
-                            Paket {{ auth()->user()->planName() }}
-                        </a>
-                    @endif
                 </div>
                 <p class="text-[14px] sm:text-[16px] text-on-surface-variant leading-relaxed">Kebun Anda tumbuh dengan baik. Mari lihat apa yang perlu dirawat hari ini.</p>
             </div>
             
             {{-- Weather Widget (Dynamic - Premium Card Style) --}}
-            @if(in_array(Auth::user()->role ?? 'free', ['pro', 'premium', 'admin']))
             <div id="weather-widget" class="bg-white rounded-3xl p-5 sm:p-6 md:p-8 ambient-shadow max-w-[480px] w-full transition-all duration-500 shrink-0 border border-outline-variant/20">
                 
                 {{-- Default: Ask Location State --}}
@@ -94,7 +85,6 @@
                     </div>
                 </div>
             </div>
-            @endif
         </div>
 
         @if(isset($activeAlerts) && $activeAlerts->count() > 0)

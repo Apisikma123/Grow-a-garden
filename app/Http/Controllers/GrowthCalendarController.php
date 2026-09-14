@@ -28,6 +28,7 @@ class GrowthCalendarController extends Controller
 
         if ($plants->isEmpty()) {
             return view('users.growth-calendar', [
+                'plants' => collect(),
                 'mainPlant' => null,
                 'otherPlants' => collect(),
                 'timeline' => [],
@@ -134,6 +135,7 @@ class GrowthCalendarController extends Controller
         ];
 
         return view('users.growth-calendar', [
+            'plants' => $plants,
             'mainPlant' => $mainPlant,
             'otherPlants' => $otherPlants,
             'timeline' => $timeline,
@@ -142,6 +144,136 @@ class GrowthCalendarController extends Controller
             'agronomic' => $agronomic,
             'stageWeatherAdvice' => $stageWeatherAdvice,
             'isLocked' => $isLocked,
+        ]);
+    }
+
+    public function calendarEvents(Request $request, \App\Services\AutopilotService $autopilot)
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['success' => false, 'events' => []], 401);
+        }
+
+        $autopilot->generateForUser($user);
+
+        $gardens = $user->gardens()->with(['plants' => function($query) {
+            $query->whereNotIn('status', ['FINISHED', 'DEAD']);
+        }, 'plants.plantTemplate'])->get();
+        $plants = $gardens->pluck('plants')->flatten();
+        $plantIds = $plants->pluck('id');
+
+        $requestedPlantId = $request->query('plant_id');
+        if ($requestedPlantId && $requestedPlantId !== 'all' && $plantIds->contains((int)$requestedPlantId)) {
+            $targetPlantIds = [(int)$requestedPlantId];
+        } else {
+            $targetPlantIds = $plantIds->toArray();
+        }
+
+        $month = (int) $request->query('month', Carbon::now()->month);
+        $year = (int) $request->query('year', Carbon::now()->year);
+
+        if ($month < 1 || $month > 12) $month = Carbon::now()->month;
+        if ($year < 2020 || $year > 2050) $year = Carbon::now()->year;
+
+        $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth()->toDateString();
+        $endDate = Carbon::createFromDate($year, $month, 1)->endOfMonth()->toDateString();
+
+        $events = \App\Models\Event::with(['eventType', 'plant.plantTemplate', 'plant.garden'])
+            ->whereIn('plant_id', $targetPlantIds)
+            ->whereBetween('scheduled_date', [$startDate, $endDate])
+            ->orderBy('scheduled_date', 'asc')
+            ->orderBy('priority', 'asc')
+            ->get();
+
+        $formatted = $events->map(function ($event) {
+            $code = strtolower($event->eventType->code ?? '');
+            $icon = 'eco';
+            if (str_contains($code, 'water')) {
+                $icon = 'water_drop';
+            } elseif (str_contains($code, 'fertiliz')) {
+                $icon = 'science';
+            } elseif (str_contains($code, 'pest')) {
+                $icon = 'pest_control';
+            } elseif (str_contains($code, 'drainage')) {
+                $icon = 'water_damage';
+            } elseif (str_contains($code, 'fungus')) {
+                $icon = 'coronavirus';
+            } elseif (str_contains($code, 'protect') || str_contains($code, 'staking')) {
+                $icon = 'shield';
+            } elseif (str_contains($code, 'harvest')) {
+                $icon = 'shopping_basket';
+            }
+
+            return [
+                'id' => $event->id,
+                'plant_id' => $event->plant_id,
+                'plant_name' => $event->plant->plantTemplate->name_id ?? 'Tanaman',
+                'garden_name' => $event->plant->garden->name ?? '-',
+                'title' => $event->eventType->label ?? $event->message ?? 'Perawatan',
+                'code' => $event->eventType->code ?? '',
+                'category' => $event->eventType->category ?? 'CARE',
+                'icon' => $icon,
+                'scheduled_date' => $event->scheduled_date ? $event->scheduled_date->format('Y-m-d') : null,
+                'scheduled_date_formatted' => $event->scheduled_date ? $event->scheduled_date->isoFormat('D MMMM YYYY') : '-',
+                'status' => $event->status,
+                'priority' => $event->priority,
+                'message' => $event->message,
+                'can_reschedule' => in_array($event->status, ['PENDING', 'MISSED']),
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'month' => $month,
+            'year' => $year,
+            'events' => $formatted,
+        ]);
+    }
+
+    public function rescheduleEvent(Request $request, \App\Models\Event $event)
+    {
+        $event->loadMissing('plant.garden');
+
+        if (!$event->plant || !$event->plant->garden || $event->plant->garden->user_id !== Auth::id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda tidak memiliki akses untuk mengubah jadwal ini.'
+            ], 403);
+        }
+
+        if ($event->status === 'COMPLETED') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Jadwal yang sudah selesai tidak dapat dipindahkan.'
+            ], 422);
+        }
+
+        $validated = $request->validate([
+            'new_date' => ['required', 'date', 'after_or_equal:today'],
+        ], [
+            'new_date.required' => 'Tanggal baru wajib dipilih.',
+            'new_date.date' => 'Format tanggal tidak valid.',
+            'new_date.after_or_equal' => 'Jadwal tidak boleh dipindahkan ke tanggal sebelum hari ini.',
+        ]);
+
+        $newDate = Carbon::parse($validated['new_date']);
+        $event->scheduled_date = $newDate->toDateString();
+
+        if ($event->status === 'MISSED' && ($newDate->isToday() || $newDate->isAfter(Carbon::today()))) {
+            $event->status = 'PENDING';
+        }
+
+        $event->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Jadwal berhasil dipindahkan ke ' . $newDate->isoFormat('D MMMM YYYY') . '.',
+            'event' => [
+                'id' => $event->id,
+                'scheduled_date' => $event->scheduled_date->format('Y-m-d'),
+                'scheduled_date_formatted' => $event->scheduled_date->isoFormat('D MMMM YYYY'),
+                'status' => $event->status,
+            ]
         ]);
     }
 
@@ -238,6 +370,6 @@ class GrowthCalendarController extends Controller
             ];
         }
 
-        return $timeline;ne;
+        return $timeline;
     }
 }

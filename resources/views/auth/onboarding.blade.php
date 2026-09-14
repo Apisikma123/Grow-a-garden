@@ -54,13 +54,13 @@
             </div>
             <div class="flex items-center gap-2 shrink-0">
                 <span class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20 whitespace-nowrap" id="step-badge">
-                    Langkah 1 dari 5
+                    Langkah 1 dari 4
                 </span>
             </div>
         </div>
 
         {{-- Interactive Stepper Indicator Pills --}}
-        <div class="grid grid-cols-5 gap-1.5 sm:gap-2 mb-6 sm:mb-8 w-full" id="stepper-pills">
+        <div class="grid grid-cols-4 gap-1.5 sm:gap-2 mb-6 sm:mb-8 w-full" id="stepper-pills">
             <button type="button" onclick="goToStep(1)" class="step-indicator-pill flex flex-col items-center gap-1 group text-left cursor-pointer" id="pill-1">
                 <div class="w-full h-2 rounded-full bg-primary transition-all duration-300 pill-bar"></div>
                 <span class="text-[10px] sm:text-[11px] font-bold text-primary truncate hidden sm:inline">1. Identitas</span>
@@ -76,10 +76,6 @@
             <button type="button" onclick="goToStep(4)" class="step-indicator-pill flex flex-col items-center gap-1 group text-left cursor-pointer" id="pill-4">
                 <div class="w-full h-2 rounded-full bg-surface-container-high transition-all duration-300 pill-bar"></div>
                 <span class="text-[10px] sm:text-[11px] font-semibold text-on-surface-variant truncate hidden sm:inline">4. Kendala</span>
-            </button>
-            <button type="button" onclick="calculateAndShowRecommendation()" class="step-indicator-pill flex flex-col items-center gap-1 group text-left cursor-pointer" id="pill-5">
-                <div class="w-full h-2 rounded-full bg-surface-container-high transition-all duration-300 pill-bar"></div>
-                <span class="text-[10px] sm:text-[11px] font-semibold text-on-surface-variant truncate hidden sm:inline">5. Solusi</span>
             </button>
         </div>
 
@@ -316,7 +312,6 @@
                             <div class="min-w-0">
                                 <div class="flex items-center gap-2 flex-wrap mb-1">
                                     <h4 class="font-bold text-sm sm:text-base text-on-surface leading-tight">1 – 10 Tanaman Aktif</h4>
-                                    <span class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant whitespace-nowrap">Paket Bibit (Gratis)</span>
                                 </div>
                                 <p class="text-xs text-on-surface-variant leading-relaxed">
                                     Cocok untuk kebun mini di teras atau balkon dengan kebutuhan pencatatan dasar.
@@ -335,10 +330,9 @@
                             <div class="min-w-0">
                                 <div class="flex items-center gap-2 flex-wrap mb-1">
                                     <h4 class="font-bold text-sm sm:text-base text-on-surface leading-tight">10 – 50 Tanaman (Multikebun)</h4>
-                                    <span class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 whitespace-nowrap">Rekomendasi Paket Subur (Pro)</span>
                                 </div>
                                 <p class="text-xs text-on-surface-variant leading-relaxed">
-                                    Kapasitas hingga 10 kebun dan 100 tanaman dengan penyesuaian cuaca otomatis.
+                                    Kapasitas untuk mencatat beberapa varietas tanaman dengan jadwal teratur.
                                 </p>
                             </div>
                         </div>
@@ -348,16 +342,15 @@
                     {{-- Option 3: > 50 Plants --}}
                     <div class="option-card border border-outline-variant/60 rounded-2xl p-4 sm:p-5 bg-surface-container-lowest flex items-start justify-between gap-3.5 w-full" onclick="selectScale('50+', this)">
                         <div class="flex items-start gap-3 sm:gap-3.5 min-w-0">
-                            <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-amber-100 text-amber-900 flex items-center justify-center shrink-0 mt-0.5">
-                                <span class="material-symbols-outlined text-[22px] sm:text-[24px]">workspace_premium</span>
+                            <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
+                                <span class="material-symbols-outlined text-[22px] sm:text-[24px]">agriculture</span>
                             </div>
                             <div class="min-w-0">
                                 <div class="flex items-center gap-2 flex-wrap mb-1">
-                                    <h4 class="font-bold text-sm sm:text-base text-on-surface leading-tight">Lebih dari 50 Tanaman / Skala Komersial</h4>
-                                    <span class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 whitespace-nowrap">Paket Panen Raya (Premium)</span>
+                                    <h4 class="font-bold text-sm sm:text-base text-on-surface leading-tight">Lebih dari 50 Tanaman / Skala Besar</h4>
                                 </div>
                                 <p class="text-xs text-on-surface-variant leading-relaxed">
-                                    Kapasitas hingga 100 kebun dan tanaman tanpa batas untuk perkebunan produktif.
+                                    Pengelolaan kebun skala besar dengan banyak varietas dan pencatatan panen aktif.
                                 </p>
                             </div>
                         </div>
@@ -475,114 +468,15 @@
                         <span class="material-symbols-outlined text-[18px]">arrow_back</span> Kembali
                     </button>
                     <div class="flex items-center gap-2">
-                        <button type="button" onclick="calculateAndShowRecommendation()" class="text-xs sm:text-sm font-semibold text-on-surface-variant hover:text-on-surface px-3 sm:px-4 py-2.5 rounded-full transition-colors cursor-pointer">
+                        <button type="button" onclick="submitOnboarding()" class="text-xs sm:text-sm font-semibold text-on-surface-variant hover:text-on-surface px-3 sm:px-4 py-2.5 rounded-full transition-colors cursor-pointer">
                             Lewati
                         </button>
-                        <button type="button" onclick="calculateAndShowRecommendation()" class="bg-primary text-on-primary font-bold text-xs sm:text-sm px-6 sm:px-8 py-3.5 rounded-full hover:bg-primary/90 active:scale-98 transition-all shadow-sm flex items-center gap-2 cursor-pointer">
-                            Lihat Rekomendasi
-                            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+                        <button type="button" onclick="submitOnboarding()" class="bg-primary text-on-primary font-bold text-xs sm:text-sm px-6 sm:px-8 py-3.5 rounded-full hover:bg-primary/90 active:scale-98 transition-all shadow-sm flex items-center gap-2 cursor-pointer">
+                            Selesai & Mulai Berkebun
+                            <span class="material-symbols-outlined text-[18px]">check_circle</span>
                         </button>
                     </div>
                 </div>
-            </div>
-
-            {{-- ══════════════════════════════════════════════════
-                 STEP 5: HASIL ANALISIS & REKOMENDASI PAKET
-            ══════════════════════════════════════════════════ --}}
-            <div id="step-5" class="step-pane hidden flex-col gap-5 sm:gap-6 w-full">
-                
-                {{-- Analyzing Loader State --}}
-                <div id="rec-loading" class="flex flex-col items-center justify-center py-12 w-full">
-                    <x-brand-loader size="md" text="Menyiapkan rekomendasi sistem kebun Anda..." />
-                </div>
-
-                {{-- Recommended Content State --}}
-                <div id="rec-content" class="hidden flex-col gap-5 sm:gap-6 w-full">
-                    <div class="w-full">
-                        <span class="inline-flex items-center gap-1.5 text-xs font-bold text-primary mb-1.5 sm:mb-2">
-                            <span class="material-symbols-outlined text-[16px]">verified</span> Rekomendasi Paket
-                        </span>
-                        <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-on-surface tracking-tight mb-1.5 leading-tight" id="rec-headline">
-                            Paket Subur (Pro) Direkomendasikan
-                        </h2>
-                        <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed" id="rec-subtext">
-                            Berdasarkan skala kebun dan fokus perawatan Anda, fitur jadwal otomatis dan penyesuaian cuaca akan membantu menjaga konsistensi hasil kebun.
-                        </p>
-                    </div>
-
-                    {{-- Dynamic Recommendation Card --}}
-                    <div id="rec-gradient-box" class="rounded-2xl sm:rounded-3xl p-5 sm:p-7 bg-gradient-to-br from-[#004d34] to-[#006c49] text-white shadow-xl relative overflow-hidden flex flex-col gap-5 border border-white/20 w-full">
-                        {{-- Background Pattern --}}
-                        <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-emerald-400/20 rounded-full blur-2xl"></div>
-                        <div class="absolute -left-10 -top-10 w-48 h-48 bg-emerald-300/15 rounded-full blur-2xl"></div>
-
-                        <div class="relative z-10 flex flex-col gap-4 w-full">
-                            <div class="flex items-center justify-between gap-2 flex-wrap">
-                                <span id="rec-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-yellow-400 text-yellow-950 font-black text-[11px] sm:text-xs uppercase tracking-wider shadow-xs whitespace-nowrap">
-                                    <span class="material-symbols-outlined text-[15px]">star</span>
-                                    Rekomendasi Paket
-                                </span>
-                                <div class="text-right flex items-baseline gap-2">
-                                    <span class="text-xs text-white/80 line-through" id="rec-old-price">Rp 29.000/bln</span>
-                                    <span class="text-base sm:text-xl font-black text-yellow-300 whitespace-nowrap" id="rec-price">Rp 199.000 / thn</span>
-                                </div>
-                            </div>
-
-                            <h3 class="text-lg sm:text-2xl font-black leading-tight" id="rec-plan-title">Paket Subur (Pro)</h3>
-
-                            {{-- Benefits Matrix --}}
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 pt-1 sm:pt-2 w-full">
-                                <div class="flex items-start gap-2.5 bg-white/10 backdrop-blur-xs rounded-xl p-3 border border-white/15 min-w-0">
-                                    <span class="material-symbols-outlined text-yellow-300 text-[20px] shrink-0 mt-0.5">checklist</span>
-                                    <div class="min-w-0">
-                                        <h5 class="text-xs font-bold text-white leading-tight">Jadwal Perawatan Otomatis</h5>
-                                        <p class="text-[11px] text-white/80 leading-relaxed mt-0.5">Jadwal siram dan pemupukan dibuat teratur tanpa input manual.</p>
-                                    </div>
-                                </div>
-
-                                <div class="flex items-start gap-2.5 bg-white/10 backdrop-blur-xs rounded-xl p-3 border border-white/15 min-w-0">
-                                    <span class="material-symbols-outlined text-yellow-300 text-[20px] shrink-0 mt-0.5">cloud_done</span>
-                                    <div class="min-w-0">
-                                        <h5 class="text-xs font-bold text-white leading-tight">Penyesuaian Cuaca Otomatis</h5>
-                                        <p class="text-[11px] text-white/80 leading-relaxed mt-0.5">Frekuensi penyiraman otomatis disesuaikan saat curah hujan berubah.</p>
-                                    </div>
-                                </div>
-
-                                <div class="flex items-start gap-2.5 bg-white/10 backdrop-blur-xs rounded-xl p-3 border border-white/15 min-w-0">
-                                    <span class="material-symbols-outlined text-yellow-300 text-[20px] shrink-0 mt-0.5">all_inclusive</span>
-                                    <div class="min-w-0">
-                                        <h5 class="text-xs font-bold text-white leading-tight" id="rec-cap-title">Kapasitas 10 Kebun & 100 Tanaman</h5>
-                                        <p class="text-[11px] text-white/80 leading-relaxed mt-0.5">Kapasitas luas untuk mencatat tanaman aktif di berbagai lokasi.</p>
-                                    </div>
-                                </div>
-
-                                <div class="flex items-start gap-2.5 bg-white/10 backdrop-blur-xs rounded-xl p-3 border border-white/15 min-w-0">
-                                    <span class="material-symbols-outlined text-yellow-300 text-[20px] shrink-0 mt-0.5">calendar_month</span>
-                                    <div class="min-w-0">
-                                        <h5 class="text-xs font-bold text-white leading-tight">Kalender Pertumbuhan Tanaman</h5>
-                                        <p class="text-[11px] text-white/80 leading-relaxed mt-0.5">Memantau hari setelah tanam dan estimasi panen setiap varietas.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- Choice CTAs --}}
-                    <div class="flex flex-col gap-2.5 sm:gap-3 pt-1 w-full">
-                        {{-- Paid Upgrade Button --}}
-                        <button type="button" id="btn-activate-pro" onclick="submitOnboarding(recommendedPlan, 'yearly')" class="w-full bg-[#006c49] text-white font-extrabold text-sm sm:text-base py-3.5 sm:py-4 rounded-2xl hover:bg-[#005236] active:scale-98 transition-all shadow-[0_8px_24px_rgba(0,108,73,0.3)] flex items-center justify-center gap-2 cursor-pointer">
-                            <span class="material-symbols-outlined text-[20px] sm:text-[22px]">rocket_launch</span>
-                            <span id="btn-pro-text">Aktifkan Paket Subur (Pro) — Rp 199.000 / thn</span>
-                        </button>
-
-                        {{-- Alternative Free Button --}}
-                        <button type="button" id="btn-activate-free" onclick="submitOnboarding('free', 'monthly')" class="w-full bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-bold text-xs sm:text-sm py-3 sm:py-3.5 rounded-2xl transition-colors flex items-center justify-center gap-2 cursor-pointer border border-outline-variant/30">
-                            <span class="material-symbols-outlined text-[18px] text-primary">eco</span>
-                            <span>Lanjut dengan Paket Bibit (Gratis)</span>
-                        </button>
-                    </div>
-                </div>
-
             </div>
 
         </form>
@@ -596,7 +490,6 @@
     let selectedExperience = 'beginner';
     let selectedScale = '10-50';
     let selectedGoal = 'automation';
-    let recommendedPlan = 'subur';
 
     // ── Garden Name Suggester ──
     function setGardenName(name) {
@@ -774,10 +667,10 @@
         }
 
         currentStep = step;
-        document.getElementById('step-badge').textContent = `Langkah ${step} dari 5`;
+        document.getElementById('step-badge').textContent = `Langkah ${step} dari 4`;
 
         // Update Stepper Navigation Pills
-        for (let i = 1; i <= 5; i++) {
+        for (let i = 1; i <= 4; i++) {
             const pill = document.getElementById(`pill-${i}`);
             if (!pill) continue;
             const bar = pill.querySelector('.pill-bar');
@@ -803,59 +696,8 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // ── Dynamic Recommendation Pitch Calculator ──
-    function calculateAndShowRecommendation() {
-        goToStep(5);
-
-        const loading = document.getElementById('rec-loading');
-        const content = document.getElementById('rec-content');
-        loading.classList.remove('hidden');
-        loading.classList.add('flex');
-        content.classList.add('hidden');
-        content.classList.remove('flex');
-
-        if (selectedScale === '50+') {
-            recommendedPlan = 'pro'; // Panen raya premium
-        } else {
-            recommendedPlan = 'subur'; // Subur pro
-        }
-
-        setTimeout(() => {
-            loading.classList.add('hidden');
-            loading.classList.remove('flex');
-            content.classList.remove('hidden');
-            content.classList.add('flex');
-
-            const headline = document.getElementById('rec-headline');
-            const subtext = document.getElementById('rec-subtext');
-            const planTitle = document.getElementById('rec-plan-title');
-            const price = document.getElementById('rec-price');
-            const btnProText = document.getElementById('btn-pro-text');
-            const capTitle = document.getElementById('rec-cap-title');
-            const gradBox = document.getElementById('rec-gradient-box');
-
-            if (recommendedPlan === 'pro') {
-                headline.textContent = 'Paket Panen Raya (Premium) Direkomendasikan';
-                subtext.textContent = 'Untuk kebutuhan pengelolaan lebih dari 50 tanaman, Paket Panen Raya menyediakan kapasitas hingga 100 kebun dan tanaman tanpa batas.';
-                planTitle.textContent = 'Paket Panen Raya (Premium)';
-                price.textContent = 'Rp 799.000 / thn';
-                btnProText.textContent = 'Aktifkan Paket Panen Raya — Rp 799.000 / thn';
-                capTitle.textContent = 'Kapasitas 100 Kebun & Tanaman Tanpa Batas';
-                if (gradBox) gradBox.className = 'rounded-2xl sm:rounded-3xl p-5 sm:p-7 bg-gradient-to-br from-[#0f172a] to-[#1e293b] text-white shadow-xl relative overflow-hidden flex flex-col gap-5 border border-white/20 w-full';
-            } else {
-                headline.textContent = 'Paket Subur (Pro) Direkomendasikan';
-                subtext.textContent = 'Berdasarkan skala kebun dan fokus perawatan Anda, jadwal otomatis dan penyesuaian cuaca akan membantu menjaga konsistensi hasil kebun.';
-                planTitle.textContent = 'Paket Subur (Pro)';
-                price.textContent = 'Rp 199.000 / thn';
-                btnProText.textContent = 'Aktifkan Paket Subur (Pro) — Rp 199.000 / thn';
-                capTitle.textContent = 'Kapasitas 10 Kebun & 100 Tanaman Aktif';
-                if (gradBox) gradBox.className = 'rounded-2xl sm:rounded-3xl p-5 sm:p-7 bg-gradient-to-br from-[#004d34] to-[#006c49] text-white shadow-xl relative overflow-hidden flex flex-col gap-5 border border-white/20 w-full';
-            }
-        }, 800);
-    }
-
     // ── Submission Handler ──
-    async function submitOnboarding(planChoice, billingCycle = 'yearly') {
+    async function submitOnboarding() {
         const userName = document.getElementById('user_name').value.trim();
         const gardenName = document.getElementById('garden_name').value.trim() || 'Kebun Saya';
         const location = document.getElementById('garden_location').value.trim() || 'Jakarta Selatan, DKI Jakarta';
@@ -878,11 +720,9 @@
             gardening_experience: selectedExperience,
             gardening_scale: selectedScale,
             gardening_goal: selectedGoal,
-            selected_plan: planChoice,
-            billing_cycle: billingCycle,
         };
 
-        if (window.LoadingOverlay) LoadingOverlay.show('Menyimpan data kebun Anda...');
+        if (window.LoadingOverlay) LoadingOverlay.show('Menyiapkan kebun Anda...');
 
         try {
             const resp = await fetch('/onboarding', {
@@ -910,12 +750,7 @@
             };
             localStorage.setItem('garden_location', JSON.stringify(syncLoc));
 
-            if (planChoice !== 'free' && window.Alert && Alert.premium) {
-                const planName = planChoice === 'pro' ? 'Panen Raya (Premium)' : 'Subur (Pro)';
-                Alert.premium.celebrate(planName, 'Paket langganan Anda telah aktif bersamaan dengan kebun pertama Anda!', data.redirect_url || '/dashboard');
-            } else {
-                window.location.href = data.redirect_url || '/dashboard';
-            }
+            window.location.href = data.redirect_url || '/dashboard';
 
         } catch (err) {
             if (window.LoadingOverlay) LoadingOverlay.hide();

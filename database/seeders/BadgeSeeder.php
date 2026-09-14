@@ -147,10 +147,6 @@ class BadgeSeeder extends Seeder
             ['name' => 'Tanaman 500', 'description' => 'Menambahkan 500 tanaman.', 'icon_url' => 'landscape'],
             ['name' => 'Tanaman 1.000', 'description' => 'Menambahkan 1.000 tanaman.', 'icon_url' => 'account_tree'],
 
-            // ==========================================
-            // APP FEATURES & SUBSCRIPTION (1)
-            // ==========================================
-            ['name' => 'Sang Pro', 'description' => 'Berlangganan paket Grow a Garden Pro.', 'icon_url' => 'star'],
         ];
 
         foreach ($badges as $badge) {
@@ -165,11 +161,7 @@ class BadgeSeeder extends Seeder
             $desc = strtolower($badge['description'] ?? '');
             $metricType = 'total_tasks';
 
-            if (str_contains($name, 'sang pro') || str_contains($desc, 'subur (pro)') || str_contains($desc, 'grow a garden pro')) {
-                $metricType = 'pro';
-            } elseif (str_contains($name, 'panen raya premium') || str_contains($name, 'pekebun panen raya') || str_contains($desc, 'panen raya (premium)')) {
-                $metricType = 'premium';
-            } elseif (str_contains($name, 'siram') || str_contains($name, 'water') || str_contains($name, 'setetes') || str_contains($desc, 'penyiraman')) {
+            if (str_contains($name, 'siram') || str_contains($name, 'water') || str_contains($name, 'setetes') || str_contains($desc, 'penyiraman')) {
                 $metricType = 'watering';
             } elseif (str_contains($name, 'pupuk') || str_contains($name, 'pemupukan') || str_contains($desc, 'pemupukan')) {
                 $metricType = 'fertilizing';

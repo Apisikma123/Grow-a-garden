@@ -13,8 +13,6 @@ class CareTaskController extends Controller
     {
         $user = Auth::user();
 
-        $isLocked = $user && !in_array($user->role, ['pro', 'premium', 'admin']);
-        
         $events = collect();
         $weatherAdvice = null;
 
@@ -89,8 +87,7 @@ class CareTaskController extends Controller
 
             $events = $filteredEvents;
 
-            if (!$isLocked) {
-                // Get location for weather
+            // Get location for weather
                 $firstGarden = $gardens->first();
                 $lat = $firstGarden->latitude ?? 3.58;
                 $lng = $firstGarden->longitude ?? 98.67;
@@ -272,7 +269,6 @@ class CareTaskController extends Controller
                     'agronomic' => $agronomic
                 ];
             }
-        }
 
         $pendingTasks = $events->whereIn('status', ['PENDING', 'MISSED']);
         $completedTasks = $events->where('status', 'COMPLETED');
@@ -308,7 +304,6 @@ class CareTaskController extends Controller
             'highPriorityCount' => $highPriorityCount,
             'totalCompleted' => $totalCompleted,
             'totalTasks' => $totalTasks > 0 ? $totalTasks : 1,
-            'isLocked' => $isLocked,
             'closestBadge' => $closestBadge,
             'closestTarget' => $closestTarget,
             'closestCurrent' => $closestCurrent,

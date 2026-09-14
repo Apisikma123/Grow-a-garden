@@ -13,12 +13,6 @@
   - **Error & Locked Containers**: `#ba1a1a` & `#ffdad6` (`bg-error-container`, `text-on-error-container`)
 - **NO Generic Orange**: Do NOT use arbitrary orange or amber Tailwind utility classes (`amber-500`, `#fb923c`, `#f97316`) for locked states, alerts, or charts. Use design system tokens.
 
-## 3. Subscription Tier & Plan Limit Rules
-- **Free Plan (`Bibit (Gratis)`)**: Max 1 Kebun, Max 10 Tanaman.
-- **Pro Plan (`Subur (Pro)`)**: Max 10 Kebun, Max 100 Tanaman.
-- **Premium Plan (`Panen Raya (Premium)`)**: Max 100 Kebun (Tak Terbatas), Tanaman Tak Terbatas.
-- **Locked Visuals**: Display strikethrough titles (`line-through opacity-70`), lock icon badges, and error-container warning banners when user exceeds plan limits, triggering the pricing upgrade modal on click.
-
-## 4. Browser Automation & Review Policy (Strictly Disabled)
+## 3. Browser Automation & Review Policy (Strictly Disabled)
 - **NO Automated Browser Review / Subagent**: NEVER launch the `browser_subagent` or open, control, or record the browser in any circumstances.
 - **Pure Code & CLI Workflow**: Perform all task execution, syntax checks, migrations, and build validations strictly through local code edits, static analysis, and CLI commands (`php artisan`, `npm run build`, etc.) without opening the browser.

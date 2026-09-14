@@ -170,9 +170,9 @@
                             <span class="text-[15px] font-extrabold text-on-surface">
                                 @php
                                     $scaleMap = [
-                                        '1-10' => '1 – 10 Tanaman (Bibit)',
-                                        '10-50' => '10 – 50 Tanaman (Subur)',
-                                        '50+' => '> 50 Tanaman (Panen Raya)',
+                                        '1-10' => '1 – 10 Tanaman (Skala Kecil)',
+                                        '10-50' => '10 – 50 Tanaman (Skala Menengah)',
+                                        '50+' => '> 50 Tanaman (Skala Besar)',
                                     ];
                                 @endphp
                                 {{ $scaleMap[Auth::user()->gardening_scale] ?? 'Belum Diatur' }}
@@ -269,8 +269,6 @@
                         </a>
                     </div>
                 </div>
-
-                {{-- Subscription / Langganan Box: hidden - all features accessible --}}
 
 
                 {{-- Notifications Settings Box --}}
@@ -638,49 +636,6 @@
             });
         }
 
-        // Cancel Subscription Handler
-        const cancelBtn = document.getElementById('btn-cancel-sub');
-        if (cancelBtn) {
-            cancelBtn.addEventListener('click', async () => {
-                const confirmResult = await Alert.modal.confirm(
-                    'Batalkan Langganan?', 
-                    'Apakah Anda yakin ingin membatalkan langganan? Anda akan kembali ke Paket Bibit (Gratis) dan kehilangan akses ke fitur Kalender Tanam dan Weather Adjustment.', 
-                    'Ya, Batalkan', 
-                    true
-                );
-
-                if (!confirmResult || !confirmResult.isConfirmed) {
-                    return;
-                }
-
-                cancelBtn.disabled = true;
-                cancelBtn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span> Membatalkan...';
-
-                try {
-                    const response = await fetch('/api/cancel-subscription', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Accept': 'application/json',
-                        },
-                    });
-
-                    const data = await response.json();
-
-                    if (data.success) {
-                        Alert.toast.success(data.message || 'Langganan berhasil dibatalkan.');
-                        setTimeout(() => window.location.reload(), 1000);
-                    } else {
-                        throw new Error(data.message || 'Gagal membatalkan langganan');
-                    }
-                } catch (error) {
-                    cancelBtn.disabled = false;
-                    cancelBtn.innerHTML = '<span class="material-symbols-outlined text-[18px]">cancel</span> Batalkan Langganan';
-                    Alert.modal.error('Gagal Membatalkan', error.message || 'Terjadi kesalahan sistem.');
-                }
-            });
-        }
     });
 </script>
 @endpush

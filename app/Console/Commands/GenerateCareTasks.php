@@ -69,11 +69,6 @@ class GenerateCareTasks extends Command
                 continue;
             }
 
-            $userRole = $garden->user->role ?? 'free';
-            if (!in_array($userRole, ['pro', 'premium', 'admin'])) {
-                continue; // Weather adjustment is a Pro/Premium feature
-            }
-
             // Check Activity Rules to modify tasks
             foreach ($garden->plants as $plant) {
                 foreach ($plant->events as $event) {

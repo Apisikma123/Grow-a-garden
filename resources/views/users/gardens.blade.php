@@ -3,13 +3,6 @@
 @section('title', 'Kebun Saya — Grow a Garden')
 @section('description', 'Kelola kebun dan tanaman Anda.')
 
-@php
-    $authUser = auth()->user();
-    $userRole = $authUser ? $authUser->role : 'free';
-    $planName = $authUser ? $authUser->planName() : 'Bibit (Gratis)';
-    $maxGardens = $authUser ? $authUser->maxGardens() : 1;
-    $maxPlants = $authUser ? $authUser->maxPlants() : 10;
-@endphp
 
 @section('dashboard-content')
 <div class="flex flex-col gap-6 pb-28 sm:pb-10 w-full" id="gardens-app" style="width: 100% !important;">
@@ -178,25 +171,8 @@
                     </div>
                 </div>
 
-                {{-- Plant Content Section (Supports Glassmorphism Blur Overlay when garden is locked) --}}
+                {{-- Plant Content Section --}}
                 <div id="plants-wrapper" class="relative w-full min-h-[300px] rounded-[24px]">
-
-                    {{-- Glassmorphism Blur Overlay for Locked Gardens --}}
-                    <div id="locked-plants-overlay" style="display: none; width: 100% !important;" class="absolute inset-0 z-20 backdrop-blur-md bg-surface/90 rounded-[24px] border border-error/30 p-6 sm:p-10 flex flex-col items-center justify-center text-center shadow-xl">
-                        <div class="w-16 h-16 rounded-full bg-error-container text-on-error-container flex items-center justify-center shadow-md mb-4 shrink-0 border border-error/30">
-                            <span class="material-symbols-outlined text-[36px]">lock</span>
-                        </div>
-                        <div class="text-center w-full min-w-full max-w-md mx-auto self-stretch flex flex-col items-center" style="width: 100% !important; min-width: 100% !important; text-align: center !important;">
-                            <h3 class="text-[20px] font-extrabold text-on-surface mb-2" style="width: 100% !important; text-align: center !important; display: block !important; white-space: normal !important; word-break: normal !important;">Akses Kebun Terkunci</h3>
-                            <p class="text-[13.5px] text-on-surface-variant leading-relaxed mb-6" style="width: 100% !important; text-align: center !important; display: block !important; white-space: normal !important; word-break: normal !important;">
-                                Kebun ini berada di luar kuota paket <strong class="font-bold text-error">{{ $planName }}</strong> Anda (Maksimal {{ $maxGardens }} Kebun). Upgrade paket Anda untuk membuka kembali seluruh isi kebun ini.
-                            </p>
-                        </div>
-                        <a href="/settings#subscription" class="bg-error hover:bg-error/90 text-on-error font-extrabold text-[14px] px-7 py-3 rounded-full shadow-md active:scale-95 transition-all flex items-center gap-2 cursor-pointer shrink-0">
-                            <span class="material-symbols-outlined text-[20px]">workspace_premium</span>
-                            Upgrade Paket Sekarang
-                        </a>
-                    </div>
 
                     {{-- Plants Loading --}}
                     <div id="plants-loading" class="w-full flex items-center justify-center py-10" style="width: 100% !important;">
@@ -485,13 +461,6 @@
     </div>
 </div>
 
-<script>
-window.USER_PLAN_CONFIG = {
-    role: @json($userRole),
-    planName: @json($planName),
-    maxGardens: {{ $maxGardens }},
-    maxPlants: {{ $maxPlants >= 99999 ? 999999 : $maxPlants }}
-};
 
 window.GardenApp = (() => {
     let gardens = [];
@@ -633,21 +602,19 @@ window.GardenApp = (() => {
         content.style.width = '100%';
 
         list.innerHTML = gardens.map((g, idx) => {
-            const isLocked = idx >= USER_PLAN_CONFIG.maxGardens;
             const cleanLoc = cleanLocationName(g.location_name);
             return `
             <button type="button" onclick="GardenApp.selectGarden(${g.id})"
-                class="garden-card w-full text-left bg-surface rounded-[20px] p-4 sm:p-5 ambient-shadow hover:-translate-y-0.5 hover:ambient-shadow-lg transition-all duration-200 border-2 ${selectedGardenId === g.id ? (isLocked ? 'border-error bg-error-container/20' : 'border-[#006c49]') : 'border-transparent'} ${isLocked ? 'bg-surface-container-low opacity-80' : ''}" data-garden-id="${g.id}">
+                class="garden-card w-full text-left bg-surface rounded-[20px] p-4 sm:p-5 ambient-shadow hover:-translate-y-0.5 hover:ambient-shadow-lg transition-all duration-200 border-2 ${selectedGardenId === g.id ? 'border-[#006c49]' : 'border-transparent'}" data-garden-id="${g.id}">
                 <div class="flex items-center gap-3 sm:gap-4">
-                    <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl ${selectedGardenId === g.id ? (isLocked ? 'bg-error text-on-error' : 'bg-primary text-on-primary') : (isLocked ? 'bg-error/15 text-error' : 'bg-primary/10 text-primary')} flex items-center justify-center shrink-0 transition-colors">
-                        <span class="material-symbols-outlined text-[22px] sm:text-[24px]">${isLocked ? 'lock' : 'yard'}</span>
+                    <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl ${selectedGardenId === g.id ? 'bg-primary text-on-primary' : 'bg-primary/10 text-primary'} flex items-center justify-center shrink-0 transition-colors">
+                        <span class="material-symbols-outlined text-[22px] sm:text-[24px]">yard</span>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <h3 class="text-[14px] sm:text-[15px] font-bold ${isLocked ? 'text-on-surface-variant line-through opacity-70' : 'text-on-surface'} truncate">${escHtml(g.name)}</h3>
+                        <h3 class="text-[14px] sm:text-[15px] font-bold text-on-surface truncate">${escHtml(g.name)}</h3>
                         ${cleanLoc ? `<p class="text-[11px] sm:text-[12px] text-on-surface-variant truncate flex items-center gap-1 mt-0.5"><span class="material-symbols-outlined text-[12px]">location_on</span>${escHtml(cleanLoc)}</p>` : ''}
-                        ${isLocked ? `<div class="mt-1"><span class="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container border border-error/30 whitespace-nowrap inline-block">Terkunci</span></div>` : ''}
                     </div>
-                    <span class="material-symbols-outlined text-[20px] ${isLocked ? 'text-error' : 'text-on-surface-variant'}">chevron_right</span>
+                    <span class="material-symbols-outlined text-[20px] text-on-surface-variant">chevron_right</span>
                 </div>
             </button>
             `;
@@ -666,46 +633,30 @@ window.GardenApp = (() => {
         const garden = gardens[gardenIdx];
         if (!garden) return;
 
-        const isGardenLocked = gardenIdx >= USER_PLAN_CONFIG.maxGardens;
-
-        // Show/hide blur overlay for locked garden
-        const lockOverlay = document.getElementById('locked-plants-overlay');
-        if (lockOverlay) {
-            lockOverlay.style.display = isGardenLocked ? 'flex' : 'none';
-        }
-
-        // Toggle header action button
+        // Header action button
         const addBtn = document.getElementById('add-plant-btn');
         if (addBtn) {
-            if (isGardenLocked) {
-                addBtn.className = 'flex items-center gap-2 bg-error text-on-error font-bold text-[13px] px-4 py-2.5 rounded-full hover:bg-error/90 active:scale-95 transition-all shadow-sm cursor-pointer';
-                addBtn.innerHTML = '<span class="material-symbols-outlined text-[16px]">workspace_premium</span> Upgrade Paket';
-                addBtn.onclick = () => window.location.href = '/settings#subscription';
-            } else {
-                addBtn.className = 'flex items-center gap-2 bg-primary text-on-primary font-bold text-[13px] px-4 py-2.5 rounded-full hover:bg-primary/90 active:scale-95 transition-all shadow-sm cursor-pointer';
-                addBtn.innerHTML = '<span class="material-symbols-outlined text-[16px]">add</span> Tambah Tanaman';
-                addBtn.onclick = () => GardenApp.openAddPlantModal();
-            }
+            addBtn.className = 'flex items-center gap-2 bg-primary text-on-primary font-bold text-[13px] px-4 py-2.5 rounded-full hover:bg-primary/90 active:scale-95 transition-all shadow-sm cursor-pointer';
+            addBtn.innerHTML = '<span class="material-symbols-outlined text-[16px]">add</span> Tambah Tanaman';
+            addBtn.onclick = () => GardenApp.openAddPlantModal();
         }
 
         // Update card highlights
         document.querySelectorAll('.garden-card').forEach(card => {
             const id = parseInt(card.dataset.gardenId);
-            const cardIdx = gardens.findIndex(g => g.id === id);
-            const cardIsLocked = cardIdx >= USER_PLAN_CONFIG.maxGardens;
             const icon = card.querySelector('.w-11, .w-12');
             
             if (id === gardenId) {
                 card.classList.remove('border-transparent');
-                card.classList.add(cardIsLocked ? 'border-error' : 'border-[#006c49]');
+                card.classList.add('border-[#006c49]');
                 if (icon) {
-                    icon.className = `w-11 h-11 sm:w-12 sm:h-12 rounded-xl ${cardIsLocked ? 'bg-error text-on-error' : 'bg-primary text-on-primary'} flex items-center justify-center shrink-0 transition-colors relative`;
+                    icon.className = 'w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-primary text-on-primary flex items-center justify-center shrink-0 transition-colors relative';
                 }
             } else {
                 card.classList.add('border-transparent');
-                card.classList.remove('border-[#006c49]', 'border-error');
+                card.classList.remove('border-[#006c49]');
                 if (icon) {
-                    icon.className = `w-11 h-11 sm:w-12 sm:h-12 rounded-xl ${cardIsLocked ? 'bg-error/15 text-error' : 'bg-primary/10 text-primary'} flex items-center justify-center shrink-0 transition-colors relative`;
+                    icon.className = 'w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 transition-colors relative';
                 }
             }
         });
@@ -821,18 +772,6 @@ window.GardenApp = (() => {
         }
     }
 
-    function showPlantLockedAlert(plantName) {
-        Alert.modal.confirm(
-            'Tanaman Terkunci',
-            `Tanaman "${plantName}" terkunci karena melebihi kuota ${USER_PLAN_CONFIG.maxPlants} tanaman paket ${USER_PLAN_CONFIG.planName}. Upgrade ke paket Pro atau Premium untuk membuka kembali seluruh tanaman Anda.`,
-            'Upgrade Paket',
-            false
-        ).then(res => {
-            if (res && res.isConfirmed) {
-                window.location.href = '/settings#subscription';
-            }
-        });
-    }
 
     // ── Geolocation & Weather Helpers ──
     async function fetchFastLocation() {
@@ -1055,19 +994,6 @@ window.GardenApp = (() => {
 
     // ── Add Garden ──
     function openAddGardenModal() {
-        if (gardens.length >= USER_PLAN_CONFIG.maxGardens) {
-            Alert.modal.confirm(
-                'Batas Kebun Tercapai',
-                `Paket ${USER_PLAN_CONFIG.planName} Anda dibatasi maksimal ${USER_PLAN_CONFIG.maxGardens} kebun. Tingkatkan paket Anda ke Pro (10 Kebun) atau Premium (Tanpa Batas) untuk menambah kebun baru.`,
-                'Upgrade Paket',
-                false
-            ).then(res => {
-                if (res && res.isConfirmed) {
-                    window.location.href = '/settings#subscription';
-                }
-            });
-            return;
-        }
         document.getElementById('add-garden-modal').classList.remove('hidden');
         document.getElementById('add-garden-form').reset();
         const latEl = document.getElementById('add-garden-lat');
@@ -1217,35 +1143,6 @@ window.GardenApp = (() => {
     // ── Add Plant ──
     async function openAddPlantModal() {
         if (!selectedGardenId) return;
-
-        const gardenIdx = gardens.findIndex(g => g.id === selectedGardenId);
-        if (gardenIdx >= USER_PLAN_CONFIG.maxGardens) {
-            Alert.modal.confirm(
-                'Kebun Terkunci',
-                `Kebun ini terkunci karena melebihi batas kuota ${USER_PLAN_CONFIG.maxGardens} kebun paket ${USER_PLAN_CONFIG.planName}. Tingkatkan paket Anda untuk mengelola kebun ini.`,
-                'Upgrade Paket',
-                false
-            ).then(res => {
-                if (res && res.isConfirmed) {
-                    window.location.href = '/settings#subscription';
-                }
-            });
-            return;
-        }
-
-        if (plants.length >= USER_PLAN_CONFIG.maxPlants) {
-            Alert.modal.confirm(
-                'Batas Tanaman Terlampaui',
-                `Paket ${USER_PLAN_CONFIG.planName} Anda dibatasi maksimal ${USER_PLAN_CONFIG.maxPlants} tanaman per kebun. Tingkatkan paket Anda untuk menambah tanaman baru.`,
-                'Upgrade Paket',
-                false
-            ).then(res => {
-                if (res && res.isConfirmed) {
-                    window.location.href = '/settings#subscription';
-                }
-            });
-            return;
-        }
 
         document.getElementById('add-plant-modal').classList.remove('hidden');
         document.getElementById('template-search').value = '';

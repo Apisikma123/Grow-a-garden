@@ -15,27 +15,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        if (!User::where('email', 'free@example.com')->exists()) {
+        if (!User::where('email', 'user@example.com')->exists()) {
             User::factory()->create([
-                'name' => 'Free User',
-                'email' => 'free@example.com',
-                'role' => 'free',
-            ]);
-        }
-
-        if (!User::where('email', 'pro@example.com')->exists()) {
-            User::factory()->create([
-                'name' => 'Pro User',
-                'email' => 'pro@example.com',
-                'role' => 'pro',
-            ]);
-        }
-
-        if (!User::where('email', 'premium@example.com')->exists()) {
-            User::factory()->create([
-                'name' => 'Premium User',
-                'email' => 'premium@example.com',
-                'role' => 'premium',
+                'name' => 'Demo User',
+                'email' => 'user@example.com',
+                'role' => 'user',
             ]);
         }
 

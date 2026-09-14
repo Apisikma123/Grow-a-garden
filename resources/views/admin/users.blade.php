@@ -17,9 +17,7 @@
                 </div>
                 <select name="role" onchange="this.form.submit()" class="px-3 py-2 bg-surface-container-highest border border-outline-variant/30 rounded-lg text-[13px] text-on-surface focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer font-medium">
                     <option value="">Semua Peran (Role)</option>
-                    <option value="free" {{ request('role') == 'free' ? 'selected' : '' }}>Bibit (Gratis)</option>
-                    <option value="pro" {{ request('role') == 'pro' ? 'selected' : '' }}>Subur (Pro)</option>
-                    <option value="premium" {{ request('role') == 'premium' ? 'selected' : '' }}>Panen Raya (Premium)</option>
+                    <option value="user" {{ request('role') == 'user' ? 'selected' : '' }}>Pengguna</option>
                     <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
                 </select>
                 @if(request('search') || request('role'))
@@ -74,12 +72,8 @@
                         <td class="py-4 px-6">
                             @if($user->role === 'admin')
                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold bg-primary text-on-primary shadow-2xs">Admin</span>
-                            @elseif($user->role === 'premium')
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold bg-secondary text-on-secondary shadow-2xs">Panen Raya (Premium)</span>
-                            @elseif($user->role === 'pro')
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold bg-[#10b981] text-white shadow-2xs">Subur (Pro)</span>
                             @else
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold bg-surface-container-highest text-on-surface-variant border border-outline-variant/30">Bibit (Gratis)</span>
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold bg-surface-container-highest text-on-surface-variant border border-outline-variant/30">Pengguna</span>
                             @endif
                         </td>
                         <td class="py-4 px-6 text-[13px] text-on-surface-variant font-medium">
@@ -92,16 +86,18 @@
                             </div>
                         </td>
                         <td class="py-4 px-6 text-right relative">
-                            @if($user->role !== 'admin')
+                            @if($user->id !== auth()->id())
                             <button class="btn-user-action text-on-surface-variant hover:text-primary transition-colors focus:outline-none" onclick="toggleDropdown({{ $user->id }})">
                                 <span class="material-symbols-outlined text-[20px]">more_horiz</span>
                             </button>
                             
                             {{-- Dropdown Action Menu --}}
                             <div id="dropdown-{{ $user->id }}" class="hidden absolute right-6 top-10 w-48 bg-white rounded-xl shadow-lg border border-outline-variant/20 z-20 py-2">
-                                <button onclick="changeRole({{ $user->id }}, 'free')" class="w-full text-left px-4 py-2 text-[13px] text-on-surface hover:bg-surface-container-lowest hover:text-primary transition-colors">Ubah ke Bibit (Free)</button>
-                                <button onclick="changeRole({{ $user->id }}, 'pro')" class="w-full text-left px-4 py-2 text-[13px] text-on-surface hover:bg-surface-container-lowest hover:text-primary transition-colors">Ubah ke Subur (Pro)</button>
-                                <button onclick="changeRole({{ $user->id }}, 'premium')" class="w-full text-left px-4 py-2 text-[13px] text-on-surface hover:bg-surface-container-lowest hover:text-primary transition-colors">Ubah ke Panen Raya</button>
+                                @if($user->role !== 'admin')
+                                    <button onclick="changeRole({{ $user->id }}, 'admin')" class="w-full text-left px-4 py-2 text-[13px] text-on-surface hover:bg-surface-container-lowest hover:text-primary transition-colors">Jadikan Admin</button>
+                                @else
+                                    <button onclick="changeRole({{ $user->id }}, 'user')" class="w-full text-left px-4 py-2 text-[13px] text-on-surface hover:bg-surface-container-lowest hover:text-primary transition-colors">Ubah ke Pengguna</button>
+                                @endif
                                 <hr class="my-1 border-outline-variant/20">
                                 <button onclick="deleteUser({{ $user->id }})" class="w-full text-left px-4 py-2 text-[13px] text-red-500 hover:bg-red-50 transition-colors">Hapus Akun</button>
                             </div>

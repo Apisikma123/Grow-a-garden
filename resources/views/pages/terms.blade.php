@@ -18,12 +18,8 @@
         <div class="space-y-6 text-on-surface-variant leading-relaxed">
             <p>Dengan mendaftar dan menggunakan <strong>Grow a Garden</strong>, Anda menyetujui ketentuan layanan kami.</p>
             
-            <h3 class="text-lg font-bold text-on-surface mt-8 mb-2">1. Ketentuan Paket Langganan</h3>
-            <ul class="list-disc pl-5 space-y-2 mt-2">
-                <li><strong>Paket Bibit (Gratis):</strong> Pengguna dapat memetakan maksimal 1 kebun dengan batasan 10 tanaman aktif.</li>
-                <li><strong>Paket Subur:</strong> Pengguna dapat menikmati fitur Growth Calendar, otomatisasi <em>Care Template</em>, serta penyesuaian cuaca. Cocok untuk pekebun hobi.</li>
-                <li><strong>Paket Panen Raya (Pro):</strong> Memberikan skala tak terbatas untuk kebutuhan komunitas atau <em>urban farming</em> skala besar.</li>
-            </ul>
+            <h3 class="text-lg font-bold text-on-surface mt-8 mb-2">1. Layanan & Akses Fitur</h3>
+            <p>Grow a Garden menyediakan akses penuh ke seluruh fitur aplikasi, termasuk pemetaan kebun tanpa batas, katalog tanaman, kalender pertumbuhan otomatis, dan penyesuaian cuaca cerdas bagi seluruh pengguna terdaftar.</p>
             
             <h3 class="text-lg font-bold text-on-surface mt-8 mb-2">2. Penggunaan Edukasi & Data</h3>
             <p>Estimasi panen dan <em>Growth Calendar</em> kami dirancang menggunakan referensi agrikultur terpercaya. Namun, kondisi alam yang tidak dapat diprediksi berarti kami tidak dapat menjamin panen pasti 100%. Kami hadir sebagai asisten cerdas kebun Anda.</p>

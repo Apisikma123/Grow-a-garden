@@ -5,28 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Garden;
-use App\Models\Subscription;
-use App\Models\Transaction;
 use App\Services\BadgeService;
 use App\Services\AutopilotService;
 use Carbon\Carbon;
 
 class OnboardingController extends Controller
 {
-    private array $plans = [
-        'subur' => [
-            'role' => 'pro',
-            'label' => 'Paket Subur',
-            'monthly_price' => 29000,
-            'yearly_price' => 199000,
-        ],
-        'pro' => [
-            'role' => 'premium',
-            'label' => 'Panen Raya (Premium)',
-            'monthly_price' => 99000,
-            'yearly_price' => 799000,
-        ],
-    ];
 
     private function cleanLocationName(?string $location): ?string
     {
@@ -70,8 +54,6 @@ class OnboardingController extends Controller
             'gardening_experience' => 'nullable|string|max:50',
             'gardening_scale' => 'nullable|string|max:50',
             'gardening_goal' => 'nullable|string|max:100',
-            'selected_plan' => 'nullable|string|in:free,subur,pro',
-            'billing_cycle' => 'nullable|string|in:monthly,yearly',
         ]);
 
         $user = Auth::user();
@@ -106,46 +88,9 @@ class OnboardingController extends Controller
             ]);
         }
 
-        $selectedPlan = $request->input('selected_plan', 'free');
-        $billingCycle = $request->input('billing_cycle', 'yearly');
-        $redirectUrl = '/dashboard';
-
-        // 3. Handle Plan Selection
-        if (in_array($selectedPlan, ['subur', 'pro'])) {
-            $planConfig = $this->plans[$selectedPlan];
-            $amount = $billingCycle === 'yearly' ? $planConfig['yearly_price'] : $planConfig['monthly_price'];
-            $validUntil = $billingCycle === 'yearly' ? Carbon::now()->addYear() : Carbon::now()->addMonth();
-
-            // Cancel any old subscription
-            Subscription::where('user_id', $user->id)
-                ->where('status', 'active')
-                ->update(['status' => 'canceled']);
-
-            // Create active subscription
-            $subscription = Subscription::create([
-                'user_id' => $user->id,
-                'plan_name' => $selectedPlan,
-                'billing_cycle' => $billingCycle,
-                'status' => 'active',
-                'valid_until' => $validUntil,
-            ]);
-
-            // Dev bypass transaction
-            Transaction::create([
-                'user_id' => $user->id,
-                'subscription_id' => $subscription->id,
-                'amount' => $amount,
-                'payment_method' => 'dev_bypass',
-                'status' => 'success',
-            ]);
-
-            // Update user role
-            $user->update(['role' => $planConfig['role']]);
-
-            // Auto-generate care tasks for autopilot
-            $autopilot = new AutopilotService();
-            $autopilot->generateForUser($user);
-        }
+        // 3. Auto-generate care tasks for autopilot
+        $autopilot = new AutopilotService();
+        $autopilot->generateForUser($user);
 
         // 4. Sync badges (auto-awards 'Pekebun Pertama' badge)
         $sync = BadgeService::syncUserBadges($user);

@@ -21,7 +21,6 @@ class AdminController extends Controller
         $totalPlantTemplates = PlantTemplate::count();
         $totalCareTemplates = PlantTemplate::count();
         $totalBadges = \App\Models\Badge::count();
-        $premiumUsers = User::whereIn('role', ['pro', 'premium'])->count();
         
         // Today Weather for Admin Dashboard
         try {
@@ -253,7 +252,7 @@ class AdminController extends Controller
     public function updateRole(Request $request, User $user)
     {
         $request->validate([
-            'role' => 'required|in:free,pro,premium,admin'
+            'role' => 'required|in:user,admin'
         ]);
 
         if ($user->id === auth()->id()) {

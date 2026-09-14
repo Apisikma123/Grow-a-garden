@@ -72,16 +72,6 @@ class User extends Authenticatable
         return !is_null($this->onboarding_completed_at) || $this->gardens()->count() > 0;
     }
 
-    public function subscriptions(): HasMany
-    {
-        return $this->hasMany(Subscription::class);
-    }
-
-    public function transactions(): HasMany
-    {
-        return $this->hasMany(Transaction::class);
-    }
-
     public function gardens(): HasMany
     {
         return $this->hasMany(Garden::class);
@@ -92,52 +82,6 @@ class User extends Authenticatable
         return $this->belongsToMany(Badge::class, 'user_badges')
             ->withPivot('awarded_at')
             ->withTimestamps();
-    }
-
-    // ── Plan Helper Methods ──
-
-    /**
-     * Get the user's active subscription.
-     */
-    public function activeSubscription()
-    {
-        return $this->subscriptions()
-            ->where('status', 'active')
-            ->where('valid_until', '>', now())
-            ->latest()
-            ->first();
-    }
-
-    /**
-     * Get human-readable plan name.
-     */
-    public function planName(): string
-    {
-        return match ($this->role) {
-            'pro' => 'Subur (Pro)',
-            'premium' => 'Panen Raya (Premium)',
-            'admin' => 'Admin Console',
-            default => 'Bibit (Gratis)',
-        };
-    }
-
-    /**
-     * Maximum gardens allowed for this user's plan.
-     */
-    public function maxGardens(): int
-    {
-        // All users get unlimited gardens
-        return PHP_INT_MAX;
-    }
-
-    /**
-     * Maximum plants allowed for this user's plan.
-     * Returns PHP_INT_MAX for unlimited.
-     */
-    public function maxPlants(): int
-    {
-        // All users get unlimited plants
-        return PHP_INT_MAX;
     }
 
     /**

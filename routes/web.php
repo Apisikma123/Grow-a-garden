@@ -34,12 +34,6 @@ Route::post('/onboarding', [OnboardingController::class, 'complete'])->name('onb
 Route::match(['get', 'post'], '/onboarding/skip', [OnboardingController::class, 'skip'])->name('onboarding.skip')->middleware('auth');
 Route::post('/api/onboarding/complete', [OnboardingController::class, 'complete'])->name('api.onboarding.complete')->middleware('auth');
 
-Route::get('/checkout', function () {
-    if (!Auth::check()) {
-        return redirect()->route('login');
-    }
-    return view('users.checkout');
-})->middleware('auth');
 
 // Protected User Routes
 Route::middleware(['auth', 'user'])->group(function () {
@@ -218,6 +212,8 @@ Route::middleware(['auth', 'user'])->group(function () {
     })->name('gardens');
 
     Route::get('/growth-calendar', [\App\Http\Controllers\GrowthCalendarController::class, 'index'])->name('growth-calendar');
+    Route::get('/api/growth-calendar/events', [\App\Http\Controllers\GrowthCalendarController::class, 'calendarEvents'])->name('api.growth-calendar.events');
+    Route::patch('/api/events/{event}/reschedule', [\App\Http\Controllers\GrowthCalendarController::class, 'rescheduleEvent'])->name('api.events.reschedule');
 
     Route::get('/care-tasks', [\App\Http\Controllers\CareTaskController::class, 'index'])->name('care-tasks');
     Route::patch('/care-tasks/{event}/complete', [\App\Http\Controllers\CareTaskController::class, 'complete'])->name('care-tasks.complete');
@@ -252,10 +248,6 @@ Route::middleware(['auth', 'user'])->group(function () {
     // API Routes for Plant Templates
     Route::get('/api/plant-templates', [\App\Http\Controllers\PlantTemplateController::class, 'index']);
 
-    // Subscription API Routes
-    Route::post('/api/subscribe', [\App\Http\Controllers\SubscriptionController::class, 'subscribe']);
-    Route::post('/api/cancel-subscription', [\App\Http\Controllers\SubscriptionController::class, 'cancel']);
-    Route::get('/api/subscription-status', [\App\Http\Controllers\SubscriptionController::class, 'status']);
 
     // Live Weather API Route
     Route::get('/api/weather/live', [\App\Http\Controllers\WeatherController::class, 'live'])->name('api.weather.live');
