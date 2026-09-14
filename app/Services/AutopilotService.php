@@ -21,6 +21,14 @@ class AutopilotService
             ->with('plantTemplate')
             ->get();
 
+        if ($plants->isNotEmpty()) {
+            // Remove/purge past overdue tasks that were missed or pending
+            Event::whereIn('plant_id', $plants->pluck('id'))
+                ->whereDate('scheduled_date', '<', Carbon::today())
+                ->whereIn('status', ['PENDING', 'MISSED'])
+                ->delete();
+        }
+
         $totalGenerated = 0;
 
         foreach ($plants as $plant) {
@@ -73,6 +81,9 @@ class AutopilotService
 
             $scheduledDate = $plantedDate->copy()->addDays($day);
 
+            // Skip milestone if date is already in the past
+            if ($scheduledDate->lt(Carbon::today())) continue;
+
             // Skip if event already exists for this plant/type/date
             $eventType = EventType::where('code', $code)->first();
             if (!$eventType) continue;
@@ -88,7 +99,7 @@ class AutopilotService
                 'plant_id' => $plant->id,
                 'event_type_id' => $eventType->id,
                 'scheduled_date' => $scheduledDate->toDateString(),
-                'status' => $scheduledDate->isPast() ? 'MISSED' : 'PENDING',
+                'status' => 'PENDING',
                 'priority' => $eventType->default_priority ?? 'MEDIUM',
                 'message' => "{$template->name_id}: {$eventType->label} (HST {$day})",
             ]);

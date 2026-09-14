@@ -252,56 +252,66 @@
                         </div>
                         <div>
                             <h3 class="text-lg font-bold text-on-surface leading-tight">Growth Calendar</h3>
-                            <p class="text-[12px] text-on-surface-variant leading-tight">Timeline tahapan pertumbuhan.</p>
+                            <p class="text-[12px] text-on-surface-variant leading-tight">Kalender bulanan interaktif & kelola jadwal.</p>
                         </div>
                     </div>
 
-                    {{-- Compact Timeline --}}
-                    <div class="relative pl-11 space-y-5">
-                        {{-- Vertical dashed line --}}
-                        <div class="absolute left-[14px] top-2 bottom-2 w-[2px] border-l-2 border-dashed border-[#006c49]/30"></div>
-
-                        {{-- Step 1 --}}
-                        <div class="relative flex items-center">
-                            <div class="absolute -left-[42px] w-6 h-6 rounded-full bg-[#006c49] text-white flex items-center justify-center shadow-xs z-10">
-                                <svg class="w-3.5 h-3.5 text-white stroke-[3.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                </svg>
+                    {{-- Mini Monthly Calendar Grid Mockup --}}
+                    <div class="bg-surface rounded-2xl p-3.5 border border-outline-variant/30 space-y-2.5">
+                        {{-- Month Header --}}
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-xs font-black text-on-surface">September 2026</span>
+                                <span class="bg-primary/10 text-primary text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase">Bayam</span>
                             </div>
-                            <div class="text-[12px] font-bold text-[#006c49] inline-flex items-center gap-1.5 bg-[#e6f4ea] px-3 py-1 rounded-full border border-[#006c49]/20 shadow-xs">
-                                <span>Tanam</span>
-                                <span class="text-[11px] font-bold text-[#006c49] opacity-80">(Selesai)</span>
+                            <div class="flex items-center gap-1 text-[10px] text-on-surface-variant font-bold">
+                                <span class="w-4 h-4 rounded bg-white border border-outline-variant/40 flex items-center justify-center text-[9px]">‹</span>
+                                <span class="w-4 h-4 rounded bg-white border border-outline-variant/40 flex items-center justify-center text-[9px]">›</span>
                             </div>
                         </div>
 
-                        {{-- Step 2: Active Card --}}
-                        <div class="relative">
-                            <div class="absolute -left-[46px] top-2 w-8 h-8 rounded-full bg-[#e6f4ea] border border-[#006c49]/30 flex items-center justify-center shadow-xs z-10">
-                                <span class="material-symbols-outlined text-[18px] text-[#006c49]" style="font-variation-settings: 'FILL' 1;">eco</span>
-                            </div>
-                            <div class="bg-surface rounded-xl p-3.5 border-2 border-[#006c49] space-y-2 shadow-sm">
-                                <div class="flex items-center justify-between">
-                                    <span class="text-[12px] font-bold text-[#006c49]">Germinasi</span>
-                                    <span class="bg-[#006c49] text-white text-[8px] font-extrabold px-2 py-0.5 rounded-full tracking-wider">AKTIF</span>
-                                </div>
-                                <div class="bg-[#e8f3ee] rounded-lg p-2 text-[10px] text-[#006c49] font-medium leading-tight">
-                                    ✦ <strong>Fase Persemaian:</strong> Jaga kelembapan media semai.
-                                </div>
-                                <div class="flex items-center gap-2 pt-0.5">
-                                    <div class="flex-1 bg-surface-container-high h-1.5 rounded-full overflow-hidden">
-                                        <div class="bg-[#006c49] h-full w-[50%] rounded-full"></div>
-                                    </div>
-                                    <span class="text-[9px] font-bold text-[#006c49]">3 hari lagi</span>
-                                </div>
-                            </div>
+                        {{-- Weekdays mini --}}
+                        <div class="grid grid-cols-7 gap-1 text-center text-[9px] font-extrabold text-on-surface-variant uppercase">
+                            <div>Sn</div><div>Sl</div><div>Rb</div><div>Km</div><div>Jm</div><div class="text-[#006c49]">Sb</div><div class="text-[#ba1a1a]">Mg</div>
                         </div>
 
-                        {{-- Step 3 --}}
-                        <div class="relative flex items-center">
-                            <div class="absolute -left-[42px] w-6 h-6 rounded-full bg-surface-container-high border border-outline-variant/60 text-on-surface-variant flex items-center justify-center z-10">
-                                <span class="material-symbols-outlined text-[13px] text-on-surface-variant">schedule</span>
+                        {{-- Mini Days Grid --}}
+                        <div class="grid grid-cols-7 gap-1 text-[10px]">
+                            <div class="p-1 rounded-lg border border-outline-variant/20 bg-white/40 text-center opacity-40">13</div>
+                            {{-- Day 14 (Hari Ini) --}}
+                            <div class="p-1 rounded-lg border border-primary bg-primary/10 text-center font-black text-primary ring-1 ring-primary/40 relative shadow-2xs">
+                                <span>14</span>
+                                <span class="block w-1.5 h-1.5 rounded-full bg-cyan-500 mx-auto mt-0.5"></span>
                             </div>
-                            <div class="text-[12px] font-bold text-on-surface-variant py-0.5">Persemaian & Panen</div>
+                            {{-- Day 15 --}}
+                            <div class="p-1 rounded-lg border border-outline-variant/30 bg-white text-center font-bold text-slate-700">15</div>
+                            {{-- Day 16 (Event Pupuk) --}}
+                            <div class="p-1 rounded-lg border border-primary/40 bg-primary/5 text-center font-bold text-primary relative">
+                                <span>16</span>
+                                <span class="block w-1.5 h-1.5 rounded-full bg-emerald-500 mx-auto mt-0.5"></span>
+                            </div>
+                            {{-- Day 17 --}}
+                            <div class="p-1 rounded-lg border border-outline-variant/30 bg-white text-center font-bold text-slate-700">17</div>
+                            {{-- Day 18 (Event Hama) --}}
+                            <div class="p-1 rounded-lg border border-[#944a23]/30 bg-[#944a23]/5 text-center font-bold text-[#944a23] relative">
+                                <span>18</span>
+                                <span class="block w-1.5 h-1.5 rounded-full bg-[#944a23] mx-auto mt-0.5"></span>
+                            </div>
+                            <div class="p-1 rounded-lg border border-outline-variant/30 bg-white text-center font-bold text-slate-700">19</div>
+                        </div>
+
+                        {{-- Active Task Info Box --}}
+                        <div class="bg-white rounded-xl p-2.5 border border-primary/25 flex items-center justify-between gap-2 shadow-2xs">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <div class="w-6 h-6 rounded-lg bg-cyan-50 text-cyan-700 flex items-center justify-center text-[12px] shrink-0">
+                                    💧
+                                </div>
+                                <div class="min-w-0">
+                                    <p class="text-[11px] font-black text-on-surface truncate leading-tight">Penyiraman & Perawatan</p>
+                                    <p class="text-[9px] text-on-surface-variant font-medium truncate">Klik tanggal • Tambah & Kelola</p>
+                                </div>
+                            </div>
+                            <span class="text-[8px] font-black uppercase tracking-wider bg-primary/10 text-primary border border-primary/20 px-1.5 py-0.5 rounded-full shrink-0">Hari Ini</span>
                         </div>
                     </div>
                 </div>

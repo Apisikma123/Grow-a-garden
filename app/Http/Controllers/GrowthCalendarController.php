@@ -74,7 +74,7 @@ class GrowthCalendarController extends Controller
         if ($mainPlant) {
             $todayTasks = \App\Models\Event::with('eventType')
                 ->where('plant_id', $mainPlant->id)
-                ->whereDate('scheduled_date', '<=', Carbon::today())
+                ->whereDate('scheduled_date', Carbon::today())
                 ->whereIn('status', ['PENDING', 'MISSED'])
                 ->orderBy('priority', 'asc')
                 ->get();
@@ -248,6 +248,12 @@ class GrowthCalendarController extends Controller
         }, 'plants.plantTemplate'])->get();
         $plants = $gardens->pluck('plants')->flatten();
         $plantIds = $plants->pluck('id');
+
+        // Purge overdue incomplete tasks (scheduled_date < today)
+        \App\Models\Event::whereIn('plant_id', $plantIds)
+            ->whereDate('scheduled_date', '<', Carbon::today())
+            ->whereIn('status', ['PENDING', 'MISSED'])
+            ->delete();
 
         $requestedPlantId = $request->query('plant_id');
         if ($requestedPlantId && $requestedPlantId !== 'all' && $plantIds->contains((int)$requestedPlantId)) {
