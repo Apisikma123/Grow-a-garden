@@ -13,11 +13,15 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-2">
             <div>
                 <h1 class="text-[30px] md:text-[42px] font-bold text-on-surface tracking-tight leading-tight mb-1">Kalender Tanam</h1>
-                <p class="text-[15px] md:text-[16px] text-on-surface-variant max-w-xl leading-relaxed">Pantau linimasa pertumbuhan cerdas dan kelola jadwal perawatan tanaman Anda secara interaktif.</p>
+                <p class="text-[15px] md:text-[16px] text-on-surface-variant max-w-xl leading-relaxed">Pantau linimasa pertumbuhan cerdas, jadwalkan perawatan baru, dan kelola kegiatan kebun Anda secara fleksibel.</p>
             </div>
             @if($mainPlant)
-            <div class="flex items-center gap-2">
-                <button type="button" onclick="document.getElementById('edit-jadwal-modal').classList.remove('hidden')" class="bg-white border border-outline-variant/40 text-on-surface-variant font-bold px-4 py-2.5 rounded-xl hover:bg-surface hover:text-primary hover:border-primary/30 transition-all flex items-center gap-2 text-sm shadow-sm active:scale-95">
+            <div class="flex items-center gap-2 flex-wrap">
+                <button type="button" onclick="openAddTaskModal()" class="bg-primary text-white font-extrabold text-sm px-4 py-2.5 rounded-xl hover:bg-[#005236] transition-all flex items-center gap-1.5 shadow-sm active:scale-95">
+                    <span class="material-symbols-outlined text-[18px]">add_circle</span>
+                    <span>Tambah Kegiatan</span>
+                </button>
+                <button type="button" onclick="document.getElementById('edit-jadwal-modal').classList.remove('hidden')" class="bg-white border border-outline-variant/40 text-on-surface-variant font-bold px-4 py-2.5 rounded-xl hover:bg-surface hover:text-primary hover:border-primary/30 transition-all flex items-center gap-1.5 text-sm shadow-sm active:scale-95">
                     <span class="material-symbols-outlined text-[18px]">edit_calendar</span>
                     <span>Ubah Tgl Tanam</span>
                 </button>
@@ -154,7 +158,7 @@
                         </div>
                     </div>
 
-                    {{-- Controls: Plant Filter, Today, Prev/Next --}}
+                    {{-- Controls: Plant Filter, Add Task, Today, Prev/Next --}}
                     <div class="flex items-center gap-2 flex-wrap">
                         {{-- Plant Filter --}}
                         <div class="relative">
@@ -169,8 +173,14 @@
                             <span class="material-symbols-outlined text-[18px] text-on-surface-variant absolute right-2.5 top-2.5 pointer-events-none">expand_more</span>
                         </div>
 
+                        {{-- Add Task Button --}}
+                        <button type="button" onclick="openAddTaskModal()" class="text-[12px] font-extrabold text-primary bg-primary/10 border border-primary/30 hover:bg-primary hover:text-white active:scale-95 px-3 py-2 rounded-xl transition-all flex items-center gap-1 shadow-2xs" title="Tambah Jadwal Kegiatan Baru">
+                            <span class="material-symbols-outlined text-[16px]">add</span>
+                            <span>Tambah</span>
+                        </button>
+
                         {{-- Today Button --}}
-                        <button type="button" onclick="jumpToToday()" class="text-[12px] font-extrabold text-primary border border-primary/30 hover:bg-primary/10 active:scale-95 px-3 py-2 rounded-xl transition-all shadow-2xs">
+                        <button type="button" onclick="jumpToToday()" class="text-[12px] font-extrabold text-on-surface border border-outline-variant/50 hover:bg-surface-container-high active:scale-95 px-3 py-2 rounded-xl transition-all shadow-2xs">
                             Hari Ini
                         </button>
 
@@ -223,7 +233,7 @@
                         </span>
                     </div>
                     <div class="text-[11px] text-on-surface-variant italic">
-                        * Klik pada tugas untuk mereschedule ke tanggal baru
+                        * Klik pada tugas untuk reschedule atau hapus kegiatan
                     </div>
                 </div>
 
@@ -267,8 +277,8 @@
                                             {{ $task->plant ? $task->plant->plantTemplate->name_id : 'Tanaman' }}
                                         </p>
                                     </div>
-                                    <button type="button" onclick="quickRescheduleById({{ $task->id }})" class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded-lg transition-colors shrink-0" title="Reschedule Jadwal">
-                                        <span class="material-symbols-outlined text-[18px]">update</span>
+                                    <button type="button" onclick="quickRescheduleById({{ $task->id }})" class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded-lg transition-colors shrink-0" title="Kelola / Reschedule Jadwal">
+                                        <span class="material-symbols-outlined text-[18px]">edit_calendar</span>
                                     </button>
                                 </div>
                             @endforeach
@@ -317,18 +327,18 @@
                 </div>
                 @endif
 
-                {{-- Card: Edukasi Reschedule & Tips --}}
+                {{-- Card: Edukasi & Bantuan --}}
                 <div class="w-full bg-gradient-to-br from-[#006c49]/10 via-surface to-[#944a23]/10 rounded-[24px] p-6 border border-primary/20 ambient-shadow-lg flex flex-col">
                     <div class="flex items-center gap-2 mb-2 text-primary font-black text-[14px]">
                         <span class="material-symbols-outlined text-[20px]">lightbulb</span>
-                        <span>Fleksibilitas Reschedule</span>
+                        <span>Fleksibilitas Kalender</span>
                     </div>
                     <p class="text-[12px] text-on-surface-variant leading-relaxed mb-3">
-                        Kondisi cuaca atau kesibukan mendadak? Anda dapat memindahkan tanggal jadwal perawatan maju ke masa depan maupun mundur mendekat, asalkan tidak sebelum hari ini.
+                        Anda dapat menambah jadwal perawatan baru kapan saja serta memindahkan tanggal jadwal maju/mundur atau menghapusnya jika sudah tidak diperlukan.
                     </p>
                     <div class="flex items-center gap-2 text-[11px] font-bold text-[#006c49] bg-white/80 p-2.5 rounded-xl border border-primary/20">
                         <span class="material-symbols-outlined text-[16px]">verified</span>
-                        <span>Tugas yang terlewat (Missed) akan aktif kembali saat dijadwal ulang ke hari ini atau ke depan!</span>
+                        <span>Klik tombol (+) di tanggal atau klik tombol Tambah Kegiatan untuk menambahkan jadwal baru!</span>
                     </div>
                 </div>
 
@@ -340,7 +350,7 @@
     </div>
 
     {{-- ============================================================
-         3. Interactive Reschedule Modal
+         3. Interactive Reschedule & Delete Modal
          ============================================================ --}}
     <div id="reschedule-modal" class="fixed inset-0 z-[110] hidden overflow-y-auto" aria-labelledby="modal-reschedule-title" role="dialog" aria-modal="true">
         {{-- Backdrop --}}
@@ -359,8 +369,8 @@
                         <span class="material-symbols-outlined text-[22px]">calendar_clock</span>
                     </div>
                     <div>
-                        <h3 id="modal-reschedule-title" class="text-[18px] md:text-[20px] font-black text-on-surface leading-tight">Reschedule Jadwal Perawatan</h3>
-                        <p class="text-[12px] text-on-surface-variant">Pindahkan waktu pelaksanaan tugas ke tanggal baru.</p>
+                        <h3 id="modal-reschedule-title" class="text-[18px] md:text-[20px] font-black text-on-surface leading-tight">Kelola Jadwal Perawatan</h3>
+                        <p class="text-[12px] text-on-surface-variant">Ubah tanggal pelaksanaan atau hapus kegiatan dari jadwal.</p>
                     </div>
                 </div>
 
@@ -385,7 +395,7 @@
                         <span class="material-symbols-outlined text-[18px]">check_circle</span>
                         <span>Tugas Telah Selesai</span>
                     </div>
-                    <p class="text-[12px]">Tugas ini telah ditandai selesai dan tidak dapat di-reschedule lagi.</p>
+                    <p class="text-[12px]">Tugas ini telah ditandai selesai dan tidak dapat diubah atau dihapus.</p>
                 </div>
 
                 {{-- Reschedule Form --}}
@@ -396,7 +406,25 @@
                         <span id="modal-error-text">Terjadi kesalahan.</span>
                     </div>
 
-                    <div class="mb-5">
+                    {{-- Inline Delete Confirmation Box --}}
+                    <div id="modal-delete-confirm-box" class="hidden bg-[#ffdad6]/40 border border-[#ba1a1a]/30 rounded-2xl p-3.5 mb-4 text-[12px]">
+                        <p class="font-bold text-[#ba1a1a] mb-2 flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-[16px]">warning</span>
+                            <span>Hapus kegiatan ini dari kalender?</span>
+                        </p>
+                        <p class="text-on-surface-variant mb-3">Tindakan ini akan menghapus jadwal kegiatan ini secara permanen.</p>
+                        <div class="flex items-center gap-2 justify-end">
+                            <button type="button" onclick="cancelDeleteEvent()" class="px-3 py-1.5 rounded-xl font-bold text-xs bg-white text-on-surface-variant border border-outline-variant/30 hover:bg-surface transition-colors">
+                                Batal
+                            </button>
+                            <button type="button" id="btn-confirm-delete" onclick="submitDeleteEvent()" class="px-3 py-1.5 rounded-xl font-bold text-xs bg-[#ba1a1a] text-white hover:bg-[#93000a] transition-colors flex items-center gap-1 shadow-xs">
+                                <span id="btn-delete-text">Ya, Hapus Kegiatan</span>
+                                <span id="btn-delete-spinner" class="hidden material-symbols-outlined text-[14px] animate-spin">sync</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="reschedule-input-container" class="mb-5">
                         <label for="reschedule-new-date" class="block text-xs font-black uppercase tracking-wider text-on-surface mb-2">
                             Pilih Tanggal Baru
                         </label>
@@ -407,14 +435,22 @@
                         </p>
                     </div>
 
-                    <div class="flex gap-3 justify-end items-center pt-2">
-                        <button type="button" onclick="closeRescheduleModal()" class="px-5 py-2.5 rounded-full font-bold text-sm text-on-surface-variant hover:bg-surface-container-high transition-colors">
-                            Batal
+                    <div class="flex gap-2 justify-between items-center pt-2 flex-wrap">
+                        {{-- Delete Button --}}
+                        <button type="button" id="btn-trigger-delete" onclick="showDeleteConfirm()" class="px-3.5 py-2.5 rounded-xl font-bold text-xs md:text-sm text-[#ba1a1a] hover:bg-[#ffdad6]/60 border border-[#ba1a1a]/30 transition-all flex items-center gap-1 active:scale-95">
+                            <span class="material-symbols-outlined text-[16px]">delete</span>
+                            <span>Hapus</span>
                         </button>
-                        <button type="button" id="btn-submit-reschedule" onclick="submitReschedule()" class="px-6 py-2.5 rounded-full font-bold text-sm bg-primary text-white shadow-sm hover:bg-[#005236] transition-colors flex items-center gap-2 active:scale-95">
-                            <span id="btn-reschedule-text">Simpan Jadwal Baru</span>
-                            <span id="btn-reschedule-spinner" class="hidden material-symbols-outlined text-[16px] animate-spin">sync</span>
-                        </button>
+
+                        <div class="flex gap-2 items-center ml-auto">
+                            <button type="button" onclick="closeRescheduleModal()" class="px-4 py-2.5 rounded-full font-bold text-sm text-on-surface-variant hover:bg-surface-container-high transition-colors">
+                                Batal
+                            </button>
+                            <button type="button" id="btn-submit-reschedule" onclick="submitReschedule()" class="px-5 py-2.5 rounded-full font-bold text-sm bg-primary text-white shadow-sm hover:bg-[#005236] transition-colors flex items-center gap-2 active:scale-95">
+                                <span id="btn-reschedule-text">Simpan Jadwal Baru</span>
+                                <span id="btn-reschedule-spinner" class="hidden material-symbols-outlined text-[16px] animate-spin">sync</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -429,7 +465,117 @@
     </div>
 
     {{-- ============================================================
-         4. Edit Planted Date Modal (Original)
+         4. Add Task Modal (Tambah Kegiatan Baru)
+         ============================================================ --}}
+    <div id="add-task-modal" class="fixed inset-0 z-[110] hidden overflow-y-auto" aria-labelledby="modal-add-title" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity" onclick="closeAddTaskModal()"></div>
+
+        <div class="min-h-screen w-full px-4 py-8 flex items-center justify-center pointer-events-none">
+            <div class="w-full max-w-[480px] bg-white rounded-3xl p-6 md:p-8 ambient-shadow-lg border border-outline-variant/30 pointer-events-auto relative shrink-0">
+                
+                <button type="button" onclick="closeAddTaskModal()" class="absolute top-5 right-5 w-9 h-9 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface-variant hover:bg-error/10 hover:text-error transition-colors" aria-label="Tutup">
+                    <span class="material-symbols-outlined text-[20px]">close</span>
+                </button>
+
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                        <span class="material-symbols-outlined text-[22px]">add_task</span>
+                    </div>
+                    <div>
+                        <h3 id="modal-add-title" class="text-[18px] md:text-[20px] font-black text-on-surface leading-tight">Tambah Kegiatan Perawatan</h3>
+                        <p class="text-[12px] text-on-surface-variant">Buat jadwal tugas baru untuk tanaman di kebun Anda.</p>
+                    </div>
+                </div>
+
+                {{-- Error Container --}}
+                <div id="add-task-error" class="hidden bg-[#ffdad6] border border-[#ba1a1a]/30 text-[#ba1a1a] rounded-2xl p-3 mb-4 text-[12px] font-semibold flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px] shrink-0">error</span>
+                    <span id="add-task-error-text">Terjadi kesalahan.</span>
+                </div>
+
+                <form id="add-task-form" onsubmit="event.preventDefault(); submitAddTask();">
+                    {{-- 1. Plant Selector --}}
+                    <div class="mb-4">
+                        <label for="add-task-plant-id" class="block text-xs font-black uppercase tracking-wider text-on-surface mb-1.5">
+                            Pilih Tanaman <span class="text-error">*</span>
+                        </label>
+                        <select id="add-task-plant-id" class="w-full bg-surface border border-outline-variant/60 rounded-xl px-3.5 py-2.5 text-on-surface text-[14px] font-bold focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" required>
+                            @foreach($plants as $p)
+                                <option value="{{ $p->id }}" {{ $mainPlant && $mainPlant->id == $p->id ? 'selected' : '' }}>
+                                    {{ $p->plantTemplate->name_id }} ({{ $p->garden->name ?? 'Kebun' }})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- 2. Event Type Selector --}}
+                    <div class="mb-4">
+                        <label for="add-task-event-type-id" class="block text-xs font-black uppercase tracking-wider text-on-surface mb-1.5">
+                            Jenis Kegiatan Perawatan <span class="text-error">*</span>
+                        </label>
+                        <select id="add-task-event-type-id" class="w-full bg-surface border border-outline-variant/60 rounded-xl px-3.5 py-2.5 text-on-surface text-[14px] font-bold focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" required>
+                            @if(isset($eventTypes) && $eventTypes->count() > 0)
+                                @foreach($eventTypes as $et)
+                                    <option value="{{ $et->id }}">{{ $et->label }}</option>
+                                @endforeach
+                            @else
+                                <option value="9">Pengingat Penyiraman</option>
+                                <option value="10">Pengingat Pemupukan</option>
+                                <option value="11">Inspeksi Hama</option>
+                                <option value="12">Perempelan / Pemangkasan</option>
+                                <option value="13">Pemasangan Ajir</option>
+                                <option value="21">Pemeriksaan Drainase Pot</option>
+                                <option value="22">Sanitasi Jamur Daun</option>
+                            @endif
+                        </select>
+                    </div>
+
+                    {{-- 3. Scheduled Date & Priority --}}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                        <div>
+                            <label for="add-task-date" class="block text-xs font-black uppercase tracking-wider text-on-surface mb-1.5">
+                                Tanggal Pelaksanaan <span class="text-error">*</span>
+                            </label>
+                            <input type="date" id="add-task-date" min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}" class="w-full bg-surface border border-outline-variant/60 rounded-xl px-3 py-2 text-on-surface text-[13px] font-bold focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" required>
+                        </div>
+                        <div>
+                            <label for="add-task-priority" class="block text-xs font-black uppercase tracking-wider text-on-surface mb-1.5">
+                                Prioritas
+                            </label>
+                            <select id="add-task-priority" class="w-full bg-surface border border-outline-variant/60 rounded-xl px-3 py-2 text-on-surface text-[13px] font-bold focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+                                <option value="MEDIUM">Sedang (Normal)</option>
+                                <option value="HIGH">Tinggi (Penting)</option>
+                                <option value="LOW">Rendah</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    {{-- 4. Custom Message / Notes --}}
+                    <div class="mb-5">
+                        <label for="add-task-message" class="block text-xs font-black uppercase tracking-wider text-on-surface mb-1.5">
+                            Catatan Tambahan <span class="text-[11px] text-on-surface-variant font-normal">(Opsional)</span>
+                        </label>
+                        <input type="text" id="add-task-message" placeholder="Contoh: Berikan pupuk NPK 5 gram / Cek daun bawah" class="w-full bg-surface border border-outline-variant/60 rounded-xl px-3.5 py-2.5 text-on-surface text-[13px] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+                    </div>
+
+                    {{-- Actions --}}
+                    <div class="flex gap-2 justify-end items-center pt-2">
+                        <button type="button" onclick="closeAddTaskModal()" class="px-5 py-2.5 rounded-full font-bold text-sm text-on-surface-variant hover:bg-surface-container-high transition-colors">
+                            Batal
+                        </button>
+                        <button type="submit" id="btn-submit-add-task" class="px-6 py-2.5 rounded-full font-bold text-sm bg-primary text-white shadow-sm hover:bg-[#005236] transition-colors flex items-center gap-2 active:scale-95">
+                            <span id="btn-add-text">Simpan Kegiatan</span>
+                            <span id="btn-add-spinner" class="hidden material-symbols-outlined text-[16px] animate-spin">sync</span>
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    {{-- ============================================================
+         5. Edit Planted Date Modal (Original)
          ============================================================ --}}
     @if($mainPlant)
     <div id="edit-jadwal-modal" class="fixed inset-0 z-[100] hidden overflow-y-auto">
@@ -611,13 +757,20 @@
             }
             cell.className = cellClass;
 
-            // Day Header (Date number + badge)
+            // Day Header (Date number + badge + quick add button)
             let headerHtml = `
                 <div class="flex items-center justify-between gap-1 mb-1">
-                    <span class="text-[12px] md:text-[13px] font-black ${isToday ? 'text-primary' : (isPast ? 'text-slate-500' : 'text-on-surface')}">
-                        ${d}
-                    </span>
-                    ${isToday ? '<span class="text-[9px] font-black bg-primary text-white px-1.5 py-0.2 rounded-full uppercase tracking-tighter">Hari Ini</span>' : ''}
+                    <div class="flex items-center gap-1">
+                        <span class="text-[12px] md:text-[13px] font-black ${isToday ? 'text-primary' : (isPast ? 'text-slate-500' : 'text-on-surface')}">
+                            ${d}
+                        </span>
+                        ${isToday ? '<span class="text-[9px] font-black bg-primary text-white px-1.5 py-0.2 rounded-full uppercase tracking-tighter">Hari Ini</span>' : ''}
+                    </div>
+                    ${!isPast ? `
+                    <button type="button" onclick="openAddTaskModalForDate('${dateStr}')" class="opacity-0 group-hover:opacity-100 p-0.5 rounded text-slate-400 hover:text-primary hover:bg-primary/10 transition-all active:scale-95" title="Tambah kegiatan di tanggal ini">
+                        <span class="material-symbols-outlined text-[15px]">add</span>
+                    </button>
+                    ` : ''}
                 </div>
             `;
 
@@ -647,7 +800,7 @@
                 }
 
                 tasksHtml += `
-                    <button type="button" onclick="openRescheduleModalById(${evt.id})" class="w-full text-left px-1.5 py-1 rounded-md text-[10px] md:text-[11px] font-extrabold border ${badgeColor} transition-transform active:scale-95 flex items-center gap-1 truncate shadow-2xs" title="${evt.title} (${evt.plant_name}) - Klik untuk kelola">
+                    <button type="button" onclick="openRescheduleModalById(${evt.id})" class="w-full text-left px-1.5 py-1 rounded-md text-[10px] md:text-[11px] font-extrabold border ${badgeColor} transition-transform active:scale-95 flex items-center gap-1 truncate shadow-2xs" title="${evt.title} (${evt.plant_name}) - Klik untuk kelola / reschedule">
                         <span class="material-symbols-outlined text-[13px] shrink-0">${evt.icon || 'eco'}</span>
                         <span class="truncate">${evt.title}</span>
                     </button>
@@ -656,9 +809,9 @@
 
             if (remaining > 0) {
                 tasksHtml += `
-                    <span class="text-[9px] font-bold text-on-surface-variant bg-surface-container-high px-1.5 py-0.5 rounded text-center block">
+                    <button type="button" onclick="openAddTaskModalForDate('${dateStr}')" class="text-[9px] font-bold text-on-surface-variant bg-surface-container-high px-1.5 py-0.5 rounded text-center block w-full hover:bg-surface-container-highest transition-colors">
                         +${remaining} lainnya
-                    </span>
+                    </button>
                 `;
             }
 
@@ -679,6 +832,121 @@
         }
     }
 
+    // ============================================================
+    // Add Task Modal Functions
+    // ============================================================
+    function openAddTaskModal(defaultDate = null) {
+        const modal = document.getElementById('add-task-modal');
+        const errBox = document.getElementById('add-task-error');
+        const dateInput = document.getElementById('add-task-date');
+        const plantSelect = document.getElementById('add-task-plant-id');
+        const msgInput = document.getElementById('add-task-message');
+
+        if (errBox) errBox.classList.add('hidden');
+        if (msgInput) msgInput.value = '';
+
+        if (dateInput) {
+            dateInput.min = todayStr;
+            dateInput.value = (defaultDate && defaultDate >= todayStr) ? defaultDate : todayStr;
+        }
+
+        // Pre-select plant if activePlantFilter is a specific plant
+        if (plantSelect && activePlantFilter && activePlantFilter !== 'all') {
+            plantSelect.value = activePlantFilter;
+        }
+
+        if (modal) modal.classList.remove('hidden');
+    }
+
+    function openAddTaskModalForDate(dateStr) {
+        openAddTaskModal(dateStr);
+    }
+
+    function closeAddTaskModal() {
+        const modal = document.getElementById('add-task-modal');
+        if (modal) modal.classList.add('hidden');
+    }
+
+    async function submitAddTask() {
+        const plantSelect = document.getElementById('add-task-plant-id');
+        const typeSelect = document.getElementById('add-task-event-type-id');
+        const dateInput = document.getElementById('add-task-date');
+        const prioritySelect = document.getElementById('add-task-priority');
+        const msgInput = document.getElementById('add-task-message');
+
+        const errBox = document.getElementById('add-task-error');
+        const errText = document.getElementById('add-task-error-text');
+        const btnText = document.getElementById('btn-add-text');
+        const btnSpinner = document.getElementById('btn-add-spinner');
+        const submitBtn = document.getElementById('btn-submit-add-task');
+
+        const plantId = plantSelect ? plantSelect.value : '';
+        const eventTypeId = typeSelect ? typeSelect.value : '';
+        const schedDate = dateInput ? dateInput.value : '';
+        const priority = prioritySelect ? prioritySelect.value : 'MEDIUM';
+        const message = msgInput ? msgInput.value : '';
+
+        if (!plantId || !eventTypeId || !schedDate) {
+            if (errText) errText.textContent = 'Harap lengkapi semua kolom yang wajib diisi.';
+            if (errBox) errBox.classList.remove('hidden');
+            return;
+        }
+
+        if (schedDate < todayStr) {
+            if (errText) errText.textContent = 'Tanggal kegiatan tidak boleh sebelum hari ini.';
+            if (errBox) errBox.classList.remove('hidden');
+            return;
+        }
+
+        // Show loading state
+        if (btnText) btnText.textContent = 'Menyimpan...';
+        if (btnSpinner) btnSpinner.classList.remove('hidden');
+        if (submitBtn) submitBtn.disabled = true;
+        if (errBox) errBox.classList.add('hidden');
+
+        try {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            const res = await fetch('/api/growth-calendar/events', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({
+                    plant_id: plantId,
+                    event_type_id: eventTypeId,
+                    scheduled_date: schedDate,
+                    priority: priority,
+                    message: message
+                })
+            });
+
+            const result = await res.json();
+            if (res.ok && result.success) {
+                closeAddTaskModal();
+                showToast(result.message || 'Kegiatan berhasil ditambahkan.');
+                // Refresh calendar events
+                fetchEvents();
+            } else {
+                const message = result.message || (result.errors && Object.values(result.errors)[0][0]) || 'Gagal menambahkan kegiatan.';
+                if (errText) errText.textContent = message;
+                if (errBox) errBox.classList.remove('hidden');
+            }
+        } catch (err) {
+            console.error('Add task error:', err);
+            if (errText) errText.textContent = 'Terjadi kesalahan koneksi. Silakan coba lagi.';
+            if (errBox) errBox.classList.remove('hidden');
+        } finally {
+            if (btnText) btnText.textContent = 'Simpan Kegiatan';
+            if (btnSpinner) btnSpinner.classList.add('hidden');
+            if (submitBtn) submitBtn.disabled = false;
+        }
+    }
+
+    // ============================================================
+    // Reschedule & Delete Modal Functions
+    // ============================================================
     function openRescheduleModalById(eventId) {
         const evt = eventsData.find(e => e.id === eventId);
         if (!evt) return;
@@ -696,8 +964,11 @@
         const completedNotice = document.getElementById('modal-completed-notice');
         const completedFooter = document.getElementById('modal-completed-footer');
         const errNotice = document.getElementById('modal-error-notice');
+        const deleteConfirmBox = document.getElementById('modal-delete-confirm-box');
+        const triggerDeleteBtn = document.getElementById('btn-trigger-delete');
 
         if (errNotice) errNotice.classList.add('hidden');
+        if (deleteConfirmBox) deleteConfirmBox.classList.add('hidden');
 
         if (iconEl) iconEl.textContent = evt.icon || 'eco';
         if (titleEl) titleEl.textContent = evt.title;
@@ -721,14 +992,15 @@
             if (completedNotice) completedNotice.classList.remove('hidden');
             if (completedFooter) completedFooter.classList.remove('hidden');
             if (completedFooter) completedFooter.classList.add('flex');
+            if (triggerDeleteBtn) triggerDeleteBtn.classList.add('hidden');
         } else {
             if (formBody) formBody.classList.remove('hidden');
             if (completedNotice) completedNotice.classList.add('hidden');
             if (completedFooter) completedFooter.classList.add('hidden');
             if (completedFooter) completedFooter.classList.remove('flex');
+            if (triggerDeleteBtn) triggerDeleteBtn.classList.remove('hidden');
 
             if (dateInput) {
-                // Set default value to event scheduled_date or today if scheduled_date is in the past
                 const currentSched = evt.scheduled_date;
                 dateInput.value = (currentSched && currentSched >= todayStr) ? currentSched : todayStr;
                 dateInput.min = todayStr;
@@ -739,14 +1011,71 @@
     }
 
     function quickRescheduleById(eventId) {
-        // Quick hook for sidebar tasks
         openRescheduleModalById(eventId);
     }
 
     function closeRescheduleModal() {
         const modal = document.getElementById('reschedule-modal');
         if (modal) modal.classList.add('hidden');
+        cancelDeleteEvent();
         activeEvent = null;
+    }
+
+    function showDeleteConfirm() {
+        const deleteConfirmBox = document.getElementById('modal-delete-confirm-box');
+        if (deleteConfirmBox) deleteConfirmBox.classList.remove('hidden');
+    }
+
+    function cancelDeleteEvent() {
+        const deleteConfirmBox = document.getElementById('modal-delete-confirm-box');
+        if (deleteConfirmBox) deleteConfirmBox.classList.add('hidden');
+    }
+
+    async function submitDeleteEvent() {
+        if (!activeEvent) return;
+
+        const btnText = document.getElementById('btn-delete-text');
+        const btnSpinner = document.getElementById('btn-delete-spinner');
+        const submitBtn = document.getElementById('btn-confirm-delete');
+        const errNotice = document.getElementById('modal-error-notice');
+        const errText = document.getElementById('modal-error-text');
+
+        // Show loading state
+        if (btnText) btnText.textContent = 'Menghapus...';
+        if (btnSpinner) btnSpinner.classList.remove('hidden');
+        if (submitBtn) submitBtn.disabled = true;
+        if (errNotice) errNotice.classList.add('hidden');
+
+        try {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            const res = await fetch(`/api/events/${activeEvent.id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            });
+
+            const result = await res.json();
+            if (res.ok && result.success) {
+                closeRescheduleModal();
+                showToast(result.message || 'Kegiatan berhasil dihapus.');
+                // Refresh calendar events
+                fetchEvents();
+            } else {
+                const message = result.message || 'Gagal menghapus kegiatan.';
+                if (errText) errText.textContent = message;
+                if (errNotice) errNotice.classList.remove('hidden');
+            }
+        } catch (err) {
+            console.error('Delete error:', err);
+            if (errText) errText.textContent = 'Terjadi kesalahan koneksi. Silakan coba lagi.';
+            if (errNotice) errNotice.classList.remove('hidden');
+        } finally {
+            if (btnText) btnText.textContent = 'Ya, Hapus Kegiatan';
+            if (btnSpinner) btnSpinner.classList.add('hidden');
+            if (submitBtn) submitBtn.disabled = false;
+        }
     }
 
     async function submitReschedule() {
@@ -796,7 +1125,7 @@
             if (res.ok && result.success) {
                 closeRescheduleModal();
                 showToast(result.message || 'Jadwal berhasil dipindahkan.');
-                // Refresh calendar events to reflect updated date and status
+                // Refresh calendar events
                 fetchEvents();
             } else {
                 const message = result.message || (result.errors && Object.values(result.errors)[0][0]) || 'Gagal mengubah jadwal.';

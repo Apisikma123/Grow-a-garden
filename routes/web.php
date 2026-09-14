@@ -213,7 +213,9 @@ Route::middleware(['auth', 'user'])->group(function () {
 
     Route::get('/growth-calendar', [\App\Http\Controllers\GrowthCalendarController::class, 'index'])->name('growth-calendar');
     Route::get('/api/growth-calendar/events', [\App\Http\Controllers\GrowthCalendarController::class, 'calendarEvents'])->name('api.growth-calendar.events');
+    Route::post('/api/growth-calendar/events', [\App\Http\Controllers\GrowthCalendarController::class, 'storeEvent'])->name('api.growth-calendar.events.store');
     Route::patch('/api/events/{event}/reschedule', [\App\Http\Controllers\GrowthCalendarController::class, 'rescheduleEvent'])->name('api.events.reschedule');
+    Route::delete('/api/events/{event}', [\App\Http\Controllers\GrowthCalendarController::class, 'destroyEvent'])->name('api.events.destroy');
 
     Route::get('/care-tasks', [\App\Http\Controllers\CareTaskController::class, 'index'])->name('care-tasks');
     Route::patch('/care-tasks/{event}/complete', [\App\Http\Controllers\CareTaskController::class, 'complete'])->name('care-tasks.complete');

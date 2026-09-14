@@ -26,6 +26,11 @@ class GrowthCalendarController extends Controller
             }
         }
 
+        $eventTypes = \App\Models\EventType::where('category', 'MAINTENANCE')
+            ->orWhere('code', 'HARVEST_READY')
+            ->orderBy('label', 'asc')
+            ->get();
+
         if ($plants->isEmpty()) {
             return view('users.growth-calendar', [
                 'plants' => collect(),
@@ -36,6 +41,7 @@ class GrowthCalendarController extends Controller
                 'agronomic' => null,
                 'stageWeatherAdvice' => null,
                 'isLocked' => false,
+                'eventTypes' => $eventTypes,
             ]);
         }
 
@@ -144,6 +150,87 @@ class GrowthCalendarController extends Controller
             'agronomic' => $agronomic,
             'stageWeatherAdvice' => $stageWeatherAdvice,
             'isLocked' => $isLocked,
+            'eventTypes' => $eventTypes,
+        ]);
+    }
+
+    public function storeEvent(Request $request)
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
+        }
+
+        $validated = $request->validate([
+            'plant_id' => ['required', 'integer', 'exists:plants,id'],
+            'event_type_id' => ['required', 'integer', 'exists:event_type_catalog,id'],
+            'scheduled_date' => ['required', 'date', 'after_or_equal:today'],
+            'priority' => ['nullable', 'in:LOW,MEDIUM,HIGH'],
+            'message' => ['nullable', 'string', 'max:255'],
+        ], [
+            'plant_id.required' => 'Pilih tanaman yang akan dirawat.',
+            'event_type_id.required' => 'Pilih jenis kegiatan perawatan.',
+            'scheduled_date.required' => 'Tanggal pelaksanaan wajib dipilih.',
+            'scheduled_date.after_or_equal' => 'Jadwal tidak boleh dibuat sebelum hari ini.',
+        ]);
+
+        $plant = \App\Models\Plant::with(['garden', 'plantTemplate'])->findOrFail($validated['plant_id']);
+        if (!$plant->garden || $plant->garden->user_id !== $user->id) {
+            return response()->json(['success' => false, 'message' => 'Anda tidak memiliki akses ke tanaman ini.'], 403);
+        }
+
+        $eventType = \App\Models\EventType::findOrFail($validated['event_type_id']);
+        $priority = !empty($validated['priority']) ? $validated['priority'] : ($eventType->default_priority ?: 'MEDIUM');
+        $plantName = $plant->plantTemplate->name_id ?? 'Tanaman';
+        $message = !empty($validated['message']) ? $validated['message'] : "{$plantName}: {$eventType->label}";
+
+        $event = \App\Models\Event::create([
+            'plant_id' => $plant->id,
+            'event_type_id' => $eventType->id,
+            'scheduled_date' => Carbon::parse($validated['scheduled_date'])->toDateString(),
+            'status' => 'PENDING',
+            'priority' => $priority,
+            'message' => $message,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => "Kegiatan '{$eventType->label}' berhasil ditambahkan ke jadwal.",
+            'event' => [
+                'id' => $event->id,
+                'plant_id' => $event->plant_id,
+                'plant_name' => $plantName,
+                'title' => $eventType->label,
+                'scheduled_date' => $event->scheduled_date->format('Y-m-d'),
+                'status' => $event->status,
+            ]
+        ], 201);
+    }
+
+    public function destroyEvent(Request $request, \App\Models\Event $event)
+    {
+        $event->loadMissing(['plant.garden', 'eventType']);
+
+        if (!$event->plant || !$event->plant->garden || $event->plant->garden->user_id !== Auth::id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda tidak memiliki akses untuk menghapus kegiatan ini.'
+            ], 403);
+        }
+
+        if ($event->status === 'COMPLETED') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kegiatan yang sudah selesai tidak dapat dihapus.'
+            ], 422);
+        }
+
+        $title = $event->eventType->label ?? $event->message ?? 'Kegiatan';
+        $event->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => "Kegiatan '{$title}' berhasil dihapus dari jadwal."
         ]);
     }
 
