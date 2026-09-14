@@ -387,4 +387,18 @@ html {
     padding: 0 !important;
 }
 
+/* ============================================
+   GLOBAL ANTI-COLLAPSE FLEXBOX RULES
+   (Enforces AGENTS.md & GEMINI.md layout integrity)
+   ============================================ */
+.flex-col > .self-stretch,
+.items-center > .self-stretch,
+.anti-collapse {
+    width: 100%;
+    min-width: 0;
+    white-space: normal;
+    word-break: normal;
+}
+
+
 

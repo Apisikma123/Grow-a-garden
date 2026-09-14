@@ -4,13 +4,13 @@
 @section('description', 'Pantau dan kelola tahap pertumbuhan tanaman Anda dengan kalender bulanan interaktif.')
 
 @section('dashboard-content')
-<div class="relative min-h-[80vh] pb-10">
+<div class="relative min-h-[80vh] pb-10 w-full min-w-0" style="width: 100% !important;">
 
     {{-- Main Container --}}
-    <div class="flex flex-col gap-[24px]">
+    <div class="flex flex-col gap-[24px] w-full min-w-0" style="width: 100% !important;">
 
         {{-- Page Header --}}
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-2">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-2 w-full">
             <div>
                 <h1 class="text-[30px] md:text-[42px] font-bold text-on-surface tracking-tight leading-tight mb-1">Kalender Tanam</h1>
                 <p class="text-[15px] md:text-[16px] text-on-surface-variant max-w-xl leading-relaxed">Pantau linimasa pertumbuhan cerdas, jadwalkan perawatan baru, dan kelola kegiatan kebun Anda secara fleksibel.</p>
@@ -27,14 +27,14 @@
 
         @if(!$mainPlant)
         {{-- Empty State (Layout Anti-Collapse Safe) --}}
-        <div class="w-full bg-surface rounded-[24px] p-8 md:p-14 text-center border border-outline-variant/30 ambient-shadow-lg flex flex-col items-center justify-center">
-            <div class="w-full max-w-md mx-auto flex flex-col items-center text-center">
-                <div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-5 shadow-inner">
-                    <span class="material-symbols-outlined text-[42px]">yard</span>
-                </div>
-                <h2 class="text-[22px] font-black text-on-surface mb-2 w-full">Belum Ada Tanaman Aktif</h2>
-                <p class="text-[14px] text-on-surface-variant mb-6 w-full leading-relaxed">Tambahkan tanaman di kebun Anda untuk melihat kalender bulanan dan rekomendasi perawatan cerdas.</p>
-                <a href="{{ route('gardens') }}" class="inline-flex items-center gap-2 bg-primary text-white font-bold px-6 py-3 rounded-full hover:bg-[#005236] transition-all shadow-md active:scale-95">
+        <div class="w-full min-w-full self-stretch bg-white rounded-[24px] p-8 md:p-14 text-center border border-outline-variant/30 ambient-shadow-lg flex flex-col items-center justify-center gap-5" style="width: 100% !important; min-width: 100% !important; box-sizing: border-box !important;">
+            <div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-1 shadow-inner shrink-0">
+                <span class="material-symbols-outlined text-[42px]">yard</span>
+            </div>
+            <div class="text-center w-full min-w-full max-w-md mx-auto self-stretch flex flex-col items-center" style="width: 100% !important; min-width: 100% !important; max-width: 28rem !important; text-align: center !important;">
+                <h2 class="text-[22px] md:text-[26px] font-black text-on-surface mb-2 w-full self-stretch" style="width: 100% !important; min-width: 100% !important; text-align: center !important; display: block !important; white-space: normal !important; word-break: normal !important;">Belum Ada Tanaman Aktif</h2>
+                <p class="text-[14px] md:text-[15px] text-on-surface-variant mb-6 w-full self-stretch leading-relaxed" style="width: 100% !important; min-width: 100% !important; text-align: center !important; display: block !important; white-space: normal !important; word-break: normal !important;">Tambahkan tanaman di kebun Anda untuk melihat kalender bulanan dan rekomendasi perawatan cerdas.</p>
+                <a href="{{ route('gardens') }}" class="inline-flex items-center justify-center gap-2 bg-primary text-white font-bold px-6 py-3.5 rounded-full hover:bg-[#005236] transition-all shadow-md active:scale-95 shrink-0 whitespace-nowrap" style="white-space: nowrap !important; text-decoration: none !important;">
                     <span class="material-symbols-outlined text-[20px]">add_circle</span>
                     <span>Buka Kebun & Tambah Tanaman</span>
                 </a>
@@ -67,8 +67,8 @@
                         </div>
                         <p class="text-[13px] text-on-surface-variant font-medium mt-1">
                             Kebun: <span class="text-on-surface font-bold">{{ $mainPlant->garden->name ?? 'Kebun Utama' }}</span> • 
-                            Umur <span class="text-primary font-black">{{ max(1, $currentHst) }} HST</span> • 
-                            Est. Panen <span class="text-[#944a23] font-black">{{ $mainPlant->plantTemplate->harvest_start_day ?? 30 }} HST</span>
+                            Umur Tanaman: <span class="text-primary font-black">{{ max(1, $currentHst) }} Hari</span> • 
+                            Perkiraan Panen: <span class="text-[#944a23] font-black">Hari ke-{{ $mainPlant->plantTemplate->harvest_start_day ?? 30 }}</span>
                         </p>
                     </div>
                 </div>
@@ -112,6 +112,14 @@
                             </div>
                             <h4 class="text-[13px] md:text-[14px] font-black text-on-surface leading-snug">{{ $stage['label'] }}</h4>
                             <p class="text-[11px] text-on-surface-variant font-medium mt-0.5">{{ $stage['date']->isoFormat('D MMM') }}</p>
+
+                            @if(!empty($stage['weatherBadge']))
+                            <div class="mt-1">
+                                <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-md {{ $stage['weatherBadgeBg'] }} inline-block">
+                                    {{ $stage['weatherBadge'] }}
+                                </span>
+                            </div>
+                            @endif
 
                             @if($isActive)
                             <div class="mt-2.5 w-full bg-outline-variant/30 h-1.5 rounded-full overflow-hidden">
@@ -232,6 +240,53 @@
             {{-- Sidebar Supporting Cards (2 Columns) --}}
             <div class="lg:col-span-2 flex flex-col gap-[24px]">
 
+                {{-- Card: Penyesuaian Cuaca & Kalender (Agronomic Weather Intelligence) --}}
+                @if(isset($agronomic))
+                <div class="w-full bg-white rounded-[24px] p-6 border border-outline-variant/30 ambient-shadow-lg flex flex-col gap-4">
+                    <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-[20px]">{{ $agronomic['icon'] ?? 'partly_cloudy_day' }}</span>
+                            </div>
+                            <div>
+                                <h3 class="text-[15px] font-black text-on-surface leading-snug">Penyesuaian Cuaca</h3>
+                                <p class="text-[11px] text-on-surface-variant font-medium">{{ $agronomic['condition_title'] ?? 'Kondisi Hari Ini' }}</p>
+                            </div>
+                        </div>
+                        <span class="text-[11px] font-extrabold px-2.5 py-1 rounded-full {{ $agronomic['watering']['badge_bg'] ?? 'bg-primary/10 text-primary' }}">
+                            {{ $agronomic['watering']['badge'] ?? 'Normal' }}
+                        </span>
+                    </div>
+
+                    {{-- Metrics grid --}}
+                    <div class="grid grid-cols-3 gap-2 text-center">
+                        <div class="bg-surface-container-low rounded-xl p-2.5 border border-outline-variant/15">
+                            <span class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold block">Suhu</span>
+                            <span class="text-[14px] font-black text-on-surface">{{ (int) round($agronomic['temperature'] ?? 29) }}°C</span>
+                        </div>
+                        <div class="bg-surface-container-low rounded-xl p-2.5 border border-outline-variant/15">
+                            <span class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold block">Lembap</span>
+                            <span class="text-[14px] font-black text-on-surface">{{ $agronomic['humidity'] ?? 75 }}%</span>
+                        </div>
+                        <div class="bg-surface-container-low rounded-xl p-2.5 border border-outline-variant/15">
+                            <span class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold block">Hujan</span>
+                            <span class="text-[14px] font-black text-on-surface">{{ $agronomic['rain_probability'] ?? 0 }}%</span>
+                        </div>
+                    </div>
+
+                    {{-- Impact & Advice on Calendar --}}
+                    <div class="bg-primary/5 rounded-xl p-3 border border-primary/20 space-y-1.5">
+                        <div class="flex items-center gap-1.5 text-xs font-black text-primary">
+                            <span class="material-symbols-outlined text-[16px]">info</span>
+                            <span>Pengaruh Terhadap Jadwal:</span>
+                        </div>
+                        <p class="text-[12px] text-on-surface leading-relaxed font-medium">
+                            {{ $agronomic['watering']['advice'] ?? 'Kondisi cuaca normal. Jadwal perawatan berjalan sesuai kalender.' }}
+                        </p>
+                    </div>
+                </div>
+                @endif
+
                 {{-- Card: Tugas Hari Ini --}}
                 <div class="w-full bg-white rounded-[24px] p-6 border border-outline-variant/30 ambient-shadow-lg flex flex-col">
                     <div class="flex items-center justify-between mb-4">
@@ -257,15 +312,28 @@
                                         <span class="material-symbols-outlined text-[18px]">{{ $tIcon }}</span>
                                     </div>
                                     <div class="flex-1 min-w-0">
-                                        <div class="flex items-center justify-between gap-2">
+                                        <div class="flex items-center justify-between gap-2 flex-wrap">
                                             <h4 class="text-[13px] font-bold text-on-surface truncate">{{ $task->eventType->label ?? $task->message ?? 'Tugas Perawatan' }}</h4>
-                                            @if($task->status === 'MISSED')
-                                                <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-[#ffdad6] text-[#ba1a1a] shrink-0 uppercase">Terlewat</span>
-                                            @endif
+                                            <div class="flex items-center gap-1 shrink-0">
+                                                @if(!empty($task->weather_tag))
+                                                    <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded-full {{ $task->weather_badge_bg ?? 'bg-primary/10 text-primary' }}">
+                                                        {{ $task->weather_tag }}
+                                                    </span>
+                                                @endif
+                                                @if($task->status === 'MISSED')
+                                                    <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-[#ffdad6] text-[#ba1a1a] uppercase">Terlewat</span>
+                                                @endif
+                                            </div>
                                         </div>
                                         <p class="text-[11px] text-on-surface-variant font-medium truncate mt-0.5">
                                             {{ $task->plant ? $task->plant->plantTemplate->name_id : 'Tanaman' }}
                                         </p>
+                                        @if(!empty($task->weather_reason))
+                                            <p class="text-[10px] text-primary/85 font-semibold truncate mt-0.5 flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-[12px]">schedule</span>
+                                                <span>{{ $task->weather_reason }}</span>
+                                            </p>
+                                        @endif
                                     </div>
                                     <button type="button" onclick="quickRescheduleById({{ $task->id }})" class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded-lg transition-colors shrink-0" title="Kelola / Reschedule Jadwal">
                                         <span class="material-symbols-outlined text-[18px]">edit_calendar</span>
@@ -274,10 +342,10 @@
                             @endforeach
                         </div>
                     @else
-                        <div class="w-full py-8 text-center bg-surface-container-low rounded-2xl border border-outline-variant/20 flex flex-col items-center justify-center">
-                            <span class="material-symbols-outlined text-[32px] text-primary/50 mb-1">task_alt</span>
-                            <p class="text-[13px] font-bold text-on-surface">Semua Beres!</p>
-                            <p class="text-[11px] text-on-surface-variant">Tidak ada tugas mendesak hari ini.</p>
+                        <div class="w-full py-8 text-center bg-surface-container-low rounded-2xl border border-outline-variant/20 flex flex-col items-center justify-center self-stretch" style="width: 100% !important;">
+                            <span class="material-symbols-outlined text-[32px] text-primary/50 mb-1 shrink-0">task_alt</span>
+                            <p class="text-[13px] font-bold text-on-surface w-full self-stretch" style="white-space: normal !important; word-break: normal !important;">Semua Beres!</p>
+                            <p class="text-[11px] text-on-surface-variant w-full self-stretch" style="white-space: normal !important; word-break: normal !important;">Tidak ada tugas mendesak hari ini.</p>
                         </div>
                     @endif
                 </div>
@@ -303,7 +371,7 @@
                                     </div>
                                     <div class="min-w-0">
                                         <h4 class="text-[13px] font-bold text-on-surface truncate">{{ $p->plantTemplate->name_id }}</h4>
-                                        <p class="text-[11px] text-on-surface-variant truncate">Kebun: {{ $p->garden->name ?? '-' }} • {{ max(1, $p->hst) }} HST</p>
+                                        <p class="text-[11px] text-on-surface-variant truncate">Kebun: {{ $p->garden->name ?? '-' }} • Umur {{ max(1, $p->hst) }} Hari</p>
                                     </div>
                                 </div>
                                 @if($isCurrent)
@@ -380,6 +448,20 @@
                 {{-- Scrollable Activities & Form Container --}}
                 <div class="overflow-y-auto flex-1 pr-1 space-y-3.5" id="date-modal-scrollable">
                     
+                    {{-- Today Weather Intelligence in Date Modal --}}
+                    <div id="date-modal-weather-card" class="hidden bg-primary/5 rounded-2xl p-3.5 border border-primary/20 flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
+                            <span id="date-modal-weather-icon" class="material-symbols-outlined text-[18px]">wb_sunny</span>
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-center gap-2 flex-wrap mb-0.5">
+                                <span id="date-modal-weather-title" class="text-xs font-black text-on-surface">Cuaca: -</span>
+                                <span id="date-modal-weather-badge" class="text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase bg-primary/10 text-primary">Normal</span>
+                            </div>
+                            <p id="date-modal-weather-advice" class="text-[11px] text-on-surface-variant font-medium leading-relaxed">-</p>
+                        </div>
+                    </div>
+
                     {{-- Collapsible Add Task Form --}}
                     <div id="date-add-form-wrapper" class="hidden bg-surface-container-low rounded-2xl p-4 border border-primary/25 transition-all">
                         <div class="flex items-center justify-between mb-3">
@@ -454,11 +536,11 @@
                     </div>
 
                     {{-- Empty State --}}
-                    <div id="date-activities-empty" class="hidden py-8 text-center bg-surface-container-low rounded-2xl border border-outline-variant/20 flex flex-col items-center justify-center">
-                        <span class="material-symbols-outlined text-[36px] text-primary/40 mb-1.5">event_available</span>
-                        <p class="text-[13px] font-bold text-on-surface">Belum Ada Kegiatan</p>
-                        <p class="text-[11px] text-on-surface-variant max-w-[260px] mx-auto mt-0.5 mb-3">Tidak ada jadwal kegiatan perawatan pada tanggal ini.</p>
-                        <button type="button" onclick="toggleDateAddForm(true)" class="px-3.5 py-1.5 rounded-xl font-bold text-xs bg-primary text-white hover:bg-[#005236] transition-all flex items-center gap-1 shadow-2xs">
+                    <div id="date-activities-empty" class="hidden py-8 text-center bg-surface-container-low rounded-2xl border border-outline-variant/20 flex flex-col items-center justify-center w-full self-stretch" style="width: 100% !important;">
+                        <span class="material-symbols-outlined text-[36px] text-primary/40 mb-1.5 shrink-0">event_available</span>
+                        <p class="text-[13px] font-bold text-on-surface w-full self-stretch" style="white-space: normal !important; word-break: normal !important;">Belum Ada Kegiatan</p>
+                        <p class="text-[11px] text-on-surface-variant max-w-[260px] mx-auto mt-0.5 mb-3 w-full self-stretch" style="white-space: normal !important; word-break: normal !important;">Tidak ada jadwal kegiatan perawatan pada tanggal ini.</p>
+                        <button type="button" onclick="toggleDateAddForm(true)" class="px-3.5 py-1.5 rounded-xl font-bold text-xs bg-primary text-white hover:bg-[#005236] transition-all flex items-center gap-1 shadow-2xs shrink-0 whitespace-nowrap">
                             <span class="material-symbols-outlined text-[15px]">add</span>
                             Tambah Kegiatan Baru
                         </button>
@@ -750,6 +832,7 @@
     let activePlantFilter = "{{ request('plant_id', ($mainPlant ? $mainPlant->id : 'all')) }}";
     let eventsData = [];
     let activeEvent = null;
+    let todayWeather = null;
 
     const todayDate = new Date();
     const todayStr = `${todayDate.getFullYear()}-${String(todayDate.getMonth() + 1).padStart(2, '0')}-${String(todayDate.getDate()).padStart(2, '0')}`;
@@ -824,6 +907,7 @@
             const data = await res.json();
             if (data && data.success) {
                 eventsData = data.events || [];
+                todayWeather = data.today_weather || null;
                 renderGrid();
             }
         } catch (err) {
@@ -891,6 +975,12 @@
                         </span>
                         ${isToday ? '<span class="text-[9px] font-black bg-primary text-white px-1.5 py-0.2 rounded-full uppercase tracking-tighter">Hari Ini</span>' : ''}
                     </div>
+                    ${isToday && todayWeather ? `
+                        <span class="text-[9px] font-bold text-primary flex items-center gap-0.5 bg-primary/10 px-1.5 py-0.5 rounded-md" title="Cuaca Hari Ini: ${todayWeather.condition_title} (${todayWeather.temperature}°C)">
+                            <span class="material-symbols-outlined text-[12px]">${todayWeather.icon || 'wb_sunny'}</span>
+                            <span>${todayWeather.temperature}°C</span>
+                        </span>
+                    ` : ''}
                 </div>
             `;
 
@@ -980,6 +1070,27 @@
         if (titleEl) titleEl.textContent = formatDateIndo(dateStr);
         if (todayBadge) {
             todayBadge.classList.toggle('hidden', dateStr !== todayStr);
+        }
+
+        // Today Weather Card in Date Modal
+        const weatherCard = document.getElementById('date-modal-weather-card');
+        if (weatherCard) {
+            if (dateStr === todayStr && todayWeather) {
+                weatherCard.classList.remove('hidden');
+                const iconEl = document.getElementById('date-modal-weather-icon');
+                if (iconEl) iconEl.textContent = todayWeather.icon || 'wb_sunny';
+                const titleEl = document.getElementById('date-modal-weather-title');
+                if (titleEl) titleEl.textContent = `Cuaca Hari Ini: ${todayWeather.condition_title} (${todayWeather.temperature}°C)`;
+                const badgeEl = document.getElementById('date-modal-weather-badge');
+                if (badgeEl) {
+                    badgeEl.textContent = todayWeather.watering_badge || 'Normal';
+                    badgeEl.className = `text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase ${todayWeather.watering_badge_bg || 'bg-primary/10 text-primary'}`;
+                }
+                const adviceEl = document.getElementById('date-modal-weather-advice');
+                if (adviceEl) adviceEl.textContent = todayWeather.watering_advice || todayWeather.summary || 'Kondisi cuaca ideal.';
+            } else {
+                weatherCard.classList.add('hidden');
+            }
         }
 
         toggleDateAddForm(autoOpenAdd);
@@ -1126,6 +1237,16 @@
                 statusBadge = '<span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase bg-[#ffdad6] text-[#ba1a1a] border border-[#ba1a1a]/30 shrink-0">TERLEWAT</span>';
             }
 
+            let weatherBadgeHtml = '';
+            if (evt.weather_tag) {
+                weatherBadgeHtml = `<span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded-full ${evt.weather_badge_bg || 'bg-primary/10 text-primary'} shrink-0">${evt.weather_tag}</span>`;
+            }
+
+            let weatherReasonHtml = '';
+            if (evt.weather_reason) {
+                weatherReasonHtml = `<p class="text-[10px] text-primary/85 font-semibold truncate mt-0.5 flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">schedule</span><span>${evt.weather_reason}</span></p>`;
+            }
+
             const item = document.createElement('div');
             item.className = 'bg-white rounded-2xl p-3.5 border border-outline-variant/30 shadow-2xs space-y-2.5 transition-all';
             item.id = `date-event-item-${evt.id}`;
@@ -1139,9 +1260,13 @@
                         <div class="min-w-0">
                             <h5 class="text-[13px] font-black text-on-surface leading-tight truncate">${evt.title}</h5>
                             <p class="text-[11px] text-on-surface-variant truncate">Tanaman: <span class="font-bold text-on-surface">${evt.plant_name}</span> (${evt.garden_name})</p>
+                            ${weatherReasonHtml}
                         </div>
                     </div>
-                    ${statusBadge}
+                    <div class="flex items-center gap-1 shrink-0">
+                        ${weatherBadgeHtml}
+                        ${statusBadge}
+                    </div>
                 </div>
 
                 ${!isCompleted ? `

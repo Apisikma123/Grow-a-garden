@@ -234,7 +234,7 @@ class GrowthCalendarController extends Controller
         ]);
     }
 
-    public function calendarEvents(Request $request, \App\Services\AutopilotService $autopilot)
+    public function calendarEvents(Request $request, \App\Services\AutopilotService $autopilot, \App\Services\WeatherService $weatherService)
     {
         $user = Auth::user();
         if (!$user) {
@@ -258,9 +258,17 @@ class GrowthCalendarController extends Controller
         $requestedPlantId = $request->query('plant_id');
         if ($requestedPlantId && $requestedPlantId !== 'all' && $plantIds->contains((int)$requestedPlantId)) {
             $targetPlantIds = [(int)$requestedPlantId];
+            $selectedPlant = $plants->firstWhere('id', (int)$requestedPlantId);
         } else {
             $targetPlantIds = $plantIds->toArray();
+            $selectedPlant = $plants->first();
         }
+
+        // Fetch agronomic weather for selected plant or first plant
+        $lat = $selectedPlant->garden->latitude ?? 3.58;
+        $lng = $selectedPlant->garden->longitude ?? 98.67;
+        $weather = $weatherService->getTodayWeather((float)$lat, (float)$lng);
+        $agronomic = $weatherService->analyzeAgronomicConditions($weather);
 
         $month = (int) $request->query('month', Carbon::now()->month);
         $year = (int) $request->query('year', Carbon::now()->year);
@@ -278,7 +286,9 @@ class GrowthCalendarController extends Controller
             ->orderBy('priority', 'asc')
             ->get();
 
-        $formatted = $events->map(function ($event) {
+        $todayStr = Carbon::today()->toDateString();
+
+        $formatted = $events->map(function ($event) use ($todayStr, $agronomic) {
             $code = strtolower($event->eventType->code ?? '');
             $icon = 'eco';
             if (str_contains($code, 'water')) {
@@ -297,6 +307,26 @@ class GrowthCalendarController extends Controller
                 $icon = 'shopping_basket';
             }
 
+            $weatherTag = null;
+            $weatherBadgeBg = null;
+            $weatherReason = null;
+
+            if ($event->scheduled_date && $event->scheduled_date->toDateString() === $todayStr) {
+                if (str_contains($code, 'water')) {
+                    $weatherTag = $agronomic['watering']['badge'] ?? null;
+                    $weatherBadgeBg = $agronomic['watering']['badge_bg'] ?? null;
+                    $weatherReason = $agronomic['watering']['time_window'] ?? null;
+                } elseif (str_contains($code, 'fertiliz')) {
+                    $weatherTag = $agronomic['fertilization']['badge'] ?? null;
+                    $weatherBadgeBg = $agronomic['fertilization']['badge_bg'] ?? null;
+                    $weatherReason = $agronomic['fertilization']['advice'] ?? null;
+                } elseif (str_contains($code, 'pest')) {
+                    $weatherTag = $agronomic['pest_disease']['badge'] ?? null;
+                    $weatherBadgeBg = $agronomic['pest_disease']['badge_bg'] ?? null;
+                    $weatherReason = $agronomic['pest_disease']['advice'] ?? null;
+                }
+            }
+
             return [
                 'id' => $event->id,
                 'plant_id' => $event->plant_id,
@@ -312,6 +342,9 @@ class GrowthCalendarController extends Controller
                 'priority' => $event->priority,
                 'message' => $event->message,
                 'can_reschedule' => in_array($event->status, ['PENDING', 'MISSED']),
+                'weather_tag' => $weatherTag,
+                'weather_badge_bg' => $weatherBadgeBg,
+                'weather_reason' => $weatherReason,
             ];
         });
 
@@ -320,6 +353,18 @@ class GrowthCalendarController extends Controller
             'month' => $month,
             'year' => $year,
             'events' => $formatted,
+            'today_weather' => [
+                'temperature' => (int) round($agronomic['temperature'] ?? 29),
+                'humidity' => $agronomic['humidity'] ?? 75,
+                'rain_probability' => $agronomic['rain_probability'] ?? 0,
+                'condition_title' => $agronomic['condition_title'] ?? 'Cerah Berawan',
+                'icon' => $agronomic['icon'] ?? 'wb_sunny',
+                'status' => $agronomic['status'] ?? 'NORMAL',
+                'watering_badge' => $agronomic['watering']['badge'] ?? 'Normal',
+                'watering_badge_bg' => $agronomic['watering']['badge_bg'] ?? 'bg-emerald-100 text-emerald-800',
+                'watering_advice' => $agronomic['watering']['advice'] ?? '',
+                'summary' => $agronomic['summary'] ?? '',
+            ]
         ]);
     }
 
@@ -419,7 +464,7 @@ class GrowthCalendarController extends Controller
                     $shiftedDays = $stage['day'] + $shift;
                     $weatherBadge = "Hujan ({$rainProb}%): Mundur {$shift} Hari";
                     $weatherBadgeBg = "bg-blue-100 text-blue-800 border border-blue-200/60";
-                    $weatherDesc = $stage['desc'] . " (Est. tumbuh melambat akibat awan hujan & matahari kurang).";
+                    $weatherDesc = $stage['desc'] . " (Perkiraan tumbuh melambat akibat awan hujan & matahari kurang).";
                 }
             }
 

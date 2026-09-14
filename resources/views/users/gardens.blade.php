@@ -461,7 +461,7 @@
     </div>
 </div>
 
-
+<script>
 window.GardenApp = (() => {
     let gardens = [];
     let selectedGardenId = null;
@@ -672,13 +672,8 @@ window.GardenApp = (() => {
         const iconBox = document.getElementById('detail-garden-icon-box');
         const iconEl = document.getElementById('detail-garden-icon');
         if (iconBox && iconEl) {
-            if (isGardenLocked) {
-                iconBox.className = 'w-14 h-14 rounded-2xl bg-error/15 text-error flex items-center justify-center shrink-0';
-                iconEl.textContent = 'lock';
-            } else {
-                iconBox.className = 'w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0';
-                iconEl.textContent = 'yard';
-            }
+            iconBox.className = 'w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0';
+            iconEl.textContent = 'yard';
         }
 
         const locEl = document.getElementById('detail-garden-location');
@@ -692,11 +687,11 @@ window.GardenApp = (() => {
 
         // Load weather & plants for this garden
         loadGardenWeather(gardenId);
-        await loadPlants(gardenId, isGardenLocked);
+        await loadPlants(gardenId);
     }
 
     // ── Plants ──
-    async function loadPlants(gardenId, isGardenLocked = false) {
+    async function loadPlants(gardenId) {
         const loading = document.getElementById('plants-loading');
         const empty = document.getElementById('plants-empty');
         const grid = document.getElementById('plants-grid');
@@ -719,7 +714,6 @@ window.GardenApp = (() => {
             grid.style.display = 'grid';
             grid.style.width = '100%';
             grid.innerHTML = plants.map((p, pIdx) => {
-                const isPlantLocked = isGardenLocked || (pIdx >= USER_PLAN_CONFIG.maxPlants);
                 const stage = STAGE_CONFIG[p.stage] || STAGE_CONFIG['SEED'];
                 const status = STATUS_CONFIG[p.status] || STATUS_CONFIG['ACTIVE'];
                 const harvestText = p.estimated_harvest_days !== null
@@ -727,31 +721,24 @@ window.GardenApp = (() => {
                     : '-';
                 const harvestColor = p.estimated_harvest_days !== null && p.estimated_harvest_days <= 0 ? 'text-[#006c49]' : 'text-on-surface-variant';
 
-                const onclickAttr = isPlantLocked
-                    ? `GardenApp.showPlantLockedAlert('${escAttr(p.template_name)}')`
-                    : `GardenApp.openPlantDetail(${p.id})`;
-
                 return `
-                    <button type="button" onclick="${onclickAttr}"
-                        class="bg-surface rounded-[20px] p-5 ambient-shadow text-left hover:-translate-y-1 hover:ambient-shadow-lg transition-all duration-200 flex flex-col gap-3 group relative ${isPlantLocked ? 'opacity-75 bg-surface-container-low border border-error/30' : ''}">
+                    <button type="button" onclick="GardenApp.openPlantDetail(${p.id})"
+                        class="bg-surface rounded-[20px] p-5 ambient-shadow text-left hover:-translate-y-1 hover:ambient-shadow-lg transition-all duration-200 flex flex-col gap-3 group relative">
                         <div class="flex items-start justify-between">
                             <div class="flex items-center gap-3 min-w-0">
-                                <div class="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 relative" style="background: ${isPlantLocked ? '#ffdad6' : stage.color + '15'};">
-                                    <span class="material-symbols-outlined text-[22px]" style="color: ${isPlantLocked ? '#ba1a1a' : stage.color};">${isPlantLocked ? 'lock' : stage.icon}</span>
+                                <div class="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 relative" style="background: ${stage.color}15;">
+                                    <span class="material-symbols-outlined text-[22px]" style="color: ${stage.color};">${stage.icon}</span>
                                 </div>
                                 <div class="min-w-0">
-                                    <h4 class="text-[14px] font-bold ${isPlantLocked ? 'text-on-surface-variant line-through opacity-70' : 'text-on-surface'} truncate">${escHtml(p.template_name)}</h4>
+                                    <h4 class="text-[14px] font-bold text-on-surface truncate">${escHtml(p.template_name)}</h4>
                                     <p class="text-[11px] text-on-surface-variant italic truncate">${escHtml(p.scientific_name)}</p>
                                 </div>
                             </div>
                             <span class="material-symbols-outlined text-[18px] text-outline-variant group-hover:text-primary transition-colors">open_in_new</span>
                         </div>
                         <div class="flex items-center gap-2 flex-wrap">
-                            ${isPlantLocked 
-                                ? `<span class="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container border border-error/30 whitespace-nowrap inline-block">Terkunci</span>`
-                                : `<span class="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full" style="background: ${stage.color}15; color: ${stage.color};">${stage.label}</span>
-                                   <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full ${status.bg} ${status.text}">${status.label}</span>`
-                            }
+                            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full" style="background: ${stage.color}15; color: ${stage.color};">${stage.label}</span>
+                            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full ${status.bg} ${status.text}">${status.label}</span>
                         </div>
                         <div class="flex items-center justify-between text-[12px] text-on-surface-variant pt-1 border-t border-outline-variant/20">
                             <div class="flex items-center gap-1">
@@ -1324,8 +1311,7 @@ window.GardenApp = (() => {
                 gardens[gardenIdx].plants_count = (gardens[gardenIdx].plants_count || 0) + (response.count || 1);
                 renderGardens();
             }
-            const isGardenLocked = gardenIdx >= USER_PLAN_CONFIG.maxGardens;
-            await loadPlants(selectedGardenId, isGardenLocked);
+            await loadPlants(selectedGardenId);
             if (window.AppState) window.AppState.usage.plants += (response.count || 1);
             Alert.toast.success(`${response.count || 1} Tanaman berhasil ditambahkan!`);
 
@@ -1427,8 +1413,7 @@ window.GardenApp = (() => {
         try {
             await api(`/api/plants/${currentPlantDetail.id}`, { method: 'DELETE' });
             closePlantDetailModal();
-            const gardenIdx = gardens.findIndex(g => g.id === selectedGardenId);
-            await loadPlants(selectedGardenId, gardenIdx >= USER_PLAN_CONFIG.maxGardens);
+            await loadPlants(selectedGardenId);
             if (window.AppState) window.AppState.usage.plants--;
             Alert.toast.success('Tanaman berhasil dihapus.');
         } catch (e) {
@@ -1447,8 +1432,7 @@ window.GardenApp = (() => {
         try {
             const res = await api(`/api/plants/${currentPlantDetail.id}/harvest`, { method: 'POST' });
             closePlantDetailModal();
-            const gardenIdx = gardens.findIndex(g => g.id === selectedGardenId);
-            await loadPlants(selectedGardenId, gardenIdx >= USER_PLAN_CONFIG.maxGardens);
+            await loadPlants(selectedGardenId);
             Alert.toast.success('Berhasil dipanen!');
             if (res.new_badge) {
                 Alert.modal.badge(res.new_badge);
@@ -1486,7 +1470,6 @@ window.GardenApp = (() => {
         closePlantDetailModal,
         deleteCurrentPlant,
         harvestCurrentPlant,
-        showPlantLockedAlert,
     };
 })();
 

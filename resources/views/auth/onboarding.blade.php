@@ -452,7 +452,7 @@
                         </div>
                         <h4 class="font-bold text-sm sm:text-base text-on-surface leading-tight">Pencatatan Riwayat dan Panen</h4>
                         <p class="text-xs text-on-surface-variant leading-relaxed">
-                            Tidak memiliki catatan umur tanaman (HST) dan perkiraan tanggal panen yang terstruktur.
+                            Tidak memiliki catatan umur tanaman harian dan perkiraan tanggal panen yang terstruktur.
                         </p>
                         <div class="mt-auto pt-2 border-t border-outline-variant/20 flex items-center gap-1 text-[11px] font-bold text-primary">
                             <span class="material-symbols-outlined text-[14px]">calendar_today</span> Fitur: Kalender Pertumbuhan

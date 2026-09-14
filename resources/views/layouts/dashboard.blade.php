@@ -130,7 +130,7 @@
     {{-- ============================================
          MAIN CONTENT CANVAS
          ============================================ --}}
-    <main class="flex-1 md:ml-64 p-5 md:p-8 pb-32 md:pb-8 overflow-y-auto no-scrollbar max-w-[1280px] mx-auto w-full">
+    <main class="flex-1 md:ml-64 p-5 md:p-8 pb-32 md:pb-8 overflow-y-auto no-scrollbar max-w-[1280px] mx-auto w-full min-w-0" style="width: 100%;">
         @yield('dashboard-content')
     </main>
 
