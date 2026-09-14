@@ -386,18 +386,15 @@
                 <div class="bg-white rounded-3xl p-8 premium-shadow max-w-[448px] w-full tactile-card">
                     {{-- Card Header --}}
                     <div class="flex items-center justify-between mb-5">
-                        <div class="flex items-center gap-3">
-                            <span class="material-symbols-outlined text-on-surface-variant" style="font-size: 22px;">cloud</span>
-                            <span class="material-symbols-outlined text-on-surface-variant" style="font-size: 22px;">water_drop</span>
-                            <span class="material-symbols-outlined text-on-surface-variant" style="font-size: 22px;">thermostat</span>
+                        <div class="flex items-center gap-2.5">
+                            <span class="material-symbols-outlined text-on-surface-variant" style="font-size: 22px;">rainy</span>
                             <span class="text-sm font-bold text-on-surface">Prediksi Cuaca: Hujan</span>
                         </div>
-                        <span class="text-xs font-semibold text-secondary bg-secondary-fixed px-3 py-1 rounded-full whitespace-nowrap">Hujan Ringan</span>
+                        <span class="text-xs font-semibold text-secondary bg-secondary-fixed px-3 py-1 rounded-full whitespace-nowrap">Hujan Ringan (24°C)</span>
                     </div>
 
                     {{-- Card Body --}}
-                    <div class="bg-surface-container-low rounded-xl p-4 flex items-start gap-3">
-                        <span class="material-symbols-outlined text-primary flex-shrink-0 mt-0.5" style="font-size: 20px;">info</span>
+                    <div class="bg-surface-container-low rounded-xl p-4">
                         <p class="text-sm text-on-surface-variant leading-relaxed">
                             Jadwal penyiraman otomatis ditunda hari ini karena curah hujan yang cukup.
                         </p>

@@ -1024,7 +1024,7 @@ window.GardenApp = (() => {
                 }
                 if (iconEl) iconEl.textContent = ag.icon || 'cloud';
 
-                if (tempEl) tempEl.textContent = `${ag.temperature}°C`;
+                if (tempEl) tempEl.textContent = `${Math.round(parseFloat(ag.temperature))}°C`;
                 if (humidityEl) humidityEl.textContent = `${ag.humidity}%`;
                 if (rainEl) rainEl.textContent = `${ag.rain_probability}%`;
                 if (windEl) windEl.textContent = `${ag.wind_speed} km/j`;

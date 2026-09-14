@@ -177,7 +177,7 @@
 <div id="careModal" class="fixed inset-0 z-[100] hidden overflow-y-auto">
     <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity" onclick="closeCareModal()"></div>
     <div class="min-h-screen px-4 py-8 flex items-center justify-center">
-        <div class="w-full max-w-lg bg-surface-container-lowest rounded-3xl p-6 sm:p-8 ambient-shadow-lg relative z-10 border border-outline-variant/30 flex flex-col gap-6 text-left">
+        <div class="w-full max-w-2xl bg-surface-container-lowest rounded-3xl p-6 sm:p-8 ambient-shadow-lg relative z-10 border border-outline-variant/30 flex flex-col gap-6 text-left">
             <div class="flex items-center justify-between pb-4 border-b border-outline-variant/20">
                 <h2 class="text-xl font-bold text-on-surface flex items-center gap-2">
                     <span class="material-symbols-outlined text-primary">assignment</span> Edit Instruksi Perawatan
@@ -186,7 +186,36 @@
                     <span class="material-symbols-outlined text-[22px]">close</span>
                 </button>
             </div>
-            <div class="overflow-y-auto max-h-[60vh] pr-1">
+
+            {{-- Quick-Add Preset Buttons --}}
+            <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[16px] text-[#006c49]">bolt</span>
+                    <span class="text-[11px] font-black tracking-widest text-on-surface uppercase">TAMBAH CEPAT ATURAN</span>
+                </div>
+                <div class="flex flex-wrap gap-2" id="quickAddButtons">
+                    <button type="button" onclick="quickAddRule('watering', 'Siram 2x sehari (pagi & sore), pastikan media tanam lembab merata.')" class="quick-add-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#006c49]/20 bg-[#006c49]/5 text-[#006c49] text-[12px] font-bold hover:bg-[#006c49]/15 transition-colors">
+                        <span class="material-symbols-outlined text-[16px]">water_drop</span> Menyiram
+                    </button>
+                    <button type="button" onclick="quickAddRule('fertilizer', 'Pemupukan setiap 7 hari dengan pupuk NPK atau organik sesuai fase pertumbuhan.')" class="quick-add-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#006c49]/20 bg-[#006c49]/5 text-[#006c49] text-[12px] font-bold hover:bg-[#006c49]/15 transition-colors">
+                        <span class="material-symbols-outlined text-[16px]">nutrition</span> Memupuk
+                    </button>
+                    <button type="button" onclick="quickAddRule('pruning', 'Pangkas daun kuning & tunas air setiap 14 hari untuk sirkulasi udara optimal.')" class="quick-add-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#006c49]/20 bg-[#006c49]/5 text-[#006c49] text-[12px] font-bold hover:bg-[#006c49]/15 transition-colors">
+                        <span class="material-symbols-outlined text-[16px]">content_cut</span> Pangkas
+                    </button>
+                    <button type="button" onclick="quickAddRule('pest_check', 'Inspeksi hama setiap 7 hari: periksa kutu daun, ulat, & tanda penyakit jamur.')" class="quick-add-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#006c49]/20 bg-[#006c49]/5 text-[#006c49] text-[12px] font-bold hover:bg-[#006c49]/15 transition-colors">
+                        <span class="material-symbols-outlined text-[16px]">bug_report</span> Cek Hama
+                    </button>
+                    <button type="button" onclick="quickAddRule('staking', 'Pasang ajir/penyangga saat tanaman mencapai 30cm, ikat longgar setiap 14 hari.')" class="quick-add-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#006c49]/20 bg-[#006c49]/5 text-[#006c49] text-[12px] font-bold hover:bg-[#006c49]/15 transition-colors">
+                        <span class="material-symbols-outlined text-[16px]">fence</span> Ajir
+                    </button>
+                    <button type="button" onclick="quickAddRule('weeding', 'Penyiangan gulma & penggemburan tanah setiap 12 hari untuk aerasi akar.')" class="quick-add-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#006c49]/20 bg-[#006c49]/5 text-[#006c49] text-[12px] font-bold hover:bg-[#006c49]/15 transition-colors">
+                        <span class="material-symbols-outlined text-[16px]">grass</span> Gulma
+                    </button>
+                </div>
+            </div>
+
+            <div class="overflow-y-auto max-h-[50vh] pr-1">
                 <form id="careForm" class="flex flex-col gap-4">
                     <input type="hidden" id="edit_plant_id">
                     
@@ -196,7 +225,7 @@
 
                     <button type="button" onclick="addRuleField()" class="flex items-center gap-2 justify-center w-full py-2.5 border-2 border-dashed border-outline-variant/50 rounded-xl text-on-surface-variant font-bold text-sm hover:bg-surface-container-highest transition-colors mt-2">
                         <span class="material-symbols-outlined text-[18px]">add</span>
-                        Tambah Aturan
+                        Tambah Aturan Manual
                     </button>
                 </form>
             </div>
@@ -212,6 +241,73 @@
     const careModal = document.getElementById('careModal');
     const rulesList = document.getElementById('rulesList');
 
+    // Default rule presets mapped to their display info
+    const RULE_PRESETS = {
+        'watering':    { label: 'Menyiram',        icon: 'water_drop',  color: '#0288d1' },
+        'fertilizer':  { label: 'Memupuk',         icon: 'nutrition',   color: '#2e7d32' },
+        'pruning':     { label: 'Pemangkasan',     icon: 'content_cut', color: '#6d4c41' },
+        'pest_check':  { label: 'Inspeksi Hama',   icon: 'bug_report',  color: '#c62828' },
+        'staking':     { label: 'Pemasangan Ajir',  icon: 'fence',       color: '#5d4037' },
+        'weeding':     { label: 'Penyiangan Gulma', icon: 'grass',       color: '#558b2f' },
+        'drainage':    { label: 'Cek Drainase',     icon: 'water_damage',color: '#0277bd' },
+        'fungus_check':{ label: 'Sanitasi Jamur',   icon: 'coronavirus', color: '#ad1457' },
+        'neem_spray':  { label: 'Pestisida Nabati', icon: 'spray',       color: '#00695c' },
+    };
+
+    function getRulePreset(key) {
+        const k = key.toLowerCase();
+        for (const [presetKey, preset] of Object.entries(RULE_PRESETS)) {
+            if (k === presetKey || k.includes(presetKey) || presetKey.includes(k)) return { key: presetKey, ...preset };
+        }
+        // Fuzzy match for legacy keys
+        if (k.includes('water') || k.includes('siram')) return { key: 'watering', ...RULE_PRESETS['watering'] };
+        if (k.includes('fertiliz') || k.includes('pupuk')) return { key: 'fertilizer', ...RULE_PRESETS['fertilizer'] };
+        if (k.includes('prun') || k.includes('pangkas') || k.includes('rempel')) return { key: 'pruning', ...RULE_PRESETS['pruning'] };
+        if (k.includes('pest') || k.includes('hama')) return { key: 'pest_check', ...RULE_PRESETS['pest_check'] };
+        if (k.includes('stak') || k.includes('ajir')) return { key: 'staking', ...RULE_PRESETS['staking'] };
+        if (k.includes('weed') || k.includes('gulma')) return { key: 'weeding', ...RULE_PRESETS['weeding'] };
+        if (k.includes('drain')) return { key: 'drainage', ...RULE_PRESETS['drainage'] };
+        if (k.includes('fungus') || k.includes('jamur')) return { key: 'fungus_check', ...RULE_PRESETS['fungus_check'] };
+        if (k.includes('neem') || k.includes('pestisida')) return { key: 'neem_spray', ...RULE_PRESETS['neem_spray'] };
+        return null;
+    }
+
+    function getActiveRuleKeys() {
+        const keys = [];
+        document.querySelectorAll('.rule-item .rule-key').forEach(el => {
+            if (el.value) keys.push(el.value);
+        });
+        return keys;
+    }
+
+    function updateQuickAddButtons() {
+        const activeKeys = getActiveRuleKeys();
+        document.querySelectorAll('.quick-add-btn').forEach(btn => {
+            const onclickStr = btn.getAttribute('onclick') || '';
+            const match = onclickStr.match(/quickAddRule\('([^']+)'/);
+            if (match) {
+                const ruleKey = match[1];
+                if (activeKeys.includes(ruleKey)) {
+                    btn.classList.add('opacity-40', 'pointer-events-none');
+                    btn.disabled = true;
+                } else {
+                    btn.classList.remove('opacity-40', 'pointer-events-none');
+                    btn.disabled = false;
+                }
+            }
+        });
+    }
+
+    function quickAddRule(key, defaultValue) {
+        // Prevent duplicate
+        if (getActiveRuleKeys().includes(key)) {
+            Alert.toast.warning('Aturan ini sudah ditambahkan!');
+            return;
+        }
+        addRuleField(key, defaultValue);
+        updateQuickAddButtons();
+    }
+
     function openCareModal(plantId, rules) {
         document.getElementById('edit_plant_id').value = plantId;
         rulesList.innerHTML = '';
@@ -220,10 +316,9 @@
             for (const [key, value] of Object.entries(rules)) {
                 addRuleField(key, value);
             }
-        } else {
-            addRuleField('', '');
         }
 
+        updateQuickAddButtons();
         careModal.classList.remove('hidden');
     }
 
@@ -231,18 +326,73 @@
         careModal.classList.add('hidden');
     }
 
+    function buildDropdownOptions(selectedKey = '') {
+        let options = `<option value="" disabled ${!selectedKey ? 'selected' : ''}>— Pilih Tipe —</option>`;
+        for (const [key, preset] of Object.entries(RULE_PRESETS)) {
+            const sel = (key === selectedKey) ? 'selected' : '';
+            options += `<option value="${key}" ${sel}>${preset.label}</option>`;
+        }
+        return options;
+    }
+
     function addRuleField(key = '', value = '') {
-        const id = Date.now() + Math.random();
+        const preset = key ? getRulePreset(key) : null;
+        const resolvedKey = preset ? preset.key : key;
+        const icon = preset ? preset.icon : 'check_circle';
+        const iconColor = preset ? preset.color : '#006c49';
+
         const div = document.createElement('div');
-        div.className = 'flex gap-2 items-start rule-item';
+        div.className = 'flex gap-2 items-start rule-item bg-surface-container-low/50 rounded-2xl p-3 border border-outline-variant/15';
         div.innerHTML = `
-            <input type="text" placeholder="Tipe (cth: watering)" value="${key}" class="rule-key w-1/3 px-3 py-2 rounded-lg border border-outline-variant/40 text-[13px] focus:ring-2 focus:ring-[#006c49] outline-none">
-            <textarea placeholder="Instruksi perawatan..." class="rule-value flex-1 px-3 py-2 rounded-lg border border-outline-variant/40 text-[13px] focus:ring-2 focus:ring-[#006c49] outline-none min-h-[40px] resize-y">${value}</textarea>
-            <button type="button" onclick="this.parentElement.remove()" class="p-2 text-on-surface-variant hover:text-error transition-colors mt-0.5">
+            <div class="flex items-center justify-center w-9 h-9 rounded-xl shrink-0 mt-0.5" style="background: ${iconColor}15; color: ${iconColor};">
+                <span class="material-symbols-outlined text-[20px] rule-icon">${icon}</span>
+            </div>
+            <div class="flex-1 flex flex-col gap-2">
+                <select onchange="onRuleTypeChange(this)" class="rule-key px-3 py-2 rounded-lg border border-outline-variant/40 text-[13px] font-bold focus:ring-2 focus:ring-[#006c49] outline-none bg-white cursor-pointer">
+                    ${buildDropdownOptions(resolvedKey)}
+                </select>
+                <textarea placeholder="Instruksi perawatan detail..." class="rule-value w-full px-3 py-2 rounded-lg border border-outline-variant/40 text-[13px] focus:ring-2 focus:ring-[#006c49] outline-none min-h-[48px] resize-y leading-relaxed">${value}</textarea>
+            </div>
+            <button type="button" onclick="removeRule(this)" class="p-2 text-on-surface-variant hover:text-error transition-colors mt-0.5 shrink-0">
                 <span class="material-symbols-outlined text-[18px]">delete</span>
             </button>
         `;
         rulesList.appendChild(div);
+
+        // Smooth entrance animation
+        div.style.opacity = '0';
+        div.style.transform = 'translateY(-8px)';
+        requestAnimationFrame(() => {
+            div.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+            div.style.opacity = '1';
+            div.style.transform = 'translateY(0)';
+        });
+    }
+
+    function onRuleTypeChange(selectEl) {
+        const key = selectEl.value;
+        const preset = RULE_PRESETS[key];
+        const ruleItem = selectEl.closest('.rule-item');
+        const iconEl = ruleItem.querySelector('.rule-icon');
+        const iconWrap = iconEl.closest('div');
+
+        if (preset) {
+            iconEl.textContent = preset.icon;
+            iconWrap.style.background = preset.color + '15';
+            iconWrap.style.color = preset.color;
+        }
+        updateQuickAddButtons();
+    }
+
+    function removeRule(btn) {
+        const item = btn.closest('.rule-item');
+        item.style.transition = 'opacity 0.15s ease, transform 0.15s ease';
+        item.style.opacity = '0';
+        item.style.transform = 'translateX(12px)';
+        setTimeout(() => {
+            item.remove();
+            updateQuickAddButtons();
+        }, 150);
     }
 
     async function saveCareRules() {
@@ -304,3 +454,4 @@
     }
 </script>
 @endsection
+

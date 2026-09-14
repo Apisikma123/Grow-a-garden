@@ -20,7 +20,7 @@ class WeatherService
         
         // Cache in 10-minute blocks for fresh & fast updates
         $tenMinBlock = floor((int) now()->format('i') / 10);
-        $cacheKey = "weather_v8_{$lat}_{$lng}_" . now()->format('Y-m-d_H') . "_{$tenMinBlock}";
+        $cacheKey = "weather_v9_{$lat}_{$lng}_" . now()->format('Y-m-d_H') . "_{$tenMinBlock}";
         
         return Cache::remember($cacheKey, now()->addMinutes(10), function () use ($lat, $lng) {
             try {
@@ -108,8 +108,8 @@ class WeatherService
 
                     return [
                         'weather_code' => $currentCode,
-                        'temperature' => round($currentTemp, 1),
-                        'apparent_temperature' => round($apparentTemp, 1),
+                        'temperature' => (int) round($currentTemp),
+                        'apparent_temperature' => (int) round($apparentTemp),
                         'rain_probability' => $currentRainProb,
                         'rain_probability_24h' => $rainProb24h,
                         'wind_speed' => round($currentWind, 1),
@@ -144,7 +144,7 @@ class WeatherService
      */
     public function analyzeAgronomicConditions(?array $weather, bool $hasRecentRain = false): array
     {
-        $temp = $weather['temperature'] ?? 29;
+        $temp = (int) round($weather['temperature'] ?? 29);
         $rainProb = $weather['rain_probability'] ?? 0;
         $windSpeed = $weather['wind_speed'] ?? 10;
         $humidity = $weather['humidity'] ?? 70;

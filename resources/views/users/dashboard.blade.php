@@ -70,19 +70,16 @@
                 <div id="weather-active" class="hidden flex flex-col w-full min-w-0">
                     {{-- Card Header --}}
                     <div class="flex items-center justify-between mb-5 gap-2">
-                        <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-                            <span class="material-symbols-outlined text-on-surface-variant hidden sm:inline-block shrink-0" style="font-size: 22px;" id="weather-icon-1">cloud</span>
-                            <span class="material-symbols-outlined text-on-surface-variant hidden sm:inline-block shrink-0" style="font-size: 22px;" id="weather-icon-2">water_drop</span>
-                            <span class="material-symbols-outlined text-on-surface-variant shrink-0" style="font-size: 22px;" id="weather-icon-main">thermostat</span>
+                        <div class="flex items-center gap-2 sm:gap-2.5 min-w-0">
+                            <span class="material-symbols-outlined text-on-surface-variant shrink-0" style="font-size: 22px;" id="weather-icon-main">partly_cloudy_day</span>
                             <span class="text-xs sm:text-sm font-bold text-on-surface truncate min-w-0" id="weather-title">Prediksi Cuaca: Hujan</span>
                         </div>
                         <span class="text-[10px] sm:text-[11px] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap shrink-0" id="weather-badge">Hujan Ringan</span>
                     </div>
 
                     {{-- Card Body --}}
-                    <div class="bg-surface-container-low rounded-xl p-4 flex items-start gap-3">
-                        <span class="material-symbols-outlined text-primary flex-shrink-0 mt-0.5" style="font-size: 20px;">info</span>
-                        <div class="min-w-0 flex-1">
+                    <div class="bg-surface-container-low rounded-xl p-4">
+                        <div class="min-w-0 w-full">
                             <div class="flex items-center gap-1.5 text-[11px] font-bold text-primary uppercase tracking-wider mb-1">
                                 <span class="material-symbols-outlined text-[14px]">auto_awesome</span> Adaptasi Pintar
                             </div>
@@ -464,7 +461,7 @@ function initDashboard() {
                 const apiData = await resp.json();
                 if (apiData.success && apiData.agronomic) {
                     const agro = apiData.agronomic;
-                    const temp = agro.temperature || 29;
+                    const temp = Math.round(parseFloat(agro.temperature ?? 29));
                     const rawName = (apiData.location && apiData.location.name) 
                         ? apiData.location.name 
                         : (locationData ? (locationData.formatted || locationData.name || locationData.city) : 'Lokasi Kebun');

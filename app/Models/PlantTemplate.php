@@ -28,12 +28,14 @@ class PlantTemplate extends Model
         'sunlight',
         'recommended_months',
         'source_refs',
+        'care_rules',
     ];
 
     protected $casts = [
         'multiple_harvest' => 'boolean',
         'recommended_months' => 'array',
         'source_refs' => 'array',
+        'care_rules' => 'array',
     ];
 
     public function category(): BelongsTo

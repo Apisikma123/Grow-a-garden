@@ -63,7 +63,7 @@
                     </div>
                     <div class="flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1 rounded-full text-[12px] font-bold">
                         <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
-                        {{ $agronomic['temperature'] ?? 29 }}°C
+                        {{ (int) round($agronomic['temperature'] ?? 29) }}°C
                     </div>
                 </div>
                 <div class="relative z-10 min-w-0 w-full">
@@ -117,7 +117,7 @@
                     </div>
                 </div>
                 <span class="text-xs sm:text-sm font-semibold px-3 py-1.5 rounded-full {{ $agronomic['watering']['badge_bg'] ?? 'bg-emerald-100 text-emerald-800' }}">
-                    {{ $agronomic['watering']['badge'] ?? 'Normal' }} ({{ $agronomic['temperature'] ?? 29 }}°C)
+                    {{ $agronomic['watering']['badge'] ?? 'Normal' }} ({{ (int) round($agronomic['temperature'] ?? 29) }}°C)
                 </span>
             </div>
             
