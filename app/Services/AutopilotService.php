@@ -101,7 +101,7 @@ class AutopilotService
                 'scheduled_date' => $scheduledDate->toDateString(),
                 'status' => 'PENDING',
                 'priority' => $eventType->default_priority ?? 'MEDIUM',
-                'message' => "{$template->name_id}: {$eventType->label} (HST {$day})",
+                'message' => "{$template->name_id}: {$eventType->label} (Hari ke-{$day})",
             ]);
 
             $generated++;
@@ -240,23 +240,23 @@ class AutopilotService
         $plantName = $template->name_id;
 
         return match ($code) {
-            'WATERING_REMINDER' => "{$plantName}: Penyiraman Secukupnya (Cek Kelembapan Tanah Terlebih Dahulu)",
+            'WATERING_REMINDER' => "{$plantName}: Siram Air Secukupnya (Periksa Tanah Dulu - Tunda Bila Hari Hujan)",
             'FERTILIZER_REMINDER' => match (true) {
-                $hst <= 12 => "{$plantName}: Nutrisi Awal Pembibitan (Pupuk Organik / NPK Daun Encer)",
-                $hst <= 25 => "{$plantName}: Nutrisi Fase Vegetatif (Pembentukan Daun & Batang Kokoh)",
-                default => "{$plantName}: Nutrisi Bobot Panen & Pembungaan (Tinggi Fosfor & Kalium)",
+                $hst <= 12 => "{$plantName}: Beri Pupuk Awal (Kompos Cair / NPK Daun Encer - Tunda Bila Hujan Lebat)",
+                $hst <= 25 => "{$plantName}: Pemupukan Masa Pertumbuhan Daun & Batang (NPK Seimbang)",
+                default => "{$plantName}: Pemupukan Masa Pembungaan & Buah (Pupuk Fosfor & Kalium)",
             },
             'PEST_INSPECTION' => match (true) {
-                $hst <= 10 => "{$plantName}: Inspeksi Kutu Daun (Aphids) & Pangkal Batang Bibit",
-                $hst <= 22 => "{$plantName}: Inspeksi Ulat Grayak & Daun Berlubang",
-                default => "{$plantName}: Inspeksi Kutu Putih (Mealybugs) & Cek Jamur Daun",
+                $hst <= 10 => "{$plantName}: Cek Kutu Daun (Aphids) & Kesehatan Pangkal Batang Bibit",
+                $hst <= 22 => "{$plantName}: Cek Bagian Bawah Daun dari Ulat & Kutu Kebul",
+                default => "{$plantName}: Cek Gejala Kutu Putih, Ulat Buah & Jamur Daun",
             },
-            'WEEDING' => "{$plantName}: Penyiangan Gulma & Penggemburan Media Tanam",
-            'PRUNING' => "{$plantName}: Sanitasi Daun Kuning & Perempelan Tunas Air",
-            'STAKING' => "{$plantName}: Pemasangan & Pengikatan Ajir Penyangga",
-            'DRAINAGE_CHECK' => "{$plantName}: Pemeriksaan Lubang Drainase Pot & Pembuangan Genangan",
-            'FUNGUS_CHECK' => "{$plantName}: Sanitasi Jamur Daun & Pemangkasan Daun Lembab Terbawah",
-            'NEEM_SPRAY' => "{$plantName}: Aplikasi Pestisida Nabati / Ekstrak Daun Mimba Sore Hari",
+            'WEEDING' => "{$plantName}: Cabut Rumput Liar (Gulma) & Gemburkan Tanah",
+            'PRUNING' => "{$plantName}: Pangkas Daun Kuning Bagian Bawah & Tunas Air Liar",
+            'STAKING' => "{$plantName}: Pasang & Rapikan Ikatan Tiang Penyangga (Ajir)",
+            'DRAINAGE_CHECK' => "{$plantName}: Cek Saluran Air / Lubang Pot (Pastikan Air Tidak Tergenang)",
+            'FUNGUS_CHECK' => "{$plantName}: Cek Gejala Jamur Bercak Daun (Terutama di Cuaca Lembap)",
+            'NEEM_SPRAY' => "{$plantName}: Semprot Cairan Hama Alami / Nabati di Sore Hari",
             default => "{$plantName}: {$code}",
         };
     }

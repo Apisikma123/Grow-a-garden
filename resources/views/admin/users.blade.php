@@ -48,7 +48,6 @@
                         <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase w-[35%]">Pengguna</th>
                         <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">Peran</th>
                         <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">Kebun</th>
-                        <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">Status</th>
                         <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase text-right">Aksi</th>
                     </tr>
                 </thead>
@@ -85,12 +84,6 @@
                             @else
                                 {{ $user->gardens_count }} Kebun
                             @endif
-                        </td>
-                        <td class="py-4 px-6">
-                            <div class="flex items-center gap-2 text-[13px] font-bold text-on-surface">
-                                <div class="w-2 h-2 rounded-full bg-[#10b981]"></div>
-                                Aktif
-                            </div>
                         </td>
                         <td class="py-4 px-6 text-right relative">
                             @if($user->id === auth()->id())
@@ -143,7 +136,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="py-10 text-center text-on-surface-variant font-medium text-sm">
+                        <td colspan="4" class="py-10 text-center text-on-surface-variant font-medium text-sm">
                             Tidak ada pengguna yang sesuai dengan filter.
                         </td>
                     </tr>

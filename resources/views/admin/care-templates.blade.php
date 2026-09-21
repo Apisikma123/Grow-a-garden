@@ -48,7 +48,7 @@
                 <div class="flex-1 flex flex-col justify-center pt-1">
                     <div class="flex items-center gap-2 mb-2">
                         <span class="px-2.5 py-0.5 rounded text-[10px] font-black tracking-wider uppercase bg-[#10b981]/10 text-[#006c49]">{{ $template->category->name }}</span>
-                        <span class="px-2.5 py-0.5 rounded text-[10px] font-black tracking-wider uppercase bg-surface-container-high text-on-surface-variant">{{ $template->harvest_start_day }}-{{ $template->harvest_end_day }} DAYS</span>
+                        <span class="px-2.5 py-0.5 rounded text-[10px] font-black tracking-wider uppercase bg-surface-container-high text-on-surface-variant">{{ $template->harvest_start_day }}-{{ $template->harvest_end_day }} HARI</span>
                     </div>
                     <h3 class="text-[22px] font-bold text-on-surface leading-tight mb-1">{{ $template->name_id }}</h3>
                     <div class="flex items-center gap-1.5 text-[12px] text-on-surface-variant font-medium">
@@ -62,7 +62,7 @@
             <div class="bg-surface-container-low/50 rounded-[24px] p-6 flex flex-col">
                 <div class="flex items-center gap-2 mb-6">
                     <span class="material-symbols-outlined text-[18px] text-[#10b981]">insights</span>
-                    <span class="text-[11px] font-black tracking-widest text-on-surface uppercase">LIFECYCLE MILESTONES</span>
+                    <span class="text-[11px] font-black tracking-widest text-on-surface uppercase">TAHAP PERTUMBUHAN TANAMAN</span>
                 </div>
                 
                 <div class="relative flex justify-between items-start w-full px-4 mb-4">
@@ -76,8 +76,8 @@
                             <span class="material-symbols-outlined text-[20px]">eco</span>
                         </div>
                         <div class="text-center">
-                            <div class="text-[12px] font-bold text-on-surface mb-0.5">Germination</div>
-                            <div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">DAY 0-{{ $template->germination_day ?? 0 }}</div>
+                            <div class="text-[12px] font-bold text-on-surface mb-0.5">Kecambah (Semai)</div>
+                            <div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">HARI 0-{{ $template->germination_day ?? 0 }}</div>
                         </div>
                     </div>
                     
@@ -87,22 +87,22 @@
                             <span class="material-symbols-outlined text-[20px]">psychiatry</span>
                         </div>
                         <div class="text-center">
-                            <div class="text-[12px] font-bold text-on-surface mb-0.5">Seedling</div>
+                            <div class="text-[12px] font-bold text-on-surface mb-0.5">Bibit Muda</div>
                             @php
                                 $seedlingEnd = ($template->germination_day ?? 0) + ($template->seedling_day ?? 0);
                             @endphp
-                            <div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">DAY {{ $template->germination_day ?? 0 }}-{{ $seedlingEnd }}</div>
+                            <div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">HARI {{ $template->germination_day ?? 0 }}-{{ $seedlingEnd }}</div>
                         </div>
                     </div>
                     
                     {{-- Milestone 3 (Vegetative/Harvest) --}}
-                    <div class="flex flex-col items-center gap-3 relative z-10 w-1/3 opacity-50">
-                        <div class="w-10 h-10 rounded-full bg-white border-2 border-outline-variant/40 text-on-surface-variant flex items-center justify-center shadow-sm ring-4 ring-white">
+                    <div class="flex flex-col items-center gap-3 relative z-10 w-1/3 opacity-70">
+                        <div class="w-10 h-10 rounded-full bg-white border-2 border-[#10b981]/50 text-on-surface-variant flex items-center justify-center shadow-sm ring-4 ring-white">
                             <span class="material-symbols-outlined text-[20px]">yard</span>
                         </div>
                         <div class="text-center">
-                            <div class="text-[12px] font-bold text-on-surface mb-0.5">Harvest</div>
-                            <div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">DAY {{ $template->harvest_start_day }}+</div>
+                            <div class="text-[12px] font-bold text-on-surface mb-0.5">Masa Panen</div>
+                            <div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">HARI {{ $template->harvest_start_day }}+</div>
                         </div>
                     </div>
                 </div>
@@ -112,22 +112,40 @@
                 <div class="mt-4 pt-4 border-t border-outline-variant/20">
                     <div class="flex items-center gap-2 mb-3">
                         <span class="material-symbols-outlined text-[16px] text-[#006c49]">assignment</span>
-                        <span class="text-[11px] font-black tracking-widest text-on-surface uppercase">CARE INSTRUCTIONS</span>
+                        <span class="text-[11px] font-black tracking-widest text-on-surface uppercase">PANDUAN PERAWATAN ASLI & CUACA</span>
                     </div>
-                    <ul class="flex flex-col gap-2">
+                    <ul class="flex flex-col gap-2.5">
+                        @php
+                            $ruleTitles = [
+                                'watering'     => 'Penyiraman Air',
+                                'fertilizer'   => 'Pemberian Pupuk',
+                                'pruning'      => 'Pemangkasan Daun/Tunas',
+                                'pest_check'   => 'Pemeriksaan Hama',
+                                'staking'      => 'Pemasangan Tiang Penyangga (Ajir)',
+                                'weeding'      => 'Pembersihan Rumput Liar (Gulma)',
+                                'drainage'     => 'Pemeriksaan Aliran Air (Drainase)',
+                                'fungus_check' => 'Cek & Pencegahan Jamur',
+                                'neem_spray'   => 'Semprot Obat Hama Alami (Nabati)',
+                            ];
+                        @endphp
                         @foreach($template->care_rules as $key => $rule)
-                            <li class="flex items-start gap-2 text-[12px] text-on-surface-variant leading-relaxed">
-                                <span class="material-symbols-outlined text-[14px] text-primary mt-0.5">
-                                    @if(str_contains($key, 'water')) water_drop
-                                    @elseif(str_contains($key, 'fertilizer')) nutrition
-                                    @elseif(str_contains($key, 'pruning')) content_cut
-                                    @elseif(str_contains($key, 'staking')) fence
+                            <li class="flex items-start gap-2.5 text-[12px] text-on-surface-variant leading-relaxed">
+                                <span class="material-symbols-outlined text-[16px] text-primary mt-0.5 shrink-0">
+                                    @if(str_contains($key, 'water') || str_contains($key, 'siram')) water_drop
+                                    @elseif(str_contains($key, 'fertilizer') || str_contains($key, 'pupuk')) nutrition
+                                    @elseif(str_contains($key, 'pruning') || str_contains($key, 'pangkas')) content_cut
+                                    @elseif(str_contains($key, 'staking') || str_contains($key, 'ajir')) fence
+                                    @elseif(str_contains($key, 'weed') || str_contains($key, 'gulma')) grass
+                                    @elseif(str_contains($key, 'drain')) water_damage
+                                    @elseif(str_contains($key, 'fungus') || str_contains($key, 'jamur')) coronavirus
+                                    @elseif(str_contains($key, 'neem') || str_contains($key, 'pestisida')) spray
+                                    @elseif(str_contains($key, 'pest') || str_contains($key, 'hama')) bug_report
                                     @elseif(str_contains($key, 'harvest')) local_florist
                                     @else check_circle
                                     @endif
                                 </span>
                                 <div>
-                                    <strong class="capitalize text-on-surface">{{ str_replace('_', ' ', $key) }}:</strong> 
+                                    <strong class="text-on-surface font-semibold">{{ $ruleTitles[$key] ?? ucwords(str_replace('_', ' ', $key)) }}:</strong> 
                                     {{ $rule }}
                                 </div>
                             </li>
@@ -140,17 +158,18 @@
             {{-- Bottom Actions --}}
             <div class="flex items-center justify-between pt-2">
                 {{-- pH & Info --}}
-                <div class="flex items-center gap-3 text-on-surface-variant text-[12px] font-bold">
-                    <span>pH Ideal: {{ $template->soil_ph_min }} - {{ $template->soil_ph_max }}</span>
+                <div class="flex items-center gap-1.5 text-on-surface-variant text-[12px] font-bold">
+                    <span class="material-symbols-outlined text-[16px] text-primary">eco</span>
+                    <span>Keasaman Tanah Ideal: <strong class="text-on-surface">pH {{ $template->soil_ph_min }} - {{ $template->soil_ph_max }}</strong></span>
                 </div>
 
                 {{-- Action Buttons --}}
                 <div class="flex items-center gap-3">
-                    <button onclick="deleteTemplate({{ $template->id }})" class="p-2 text-outline hover:text-error transition-colors">
+                    <button onclick="deleteTemplate({{ $template->id }})" class="p-2 text-outline hover:text-error transition-colors" title="Hapus Template">
                         <span class="material-symbols-outlined text-[20px]">delete</span>
                     </button>
                     <button onclick="openCareModal({{ $template->id }}, {{ json_encode($template->care_rules ?? new stdClass()) }})" class="bg-[#006c49] text-white px-5 py-2 rounded-xl text-[13px] font-bold hover:bg-[#005c3a] transition-colors shadow-sm">
-                        Edit Template
+                        Edit Panduan Perawatan
                     </button>
                 </div>
             </div>
@@ -195,22 +214,31 @@
                 </div>
                 <div class="flex flex-wrap gap-2" id="quickAddButtons">
                     <button type="button" onclick="quickAddRule('watering')" class="quick-add-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#006c49]/20 bg-[#006c49]/5 text-[#006c49] text-[12px] font-bold hover:bg-[#006c49]/15 transition-colors">
-                        <span class="material-symbols-outlined text-[16px]">water_drop</span> Menyiram
+                        <span class="material-symbols-outlined text-[16px]">water_drop</span> Siram Air
                     </button>
                     <button type="button" onclick="quickAddRule('fertilizer')" class="quick-add-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#006c49]/20 bg-[#006c49]/5 text-[#006c49] text-[12px] font-bold hover:bg-[#006c49]/15 transition-colors">
-                        <span class="material-symbols-outlined text-[16px]">nutrition</span> Memupuk
+                        <span class="material-symbols-outlined text-[16px]">nutrition</span> Pupuk
                     </button>
                     <button type="button" onclick="quickAddRule('pruning')" class="quick-add-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#006c49]/20 bg-[#006c49]/5 text-[#006c49] text-[12px] font-bold hover:bg-[#006c49]/15 transition-colors">
-                        <span class="material-symbols-outlined text-[16px]">content_cut</span> Pangkas
+                        <span class="material-symbols-outlined text-[16px]">content_cut</span> Pangkas Tunas
                     </button>
                     <button type="button" onclick="quickAddRule('pest_check')" class="quick-add-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#006c49]/20 bg-[#006c49]/5 text-[#006c49] text-[12px] font-bold hover:bg-[#006c49]/15 transition-colors">
                         <span class="material-symbols-outlined text-[16px]">bug_report</span> Cek Hama
                     </button>
                     <button type="button" onclick="quickAddRule('staking')" class="quick-add-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#006c49]/20 bg-[#006c49]/5 text-[#006c49] text-[12px] font-bold hover:bg-[#006c49]/15 transition-colors">
-                        <span class="material-symbols-outlined text-[16px]">fence</span> Ajir
+                        <span class="material-symbols-outlined text-[16px]">fence</span> Penyangga Ajir
                     </button>
                     <button type="button" onclick="quickAddRule('weeding')" class="quick-add-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#006c49]/20 bg-[#006c49]/5 text-[#006c49] text-[12px] font-bold hover:bg-[#006c49]/15 transition-colors">
-                        <span class="material-symbols-outlined text-[16px]">grass</span> Gulma
+                        <span class="material-symbols-outlined text-[16px]">grass</span> Cabut Gulma
+                    </button>
+                    <button type="button" onclick="quickAddRule('drainage')" class="quick-add-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#006c49]/20 bg-[#006c49]/5 text-[#006c49] text-[12px] font-bold hover:bg-[#006c49]/15 transition-colors">
+                        <span class="material-symbols-outlined text-[16px]">water_damage</span> Cek Saluran Air
+                    </button>
+                    <button type="button" onclick="quickAddRule('fungus_check')" class="quick-add-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#006c49]/20 bg-[#006c49]/5 text-[#006c49] text-[12px] font-bold hover:bg-[#006c49]/15 transition-colors">
+                        <span class="material-symbols-outlined text-[16px]">coronavirus</span> Cek Jamur
+                    </button>
+                    <button type="button" onclick="quickAddRule('neem_spray')" class="quick-add-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#006c49]/20 bg-[#006c49]/5 text-[#006c49] text-[12px] font-bold hover:bg-[#006c49]/15 transition-colors">
+                        <span class="material-symbols-outlined text-[16px]">spray</span> Semprot Hama Alami
                     </button>
                 </div>
             </div>
@@ -243,15 +271,15 @@
 
     // Default rule presets mapped to their display info & default instructions
     const RULE_PRESETS = {
-        'watering':    { label: 'Menyiram',        icon: 'water_drop',  color: '#0288d1', defaultText: 'Siram setiap 2-3 hari sekali (atau saat media tanam 2 cm bagian atas mulai kering). Hindari genangan berlebih agar akar tidak busuk.' },
-        'fertilizer':  { label: 'Memupuk',         icon: 'nutrition',   color: '#2e7d32', defaultText: 'Pemupukan setiap 7 hari dengan pupuk NPK atau organik cair terlarut sesuai fase pertumbuhan.' },
-        'pruning':     { label: 'Pemangkasan',     icon: 'content_cut', color: '#6d4c41', defaultText: 'Pangkas daun tua menguning & tunas air setiap 14 hari untuk aerasi dan fokus energi nutrisi.' },
-        'pest_check':  { label: 'Inspeksi Hama',   icon: 'bug_report',  color: '#c62828', defaultText: 'Inspeksi hama setiap 7 hari: periksa bagian bawah daun dari kutu kebul, tungau, atau ulat.' },
-        'staking':     { label: 'Pemasangan Ajir',  icon: 'fence',       color: '#5d4037', defaultText: 'Pasang ajir dan periksa ikatan longgar setiap 14 hari agar tanaman kokoh dan tegak.' },
-        'weeding':     { label: 'Penyiangan Gulma', icon: 'grass',       color: '#558b2f', defaultText: 'Penyiangan gulma liar dan penggemburan tanah sekitar perakaran setiap 12 hari.' },
-        'drainage':    { label: 'Cek Drainase',     icon: 'water_damage',color: '#0277bd', defaultText: 'Pemeriksaan kelancaran lubang drainase pot dan sanitasi genangan air setiap 7 hari.' },
-        'fungus_check':{ label: 'Sanitasi Jamur',   icon: 'coronavirus', color: '#ad1457', defaultText: 'Cek gejala bercak daun & jamur antraknosa setiap 10 hari, buang daun bergejala.' },
-        'neem_spray':  { label: 'Pestisida Nabati', icon: 'spray',       color: '#00695c', defaultText: 'Penyemprotan preventif ekstrak daun mimba atau sabun insektisida setiap 14 hari sore hari.' },
+        'watering':    { label: 'Penyiraman Air',        icon: 'water_drop',  color: '#0288d1', defaultText: 'Siram setiap 2-3 hari sekali pada pagi atau sore hari langsung ke area perakaran tanah (hindari daun basah berlebih). Aturan Cuaca: Bila hari ini turun hujan lebat atau tanah masih sangat basah, tunda penyiraman agar akar tidak busuk. Bila cuaca sangat terik kering, beri siraman lebih banyak.' },
+        'fertilizer':  { label: 'Pemberian Pupuk',       icon: 'nutrition',   color: '#2e7d32', defaultText: 'Pemupukan susulan setiap 7 hari sekali dengan pupuk NPK terlarut atau pupuk organik cair. Berikan pupuk daun di fase awal, dan beralih ke pupuk bunga/buah saat mulai kuncup. Aturan Cuaca: Jangan memupuk cair saat hujan lebat agar pupuk tidak larut terbuang.' },
+        'pruning':     { label: 'Pemangkasan Daun/Tunas', icon: 'content_cut', color: '#6d4c41', defaultText: 'Pangkas daun tua di bagian bawah yang mulai menguning serta buang tunas air liar setiap 14 hari sekali agar sirkulasi udara lancar dan fokus nutrisi ke buah.' },
+        'pest_check':  { label: 'Pemeriksaan Hama',      icon: 'bug_report',  color: '#c62828', defaultText: 'Periksa balik daun dan pucuk daun setiap 7 hari sekali dari serangan kutu daun (aphids), kutu kebul putih, atau ulat agar dapat ditangani sejak dini.' },
+        'staking':     { label: 'Pemasangan Penyangga',  icon: 'fence',       color: '#5d4037', defaultText: 'Pasang tongkat ajir bambu dan periksa ikatan tali setiap 14 hari sekali agar tanaman tegak kokoh menopang beban cabang serta buah.' },
+        'weeding':     { label: 'Pembersihan Rumput',    icon: 'grass',       color: '#558b2f', defaultText: 'Cabut rumput liar di sekitar pangkal tanaman dan gemburkan tanah perlahan setiap 12 hari sekali agar nutrisi tanah tidak diperebutkan gulma.' },
+        'drainage':    { label: 'Cek Saluran Air',       icon: 'water_damage',color: '#0277bd', defaultText: 'Pemeriksaan lubang aliran air pot atau parit bedengan setiap 7 hari sekali. Pastikan air hujan mengalir lancar dan tidak ada genangan becek.' },
+        'fungus_check':{ label: 'Cek & Cegah Jamur',     icon: 'coronavirus', color: '#ad1457', defaultText: 'Inspeksi bercak hitam atau daun busuk akibat jamur setiap 10 hari sekali, terutama saat musim hujan atau kelembapan tinggi. Petik dan buang daun bergejala.' },
+        'neem_spray':  { label: 'Semprot Hama Alami',    icon: 'spray',       color: '#00695c', defaultText: 'Semprotkan pestisida nabati alami (ekstrak daun mimba atau air bawang putih) setiap 14 hari sekali di sore hari sejuk sebagai pencegah hama ramah lingkungan.' },
     };
 
     function getRulePreset(key) {

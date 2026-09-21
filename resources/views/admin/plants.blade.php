@@ -53,7 +53,7 @@
                         <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">Nama Ilmiah</th>
                         <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">Kategori</th>
                         <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">Masa Panen</th>
-                        <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase text-right">Actions</th>
+                        <th class="py-4 px-6 text-[11px] font-bold text-on-surface-variant tracking-wider uppercase text-right">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-outline-variant/10">
@@ -71,7 +71,7 @@
                             </span>
                         </td>
                         <td class="py-4 px-6">
-                            <span class="text-[12px] font-medium text-on-surface-variant">{{ $template->harvest_start_day }} Hari</span>
+                            <span class="text-[12px] font-medium text-on-surface-variant">{{ $template->harvest_start_day }} - {{ $template->harvest_end_day }} Hari</span>
                         </td>
                         <td class="py-4 px-6 text-right">
                             <div class="flex items-center justify-end gap-1">
@@ -139,36 +139,46 @@
                     </div>
                 </div>
                 
-                <h3 class="text-sm font-bold text-on-surface border-b border-outline-variant/20 pb-2 mt-2 w-full">Siklus Pertumbuhan (Hari Tanam)</h3>
+                <h3 class="text-sm font-bold text-on-surface border-b border-outline-variant/20 pb-2 mt-2 w-full">Kalender & Siklus Pertumbuhan</h3>
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full">
                     <div>
-                        <label class="block text-xs font-bold text-on-surface-variant mb-1">Semai</label>
-                        <input type="number" id="germination_day" class="w-full px-3 py-2 rounded-xl border border-outline-variant/40 bg-surface focus:outline-none focus:border-primary text-sm text-on-surface" placeholder="Hari ke-">
+                        <label class="block text-xs font-bold text-on-surface-variant mb-1">Masa Semai (Kecambah)</label>
+                        <input type="number" id="germination_day" class="w-full px-3 py-2 rounded-xl border border-outline-variant/40 bg-surface focus:outline-none focus:border-primary text-sm text-on-surface" placeholder="Hari ke- (misal 3)">
+                        <span class="text-[10px] text-on-surface-variant mt-0.5 block">Muncul tunas pertama</span>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-on-surface-variant mb-1">Persemaian</label>
-                        <input type="number" id="seedling_day" class="w-full px-3 py-2 rounded-xl border border-outline-variant/40 bg-surface focus:outline-none focus:border-primary text-sm text-on-surface" placeholder="Hari ke-">
+                        <label class="block text-xs font-bold text-on-surface-variant mb-1">Masa Bibit Muda</label>
+                        <input type="number" id="seedling_day" class="w-full px-3 py-2 rounded-xl border border-outline-variant/40 bg-surface focus:outline-none focus:border-primary text-sm text-on-surface" placeholder="Hari ke- (misal 14)">
+                        <span class="text-[10px] text-on-surface-variant mt-0.5 block">Tumbuh daun sejati</span>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-on-surface-variant mb-1">Awal Panen</label>
-                        <input type="number" id="harvest_start_day" required class="w-full px-3 py-2 rounded-xl border border-outline-variant/40 bg-surface focus:outline-none focus:border-primary text-sm text-on-surface" placeholder="Hari ke-">
+                        <label class="block text-xs font-bold text-on-surface-variant mb-1">Mulai Bisa Panen</label>
+                        <input type="number" id="harvest_start_day" required class="w-full px-3 py-2 rounded-xl border border-outline-variant/40 bg-surface focus:outline-none focus:border-primary text-sm text-on-surface" placeholder="Hari ke- (misal 25)">
+                        <span class="text-[10px] text-on-surface-variant mt-0.5 block">Hari awal petik panen</span>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-on-surface-variant mb-1">Akhir Panen</label>
-                        <input type="number" id="harvest_end_day" required class="w-full px-3 py-2 rounded-xl border border-outline-variant/40 bg-surface focus:outline-none focus:border-primary text-sm text-on-surface" placeholder="Hari ke-">
+                        <label class="block text-xs font-bold text-on-surface-variant mb-1">Selesai Masa Panen</label>
+                        <input type="number" id="harvest_end_day" required class="w-full px-3 py-2 rounded-xl border border-outline-variant/40 bg-surface focus:outline-none focus:border-primary text-sm text-on-surface" placeholder="Hari ke- (misal 35)">
+                        <span class="text-[10px] text-on-surface-variant mt-0.5 block">Batas akhir tanaman</span>
                     </div>
                 </div>
 
-                <h3 class="text-sm font-bold text-on-surface border-b border-outline-variant/20 pb-2 mt-2 w-full">Kondisi Lingkungan</h3>
+                <h3 class="text-sm font-bold text-on-surface border-b border-outline-variant/20 pb-2 mt-2 w-full">Tingkat Keasaman Tanah (Derajat pH)</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
                     <div>
-                        <label class="block text-xs font-bold text-on-surface-variant mb-1">pH Tanah Minimal</label>
-                        <input type="number" step="0.1" id="soil_ph_min" required class="w-full px-3 py-2 rounded-xl border border-outline-variant/40 bg-surface focus:outline-none focus:border-primary text-sm text-on-surface" placeholder="Misal: 5.5">
+                        <label class="block text-xs font-bold text-on-surface-variant mb-1">Batas Keasaman Terendah (pH Min)</label>
+                        <input type="number" step="0.1" id="soil_ph_min" required class="w-full px-3 py-2 rounded-xl border border-outline-variant/40 bg-surface focus:outline-none focus:border-primary text-sm text-on-surface" placeholder="Misal: 6.0">
+                        <span class="text-[11px] text-on-surface-variant mt-0.5 block">Toleransi tanah asam minimum</span>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-on-surface-variant mb-1">pH Tanah Maksimal</label>
-                        <input type="number" step="0.1" id="soil_ph_max" required class="w-full px-3 py-2 rounded-xl border border-outline-variant/40 bg-surface focus:outline-none focus:border-primary text-sm text-on-surface" placeholder="Misal: 6.5">
+                        <label class="block text-xs font-bold text-on-surface-variant mb-1">Batas Keasaman Tertinggi (pH Maks)</label>
+                        <input type="number" step="0.1" id="soil_ph_max" required class="w-full px-3 py-2 rounded-xl border border-outline-variant/40 bg-surface focus:outline-none focus:border-primary text-sm text-on-surface" placeholder="Misal: 7.0">
+                        <span class="text-[11px] text-on-surface-variant mt-0.5 block">Toleransi tanah basa maksimum</span>
                     </div>
+                </div>
+                <div class="bg-primary/5 rounded-xl p-3 border border-primary/20 text-[11px] text-on-surface-variant flex items-center gap-2.5">
+                    <span class="material-symbols-outlined text-primary text-[18px] shrink-0">info</span>
+                    <span><strong>💡 Penjelasan Mudah untuk Pemula:</strong> Nilai pH menunjukkan keasaman tanah. Angka <strong>6.0 - 7.0</strong> adalah tanah netral yang paling subur untuk sayuran pekarangan. Di bawah 6.0 tanah tergolong asam, dan di atas 7.0 tergolong basa.</span>
                 </div>
 
                 <div class="pt-4 border-t border-outline-variant/20 flex justify-end gap-3 w-full">
