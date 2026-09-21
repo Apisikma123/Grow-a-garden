@@ -106,7 +106,7 @@
 
 
                 
-                {{-- Pagination for Premium users --}}
+                {{-- Pagination --}}
                 @if(method_exists($activities, 'hasPages') && $activities->hasPages())
                     <div class="mt-12 flex justify-center">
                         {{ $activities->links() }}

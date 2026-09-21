@@ -26,7 +26,7 @@ class OnboardingController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->role === 'admin') {
+        if (in_array($user->role, ['admin', 'super_admin'])) {
             return redirect('/admin/dashboard');
         }
 

@@ -212,26 +212,34 @@
 
                 {{-- Calendar Footer Legend --}}
                 <div class="mt-6 pt-4 border-t border-outline-variant/20 flex flex-wrap items-center justify-between gap-3 text-[11px] md:text-[12px] text-on-surface-variant font-medium">
-                    <div class="flex items-center gap-4 flex-wrap">
+                    <div class="flex items-center gap-3 md:gap-4 flex-wrap">
                         <span class="flex items-center gap-1.5">
-                            <span class="w-3 h-3 rounded-full bg-primary/20 border border-primary"></span>
+                            <span class="w-3.5 h-3.5 rounded-md border-2 border-primary bg-primary/5"></span>
                             <span>Hari Ini</span>
                         </span>
                         <span class="flex items-center gap-1.5">
-                            <span class="w-2.5 h-2.5 rounded-sm bg-cyan-100 border border-cyan-400"></span>
-                            <span>Pending</span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span>
+                            <span>Penyiraman</span>
                         </span>
                         <span class="flex items-center gap-1.5">
-                            <span class="w-2.5 h-2.5 rounded-sm bg-[#ffdad6] border border-[#ba1a1a]"></span>
-                            <span>Terlewat (Missed)</span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-[#006c49]"></span>
+                            <span>Pemupukan</span>
                         </span>
                         <span class="flex items-center gap-1.5">
-                            <span class="w-2.5 h-2.5 rounded-sm bg-emerald-100 border border-emerald-500"></span>
-                            <span>Selesai (Completed)</span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-[#944a23]"></span>
+                            <span>Hama / Proteksi</span>
+                        </span>
+                        <span class="flex items-center gap-1.5">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                            <span>Selesai</span>
+                        </span>
+                        <span class="flex items-center gap-1.5">
+                            <span class="w-2.5 h-2.5 rounded-full bg-[#ba1a1a]"></span>
+                            <span>Terlewat</span>
                         </span>
                     </div>
                     <div class="text-[11px] text-on-surface-variant italic">
-                        * Klik tanggal untuk melihat daftar kegiatan, menambah, atau mengelola jadwal
+                        * Klik tanggal untuk melihat daftar kegiatan lengkap, menambah, atau mengelola jadwal
                     </div>
                 </div>
 
@@ -936,7 +944,7 @@
         for (let i = startOffset - 1; i >= 0; i--) {
             const dayNum = daysInPrevMonth - i;
             const cell = document.createElement('div');
-            cell.className = 'min-h-[85px] md:min-h-[105px] p-2 rounded-xl bg-slate-50/40 border border-outline-variant/10 flex flex-col justify-between opacity-40 select-none';
+            cell.className = 'min-h-[72px] md:min-h-[88px] p-2 rounded-xl bg-slate-50/40 border border-outline-variant/10 flex flex-col justify-between opacity-40 select-none';
             cell.innerHTML = `<span class="text-[11px] font-bold text-slate-400">${dayNum}</span>`;
             grid.appendChild(cell);
         }
@@ -950,14 +958,14 @@
             const dayEvents = eventsData.filter(e => e.scheduled_date === dateStr);
 
             const cell = document.createElement('div');
-            let cellClass = 'min-h-[85px] md:min-h-[105px] p-1.5 md:p-2 rounded-xl border flex flex-col justify-between transition-all relative overflow-hidden group cursor-pointer';
+            let cellClass = 'min-h-[72px] md:min-h-[88px] p-1.5 md:p-2 rounded-xl flex flex-col justify-between transition-all relative overflow-hidden group cursor-pointer';
 
             if (isToday) {
-                cellClass += ' bg-[#006c49]/5 border-primary ring-1.5 ring-primary/40 shadow-xs';
+                cellClass += ' bg-primary/[0.04] border-2 border-primary ring-2 ring-primary/20 shadow-xs';
             } else if (isPast) {
-                cellClass += ' bg-surface/50 border-outline-variant/20 hover:border-outline-variant/40';
+                cellClass += ' bg-surface/50 border border-outline-variant/20 hover:border-outline-variant/40';
             } else {
-                cellClass += ' bg-white border-outline-variant/25 hover:border-primary/40 hover:shadow-xs';
+                cellClass += ' bg-white border border-outline-variant/25 hover:border-primary/40 hover:shadow-xs';
             }
             cell.className = cellClass;
             cell.title = `Klik untuk kelola kegiatan tanggal ${dateStr}`;
@@ -966,66 +974,67 @@
                 openDateModal(dateStr);
             };
 
-            // Day Header (Date number + badge)
+            // Day Header (Date number + optional weather icon, NO 'Hari Ini' text)
             let headerHtml = `
-                <div class="flex items-center justify-between gap-1 mb-1">
-                    <div class="flex items-center gap-1">
-                        <span class="text-[12px] md:text-[13px] font-black ${isToday ? 'text-primary' : (isPast ? 'text-slate-500' : 'text-on-surface')}">
-                            ${d}
-                        </span>
-                        ${isToday ? '<span class="text-[9px] font-black bg-primary text-white px-1.5 py-0.2 rounded-full uppercase tracking-tighter">Hari Ini</span>' : ''}
-                    </div>
+                <div class="flex items-center justify-between gap-1 w-full mb-1">
+                    <span class="text-[12px] md:text-[14px] font-black ${isToday ? 'text-primary' : (isPast ? 'text-slate-400' : 'text-on-surface')}">
+                        ${d}
+                    </span>
                     ${isToday && todayWeather ? `
-                        <span class="text-[9px] font-bold text-primary flex items-center gap-0.5 bg-primary/10 px-1.5 py-0.5 rounded-md" title="Cuaca Hari Ini: ${todayWeather.condition_title} (${todayWeather.temperature}°C)">
-                            <span class="material-symbols-outlined text-[12px]">${todayWeather.icon || 'wb_sunny'}</span>
-                            <span>${todayWeather.temperature}°C</span>
+                        <span class="text-[9px] font-bold text-primary flex items-center gap-0.5 bg-primary/10 px-1 py-0.5 rounded-md shrink-0" title="Cuaca Hari Ini: ${todayWeather.condition_title} (${todayWeather.temperature}°C)">
+                            <span class="material-symbols-outlined text-[13px]">${todayWeather.icon || 'wb_sunny'}</span>
+                            <span class="hidden sm:inline">${todayWeather.temperature}°C</span>
                         </span>
                     ` : ''}
                 </div>
             `;
 
-            // Tasks List
-            let tasksHtml = '<div class="flex flex-col gap-1 w-full overflow-hidden">';
-            const visibleEvents = dayEvents.slice(0, 3);
-            const remaining = dayEvents.length - visibleEvents.length;
+            // Tasks Dots (Titik-titik kegiatan)
+            let tasksHtml = '';
+            if (dayEvents.length > 0) {
+                tasksHtml = '<div class="flex items-center justify-start gap-1.5 flex-wrap mt-auto pt-1 w-full">';
+                const maxDots = 5;
+                const visibleEvents = dayEvents.slice(0, maxDots);
+                const remaining = dayEvents.length - maxDots;
 
-            visibleEvents.forEach(evt => {
-                const isCompleted = (evt.status === 'COMPLETED');
-                const isMissed = (evt.status === 'MISSED');
+                visibleEvents.forEach(evt => {
+                    const isCompleted = (evt.status === 'COMPLETED');
+                    const isMissed = (evt.status === 'MISSED');
 
-                let badgeColor = 'bg-primary/10 text-primary border-primary/20 hover:bg-primary/20';
-                if (isCompleted) {
-                    badgeColor = 'bg-emerald-50 text-emerald-800 border-emerald-200 line-through opacity-75';
-                } else if (isMissed) {
-                    badgeColor = 'bg-[#ffdad6] text-[#ba1a1a] border-[#ba1a1a]/30 font-bold';
-                } else {
-                    const code = (evt.code || '').toLowerCase();
-                    if (code.includes('water')) {
-                        badgeColor = 'bg-cyan-50 text-cyan-800 border-cyan-200 hover:bg-cyan-100';
-                    } else if (code.includes('fertiliz')) {
-                        badgeColor = 'bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100';
-                    } else if (code.includes('pest')) {
-                        badgeColor = 'bg-[#944a23]/10 text-[#944a23] border-[#944a23]/30 hover:bg-[#944a23]/20';
+                    let dotColor = 'bg-[#006c49]';
+                    let dotTitle = evt.title || 'Kegiatan';
+                    if (evt.plant_name) dotTitle += ` (${evt.plant_name})`;
+
+                    if (isCompleted) {
+                        dotColor = 'bg-emerald-500';
+                        dotTitle += ' [Selesai]';
+                    } else if (isMissed) {
+                        dotColor = 'bg-[#ba1a1a]';
+                        dotTitle += ' [Terlewat]';
+                    } else {
+                        const code = (evt.code || '').toLowerCase();
+                        if (code.includes('water')) {
+                            dotColor = 'bg-sky-500';
+                        } else if (code.includes('fertiliz')) {
+                            dotColor = 'bg-[#006c49]';
+                        } else if (code.includes('pest')) {
+                            dotColor = 'bg-[#944a23]';
+                        }
                     }
+
+                    tasksHtml += `
+                        <span class="w-2.5 h-2.5 rounded-full ${dotColor} transition-transform duration-150 hover:scale-125 inline-block shrink-0 shadow-2xs" title="${dotTitle.replace(/"/g, '&quot;')}"></span>
+                    `;
+                });
+
+                if (remaining > 0) {
+                    tasksHtml += `
+                        <span class="text-[9px] font-extrabold text-on-surface-variant leading-none ml-0.5" title="${remaining} kegiatan lainnya">+${remaining}</span>
+                    `;
                 }
 
-                tasksHtml += `
-                    <button type="button" onclick="openDateModal('${dateStr}')" class="w-full text-left px-1.5 py-1 rounded-md text-[10px] md:text-[11px] font-extrabold border ${badgeColor} transition-transform active:scale-95 flex items-center gap-1 truncate shadow-2xs" title="${evt.title} (${evt.plant_name}) - Klik untuk kelola kegiatan">
-                        <span class="material-symbols-outlined text-[13px] shrink-0">${evt.icon || 'eco'}</span>
-                        <span class="truncate">${evt.title}</span>
-                    </button>
-                `;
-            });
-
-            if (remaining > 0) {
-                tasksHtml += `
-                    <button type="button" onclick="openDateModal('${dateStr}')" class="text-[9px] font-bold text-on-surface-variant bg-surface-container-high px-1.5 py-0.5 rounded text-center block w-full hover:bg-surface-container-highest transition-colors">
-                        +${remaining} lainnya
-                    </button>
-                `;
+                tasksHtml += '</div>';
             }
-
-            tasksHtml += '</div>';
 
             cell.innerHTML = headerHtml + tasksHtml;
             grid.appendChild(cell);
@@ -1036,7 +1045,7 @@
         const trailing = (7 - (totalRendered % 7)) % 7;
         for (let j = 1; j <= trailing; j++) {
             const cell = document.createElement('div');
-            cell.className = 'min-h-[85px] md:min-h-[105px] p-2 rounded-xl bg-slate-50/40 border border-outline-variant/10 flex flex-col justify-between opacity-40 select-none';
+            cell.className = 'min-h-[72px] md:min-h-[88px] p-2 rounded-xl bg-slate-50/40 border border-outline-variant/10 flex flex-col justify-between opacity-40 select-none';
             cell.innerHTML = `<span class="text-[11px] font-bold text-slate-400">${j}</span>`;
             grid.appendChild(cell);
         }

@@ -17,8 +17,11 @@ class IsUser
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::check()) {
-            if (Auth::user()->role === 'admin') {
-                return redirect()->route('admin.dashboard')->with('info', 'Anda diarahkan ke dashboard admin.');
+            if (in_array(Auth::user()->role, ['admin', 'super_admin'])) {
+                if ($request->expectsJson() || $request->is('api/*')) {
+                    return $next($request);
+                }
+                return redirect()->route('admin.dashboard');
             }
         }
         

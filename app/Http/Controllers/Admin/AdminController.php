@@ -104,7 +104,7 @@ class AdminController extends Controller
         }
 
         return view('admin.dashboard', compact(
-            'totalUsers', 'totalGardens', 'totalPlants', 'totalPlantTemplates', 'totalCareTemplates', 'totalBadges', 'premiumUsers', 'successfulHarvests',
+            'totalUsers', 'totalGardens', 'totalPlants', 'totalPlantTemplates', 'totalCareTemplates', 'totalBadges', 'successfulHarvests',
             'popularPlants', 'userGrowth', 'growthLabels', 'period', 'todayWeather'
         ));
     }
@@ -251,22 +251,43 @@ class AdminController extends Controller
 
     public function updateRole(Request $request, User $user)
     {
+        // Fitur khusus: Hanya Super Admin yang berhak merubah role admin biasa ke user dan sebaliknya
+        if (auth()->user()->role !== 'super_admin') {
+            return response()->json(['error' => 'Hanya Super Admin yang memiliki hak akses untuk mengubah role pengguna.'], 403);
+        }
+
+        if ($user->id === auth()->id()) {
+            return response()->json(['error' => 'Tidak dapat mengubah role akun sendiri.'], 403);
+        }
+
+        if ($user->role === 'super_admin') {
+            return response()->json(['error' => 'Role Super Admin dilindungi dan tidak dapat diubah.'], 403);
+        }
+
         $request->validate([
             'role' => 'required|in:user,admin'
         ]);
 
-        if ($user->id === auth()->id()) {
-            return response()->json(['error' => 'You cannot change your own role.'], 403);
-        }
-
         $user->update(['role' => $request->role]);
-        return response()->json(['success' => true]);
+        $roleLabel = ($request->role === 'admin') ? 'Admin' : 'Pengguna';
+        return response()->json([
+            'success' => true,
+            'message' => "Role {$user->name} berhasil diubah menjadi {$roleLabel}."
+        ]);
     }
 
     public function destroyUser(User $user)
     {
         if ($user->id === auth()->id()) {
             return response()->json(['error' => 'You cannot delete yourself.'], 403);
+        }
+
+        if ($user->role === 'super_admin') {
+            return response()->json(['error' => 'Akun Super Admin tidak dapat dihapus.'], 403);
+        }
+
+        if ($user->role === 'admin' && auth()->user()->role !== 'super_admin') {
+            return response()->json(['error' => 'Hanya Super Admin yang dapat menghapus akun Admin.'], 403);
         }
 
         $user->delete();

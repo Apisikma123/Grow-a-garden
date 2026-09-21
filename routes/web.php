@@ -258,22 +258,23 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::post('/notifications/mark-all-read', [\App\Http\Controllers\NotificationController::class, 'markAllRead'])->name('notifications.mark-all-read');
     Route::post('/notifications/{id}/mark-read', [\App\Http\Controllers\NotificationController::class, 'markRead'])->name('notifications.mark-read');
 
-    // Admin API Routes
-    Route::middleware(['admin'])->group(function () {
-        Route::put('/api/admin/users/{user}/role', [\App\Http\Controllers\Admin\AdminController::class, 'updateRole']);
-        Route::delete('/api/admin/users/{user}', [\App\Http\Controllers\Admin\AdminController::class, 'destroyUser']);
-        
-        Route::post('/api/admin/plants', [\App\Http\Controllers\Admin\AdminController::class, 'storePlant']);
-        Route::put('/api/admin/plants/{plant}', [\App\Http\Controllers\Admin\AdminController::class, 'updatePlant']);
-        Route::put('/api/admin/plants/{plant}/care-rules', [\App\Http\Controllers\Admin\AdminController::class, 'updateCareRules']);
-        Route::delete('/api/admin/plants/{plant}', [\App\Http\Controllers\Admin\AdminController::class, 'destroyPlant']);
-
-        Route::post('/api/admin/categories', [\App\Http\Controllers\Admin\AdminController::class, 'storeCategory']);
-        Route::delete('/api/admin/categories/{category}', [\App\Http\Controllers\Admin\AdminController::class, 'destroyCategory']);
-    });
 });
 
-// Protected Admin Routes (We can add a custom 'admin' middleware later if needed)
+// Admin API Routes (Independent from user middleware)
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::put('/api/admin/users/{user}/role', [\App\Http\Controllers\Admin\AdminController::class, 'updateRole']);
+    Route::delete('/api/admin/users/{user}', [\App\Http\Controllers\Admin\AdminController::class, 'destroyUser']);
+    
+    Route::post('/api/admin/plants', [\App\Http\Controllers\Admin\AdminController::class, 'storePlant']);
+    Route::put('/api/admin/plants/{plant}', [\App\Http\Controllers\Admin\AdminController::class, 'updatePlant']);
+    Route::put('/api/admin/plants/{plant}/care-rules', [\App\Http\Controllers\Admin\AdminController::class, 'updateCareRules']);
+    Route::delete('/api/admin/plants/{plant}', [\App\Http\Controllers\Admin\AdminController::class, 'destroyPlant']);
+
+    Route::post('/api/admin/categories', [\App\Http\Controllers\Admin\AdminController::class, 'storeCategory']);
+    Route::delete('/api/admin/categories/{category}', [\App\Http\Controllers\Admin\AdminController::class, 'destroyCategory']);
+});
+
+// Protected Admin Routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Admin\AdminController::class, 'dashboard'])->name('admin.dashboard');
 

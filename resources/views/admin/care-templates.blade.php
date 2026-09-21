@@ -194,22 +194,22 @@
                     <span class="text-[11px] font-black tracking-widest text-on-surface uppercase">TAMBAH CEPAT ATURAN</span>
                 </div>
                 <div class="flex flex-wrap gap-2" id="quickAddButtons">
-                    <button type="button" onclick="quickAddRule('watering', 'Siram 2x sehari (pagi & sore), pastikan media tanam lembab merata.')" class="quick-add-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#006c49]/20 bg-[#006c49]/5 text-[#006c49] text-[12px] font-bold hover:bg-[#006c49]/15 transition-colors">
+                    <button type="button" onclick="quickAddRule('watering')" class="quick-add-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#006c49]/20 bg-[#006c49]/5 text-[#006c49] text-[12px] font-bold hover:bg-[#006c49]/15 transition-colors">
                         <span class="material-symbols-outlined text-[16px]">water_drop</span> Menyiram
                     </button>
-                    <button type="button" onclick="quickAddRule('fertilizer', 'Pemupukan setiap 7 hari dengan pupuk NPK atau organik sesuai fase pertumbuhan.')" class="quick-add-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#006c49]/20 bg-[#006c49]/5 text-[#006c49] text-[12px] font-bold hover:bg-[#006c49]/15 transition-colors">
+                    <button type="button" onclick="quickAddRule('fertilizer')" class="quick-add-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#006c49]/20 bg-[#006c49]/5 text-[#006c49] text-[12px] font-bold hover:bg-[#006c49]/15 transition-colors">
                         <span class="material-symbols-outlined text-[16px]">nutrition</span> Memupuk
                     </button>
-                    <button type="button" onclick="quickAddRule('pruning', 'Pangkas daun kuning & tunas air setiap 14 hari untuk sirkulasi udara optimal.')" class="quick-add-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#006c49]/20 bg-[#006c49]/5 text-[#006c49] text-[12px] font-bold hover:bg-[#006c49]/15 transition-colors">
+                    <button type="button" onclick="quickAddRule('pruning')" class="quick-add-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#006c49]/20 bg-[#006c49]/5 text-[#006c49] text-[12px] font-bold hover:bg-[#006c49]/15 transition-colors">
                         <span class="material-symbols-outlined text-[16px]">content_cut</span> Pangkas
                     </button>
-                    <button type="button" onclick="quickAddRule('pest_check', 'Inspeksi hama setiap 7 hari: periksa kutu daun, ulat, & tanda penyakit jamur.')" class="quick-add-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#006c49]/20 bg-[#006c49]/5 text-[#006c49] text-[12px] font-bold hover:bg-[#006c49]/15 transition-colors">
+                    <button type="button" onclick="quickAddRule('pest_check')" class="quick-add-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#006c49]/20 bg-[#006c49]/5 text-[#006c49] text-[12px] font-bold hover:bg-[#006c49]/15 transition-colors">
                         <span class="material-symbols-outlined text-[16px]">bug_report</span> Cek Hama
                     </button>
-                    <button type="button" onclick="quickAddRule('staking', 'Pasang ajir/penyangga saat tanaman mencapai 30cm, ikat longgar setiap 14 hari.')" class="quick-add-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#006c49]/20 bg-[#006c49]/5 text-[#006c49] text-[12px] font-bold hover:bg-[#006c49]/15 transition-colors">
+                    <button type="button" onclick="quickAddRule('staking')" class="quick-add-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#006c49]/20 bg-[#006c49]/5 text-[#006c49] text-[12px] font-bold hover:bg-[#006c49]/15 transition-colors">
                         <span class="material-symbols-outlined text-[16px]">fence</span> Ajir
                     </button>
-                    <button type="button" onclick="quickAddRule('weeding', 'Penyiangan gulma & penggemburan tanah setiap 12 hari untuk aerasi akar.')" class="quick-add-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#006c49]/20 bg-[#006c49]/5 text-[#006c49] text-[12px] font-bold hover:bg-[#006c49]/15 transition-colors">
+                    <button type="button" onclick="quickAddRule('weeding')" class="quick-add-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#006c49]/20 bg-[#006c49]/5 text-[#006c49] text-[12px] font-bold hover:bg-[#006c49]/15 transition-colors">
                         <span class="material-symbols-outlined text-[16px]">grass</span> Gulma
                     </button>
                 </div>
@@ -241,17 +241,17 @@
     const careModal = document.getElementById('careModal');
     const rulesList = document.getElementById('rulesList');
 
-    // Default rule presets mapped to their display info
+    // Default rule presets mapped to their display info & default instructions
     const RULE_PRESETS = {
-        'watering':    { label: 'Menyiram',        icon: 'water_drop',  color: '#0288d1' },
-        'fertilizer':  { label: 'Memupuk',         icon: 'nutrition',   color: '#2e7d32' },
-        'pruning':     { label: 'Pemangkasan',     icon: 'content_cut', color: '#6d4c41' },
-        'pest_check':  { label: 'Inspeksi Hama',   icon: 'bug_report',  color: '#c62828' },
-        'staking':     { label: 'Pemasangan Ajir',  icon: 'fence',       color: '#5d4037' },
-        'weeding':     { label: 'Penyiangan Gulma', icon: 'grass',       color: '#558b2f' },
-        'drainage':    { label: 'Cek Drainase',     icon: 'water_damage',color: '#0277bd' },
-        'fungus_check':{ label: 'Sanitasi Jamur',   icon: 'coronavirus', color: '#ad1457' },
-        'neem_spray':  { label: 'Pestisida Nabati', icon: 'spray',       color: '#00695c' },
+        'watering':    { label: 'Menyiram',        icon: 'water_drop',  color: '#0288d1', defaultText: 'Siram setiap 2-3 hari sekali (atau saat media tanam 2 cm bagian atas mulai kering). Hindari genangan berlebih agar akar tidak busuk.' },
+        'fertilizer':  { label: 'Memupuk',         icon: 'nutrition',   color: '#2e7d32', defaultText: 'Pemupukan setiap 7 hari dengan pupuk NPK atau organik cair terlarut sesuai fase pertumbuhan.' },
+        'pruning':     { label: 'Pemangkasan',     icon: 'content_cut', color: '#6d4c41', defaultText: 'Pangkas daun tua menguning & tunas air setiap 14 hari untuk aerasi dan fokus energi nutrisi.' },
+        'pest_check':  { label: 'Inspeksi Hama',   icon: 'bug_report',  color: '#c62828', defaultText: 'Inspeksi hama setiap 7 hari: periksa bagian bawah daun dari kutu kebul, tungau, atau ulat.' },
+        'staking':     { label: 'Pemasangan Ajir',  icon: 'fence',       color: '#5d4037', defaultText: 'Pasang ajir dan periksa ikatan longgar setiap 14 hari agar tanaman kokoh dan tegak.' },
+        'weeding':     { label: 'Penyiangan Gulma', icon: 'grass',       color: '#558b2f', defaultText: 'Penyiangan gulma liar dan penggemburan tanah sekitar perakaran setiap 12 hari.' },
+        'drainage':    { label: 'Cek Drainase',     icon: 'water_damage',color: '#0277bd', defaultText: 'Pemeriksaan kelancaran lubang drainase pot dan sanitasi genangan air setiap 7 hari.' },
+        'fungus_check':{ label: 'Sanitasi Jamur',   icon: 'coronavirus', color: '#ad1457', defaultText: 'Cek gejala bercak daun & jamur antraknosa setiap 10 hari, buang daun bergejala.' },
+        'neem_spray':  { label: 'Pestisida Nabati', icon: 'spray',       color: '#00695c', defaultText: 'Penyemprotan preventif ekstrak daun mimba atau sabun insektisida setiap 14 hari sore hari.' },
     };
 
     function getRulePreset(key) {
@@ -298,13 +298,14 @@
         });
     }
 
-    function quickAddRule(key, defaultValue) {
+    function quickAddRule(key, defaultValue = '') {
         // Prevent duplicate
         if (getActiveRuleKeys().includes(key)) {
             Alert.toast.warning('Aturan ini sudah ditambahkan!');
             return;
         }
-        addRuleField(key, defaultValue);
+        const text = defaultValue || (RULE_PRESETS[key]?.defaultText || '');
+        addRuleField(key, text);
         updateQuickAddButtons();
     }
 
@@ -340,6 +341,7 @@
         const resolvedKey = preset ? preset.key : key;
         const icon = preset ? preset.icon : 'check_circle';
         const iconColor = preset ? preset.color : '#006c49';
+        const initialText = value !== '' ? value : (preset?.defaultText || '');
 
         const div = document.createElement('div');
         div.className = 'flex gap-2 items-start rule-item bg-surface-container-low/50 rounded-2xl p-3 border border-outline-variant/15';
@@ -351,7 +353,7 @@
                 <select onchange="onRuleTypeChange(this)" class="rule-key px-3 py-2 rounded-lg border border-outline-variant/40 text-[13px] font-bold focus:ring-2 focus:ring-[#006c49] outline-none bg-white cursor-pointer">
                     ${buildDropdownOptions(resolvedKey)}
                 </select>
-                <textarea placeholder="Instruksi perawatan detail..." class="rule-value w-full px-3 py-2 rounded-lg border border-outline-variant/40 text-[13px] focus:ring-2 focus:ring-[#006c49] outline-none min-h-[48px] resize-y leading-relaxed">${value}</textarea>
+                <textarea placeholder="Instruksi perawatan detail..." class="rule-value w-full px-3 py-2 rounded-lg border border-outline-variant/40 text-[13px] focus:ring-2 focus:ring-[#006c49] outline-none min-h-[48px] resize-y leading-relaxed">${initialText}</textarea>
             </div>
             <button type="button" onclick="removeRule(this)" class="p-2 text-on-surface-variant hover:text-error transition-colors mt-0.5 shrink-0">
                 <span class="material-symbols-outlined text-[18px]">delete</span>
@@ -375,11 +377,15 @@
         const ruleItem = selectEl.closest('.rule-item');
         const iconEl = ruleItem.querySelector('.rule-icon');
         const iconWrap = iconEl.closest('div');
+        const textarea = ruleItem.querySelector('.rule-value');
 
         if (preset) {
             iconEl.textContent = preset.icon;
             iconWrap.style.background = preset.color + '15';
             iconWrap.style.color = preset.color;
+            if (!textarea.value.trim() && preset.defaultText) {
+                textarea.value = preset.defaultText;
+            }
         }
         updateQuickAddButtons();
     }

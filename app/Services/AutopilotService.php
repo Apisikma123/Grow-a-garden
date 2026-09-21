@@ -131,7 +131,7 @@ class AutopilotService
             $eventType = EventType::where('code', $eventTypeCode)->first();
             if (!$eventType) continue;
 
-            $intervalDays = max(1, $this->parseIntervalFromRule($key, $ruleDescription));
+            $intervalDays = max(1, $this->parseIntervalFromRule($key, $ruleDescription, $template));
             $generated += $this->scheduleEventsForType($plant, $template, $eventType, $intervalDays, $plantedDate, $today, $endDate);
         }
 
@@ -148,11 +148,14 @@ class AutopilotService
         $today = Carbon::today();
         $endDate = $today->copy()->addDays(14);
 
+        // Calculate realistic watering interval based on plant type / water needs
+        $waterInterval = $this->resolveWateringInterval($template);
+
         $defaults = [
-            'WATERING_REMINDER' => 1,    // Every day
-            'FERTILIZER_REMINDER' => 7,  // Every 7 days
-            'PEST_INSPECTION' => 7,     // Every 7 days
-            'WEEDING' => 12,            // Every 12 days
+            'WATERING_REMINDER' => $waterInterval, // 2-3 days (avoids root rot/overwatering)
+            'FERTILIZER_REMINDER' => 7,            // Every 7 days
+            'PEST_INSPECTION' => 7,               // Every 7 days
+            'WEEDING' => 12,                      // Every 12 days
         ];
 
         foreach ($defaults as $code => $intervalDays) {
@@ -237,7 +240,7 @@ class AutopilotService
         $plantName = $template->name_id;
 
         return match ($code) {
-            'WATERING_REMINDER' => "{$plantName}: Penyiraman Rutin Pagi & Sore",
+            'WATERING_REMINDER' => "{$plantName}: Penyiraman Secukupnya (Cek Kelembapan Tanah Terlebih Dahulu)",
             'FERTILIZER_REMINDER' => match (true) {
                 $hst <= 12 => "{$plantName}: Nutrisi Awal Pembibitan (Pupuk Organik / NPK Daun Encer)",
                 $hst <= 25 => "{$plantName}: Nutrisi Fase Vegetatif (Pembentukan Daun & Batang Kokoh)",
@@ -251,8 +254,44 @@ class AutopilotService
             'WEEDING' => "{$plantName}: Penyiangan Gulma & Penggemburan Media Tanam",
             'PRUNING' => "{$plantName}: Sanitasi Daun Kuning & Perempelan Tunas Air",
             'STAKING' => "{$plantName}: Pemasangan & Pengikatan Ajir Penyangga",
+            'DRAINAGE_CHECK' => "{$plantName}: Pemeriksaan Lubang Drainase Pot & Pembuangan Genangan",
+            'FUNGUS_CHECK' => "{$plantName}: Sanitasi Jamur Daun & Pemangkasan Daun Lembab Terbawah",
+            'NEEM_SPRAY' => "{$plantName}: Aplikasi Pestisida Nabati / Ekstrak Daun Mimba Sore Hari",
             default => "{$plantName}: {$code}",
         };
+    }
+
+    /**
+     * Resolve realistic watering interval (in days) based on plant characteristics.
+     * Prevents overwatering & root rot:
+     * - Low water requirement / Succulent / Herbs: 4-5 days
+     * - Leafy greens / High humidity needs: 2 days
+     * - Standard vegetables (default): 2-3 days
+     */
+    private function resolveWateringInterval($template): int
+    {
+        if (!$template) return 2;
+
+        $waterReq = strtolower($template->water_requirement ?? '');
+        $catName = strtolower($template->category->name ?? '');
+        $plantName = strtolower($template->name_id ?? '');
+
+        // Check explicit textual hints in water_requirement
+        if (str_contains($waterReq, 'rendah') || str_contains($waterReq, 'low') || str_contains($waterReq, 'kering')) {
+            return 4;
+        }
+
+        // Fast-transpiring leafy greens in tropical sun (e.g. bayam, pakcoy, kangkung) need water every 2 days
+        if (str_contains($plantName, 'kangkung') || str_contains($plantName, 'bayam') || str_contains($plantName, 'pakcoy') || str_contains($plantName, 'selada')) {
+            return 2;
+        }
+
+        // Fruiting vegetables (cabai, tomat, terung) prefer deep watering every 2-3 days to encourage deep roots
+        if (str_contains($plantName, 'cabai') || str_contains($plantName, 'tomat') || str_contains($plantName, 'terung')) {
+            return 3;
+        }
+
+        return 2;
     }
 
     /**
@@ -277,18 +316,35 @@ class AutopilotService
         if (str_contains($key, 'stak') || str_contains($key, 'ajir')) {
             return 'STAKING';
         }
+        if (str_contains($key, 'weed') || str_contains($key, 'gulma')) {
+            return 'WEEDING';
+        }
+        if (str_contains($key, 'drain')) {
+            return 'DRAINAGE_CHECK';
+        }
+        if (str_contains($key, 'fungus') || str_contains($key, 'jamur')) {
+            return 'FUNGUS_CHECK';
+        }
+        if (str_contains($key, 'neem') || str_contains($key, 'pestisida')) {
+            return 'NEEM_SPRAY';
+        }
 
         return 'WATERING_REMINDER'; // Fallback
     }
 
     /**
      * Parse a rough interval (in days) from the care rule description.
-     * e.g. "2x sehari" → 1, "Setiap 7 hari" → 7, "Setiap 14 hari" → 14
+     * e.g. "2-3 hari sekali" → 2, "Setiap 7 hari" → 7, "Setiap 14 hari" → 14
      */
-    private function parseIntervalFromRule(string $key, string $description): int
+    private function parseIntervalFromRule(string $key, string $description, $template = null): int
     {
         $desc = strtolower($description);
         $key = strtolower($key);
+
+        // Check for range pattern e.g. "2-3 hari" or "2 - 3 hari"
+        if (preg_match('/(\d+)\s*[-–]\s*(\d+)\s*hari/i', $desc, $matches)) {
+            return (int) $matches[1];
+        }
 
         // Check for "setiap X hari" pattern
         if (preg_match('/setiap\s+(\d+)\s*hari/i', $desc, $matches)) {
@@ -300,16 +356,23 @@ class AutopilotService
             return (int) $matches[1];
         }
 
-        // Check for "Xhari" pattern
-        if (preg_match('/(\d+)\s*hari/i', $desc, $matches)) {
+        // Check for "Xhari" pattern (avoid false positive on "2x sehari" by ensuring not followed by 'sehari')
+        if (preg_match('/(\d+)\s*hari(?!\s*sehari)/i', $desc, $matches)) {
             return (int) $matches[1];
         }
 
-        // Defaults based on key type
-        if (str_contains($key, 'water') || str_contains($key, 'siram')) return 1;
+        // Defaults based on key type (minimum 2 days for watering to avoid rot)
+        if (str_contains($key, 'water') || str_contains($key, 'siram')) {
+            return $this->resolveWateringInterval($template);
+        }
         if (str_contains($key, 'fertilizer') || str_contains($key, 'pupuk')) return 7;
         if (str_contains($key, 'pest') || str_contains($key, 'hama')) return 7;
         if (str_contains($key, 'prun') || str_contains($key, 'pangkas')) return 14;
+        if (str_contains($key, 'stak') || str_contains($key, 'ajir')) return 14;
+        if (str_contains($key, 'weed') || str_contains($key, 'gulma')) return 12;
+        if (str_contains($key, 'drain')) return 7;
+        if (str_contains($key, 'fungus') || str_contains($key, 'jamur')) return 10;
+        if (str_contains($key, 'neem') || str_contains($key, 'pestisida')) return 14;
 
         return 7; // Default fallback
     }

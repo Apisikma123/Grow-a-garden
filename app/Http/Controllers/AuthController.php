@@ -47,11 +47,11 @@ class AuthController extends Controller
             RateLimiter::clear($key);
 
             // Bypass OTP if Admin or already verified
-            if ($user->role === 'admin' || !is_null($user->email_verified_at)) {
+            if (in_array($user->role, ['admin', 'super_admin']) || !is_null($user->email_verified_at)) {
                 Auth::login($user, $remember);
                 $request->session()->regenerate();
                 
-                if ($user->role === 'admin') {
+                if (in_array($user->role, ['admin', 'super_admin'])) {
                     return redirect()->intended('/admin/dashboard');
                 }
 
@@ -143,7 +143,7 @@ class AuthController extends Controller
                 Auth::login($user, true); // Google is implicitly remembered
                 $request->session()->regenerate();
                 
-                if ($user->role === 'admin') {
+                if (in_array($user->role, ['admin', 'super_admin'])) {
                     $response = redirect()->intended('/admin/dashboard');
                 } elseif (!$user->hasCompletedOnboarding()) {
                     $response = redirect()->route('onboarding');
@@ -258,7 +258,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
             session()->forget(['otp_user_id', 'otp_remember']);
 
-            if ($user->role === 'admin') {
+            if (in_array($user->role, ['admin', 'super_admin'])) {
                 $response = redirect()->intended('/admin/dashboard');
             } elseif (!$user->hasCompletedOnboarding()) {
                 $response = redirect()->route('onboarding');

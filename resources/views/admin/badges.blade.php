@@ -142,8 +142,6 @@
                                 <option value="plants">Tambah Tanaman</option>
                                 <option value="gardens">Tambah Kebun</option>
                                 <option value="skipped">Tugas Dilewati</option>
-                                <option value="pro">Langganan Pro</option>
-                                <option value="premium">Langganan Premium</option>
                             </select>
                         </div>
                         <div>
@@ -206,8 +204,6 @@
                                 <option value="plants">Tambah Tanaman</option>
                                 <option value="gardens">Tambah Kebun</option>
                                 <option value="skipped">Tugas Dilewati</option>
-                                <option value="pro">Langganan Pro</option>
-                                <option value="premium">Langganan Premium</option>
                             </select>
                         </div>
                         <div>

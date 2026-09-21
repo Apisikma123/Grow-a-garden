@@ -205,21 +205,15 @@
 </nav>
 <script>
     window.AppState = {
-        plan: '{{ Auth::check() ? Auth::user()->role : "free" }}',
+        role: '{{ Auth::check() ? Auth::user()->role : "user" }}',
         usage: { 
             gardens: {{ Auth::check() ? \App\Models\Garden::where('user_id', Auth::id())->count() : 0 }}, 
             plants: {{ Auth::check() ? \App\Models\Plant::whereIn('garden_id', \App\Models\Garden::where('user_id', Auth::id())->pluck('id'))->count() : 0 }} 
         }
     };
 
-    const PLAN_LIMITS = {
-        free: { gardens: 1, plants: 10 },
-        pro: { gardens: 10, plants: 100 },
-        premium: { gardens: Infinity, plants: Infinity }
-    };
-
     window.checkLimit = function(resourceType) {
-        // All features are accessible — no plan limits enforced
+        // Semua fitur gratis dan tanpa batasan kuota
         return true;
     };
 

@@ -115,27 +115,12 @@
     <main class="flex-1 md:ml-64 p-5 md:p-8 overflow-y-auto no-scrollbar w-full min-h-screen flex flex-col">
         {{-- Top Header Bar --}}
         @if(!request()->is('admin/settings*') && !request()->is('admin/dashboard*') && !request()->is('admin/weather*') && !request()->is('admin/plants*'))
-        <header class="hidden md:flex justify-between items-center mb-8 gap-6">
+        <header class="hidden md:flex items-center mb-8">
             {{-- Search Bar --}}
             <div class="relative w-full max-w-[400px]">
                 <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
                 <input type="text" id="admin-global-search" placeholder="Search users, templates, or badges..." class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-full pl-12 pr-4 py-2.5 text-[14px] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all ambient-shadow text-on-surface placeholder:text-on-surface-variant/60" />
             </div>
-
-            {{-- Admin Profile Chip / Avatar in Top Bar --}}
-            <a href="/admin/settings" class="flex items-center gap-3 bg-surface-container-lowest hover:bg-surface-container-low border border-outline-variant/30 rounded-full py-1.5 pl-2 pr-4 transition-all duration-200 shadow-2xs hover:shadow-xs group">
-                <div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden border border-outline-variant/40 shrink-0">
-                    @if(Auth::user()->avatar)
-                        <img src="{{ filter_var(Auth::user()->avatar, FILTER_VALIDATE_URL) ? Auth::user()->avatar : asset('storage/' . Auth::user()->avatar) }}" class="w-full h-full object-cover" alt="Profile">
-                    @else
-                        <span class="text-[#006c49] font-black text-[12px] uppercase">{{ strtoupper(substr(Auth::user()->name ?? 'AD', 0, 2)) }}</span>
-                    @endif
-                </div>
-                <div class="flex flex-col text-left">
-                    <span class="text-[13px] font-bold text-on-surface group-hover:text-primary transition-colors leading-tight">{{ Auth::user()->name }}</span>
-                    <span class="text-[10px] text-on-surface-variant font-medium uppercase tracking-wider">Admin</span>
-                </div>
-            </a>
         </header>
         @else
         <div class="mb-8 hidden md:block"></div>
