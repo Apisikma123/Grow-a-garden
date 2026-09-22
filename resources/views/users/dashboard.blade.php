@@ -68,12 +68,13 @@
                         <span class="text-[10px] sm:text-[11px] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap shrink-0" id="weather-badge">Hujan Ringan</span>
                     </div>
 
-                    {{-- Card Body --}}
-                    <div class="bg-surface-container-low rounded-xl p-4">
+                    {{-- Card Body: Adaptasi Pintar Box --}}
+                    <div id="adaptasi-card" class="bg-surface-container-low rounded-xl p-4 transition-all duration-300">
                         <div class="min-w-0 w-full">
                             <div class="flex items-center gap-1.5 text-[11px] font-bold text-primary uppercase tracking-wider mb-1">
                                 <span class="material-symbols-outlined text-[14px]">auto_awesome</span> Adaptasi Pintar
                             </div>
+
                             <p class="text-[12px] sm:text-[13px] text-on-surface-variant leading-relaxed mb-3 break-words" id="weather-desc">
                                 Jadwal penyiraman otomatis ditunda hari ini karena curah hujan yang cukup.
                             </p>
@@ -81,7 +82,26 @@
                                 <span class="material-symbols-outlined text-[14px] shrink-0">location_on</span>
                                 <span id="weather-location" class="truncate">Lokasi</span>
                             </div>
+
+                            {{-- Bottom Arrow Button to Close Adaptasi Pintar --}}
+                            <div class="flex justify-center pt-2.5 -mb-1 border-t border-outline-variant/20 mt-3">
+                                <button type="button" onclick="window.toggleAdaptasiPintar(true)" class="flex items-center gap-1 text-[11px] font-bold text-on-surface-variant/70 hover:text-primary transition-colors cursor-pointer py-1 px-3 rounded-full hover:bg-white/60 group" title="" aria-label="Tutup Adaptasi Pintar">
+                                    <span> </span>
+                                    <span class="material-symbols-outlined text-[18px] transition-transform duration-200 group-hover:-translate-y-0.5">keyboard_arrow_up</span>
+                                </button>
+                            </div>
                         </div>
+                    </div>
+
+                    {{-- Re-open Button (Shown when Adaptasi Pintar is closed) --}}
+                    <div id="adaptasi-reopen-bar" class="hidden pt-1">
+                        <button type="button" onclick="window.toggleAdaptasiPintar(false)" class="w-full flex items-center justify-between px-4 py-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container text-xs font-bold text-primary transition-all cursor-pointer group border border-outline-variant/20" title="Buka Adaptasi Pintar">
+                            <span class="flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-[15px]">auto_awesome</span>
+                                <span>Adaptasi Pintar Aktif</span>
+                            </span>
+                            <span class="material-symbols-outlined text-[20px] transition-transform duration-200 group-hover:translate-y-0.5 text-on-surface-variant/70">keyboard_arrow_down</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -739,6 +759,33 @@ function initDashboard() {
             }
         });
     }
+
+    // Global function for instant toggle with zero timing dependencies
+    window.toggleAdaptasiPintar = function(close) {
+        const card = document.getElementById('adaptasi-card');
+        const reopenBar = document.getElementById('adaptasi-reopen-bar');
+        if (!card || !reopenBar) return;
+
+        if (close) {
+            card.style.display = 'none';
+            reopenBar.style.display = 'block';
+            reopenBar.classList.remove('hidden');
+            try { localStorage.setItem('adaptasi_pintar_closed', '1'); } catch(e){}
+        } else {
+            card.style.display = 'block';
+            card.classList.remove('hidden');
+            reopenBar.style.display = 'none';
+            reopenBar.classList.add('hidden');
+            try { localStorage.setItem('adaptasi_pintar_closed', '0'); } catch(e){}
+        }
+    };
+
+    // Restore saved state
+    try {
+        if (localStorage.getItem('adaptasi_pintar_closed') === '1') {
+            window.toggleAdaptasiPintar(true);
+        }
+    } catch(e){}
 }
 
 if (document.readyState === 'loading') {

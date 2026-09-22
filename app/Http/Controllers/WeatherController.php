@@ -24,6 +24,14 @@ class WeatherController extends Controller
                 if ($garden->latitude && $garden->longitude) {
                     $lat = $garden->latitude;
                     $lng = $garden->longitude;
+                } elseif (!$request->has('lat') && !$request->has('lng')) {
+                    return response()->json([
+                        'success' => true,
+                        'has_location' => false,
+                        'location' => null,
+                        'agronomic' => null,
+                        'message' => 'Lokasi kebun belum ditentukan.'
+                    ]);
                 }
             }
         } elseif ($user) {

@@ -46,7 +46,7 @@
 
         {{-- Left: Garden List --}}
         <div class="w-full lg:w-[320px] shrink-0 flex flex-col gap-3">
-            <div id="garden-list" class="flex flex-col gap-3 w-full">
+            <div id="garden-list" class="flex flex-row lg:flex-col gap-2 sm:gap-3 w-full overflow-x-auto lg:overflow-visible no-scrollbar pb-1 lg:pb-0 touch-pan-x">
                 {{-- Populated by JS --}}
             </div>
         </div>
@@ -64,115 +64,150 @@
 
 
 
-                {{-- Detail Header --}}
-                <div class="bg-surface rounded-[24px] p-6 ambient-shadow w-full" style="width: 100% !important;">
+                {{-- Detail Header (Consolidated & Clean) --}}
+                <div class="bg-surface rounded-[24px] p-5 sm:p-6 ambient-shadow w-full border border-outline-variant/15" style="width: 100% !important;">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                        <div class="flex items-center gap-4 min-w-0">
-                            <div class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0" id="detail-garden-icon-box">
-                                <span class="material-symbols-outlined text-[28px] text-primary" id="detail-garden-icon">yard</span>
+                        <div class="flex items-center gap-3.5 min-w-0">
+                            <div class="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0" id="detail-garden-icon-box">
+                                <span class="material-symbols-outlined text-[26px] text-primary" id="detail-garden-icon">potted_plant</span>
                             </div>
                             <div class="min-w-0">
-                                <h2 id="detail-garden-name" class="text-[22px] font-bold text-on-surface truncate"></h2>
+                                <h2 id="detail-garden-name" class="text-[20px] sm:text-[24px] font-bold text-on-surface tracking-tight truncate leading-snug"></h2>
                                 <div class="flex items-center gap-2 mt-0.5 min-w-0 flex-wrap">
-                                    <p id="detail-garden-location" class="text-[13px] text-on-surface-variant flex items-center gap-1 truncate">
-                                        <span class="material-symbols-outlined text-[14px] shrink-0 text-primary">location_on</span>
+                                    <p id="detail-garden-location" class="text-[12px] sm:text-[13px] text-on-surface-variant flex items-center gap-1 truncate">
+                                        <span class="material-symbols-outlined text-[15px] shrink-0 text-primary">location_on</span>
                                         <span class="truncate"></span>
                                     </p>
-                                    <button type="button" onclick="GardenApp.quickDetectLocation()" class="text-[11px] font-bold text-primary hover:underline flex items-center gap-0.5 shrink-0" title="Deteksi Lokasi GPS Kebun">
-                                        <span class="material-symbols-outlined text-[13px]">my_location</span> Deteksi
+                                    <button type="button" onclick="GardenApp.quickDetectLocation()" class="inline-flex items-center gap-1 text-[11px] font-bold text-primary bg-primary/10 hover:bg-primary/20 px-2.5 py-0.5 rounded-full transition-colors shrink-0 cursor-pointer" title="Perbarui Lokasi GPS Kebun">
+                                        <span class="material-symbols-outlined text-[13px]">my_location</span>
+                                        <span>GPS</span>
                                     </button>
                                 </div>
                             </div>
                         </div>
-                        <div class="flex items-center gap-2 shrink-0">
-                            <button type="button" id="add-plant-btn" onclick="GardenApp.openAddPlantModal()" class="flex items-center gap-2 bg-primary text-on-primary font-bold text-[13px] px-4 py-2.5 rounded-full hover:bg-primary/90 active:scale-95 transition-all shadow-sm">
-                                <span class="material-symbols-outlined text-[16px]">add</span>
-                                Tambah Tanaman
+                        <div class="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                            <button type="button" id="add-plant-btn" onclick="GardenApp.openAddPlantModal()" class="flex items-center gap-1.5 bg-primary text-on-primary font-bold text-[13px] px-4 py-2 rounded-full hover:bg-primary/90 active:scale-95 transition-all shadow-sm">
+                                <span class="material-symbols-outlined text-[17px]">add</span>
+                                <span>Tambah Tanaman</span>
                             </button>
-                            <button type="button" onclick="GardenApp.openEditGardenModal()" class="p-2.5 text-on-surface-variant hover:text-primary hover:bg-primary/10 rounded-full transition-colors" title="Edit Kebun & Lokasi">
-                                <span class="material-symbols-outlined text-[20px]">edit</span>
+                            <button type="button" onclick="GardenApp.openEditGardenModal()" class="p-2 text-on-surface-variant hover:text-primary hover:bg-primary/10 rounded-full transition-colors" title="Edit Kebun & Lokasi">
+                                <span class="material-symbols-outlined text-[19px]">edit</span>
                             </button>
-                            <button type="button" onclick="GardenApp.deleteCurrentGarden()" class="p-2.5 text-on-surface-variant hover:text-error hover:bg-error/10 rounded-full transition-colors" title="Hapus Kebun">
-                                <span class="material-symbols-outlined text-[20px]">delete</span>
+                            <button type="button" onclick="GardenApp.deleteCurrentGarden()" class="p-2 text-on-surface-variant hover:text-error hover:bg-error/10 rounded-full transition-colors" title="Hapus Kebun">
+                                <span class="material-symbols-outlined text-[19px]">delete</span>
                             </button>
                         </div>
                     </div>
                 </div>
 
-                {{-- Garden Live Weather & Smart Adaptation Card --}}
-                <div id="garden-weather-card" class="bg-surface rounded-[24px] p-5 sm:p-6 ambient-shadow border border-outline-variant/20 w-full flex flex-col gap-4">
-                    <div class="flex items-center justify-between gap-3 flex-wrap border-b border-outline-variant/20 pb-3">
-                        <div class="flex items-center gap-2.5 min-w-0">
-                            <div class="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                                <span class="material-symbols-outlined text-[20px]" id="garden-weather-icon">cloud</span>
+                {{-- Garden Live Weather & Smart Adaptation Widget (Compact & Modern, Hidden on Mobile) --}}
+                <div id="garden-weather-card" class="hidden md:flex bg-surface rounded-[24px] p-4 sm:p-5 ambient-shadow border border-outline-variant/15 w-full flex-col gap-3">
+                    {{-- No Location State (When Garden has no GPS coordinates) --}}
+                    <div id="gweather-no-location" class="hidden flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 w-full py-1">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                                <span class="material-symbols-outlined text-[22px]">location_searching</span>
                             </div>
                             <div class="min-w-0">
-                                <h4 class="text-[15px] font-bold text-on-surface truncate" id="garden-weather-title">Memuat Cuaca Kebun...</h4>
-                                <p class="text-[11px] text-on-surface-variant flex items-center gap-1 truncate">
-                                    <span class="material-symbols-outlined text-[12px] text-primary">location_on</span>
-                                    <span id="garden-weather-location">Mendeteksi koordinat...</span>
-                                </p>
+                                <h4 class="text-[14px] font-bold text-on-surface">Lokasi Kebun Belum Diatur</h4>
+                                <p class="text-[12px] text-on-surface-variant">Deteksi lokasi kebun untuk menampilkan cuaca real-time & rekomendasi irigasi pintar.</p>
                             </div>
                         </div>
-                        <div class="flex items-center gap-2 shrink-0">
-                            <span id="garden-weather-badge" class="text-[11px] font-bold px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
-                                Deteksi Real-Time
-                            </span>
-                            <button type="button" onclick="GardenApp.quickDetectLocation()" class="flex items-center gap-1.5 text-[12px] font-bold text-primary bg-primary/10 hover:bg-primary/20 px-3.5 py-1.5 rounded-full transition-all active:scale-95 cursor-pointer" title="Perbarui Cuaca & Lokasi GPS Kebun">
-                                <span class="material-symbols-outlined text-[15px]">my_location</span>
-                                <span>Deteksi Lokasi</span>
+                        <button type="button" onclick="GardenApp.quickDetectLocation()" class="flex items-center gap-1.5 text-[12px] font-bold text-on-primary bg-primary hover:bg-primary/90 px-4 py-2 rounded-full transition-all shadow-sm active:scale-95 cursor-pointer shrink-0">
+                            <span class="material-symbols-outlined text-[16px]">my_location</span>
+                            <span>Deteksi Lokasi</span>
+                        </button>
+                    </div>
+
+                    {{-- Active Weather Content (When Garden has GPS coordinates) --}}
+                    <div id="gweather-active-content" class="flex flex-col gap-3 w-full">
+                        {{-- Weather Metrics Row --}}
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+                            {{-- Current Weather & Temp --}}
+                            <div class="flex items-center gap-3 min-w-0">
+                                <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                                    <span class="material-symbols-outlined text-[22px]" id="garden-weather-icon">cloud</span>
+                                </div>
+                                <div class="min-w-0">
+                                    <div class="flex items-baseline gap-2">
+                                        <span id="gweather-temp" class="text-[22px] font-black text-on-surface tracking-tight leading-none">--°C</span>
+                                        <span id="garden-weather-title" class="text-[13px] font-semibold text-on-surface-variant truncate">Memuat Cuaca...</span>
+                                    </div>
+                                    <span id="garden-weather-location" class="hidden"></span>
+                                    <span id="garden-weather-badge" style="display: none !important;"></span>
+                                </div>
+                            </div>
+
+                            {{-- Metrics Chips (Horizontal, Low Profile) --}}
+                            <div id="garden-weather-metrics" class="flex items-center gap-2 sm:gap-2.5 flex-wrap w-full sm:w-auto">
+                                <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container-low border border-outline-variant/10 text-[12px]">
+                                    <span class="material-symbols-outlined text-[15px] text-primary">water_drop</span>
+                                    <span class="text-on-surface-variant font-medium">Lembap:</span>
+                                    <span id="gweather-humidity" class="font-bold text-on-surface">--%</span>
+                                </div>
+                                <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container-low border border-outline-variant/10 text-[12px]">
+                                    <span class="material-symbols-outlined text-[15px] text-sky-600">rainy</span>
+                                    <span class="text-on-surface-variant font-medium">Hujan:</span>
+                                    <span id="gweather-rain" class="font-bold text-on-surface">--%</span>
+                                </div>
+                                <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container-low border border-outline-variant/10 text-[12px]">
+                                    <span class="material-symbols-outlined text-[15px] text-stone-600">air</span>
+                                    <span class="text-on-surface-variant font-medium">Angin:</span>
+                                    <span id="gweather-wind" class="font-bold text-on-surface">-- km/j</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Agronomic Advice Banner (Compact & Integrated) --}}
+                        <div id="garden-weather-advice" class="bg-surface-container-low/70 rounded-xl p-3 sm:p-3.5 flex flex-col items-start justify-between gap-2.5 border border-outline-variant/15 text-[12px] transition-all duration-300">
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 w-full">
+                                <div class="flex items-start sm:items-center gap-2.5 min-w-0 flex-1">
+                                    <span class="material-symbols-outlined text-primary text-[20px] shrink-0 mt-0.5 sm:mt-0" id="gweather-advice-icon">lightbulb</span>
+                                    <div class="min-w-0 flex-1">
+                                        <div class="flex items-center gap-1.5 flex-wrap">
+                                            <span class="font-bold text-primary flex items-center gap-1 shrink-0">
+                                                <span class="material-symbols-outlined text-[13px]">auto_awesome</span>
+                                                Adaptasi Irigasi:
+                                            </span>
+                                            <span id="gweather-advice-title" class="font-bold text-on-surface"></span>
+                                        </div>
+                                        <p id="gweather-advice-text" class="text-[11.5px] text-on-surface-variant line-clamp-2 mt-0.5 leading-relaxed"></p>
+                                    </div>
+                                </div>
+                                <span id="gweather-advice-badge" class="text-[10.5px] font-bold px-2.5 py-0.5 rounded-full whitespace-nowrap shrink-0 self-start sm:self-center"></span>
+                            </div>
+
+                            {{-- Bottom Arrow Button to Close Adaptasi Irigasi --}}
+                            <div class="w-full flex justify-center pt-2 -mb-1 border-t border-outline-variant/15 mt-1">
+                                <button type="button" onclick="window.toggleGardenAdvice(true)" class="flex items-center gap-1 text-[11px] font-bold text-on-surface-variant/70 hover:text-primary transition-colors cursor-pointer py-0.5 px-3 rounded-full hover:bg-white/60 group" title="" aria-label="Tutup Adaptasi Irigasi">
+                                    <span> </span>
+                                    <span class="material-symbols-outlined text-[18px] transition-transform duration-200 group-hover:-translate-y-0.5">keyboard_arrow_up</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        {{-- Re-open Button (Shown when Adaptasi Irigasi is closed) --}}
+                        <div id="garden-weather-advice-reopen" class="hidden pt-1">
+                            <button type="button" onclick="window.toggleGardenAdvice(false)" class="w-full flex items-center justify-between px-4 py-2 rounded-xl bg-surface-container-low/70 hover:bg-surface-container-low text-xs font-bold text-primary transition-all cursor-pointer group border border-outline-variant/15" title="Buka Adaptasi Irigasi">
+                                <span class="flex items-center gap-1.5">
+                                    <span class="material-symbols-outlined text-[15px]">auto_awesome</span>
+                                    <span>Adaptasi Irigasi Aktif</span>
+                                </span>
+                                <span class="material-symbols-outlined text-[18px] transition-transform duration-200 group-hover:translate-y-0.5 text-on-surface-variant/70">keyboard_arrow_down</span>
                             </button>
                         </div>
-                    </div>
-
-                    {{-- Weather Metrics Grid --}}
-                    <div id="garden-weather-metrics" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                        <div class="bg-surface-container-low p-3.5 rounded-2xl flex flex-col">
-                            <span class="text-[11px] text-on-surface-variant font-medium flex items-center gap-1">
-                                <span class="material-symbols-outlined text-[14px] text-error">thermostat</span> Suhu
-                            </span>
-                            <span id="gweather-temp" class="text-[18px] sm:text-[20px] font-black text-on-surface mt-0.5">--°C</span>
-                        </div>
-                        <div class="bg-surface-container-low p-3.5 rounded-2xl flex flex-col">
-                            <span class="text-[11px] text-on-surface-variant font-medium flex items-center gap-1">
-                                <span class="material-symbols-outlined text-[14px] text-primary">water_drop</span> Kelembapan
-                            </span>
-                            <span id="gweather-humidity" class="text-[18px] sm:text-[20px] font-black text-on-surface mt-0.5">--%</span>
-                        </div>
-                        <div class="bg-surface-container-low p-3.5 rounded-2xl flex flex-col">
-                            <span class="text-[11px] text-on-surface-variant font-medium flex items-center gap-1">
-                                <span class="material-symbols-outlined text-[14px] text-sky-600">rainy</span> Peluang Hujan
-                            </span>
-                            <span id="gweather-rain" class="text-[18px] sm:text-[20px] font-black text-on-surface mt-0.5">--%</span>
-                        </div>
-                        <div class="bg-surface-container-low p-3.5 rounded-2xl flex flex-col">
-                            <span class="text-[11px] text-on-surface-variant font-medium flex items-center gap-1">
-                                <span class="material-symbols-outlined text-[14px] text-stone-600">air</span> Angin
-                            </span>
-                            <span id="gweather-wind" class="text-[18px] sm:text-[20px] font-black text-on-surface mt-0.5">-- km/j</span>
-                        </div>
-                    </div>
-
-                    {{-- Agronomic Advice Box --}}
-                    <div id="garden-weather-advice" class="bg-surface-container-low rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border border-outline-variant/15">
-                        <div class="flex items-start gap-3 min-w-0">
-                            <span class="material-symbols-outlined text-primary text-[22px] shrink-0 mt-0.5" id="gweather-advice-icon">lightbulb</span>
-                            <div class="min-w-0">
-                                <div class="flex items-center gap-2 mb-0.5 flex-wrap">
-                                    <span class="text-[11px] font-extrabold uppercase tracking-wider text-primary flex items-center gap-1">
-                                        <span class="material-symbols-outlined text-[13px]">auto_awesome</span> Adaptasi Irigasi Pintar
-                                    </span>
-                                    <span id="gweather-advice-title" class="text-[13px] font-bold text-on-surface"></span>
-                                </div>
-                                <p id="gweather-advice-text" class="text-[12.5px] text-on-surface-variant leading-relaxed"></p>
-                            </div>
-                        </div>
-                        <span id="gweather-advice-badge" class="text-[11px] font-extrabold px-3 py-1 rounded-full whitespace-nowrap shrink-0"></span>
                     </div>
                 </div>
 
                 {{-- Plant Content Section --}}
-                <div id="plants-wrapper" class="relative w-full min-h-[300px] rounded-[24px]">
+                <div id="plants-wrapper" class="relative w-full min-h-[300px] flex flex-col gap-3.5">
+                    {{-- Section Header: Tanaman --}}
+                    <div class="flex items-center justify-between pt-1">
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-[16px] sm:text-[18px] font-bold text-on-surface tracking-tight">Tanaman di Kebun</h3>
+                            <span id="plants-count-badge" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-primary/10 text-primary">0 Tanaman</span>
+                        </div>
+                    </div>
 
                     {{-- Plants Loading --}}
                     <div id="plants-loading" class="w-full flex items-center justify-center py-10" style="width: 100% !important;">
@@ -206,112 +241,124 @@
 </div>
 
 {{-- ── Add Garden Modal ── --}}
-<div id="add-garden-modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+<div id="add-garden-modal" class="fixed inset-0 z-50 hidden">
+    {{-- Backdrop --}}
     <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="GardenApp.closeAddGardenModal()"></div>
-    <div class="w-full min-h-screen px-4 py-8 flex flex-col items-center justify-center pointer-events-none">
-        <div class="w-full shrink-0 min-w-full sm:min-w-[400px] max-w-md mx-auto bg-surface rounded-[28px] p-6 sm:p-8 ambient-shadow-lg border border-outline-variant/30 pointer-events-auto relative self-stretch" style="white-space: normal; word-break: normal;">
-            <div class="flex items-center justify-between mb-6">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                        <span class="material-symbols-outlined text-[22px]">yard</span>
-                    </div>
-                    <h3 class="text-[20px] font-bold text-on-surface">Tambah Kebun Baru</h3>
-                </div>
-                <button type="button" onclick="GardenApp.closeAddGardenModal()" class="w-9 h-9 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:bg-error/10 hover:text-error transition-colors">
-                    <span class="material-symbols-outlined text-[20px]">close</span>
-                </button>
-            </div>
 
-            <form id="add-garden-form" onsubmit="GardenApp.submitAddGarden(event)" class="flex flex-col gap-5">
-                <div>
-                    <label class="block text-[13px] font-bold text-on-surface mb-2">Nama Kebun <span class="text-error">*</span></label>
-                    <input type="text" name="name" required placeholder="Contoh: Kebun Belakang Rumah, Balkon Apt..."
-                        class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 bg-surface text-on-surface text-[14px] focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
-                </div>
-                <div>
-                    <label class="block text-[13px] font-bold text-on-surface mb-2">Lokasi Kebun <span class="text-[12px] font-normal text-on-surface-variant">(Opsional)</span></label>
-                    <div class="flex items-center gap-2.5 w-full">
-                        <div class="relative flex-1 min-w-0">
-                            <input type="text" name="location" id="add-garden-location-input" placeholder="Contoh: Gaharu, Medan..."
-                                class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 bg-surface text-on-surface text-[14px] focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all truncate">
+    {{-- Scrollable Wrapper --}}
+    <div class="fixed inset-0 z-10 overflow-y-auto overscroll-contain">
+        <div class="flex min-h-full items-center justify-center p-4 pointer-events-none">
+            {{-- Modal Card --}}
+            <div class="w-full max-w-md bg-surface rounded-[28px] p-6 sm:p-8 ambient-shadow-lg border border-outline-variant/30 pointer-events-auto relative shadow-2xl flex flex-col" style="white-space: normal; word-break: normal; width: 100%; max-width: 480px;">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                            <span class="material-symbols-outlined text-[22px]">potted_plant</span>
                         </div>
-                        <button type="button" onclick="GardenApp.detectLocationForModal('add')" id="btn-detect-add" class="h-[46px] px-3.5 sm:px-4 rounded-xl bg-primary/10 text-primary font-bold text-[13px] hover:bg-primary/20 transition-all shrink-0 flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-[95px] sm:min-w-[110px]">
-                            <span class="material-symbols-outlined text-[18px] shrink-0">my_location</span>
-                            <span class="text-[13px]">Deteksi</span>
+                        <h3 class="text-[20px] font-bold text-on-surface">Tambah Kebun Baru</h3>
+                    </div>
+                    <button type="button" onclick="GardenApp.closeAddGardenModal()" class="w-9 h-9 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:bg-error/10 hover:text-error transition-colors shrink-0">
+                        <span class="material-symbols-outlined text-[20px]">close</span>
+                    </button>
+                </div>
+
+                <form id="add-garden-form" onsubmit="GardenApp.submitAddGarden(event)" class="flex flex-col gap-5 w-full">
+                    <div class="w-full">
+                        <label class="block text-[13px] font-bold text-on-surface mb-2">Nama Kebun <span class="text-error">*</span></label>
+                        <input type="text" name="name" required placeholder="Contoh: Kebun Belakang Rumah, Balkon Apt..."
+                            class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 bg-surface text-on-surface text-[14px] focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+                    </div>
+                    <div class="w-full">
+                        <label class="block text-[13px] font-bold text-on-surface mb-2">Lokasi Kebun <span class="text-[12px] font-normal text-on-surface-variant">(Opsional)</span></label>
+                        <div class="flex items-center gap-2.5 w-full">
+                            <div class="relative flex-1 min-w-0">
+                                <input type="text" name="location" id="add-garden-location-input" placeholder="Contoh: Gaharu, Medan..."
+                                    class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 bg-surface text-on-surface text-[14px] focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all truncate">
+                            </div>
+                            <button type="button" onclick="GardenApp.detectLocationForModal('add')" id="btn-detect-add" class="h-[46px] px-3.5 sm:px-4 rounded-xl bg-primary/10 text-primary font-bold text-[13px] hover:bg-primary/20 transition-all shrink-0 flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-[95px] sm:min-w-[110px]">
+                                <span class="material-symbols-outlined text-[18px] shrink-0">my_location</span>
+                                <span class="text-[13px]">Deteksi</span>
+                            </button>
+                        </div>
+                        <input type="hidden" name="latitude" id="add-garden-lat">
+                        <input type="hidden" name="longitude" id="add-garden-lng">
+                        <div class="mt-2 text-[12px] text-on-surface-variant flex items-start gap-1.5 w-full leading-snug" id="add-location-status" style="white-space: normal; word-break: normal;">
+                            <span class="material-symbols-outlined text-[15px] text-primary shrink-0 mt-0.5">info</span>
+                            <span class="flex-1 min-w-0 text-[12px] leading-snug" style="white-space: normal; word-break: normal;">Klik Deteksi untuk mengisi nama lokasi dari GPS.</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-end gap-3 pt-2 w-full">
+                        <button type="button" onclick="GardenApp.closeAddGardenModal()" class="px-5 py-2.5 rounded-full text-[14px] font-bold text-on-surface-variant hover:bg-surface-container-high transition-colors cursor-pointer">
+                            Batal
+                        </button>
+                        <button type="submit" id="add-garden-submit" class="bg-primary text-on-primary font-bold text-[14px] px-6 py-2.5 rounded-full hover:bg-primary/90 active:scale-95 transition-all shadow-sm cursor-pointer">
+                            Buat Kebun
                         </button>
                     </div>
-                    <input type="hidden" name="latitude" id="add-garden-lat">
-                    <input type="hidden" name="longitude" id="add-garden-lng">
-                    <div class="mt-2 text-[12px] text-on-surface-variant flex items-start gap-1.5 w-full min-w-0 break-words leading-snug" id="add-location-status">
-                        <span class="material-symbols-outlined text-[14px] text-primary shrink-0 mt-0.5">info</span>
-                        <span class="flex-1 min-w-0">Klik Deteksi untuk mengisi nama lokasi dari GPS.</span>
-                    </div>
-                </div>
-                <div class="flex items-center justify-end gap-3 pt-2">
-                    <button type="button" onclick="GardenApp.closeAddGardenModal()" class="px-5 py-2.5 rounded-full text-[14px] font-bold text-on-surface-variant hover:bg-surface-container-high transition-colors">
-                        Batal
-                    </button>
-                    <button type="submit" id="add-garden-submit" class="bg-primary text-on-primary font-bold text-[14px] px-6 py-2.5 rounded-full hover:bg-primary/90 active:scale-95 transition-all shadow-sm">
-                        Buat Kebun
-                    </button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 
 {{-- ── Edit Garden Modal ── --}}
-<div id="edit-garden-modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+<div id="edit-garden-modal" class="fixed inset-0 z-50 hidden">
+    {{-- Backdrop --}}
     <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="GardenApp.closeEditGardenModal()"></div>
-    <div class="w-full min-h-screen px-4 py-8 flex flex-col items-center justify-center pointer-events-none">
-        <div class="w-full shrink-0 min-w-full sm:min-w-[400px] max-w-md mx-auto bg-surface rounded-[28px] p-6 sm:p-8 ambient-shadow-lg border border-outline-variant/30 pointer-events-auto relative self-stretch" style="white-space: normal; word-break: normal;">
-            <div class="flex items-center justify-between mb-6">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                        <span class="material-symbols-outlined text-[22px]">edit</span>
-                    </div>
-                    <h3 class="text-[20px] font-bold text-on-surface">Edit Kebun</h3>
-                </div>
-                <button type="button" onclick="GardenApp.closeEditGardenModal()" class="w-9 h-9 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:bg-error/10 hover:text-error transition-colors shrink-0">
-                    <span class="material-symbols-outlined text-[20px]">close</span>
-                </button>
-            </div>
 
-            <form id="edit-garden-form" onsubmit="GardenApp.submitEditGarden(event)" class="flex flex-col gap-5">
-                <input type="hidden" name="garden_id" id="edit-garden-id">
-                <div>
-                    <label class="block text-[13px] font-bold text-on-surface mb-2">Nama Kebun <span class="text-error">*</span></label>
-                    <input type="text" name="name" id="edit-garden-name-input" required placeholder="Nama Kebun"
-                        class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 bg-surface text-on-surface text-[14px] focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
-                </div>
-                <div>
-                    <label class="block text-[13px] font-bold text-on-surface mb-2">Lokasi Kebun</label>
-                    <div class="flex items-center gap-2.5 w-full">
-                        <div class="relative flex-1 min-w-0">
-                            <input type="text" name="location" id="edit-garden-location-input" placeholder="Contoh: Gaharu, Medan..."
-                                class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 bg-surface text-on-surface text-[14px] focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all truncate">
+    {{-- Scrollable Wrapper --}}
+    <div class="fixed inset-0 z-10 overflow-y-auto overscroll-contain">
+        <div class="flex min-h-full items-center justify-center p-4 pointer-events-none">
+            {{-- Modal Card --}}
+            <div class="w-full max-w-md bg-surface rounded-[28px] p-6 sm:p-8 ambient-shadow-lg border border-outline-variant/30 pointer-events-auto relative shadow-2xl flex flex-col" style="white-space: normal; word-break: normal; width: 100%; max-width: 480px;">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                            <span class="material-symbols-outlined text-[22px]">edit</span>
                         </div>
-                        <button type="button" onclick="GardenApp.detectLocationForModal('edit')" id="btn-detect-edit" class="h-[46px] px-3.5 sm:px-4 rounded-xl bg-primary/10 text-primary font-bold text-[13px] hover:bg-primary/20 transition-all shrink-0 flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-[95px] sm:min-w-[110px]">
-                            <span class="material-symbols-outlined text-[18px] shrink-0">my_location</span>
-                            <span class="text-[13px]">Deteksi</span>
+                        <h3 class="text-[20px] font-bold text-on-surface">Edit Kebun</h3>
+                    </div>
+                    <button type="button" onclick="GardenApp.closeEditGardenModal()" class="w-9 h-9 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:bg-error/10 hover:text-error transition-colors shrink-0">
+                        <span class="material-symbols-outlined text-[20px]">close</span>
+                    </button>
+                </div>
+
+                <form id="edit-garden-form" onsubmit="GardenApp.submitEditGarden(event)" class="flex flex-col gap-5 w-full">
+                    <input type="hidden" name="garden_id" id="edit-garden-id">
+                    <div class="w-full">
+                        <label class="block text-[13px] font-bold text-on-surface mb-2">Nama Kebun <span class="text-error">*</span></label>
+                        <input type="text" name="name" id="edit-garden-name-input" required placeholder="Nama Kebun"
+                            class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 bg-surface text-on-surface text-[14px] focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+                    </div>
+                    <div class="w-full">
+                        <label class="block text-[13px] font-bold text-on-surface mb-2">Lokasi Kebun</label>
+                        <div class="flex items-center gap-2.5 w-full">
+                            <div class="relative flex-1 min-w-0">
+                                <input type="text" name="location" id="edit-garden-location-input" placeholder="Contoh: Gaharu, Medan..."
+                                    class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 bg-surface text-on-surface text-[14px] focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all truncate">
+                            </div>
+                            <button type="button" onclick="GardenApp.detectLocationForModal('edit')" id="btn-detect-edit" class="h-[46px] px-3.5 sm:px-4 rounded-xl bg-primary/10 text-primary font-bold text-[13px] hover:bg-primary/20 transition-all shrink-0 flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-[95px] sm:min-w-[110px]">
+                                <span class="material-symbols-outlined text-[18px] shrink-0">my_location</span>
+                                <span class="text-[13px]">Deteksi</span>
+                            </button>
+                        </div>
+                        <input type="hidden" name="latitude" id="edit-garden-lat">
+                        <input type="hidden" name="longitude" id="edit-garden-lng">
+                        <div class="mt-2 text-[12px] text-on-surface-variant flex items-start gap-1.5 w-full leading-snug" id="edit-location-status" style="white-space: normal; word-break: normal;">
+                            <span class="material-symbols-outlined text-[14px] text-primary shrink-0 mt-0.5">info</span>
+                            <span class="flex-1 min-w-0 text-[12px] leading-snug" style="white-space: normal; word-break: normal;">Klik Deteksi untuk auto-update lokasi GPS kebun ini.</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-end gap-3 pt-2 w-full">
+                        <button type="button" onclick="GardenApp.closeEditGardenModal()" class="px-5 py-2.5 rounded-full text-[14px] font-bold text-on-surface-variant hover:bg-surface-container-high transition-colors cursor-pointer">
+                            Batal
+                        </button>
+                        <button type="submit" id="edit-garden-submit" class="bg-primary text-on-primary font-bold text-[14px] px-6 py-2.5 rounded-full hover:bg-primary/90 active:scale-95 transition-all shadow-sm cursor-pointer">
+                            Simpan Perubahan
                         </button>
                     </div>
-                    <input type="hidden" name="latitude" id="edit-garden-lat">
-                    <input type="hidden" name="longitude" id="edit-garden-lng">
-                    <div class="mt-2 text-[12px] text-on-surface-variant flex items-start gap-1.5 w-full min-w-0 break-words leading-snug" id="edit-location-status">
-                        <span class="material-symbols-outlined text-[14px] text-primary shrink-0 mt-0.5">info</span>
-                        <span class="flex-1 min-w-0">Klik Deteksi untuk auto-update lokasi GPS kebun ini.</span>
-                    </div>
-                </div>
-                <div class="flex items-center justify-end gap-3 pt-2">
-                    <button type="button" onclick="GardenApp.closeEditGardenModal()" class="px-5 py-2.5 rounded-full text-[14px] font-bold text-on-surface-variant hover:bg-surface-container-high transition-colors">
-                        Batal
-                    </button>
-                    <button type="submit" id="edit-garden-submit" class="bg-primary text-on-primary font-bold text-[14px] px-6 py-2.5 rounded-full hover:bg-primary/90 active:scale-95 transition-all shadow-sm">
-                        Simpan Perubahan
-                    </button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </div>
@@ -388,73 +435,79 @@
 </div>
 
 {{-- ── Plant Detail Modal ── --}}
-<div id="plant-detail-modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+<div id="plant-detail-modal" class="fixed inset-0 z-50 hidden">
+    {{-- Backdrop --}}
     <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="GardenApp.closePlantDetailModal()"></div>
-    <div class="w-full min-h-screen px-4 py-8 flex flex-col items-center justify-center pointer-events-none">
-        <div class="w-full shrink-0 min-w-full sm:min-w-[500px] max-w-lg mx-auto bg-surface rounded-[28px] p-6 sm:p-8 ambient-shadow-lg border border-outline-variant/30 pointer-events-auto relative flex flex-col gap-6 self-stretch" style="white-space: normal; word-break: normal;">
-            {{-- Modal Header --}}
-            <div class="flex items-start justify-between">
-                <div class="flex items-center gap-4">
-                    <div id="detail-plant-icon-box" class="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0">
-                        <span id="detail-plant-icon" class="material-symbols-outlined text-[32px]"></span>
+
+    {{-- Scrollable Wrapper --}}
+    <div class="fixed inset-0 z-10 overflow-y-auto overscroll-contain">
+        <div class="flex min-h-full items-center justify-center p-4 pointer-events-none">
+            {{-- Modal Card --}}
+            <div class="w-full max-w-lg bg-surface rounded-[28px] p-6 sm:p-8 ambient-shadow-lg border border-outline-variant/30 pointer-events-auto relative shadow-2xl flex flex-col gap-6" style="white-space: normal; word-break: normal; width: 100%; max-width: 540px;">
+                {{-- Modal Header --}}
+                <div class="flex items-start justify-between w-full">
+                    <div class="flex items-center gap-4 min-w-0">
+                        <div id="detail-plant-icon-box" class="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0">
+                            <span id="detail-plant-icon" class="material-symbols-outlined text-[32px]"></span>
+                        </div>
+                        <div class="min-w-0">
+                            <h3 id="detail-plant-name" class="text-[20px] sm:text-[22px] font-bold text-on-surface leading-tight truncate"></h3>
+                            <p id="detail-plant-scientific" class="text-[13px] text-on-surface-variant italic truncate"></p>
+                        </div>
                     </div>
-                    <div>
-                        <h3 id="detail-plant-name" class="text-[22px] font-bold text-on-surface leading-tight"></h3>
-                        <p id="detail-plant-scientific" class="text-[13px] text-on-surface-variant italic"></p>
-                    </div>
-                </div>
-                <button type="button" onclick="GardenApp.closePlantDetailModal()" class="w-9 h-9 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:bg-error/10 hover:text-error transition-colors">
-                    <span class="material-symbols-outlined text-[20px]">close</span>
-                </button>
-            </div>
-
-            {{-- Badges Row --}}
-            <div class="flex items-center gap-2 flex-wrap">
-                <span id="detail-plant-stage-badge" class="text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full"></span>
-                <span id="detail-plant-status-badge" class="text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full"></span>
-                <span id="detail-plant-category-badge" class="text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant"></span>
-            </div>
-
-            {{-- Stats Cards --}}
-            <div class="grid grid-cols-2 gap-3">
-                <div class="bg-surface-container-low p-4 rounded-2xl flex flex-col">
-                    <span class="text-[11px] text-on-surface-variant font-medium">Umur Tanaman</span>
-                    <span id="detail-plant-hst" class="text-[20px] font-black text-on-surface mt-1"></span>
-                </div>
-                <div class="bg-surface-container-low p-4 rounded-2xl flex flex-col">
-                    <span class="text-[11px] text-on-surface-variant font-medium">Estimasi Panen</span>
-                    <span id="detail-plant-harvest" class="text-[18px] font-bold text-primary mt-2"></span>
-                </div>
-            </div>
-
-            {{-- Requirements --}}
-            <div id="detail-plant-reqs" class="bg-surface-container-low p-4 rounded-2xl flex flex-col gap-3">
-                <h4 class="text-[13px] font-bold text-on-surface uppercase tracking-wider">Kebutuhan Perawatan</h4>
-                <div class="flex items-center gap-3 text-[13px] text-on-surface-variant">
-                    <span class="material-symbols-outlined text-[18px] text-primary">water_drop</span>
-                    <span id="detail-plant-water"></span>
-                </div>
-                <div class="flex items-center gap-3 text-[13px] text-on-surface-variant">
-                    <span class="material-symbols-outlined text-[18px] text-secondary">wb_sunny</span>
-                    <span id="detail-plant-sunlight"></span>
-                </div>
-            </div>
-
-            {{-- Actions --}}
-            <div class="flex flex-col gap-3 pt-2 border-t border-outline-variant/30">
-                <button type="button" id="btn-harvest-plant" onclick="GardenApp.harvestCurrentPlant()" style="display: none;" class="w-full flex items-center justify-center gap-2 bg-[#006c49] text-white font-bold text-[14px] px-4 py-3 rounded-xl hover:bg-[#005236] transition-colors shadow-sm mb-1">
-                    <span class="material-symbols-outlined text-[20px]">agriculture</span>
-                    Panen Sekarang!
-                </button>
-                <div class="flex items-center justify-between">
-                    <a id="detail-plant-calendar-link" href="/growth-calendar" class="flex items-center gap-2 text-primary font-bold text-[13px] hover:underline">
-                        <span class="material-symbols-outlined text-[18px]">calendar_month</span>
-                        Lihat di Kalender
-                    </a>
-                    <button type="button" onclick="GardenApp.deleteCurrentPlant()" class="flex items-center gap-2 text-error font-bold text-[13px] px-4 py-2 rounded-xl hover:bg-error/10 transition-colors">
-                        <span class="material-symbols-outlined text-[18px]">delete</span>
-                        Hapus Tanaman
+                    <button type="button" onclick="GardenApp.closePlantDetailModal()" class="w-9 h-9 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:bg-error/10 hover:text-error transition-colors shrink-0 cursor-pointer">
+                        <span class="material-symbols-outlined text-[20px]">close</span>
                     </button>
+                </div>
+
+                {{-- Badges Row --}}
+                <div class="flex items-center gap-2 flex-wrap w-full">
+                    <span id="detail-plant-stage-badge" class="text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full"></span>
+                    <span id="detail-plant-status-badge" class="text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full"></span>
+                    <span id="detail-plant-category-badge" class="text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant"></span>
+                </div>
+
+                {{-- Stats Cards --}}
+                <div class="grid grid-cols-2 gap-3 w-full">
+                    <div class="bg-surface-container-low p-4 rounded-2xl flex flex-col">
+                        <span class="text-[11px] text-on-surface-variant font-medium">Umur Tanaman</span>
+                        <span id="detail-plant-hst" class="text-[20px] font-black text-on-surface mt-1"></span>
+                    </div>
+                    <div class="bg-surface-container-low p-4 rounded-2xl flex flex-col">
+                        <span class="text-[11px] text-on-surface-variant font-medium">Estimasi Panen</span>
+                        <span id="detail-plant-harvest" class="text-[18px] font-bold text-primary mt-2"></span>
+                    </div>
+                </div>
+
+                {{-- Requirements --}}
+                <div id="detail-plant-reqs" class="bg-surface-container-low p-4 rounded-2xl flex flex-col gap-3 w-full">
+                    <h4 class="text-[13px] font-bold text-on-surface uppercase tracking-wider">Kebutuhan Perawatan</h4>
+                    <div class="flex items-center gap-3 text-[13px] text-on-surface-variant">
+                        <span class="material-symbols-outlined text-[18px] text-primary">water_drop</span>
+                        <span id="detail-plant-water"></span>
+                    </div>
+                    <div class="flex items-center gap-3 text-[13px] text-on-surface-variant">
+                        <span class="material-symbols-outlined text-[18px] text-secondary">wb_sunny</span>
+                        <span id="detail-plant-sunlight"></span>
+                    </div>
+                </div>
+
+                {{-- Actions --}}
+                <div class="flex flex-col gap-3 pt-2 border-t border-outline-variant/30 w-full">
+                    <button type="button" id="btn-harvest-plant" onclick="GardenApp.harvestCurrentPlant()" style="display: none;" class="w-full flex items-center justify-center gap-2 bg-[#006c49] text-white font-bold text-[14px] px-4 py-3 rounded-xl hover:bg-[#005236] transition-colors shadow-sm mb-1 cursor-pointer">
+                        <span class="material-symbols-outlined text-[20px]">agriculture</span>
+                        Panen Sekarang!
+                    </button>
+                    <div class="flex items-center justify-between w-full">
+                        <a id="detail-plant-calendar-link" href="/growth-calendar" class="flex items-center gap-2 text-primary font-bold text-[13px] hover:underline">
+                            <span class="material-symbols-outlined text-[18px]">calendar_month</span>
+                            Lihat di Kalender
+                        </a>
+                        <button type="button" onclick="GardenApp.deleteCurrentPlant()" class="flex items-center gap-2 text-error font-bold text-[13px] px-4 py-2 rounded-xl hover:bg-error/10 transition-colors cursor-pointer">
+                            <span class="material-symbols-outlined text-[18px]">delete</span>
+                            Hapus Tanaman
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -603,19 +656,18 @@ window.GardenApp = (() => {
 
         list.innerHTML = gardens.map((g, idx) => {
             const cleanLoc = cleanLocationName(g.location_name);
+            const isSelected = selectedGardenId === g.id;
             return `
             <button type="button" onclick="GardenApp.selectGarden(${g.id})"
-                class="garden-card w-full text-left bg-surface rounded-[20px] p-4 sm:p-5 ambient-shadow hover:-translate-y-0.5 hover:ambient-shadow-lg transition-all duration-200 border-2 ${selectedGardenId === g.id ? 'border-[#006c49]' : 'border-transparent'}" data-garden-id="${g.id}">
-                <div class="flex items-center gap-3 sm:gap-4">
-                    <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl ${selectedGardenId === g.id ? 'bg-primary text-on-primary' : 'bg-primary/10 text-primary'} flex items-center justify-center shrink-0 transition-colors">
-                        <span class="material-symbols-outlined text-[22px] sm:text-[24px]">yard</span>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <h3 class="text-[14px] sm:text-[15px] font-bold text-on-surface truncate">${escHtml(g.name)}</h3>
-                        ${cleanLoc ? `<p class="text-[11px] sm:text-[12px] text-on-surface-variant truncate flex items-center gap-1 mt-0.5"><span class="material-symbols-outlined text-[12px]">location_on</span>${escHtml(cleanLoc)}</p>` : ''}
-                    </div>
-                    <span class="material-symbols-outlined text-[20px] text-on-surface-variant">chevron_right</span>
+                class="garden-card text-left rounded-full lg:rounded-[20px] px-3.5 py-2 lg:p-4 ambient-shadow hover:-translate-y-0.5 hover:ambient-shadow-lg transition-all duration-200 border-2 shrink-0 lg:shrink lg:w-full flex items-center gap-2 lg:gap-3.5 ${isSelected ? 'border-[#006c49] bg-primary text-on-primary lg:bg-primary/5 lg:text-on-surface' : 'border-outline-variant/30 lg:border-transparent bg-surface text-on-surface'}" data-garden-id="${g.id}">
+                <div class="garden-icon-box w-6 h-6 lg:w-11 lg:h-11 rounded-full lg:rounded-xl flex items-center justify-center shrink-0 transition-colors ${isSelected ? 'bg-white/20 text-white lg:bg-primary lg:text-on-primary' : 'bg-primary/10 text-primary'}">
+                    <span class="material-symbols-outlined text-[15px] lg:text-[22px]">potted_plant</span>
                 </div>
+                <div class="min-w-0 flex-1">
+                    <h3 class="garden-title text-[13px] lg:text-[15px] font-bold truncate whitespace-nowrap lg:whitespace-normal ${isSelected ? 'text-white lg:text-on-surface' : 'text-on-surface'}">${escHtml(g.name)}</h3>
+                    ${cleanLoc ? `<p class="hidden lg:flex text-[11px] lg:text-[12px] text-on-surface-variant truncate items-center gap-1 mt-0.5"><span class="material-symbols-outlined text-[12px]">location_on</span>${escHtml(cleanLoc)}</p>` : ''}
+                </div>
+                <span class="hidden lg:inline material-symbols-outlined text-[20px] text-on-surface-variant">chevron_right</span>
             </button>
             `;
         }).join('');
@@ -644,19 +696,26 @@ window.GardenApp = (() => {
         // Update card highlights
         document.querySelectorAll('.garden-card').forEach(card => {
             const id = parseInt(card.dataset.gardenId);
-            const icon = card.querySelector('.w-11, .w-12');
+            const iconBox = card.querySelector('.garden-icon-box');
+            const title = card.querySelector('.garden-title');
             
             if (id === gardenId) {
-                card.classList.remove('border-transparent');
-                card.classList.add('border-[#006c49]');
-                if (icon) {
-                    icon.className = 'w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-primary text-on-primary flex items-center justify-center shrink-0 transition-colors relative';
+                card.classList.remove('border-outline-variant/30', 'lg:border-transparent', 'bg-surface', 'text-on-surface');
+                card.classList.add('border-[#006c49]', 'bg-primary', 'text-on-primary', 'lg:bg-primary/5', 'lg:text-on-surface');
+                if (iconBox) {
+                    iconBox.className = 'garden-icon-box w-6 h-6 lg:w-11 lg:h-11 rounded-full lg:rounded-xl flex items-center justify-center shrink-0 transition-colors bg-white/20 text-white lg:bg-primary lg:text-on-primary';
+                }
+                if (title) {
+                    title.className = 'garden-title text-[13px] lg:text-[15px] font-bold truncate whitespace-nowrap lg:whitespace-normal text-white lg:text-on-surface';
                 }
             } else {
-                card.classList.add('border-transparent');
-                card.classList.remove('border-[#006c49]');
-                if (icon) {
-                    icon.className = 'w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 transition-colors relative';
+                card.classList.remove('border-[#006c49]', 'bg-primary', 'text-on-primary', 'lg:bg-primary/5', 'lg:text-on-surface');
+                card.classList.add('border-outline-variant/30', 'lg:border-transparent', 'bg-surface', 'text-on-surface');
+                if (iconBox) {
+                    iconBox.className = 'garden-icon-box w-6 h-6 lg:w-11 lg:h-11 rounded-full lg:rounded-xl flex items-center justify-center shrink-0 transition-colors bg-primary/10 text-primary';
+                }
+                if (title) {
+                    title.className = 'garden-title text-[13px] lg:text-[15px] font-bold truncate whitespace-nowrap lg:whitespace-normal text-on-surface';
                 }
             }
         });
@@ -673,7 +732,7 @@ window.GardenApp = (() => {
         const iconEl = document.getElementById('detail-garden-icon');
         if (iconBox && iconEl) {
             iconBox.className = 'w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0';
-            iconEl.textContent = 'yard';
+            iconEl.textContent = 'potted_plant';
         }
 
         const locEl = document.getElementById('detail-garden-location');
@@ -682,7 +741,8 @@ window.GardenApp = (() => {
             locEl.classList.remove('hidden');
             locEl.querySelector('span:last-child').textContent = cleanLoc;
         } else {
-            locEl.classList.add('hidden');
+            locEl.classList.remove('hidden');
+            locEl.querySelector('span:last-child').textContent = 'Lokasi belum diatur';
         }
 
         // Load weather & plants for this garden
@@ -704,6 +764,11 @@ window.GardenApp = (() => {
         try {
             plants = await api(`/api/gardens/${gardenId}/plants`);
             loading.style.display = 'none';
+
+            const countBadge = document.getElementById('plants-count-badge');
+            if (countBadge) {
+                countBadge.textContent = `${plants.length} Tanaman`;
+            }
 
             if (plants.length === 0) {
                 empty.style.display = 'flex';
@@ -936,17 +1001,36 @@ window.GardenApp = (() => {
         if (!gardenId) return;
         const garden = gardens.find(g => g.id === gardenId);
 
+        const noLocEl = document.getElementById('gweather-no-location');
+        const activeContentEl = document.getElementById('gweather-active-content');
+
+        // If garden has no coordinates, show the friendly prompt state
+        const hasCoordinates = garden && garden.latitude && garden.longitude;
+        if (!hasCoordinates) {
+            if (noLocEl) noLocEl.classList.remove('hidden');
+            if (activeContentEl) activeContentEl.classList.add('hidden');
+            return;
+        }
+
+        if (noLocEl) noLocEl.classList.add('hidden');
+        if (activeContentEl) activeContentEl.classList.remove('hidden');
+
         if (titleEl) titleEl.textContent = 'Memuat Data Cuaca...';
         if (locEl) locEl.textContent = garden ? (garden.location_name || 'Lokasi Belum Diatur') : 'Lokasi Kebun';
 
         try {
             const data = await api(`/api/weather/live?garden_id=${gardenId}`);
+            if (data && data.has_location === false) {
+                if (noLocEl) noLocEl.classList.remove('hidden');
+                if (activeContentEl) activeContentEl.classList.add('hidden');
+                return;
+            }
+
             if (data && data.success && data.agronomic) {
                 const ag = data.agronomic;
-                if (titleEl) titleEl.textContent = `Cuaca Saat Ini: ${ag.condition_title}`;
+                if (titleEl) titleEl.textContent = ag.condition_title;
                 if (badgeEl) {
-                    badgeEl.textContent = ag.condition_title;
-                    badgeEl.className = `text-[11px] font-bold px-3 py-1 rounded-full ${ag.badge_bg}`;
+                    badgeEl.style.display = 'none';
                 }
                 if (iconEl) iconEl.textContent = ag.icon || 'cloud';
 
@@ -960,7 +1044,7 @@ window.GardenApp = (() => {
                     if (adviceTextEl) adviceTextEl.textContent = ag.watering.advice;
                     if (adviceBadgeEl) {
                         adviceBadgeEl.textContent = ag.watering.badge;
-                        adviceBadgeEl.className = `text-[11px] font-extrabold px-3 py-1 rounded-full ${ag.watering.badge_bg}`;
+                        adviceBadgeEl.className = `text-[10.5px] font-bold px-2.5 py-0.5 rounded-full ${ag.watering.badge_bg}`;
                     }
                 }
                 if (adviceIconEl) {
@@ -1472,6 +1556,33 @@ window.GardenApp = (() => {
         harvestCurrentPlant,
     };
 })();
+
+// Global function for instant toggle of Garden Weather Advice
+window.toggleGardenAdvice = function(close) {
+    const card = document.getElementById('garden-weather-advice');
+    const reopenBar = document.getElementById('garden-weather-advice-reopen');
+    if (!card || !reopenBar) return;
+
+    if (close) {
+        card.style.display = 'none';
+        reopenBar.style.display = 'block';
+        reopenBar.classList.remove('hidden');
+        try { localStorage.setItem('garden_advice_closed', '1'); } catch(e){}
+    } else {
+        card.style.display = 'flex';
+        card.classList.remove('hidden');
+        reopenBar.style.display = 'none';
+        reopenBar.classList.add('hidden');
+        try { localStorage.setItem('garden_advice_closed', '0'); } catch(e){}
+    }
+};
+
+// Restore saved state
+try {
+    if (localStorage.getItem('garden_advice_closed') === '1') {
+        window.toggleGardenAdvice(true);
+    }
+} catch(e){}
 
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => GardenApp.init());

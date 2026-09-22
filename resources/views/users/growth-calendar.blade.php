@@ -239,7 +239,7 @@
                         </span>
                     </div>
                     <div class="text-[11px] text-on-surface-variant italic">
-                        * Klik tanggal untuk melihat daftar kegiatan lengkap, menambah, atau mengelola jadwal
+                        * Klik tanggal untuk melihat riwayat atau mengelola jadwal kegiatan hari ini & mendatang.
                     </div>
                 </div>
 
@@ -439,6 +439,7 @@
                         <div class="flex items-center gap-2 flex-wrap">
                             <h3 id="date-modal-title" class="text-[18px] md:text-[22px] font-black text-on-surface leading-tight">Tanggal</h3>
                             <span id="date-modal-today-badge" class="hidden text-[10px] font-black bg-primary text-white px-2 py-0.5 rounded-full uppercase tracking-wider shadow-2xs">Hari Ini</span>
+                            <span id="date-modal-past-badge" class="hidden text-[10px] font-black bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded-full uppercase tracking-wider border border-outline-variant/30">Sudah Lewat</span>
                         </div>
                         <p id="date-modal-subtitle" class="text-[12px] text-on-surface-variant font-medium mt-0.5">Kelola seluruh jadwal kegiatan perawatan</p>
                     </div>
@@ -451,6 +452,10 @@
                         <span class="material-symbols-outlined text-[16px]">add</span>
                         <span id="btn-toggle-date-add-label">Tambah Kegiatan</span>
                     </button>
+                    <div id="date-modal-past-notice" class="hidden items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-surface-container-high text-on-surface-variant border border-outline-variant/30">
+                        <span class="material-symbols-outlined text-[15px] text-on-surface-variant">history</span>
+                        <span>Riwayat (Hanya Lihat)</span>
+                    </div>
                 </div>
 
                 {{-- Scrollable Activities & Form Container --}}
@@ -545,10 +550,10 @@
 
                     {{-- Empty State --}}
                     <div id="date-activities-empty" class="hidden py-8 text-center bg-surface-container-low rounded-2xl border border-outline-variant/20 flex flex-col items-center justify-center w-full self-stretch" style="width: 100% !important;">
-                        <span class="material-symbols-outlined text-[36px] text-primary/40 mb-1.5 shrink-0">event_available</span>
-                        <p class="text-[13px] font-bold text-on-surface w-full self-stretch" style="white-space: normal !important; word-break: normal !important;">Belum Ada Kegiatan</p>
-                        <p class="text-[11px] text-on-surface-variant max-w-[260px] mx-auto mt-0.5 mb-3 w-full self-stretch" style="white-space: normal !important; word-break: normal !important;">Tidak ada jadwal kegiatan perawatan pada tanggal ini.</p>
-                        <button type="button" onclick="toggleDateAddForm(true)" class="px-3.5 py-1.5 rounded-xl font-bold text-xs bg-primary text-white hover:bg-[#005236] transition-all flex items-center gap-1 shadow-2xs shrink-0 whitespace-nowrap">
+                        <span id="date-empty-icon" class="material-symbols-outlined text-[36px] text-primary/40 mb-1.5 shrink-0">event_available</span>
+                        <p id="date-empty-title" class="text-[13px] font-bold text-on-surface w-full self-stretch" style="white-space: normal !important; word-break: normal !important;">Belum Ada Kegiatan</p>
+                        <p id="date-empty-desc" class="text-[11px] text-on-surface-variant max-w-[280px] mx-auto mt-0.5 mb-3 w-full self-stretch" style="white-space: normal !important; word-break: normal !important;">Tidak ada jadwal kegiatan perawatan pada tanggal ini.</p>
+                        <button type="button" id="btn-date-empty-add" onclick="toggleDateAddForm(true)" class="px-3.5 py-1.5 rounded-xl font-bold text-xs bg-primary text-white hover:bg-[#005236] transition-all flex items-center gap-1 shadow-2xs shrink-0 whitespace-nowrap">
                             <span class="material-symbols-outlined text-[15px]">add</span>
                             Tambah Kegiatan Baru
                         </button>
@@ -843,7 +848,7 @@
     let todayWeather = null;
 
     const todayDate = new Date();
-    const todayStr = `${todayDate.getFullYear()}-${String(todayDate.getMonth() + 1).padStart(2, '0')}-${String(todayDate.getDate()).padStart(2, '0')}`;
+    const todayStr = "{{ date('Y-m-d') }}";
 
     document.addEventListener('DOMContentLoaded', () => {
         fetchEvents();
@@ -968,7 +973,7 @@
                 cellClass += ' bg-white border border-outline-variant/25 hover:border-primary/40 hover:shadow-xs';
             }
             cell.className = cellClass;
-            cell.title = `Klik untuk kelola kegiatan tanggal ${dateStr}`;
+            cell.title = isPast ? `Lihat riwayat kegiatan tanggal ${dateStr}` : `Klik untuk kelola kegiatan tanggal ${dateStr}`;
             cell.onclick = (e) => {
                 if (e.target.closest('button')) return;
                 openDateModal(dateStr);
@@ -981,9 +986,8 @@
                         ${d}
                     </span>
                     ${isToday && todayWeather ? `
-                        <span class="text-[9px] font-bold text-primary flex items-center gap-0.5 bg-primary/10 px-1 py-0.5 rounded-md shrink-0" title="Cuaca Hari Ini: ${todayWeather.condition_title} (${todayWeather.temperature}°C)">
-                            <span class="material-symbols-outlined text-[13px]">${todayWeather.icon || 'wb_sunny'}</span>
-                            <span class="hidden sm:inline">${todayWeather.temperature}°C</span>
+                        <span class="material-symbols-outlined text-primary text-[15px] leading-none shrink-0 transition-transform group-hover:scale-110" title="Cuaca Hari Ini: ${todayWeather.condition_title} (${todayWeather.temperature}°C)">
+                            ${todayWeather.icon || 'wb_sunny'}
                         </span>
                     ` : ''}
                 </div>
@@ -1072,19 +1076,46 @@
 
     function openDateModal(dateStr, autoOpenAdd = false) {
         activeDateStr = dateStr;
+        const isPast = (dateStr < todayStr);
+        const isToday = (dateStr === todayStr);
+
         const modal = document.getElementById('date-activities-modal');
         const titleEl = document.getElementById('date-modal-title');
         const todayBadge = document.getElementById('date-modal-today-badge');
+        const pastBadge = document.getElementById('date-modal-past-badge');
+        const subtitleEl = document.getElementById('date-modal-subtitle');
+        const addBtn = document.getElementById('btn-toggle-date-add');
+        const pastNotice = document.getElementById('date-modal-past-notice');
         
         if (titleEl) titleEl.textContent = formatDateIndo(dateStr);
         if (todayBadge) {
-            todayBadge.classList.toggle('hidden', dateStr !== todayStr);
+            todayBadge.classList.toggle('hidden', !isToday);
+        }
+        if (pastBadge) {
+            pastBadge.classList.toggle('hidden', !isPast);
+        }
+
+        if (isPast) {
+            if (subtitleEl) subtitleEl.textContent = 'Riwayat kegiatan perawatan tanaman (Hanya Lihat)';
+            if (addBtn) addBtn.classList.add('hidden');
+            if (pastNotice) {
+                pastNotice.classList.remove('hidden');
+                pastNotice.classList.add('flex');
+            }
+            autoOpenAdd = false;
+        } else {
+            if (subtitleEl) subtitleEl.textContent = isToday ? 'Kelola jadwal kegiatan perawatan hari ini' : 'Kelola jadwal kegiatan perawatan mendatang';
+            if (addBtn) addBtn.classList.remove('hidden');
+            if (pastNotice) {
+                pastNotice.classList.add('hidden');
+                pastNotice.classList.remove('flex');
+            }
         }
 
         // Today Weather Card in Date Modal
         const weatherCard = document.getElementById('date-modal-weather-card');
         if (weatherCard) {
-            if (dateStr === todayStr && todayWeather) {
+            if (isToday && todayWeather) {
                 weatherCard.classList.remove('hidden');
                 const iconEl = document.getElementById('date-modal-weather-icon');
                 if (iconEl) iconEl.textContent = todayWeather.icon || 'wb_sunny';
@@ -1102,7 +1133,7 @@
             }
         }
 
-        toggleDateAddForm(autoOpenAdd);
+        toggleDateAddForm(isPast ? false : autoOpenAdd);
         renderDateActivitiesList();
 
         if (modal) modal.classList.remove('hidden');
@@ -1123,6 +1154,14 @@
         const msgInput = document.getElementById('date-add-message');
 
         if (!wrapper) return;
+
+        // Disallow opening add form on past dates
+        if (activeDateStr && activeDateStr < todayStr) {
+            wrapper.classList.add('hidden');
+            if (btnLabel) btnLabel.textContent = 'Tambah Kegiatan';
+            return;
+        }
+
         const isHidden = (forceState !== null) ? !forceState : !wrapper.classList.contains('hidden');
 
         if (isHidden) {
@@ -1219,16 +1258,37 @@
         const listEl = document.getElementById('date-activities-list');
         const emptyEl = document.getElementById('date-activities-empty');
         const countEl = document.getElementById('date-modal-count');
+        const emptyIcon = document.getElementById('date-empty-icon');
+        const emptyTitle = document.getElementById('date-empty-title');
+        const emptyDesc = document.getElementById('date-empty-desc');
+        const emptyAddBtn = document.getElementById('btn-date-empty-add');
+
         if (!listEl || !activeDateStr) return;
 
+        const isPast = (activeDateStr < todayStr);
         const dayEvents = eventsData.filter(e => e.scheduled_date === activeDateStr);
         if (countEl) {
-            countEl.textContent = `${dayEvents.length} Kegiatan Terjadwal`;
+            countEl.textContent = isPast
+                ? `${dayEvents.length} Catatan Kegiatan`
+                : `${dayEvents.length} Kegiatan Terjadwal`;
         }
 
         if (dayEvents.length === 0) {
             listEl.innerHTML = '';
-            if (emptyEl) emptyEl.classList.remove('hidden');
+            if (emptyEl) {
+                emptyEl.classList.remove('hidden');
+                if (isPast) {
+                    if (emptyIcon) emptyIcon.textContent = 'history_toggle_off';
+                    if (emptyTitle) emptyTitle.textContent = 'Tidak Ada Riwayat Kegiatan';
+                    if (emptyDesc) emptyDesc.textContent = 'Tidak ada kegiatan perawatan yang tercatat pada tanggal yang telah lewat ini.';
+                    if (emptyAddBtn) emptyAddBtn.classList.add('hidden');
+                } else {
+                    if (emptyIcon) emptyIcon.textContent = 'event_available';
+                    if (emptyTitle) emptyTitle.textContent = 'Belum Ada Kegiatan';
+                    if (emptyDesc) emptyDesc.textContent = 'Tidak ada jadwal kegiatan perawatan pada tanggal ini.';
+                    if (emptyAddBtn) emptyAddBtn.classList.remove('hidden');
+                }
+            }
             return;
         }
 
@@ -1466,6 +1526,10 @@
     }
 
     function openAddTaskModalForDate(dateStr) {
+        if (dateStr && dateStr < todayStr) {
+            showToast('Tidak dapat menambahkan kegiatan pada tanggal yang sudah lewat.');
+            return;
+        }
         openAddTaskModal(dateStr);
     }
 
