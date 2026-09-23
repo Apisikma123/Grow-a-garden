@@ -7,16 +7,23 @@
     <div class="flex flex-col gap-6 pb-10">
         
         {{-- Header --}}
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div>
-                <h1 class="text-2xl md:text-3xl font-bold text-on-surface tracking-tight mb-1">Kelola Badge & Prestasi</h1>
-                <p class="text-sm text-on-surface-variant font-medium">Buat badge baru atau berikan apresiasi prestasi secara manual kepada pengguna.</p>
+        <div class="flex flex-col gap-4 mb-2">
+            {{-- Row 1: Title & Action Button --}}
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <h1 class="text-[26px] sm:text-[30px] font-bold text-on-surface tracking-tight leading-tight">Kelola Badge & Prestasi</h1>
+                <button onclick="document.getElementById('create-badge-modal').classList.remove('hidden')" class="bg-[#006c49] hover:bg-[#005236] text-white font-bold text-sm px-5 py-2.5 rounded-xl transition-all shadow-sm flex items-center gap-2 active:scale-95 cursor-pointer shrink-0 whitespace-nowrap">
+                    <span class="material-symbols-outlined text-[20px]">add</span>
+                    Tambah Badge
+                </button>
             </div>
-            
-            <div class="flex flex-wrap items-center gap-3">
-                <form action="{{ route('admin.badges') }}" method="GET" class="flex flex-wrap items-center gap-2">
-                    <div class="relative">
-                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama badge..." class="pl-9 pr-4 py-2 bg-surface-container-highest border border-outline-variant/30 rounded-lg text-[13px] text-on-surface focus:outline-none focus:ring-2 focus:ring-primary w-52" onchange="this.form.submit()">
+
+            {{-- Row 2: Subtitle & Search / Filter Toolbar --}}
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-1">
+                <p class="text-[14px] text-on-surface-variant max-w-[600px] leading-relaxed">Buat badge baru atau berikan apresiasi prestasi secara manual kepada pengguna.</p>
+                
+                <form action="{{ route('admin.badges') }}" method="GET" class="flex flex-wrap items-center gap-2.5 shrink-0 w-full md:w-auto">
+                    <div class="relative flex-1 md:flex-initial">
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama badge..." class="pl-9 pr-4 py-2 bg-surface-container-highest border border-outline-variant/30 rounded-lg text-[13px] text-on-surface focus:outline-none focus:ring-2 focus:ring-primary w-full md:w-52" onchange="this.form.submit()">
                         <span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-on-surface-variant">search</span>
                     </div>
                     <select name="metric_type" onchange="this.form.submit()" class="px-3 py-2 bg-surface-container-highest border border-outline-variant/30 rounded-lg text-[13px] text-on-surface focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer font-medium">
@@ -34,11 +41,6 @@
                         </a>
                     @endif
                 </form>
-
-                <button onclick="document.getElementById('create-badge-modal').classList.remove('hidden')" class="bg-[#006c49] hover:bg-[#005236] text-white font-bold text-sm px-5 py-2.5 rounded-xl transition-all shadow-sm flex items-center gap-2 active:scale-95 cursor-pointer shrink-0">
-                    <span class="material-symbols-outlined text-[20px]">add</span>
-                    Tambah Badge
-                </button>
             </div>
         </div>
 

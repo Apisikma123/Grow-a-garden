@@ -4,18 +4,32 @@
 <div class="flex flex-col gap-6">
 
     {{-- Page Header --}}
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-2">
-        <div class="flex flex-col gap-1">
-            <h1 class="text-[28px] font-bold text-on-surface tracking-tight">Katalog Tanaman</h1>
-            <p class="text-[14px] text-on-surface-variant">Kelola database tanaman global termasuk taksonomi, kondisi ideal, dan status.</p>
+    <div class="flex flex-col gap-4 mb-2">
+        {{-- Row 1: Title & Action Buttons --}}
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <h1 class="text-[26px] sm:text-[30px] font-bold text-on-surface tracking-tight leading-tight">Katalog Tanaman</h1>
+            <div class="flex flex-wrap items-center gap-2.5 shrink-0">
+                <button onclick="openCategoryModal()" class="flex items-center gap-2 bg-secondary text-on-secondary font-bold text-[13px] px-4 py-2.5 rounded-lg hover:bg-secondary/90 active:scale-[0.98] transition-all shadow-sm">
+                    <span class="material-symbols-outlined text-[18px]">category</span>
+                    Tambah Kategori
+                </button>
+                <button onclick="openPlantModal()" class="flex items-center gap-2 bg-primary text-on-primary font-bold text-[13px] px-5 py-2.5 rounded-lg hover:bg-primary/90 active:scale-[0.98] transition-all shadow-sm">
+                    <span class="material-symbols-outlined text-[18px]">add_circle</span>
+                    Tambah Tanaman Baru
+                </button>
+            </div>
         </div>
-        <div class="flex flex-wrap items-center gap-3 shrink-0">
-            <form action="{{ route('admin.plants') }}" method="GET" class="flex flex-wrap items-center gap-2">
-                <div class="relative">
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama atau nama ilmiah..." class="pl-9 pr-4 py-2 bg-surface-container-highest border border-outline-variant/30 rounded-lg text-[13px] text-on-surface focus:outline-none focus:ring-2 focus:ring-primary w-64" onchange="this.form.submit()">
+
+        {{-- Row 2: Subtitle & Search / Filter Toolbar --}}
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-1">
+            <p class="text-[14px] text-on-surface-variant max-w-[600px] leading-relaxed">Kelola database tanaman global termasuk taksonomi, kondisi ideal, dan status.</p>
+            
+            <form action="{{ route('admin.plants') }}" method="GET" class="flex flex-wrap items-center gap-2.5 shrink-0 w-full md:w-auto">
+                <div class="relative flex-1 md:flex-initial">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama atau nama ilmiah..." class="pl-9 pr-4 py-2 bg-surface-container-highest border border-outline-variant/30 rounded-lg text-[13px] text-on-surface focus:outline-none focus:ring-2 focus:ring-primary w-full md:w-64" onchange="this.form.submit()">
                     <span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-on-surface-variant">search</span>
                 </div>
-                <select name="category_id" onchange="this.form.submit()" class="px-3 py-2 bg-surface-container-highest border border-outline-variant/30 rounded-lg text-[13px] text-on-surface focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer">
+                <select name="category_id" onchange="this.form.submit()" class="px-3 py-2 bg-surface-container-highest border border-outline-variant/30 rounded-lg text-[13px] text-on-surface focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer font-medium">
                     <option value="">Semua Kategori</option>
                     @foreach($categories as $category)
                         <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
@@ -30,14 +44,6 @@
                     </a>
                 @endif
             </form>
-            <button onclick="openCategoryModal()" class="flex items-center gap-2 bg-secondary text-on-secondary font-bold text-[14px] px-4 py-2.5 rounded-lg hover:bg-secondary/90 active:scale-[0.98] transition-all shadow-sm">
-                <span class="material-symbols-outlined text-[18px]">category</span>
-                Tambah Kategori
-            </button>
-            <button onclick="openPlantModal()" class="flex items-center gap-2 bg-primary text-on-primary font-bold text-[14px] px-5 py-2.5 rounded-lg hover:bg-primary/90 active:scale-[0.98] transition-all shadow-sm">
-                <span class="material-symbols-outlined text-[18px]">add_circle</span>
-                Tambah Tanaman Baru
-            </button>
         </div>
     </div>
 

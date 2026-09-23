@@ -4,15 +4,23 @@
 <div class="flex flex-col gap-8">
 
     {{-- Page Header --}}
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-2">
-        <div class="flex flex-col gap-2">
-            <h1 class="text-[32px] font-black text-on-surface tracking-tight">Template Pertumbuhan & Perawatan</h1>
-            <p class="text-[15px] text-on-surface-variant max-w-[600px] leading-relaxed">Konfigurasi siklus hidup otomatis, instruksi perawatan, dan aturan cuaca untuk setiap tanaman.</p>
+    <div class="flex flex-col gap-4 mb-2">
+        {{-- Row 1: Title & Primary Action Button --}}
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <h1 class="text-[26px] sm:text-[30px] lg:text-[32px] font-black text-on-surface tracking-tight leading-tight">Template Pertumbuhan & Perawatan</h1>
+            <a href="{{ route('admin.plants') }}" class="flex items-center gap-2 bg-[#006c49] text-white font-bold text-[13px] px-5 py-2.5 rounded-lg hover:bg-[#005c3a] transition-all shadow-sm shrink-0 whitespace-nowrap">
+                <span class="material-symbols-outlined text-[18px]">add</span>
+                Tambah Data Tanaman
+            </a>
         </div>
-        <div class="flex flex-wrap items-center gap-3 shrink-0">
-            <form action="{{ route('admin.care-templates') }}" method="GET" class="flex flex-wrap items-center gap-2">
-                <div class="relative">
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari template tanaman..." class="pl-9 pr-4 py-2 bg-surface-container-highest border border-outline-variant/30 rounded-lg text-[13px] text-on-surface focus:outline-none focus:ring-2 focus:ring-primary w-56" onchange="this.form.submit()">
+
+        {{-- Row 2: Subtitle & Search / Filter Toolbar --}}
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-1">
+            <p class="text-[14px] sm:text-[15px] text-on-surface-variant max-w-[600px] leading-relaxed">Konfigurasi siklus hidup otomatis, instruksi perawatan, dan aturan cuaca untuk setiap tanaman.</p>
+            
+            <form action="{{ route('admin.care-templates') }}" method="GET" class="flex flex-wrap items-center gap-2.5 shrink-0 w-full md:w-auto">
+                <div class="relative flex-1 md:flex-initial">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari template tanaman..." class="pl-9 pr-4 py-2 bg-surface-container-highest border border-outline-variant/30 rounded-lg text-[13px] text-on-surface focus:outline-none focus:ring-2 focus:ring-primary w-full md:w-56" onchange="this.form.submit()">
                     <span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-on-surface-variant">search</span>
                 </div>
                 <select name="sort" onchange="this.form.submit()" class="px-3 py-2 bg-surface-container-highest border border-outline-variant/30 rounded-lg text-[13px] text-on-surface focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer font-medium">
@@ -27,10 +35,6 @@
                     </a>
                 @endif
             </form>
-            <a href="{{ route('admin.plants') }}" class="flex items-center gap-2 bg-[#006c49] text-white font-bold text-[13px] px-5 py-2.5 rounded-lg hover:bg-[#005c3a] transition-all shadow-sm">
-                <span class="material-symbols-outlined text-[18px]">add</span>
-                Tambah Data Tanaman
-            </a>
         </div>
     </div>
 
