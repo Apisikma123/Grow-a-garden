@@ -29,7 +29,7 @@
         {{-- Empty State (Layout Anti-Collapse Safe) --}}
         <div class="w-full min-w-full self-stretch bg-white rounded-[24px] p-8 md:p-14 text-center border border-outline-variant/30 ambient-shadow-lg flex flex-col items-center justify-center gap-5" style="width: 100% !important; min-width: 100% !important; box-sizing: border-box !important;">
             <div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-1 shadow-inner shrink-0">
-                <span class="material-symbols-outlined text-[42px]">yard</span>
+                <span class="material-symbols-outlined text-[42px]">potted_plant</span>
             </div>
             <div class="text-center w-full min-w-full max-w-md mx-auto self-stretch flex flex-col items-center" style="width: 100% !important; min-width: 100% !important; max-width: 28rem !important; text-align: center !important;">
                 <h2 class="text-[22px] md:text-[26px] font-black text-on-surface mb-2 w-full self-stretch" style="width: 100% !important; min-width: 100% !important; text-align: center !important; display: block !important; white-space: normal !important; word-break: normal !important;">Belum Ada Tanaman Aktif</h2>

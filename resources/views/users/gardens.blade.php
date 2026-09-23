@@ -29,7 +29,7 @@
     {{-- Empty State --}}
     <div id="gardens-empty" style="display: none; width: 100% !important;" class="w-full bg-surface rounded-[24px] p-8 sm:p-12 ambient-shadow flex flex-col items-center justify-center gap-6 text-center border border-outline-variant/20">
         <div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-            <span class="material-symbols-outlined text-[44px] text-primary">yard</span>
+            <span class="material-symbols-outlined text-[44px] text-primary">potted_plant</span>
         </div>
         <div class="text-center w-full min-w-full max-w-md mx-auto self-stretch" style="width: 100% !important; min-width: 100% !important; text-align: center !important;">
             <h3 class="text-[20px] font-bold text-on-surface mb-2" style="width: 100% !important; text-align: center !important; display: block !important; white-space: normal !important;">Belum ada kebun</h3>
@@ -122,38 +122,58 @@
                     {{-- Active Weather Content (When Garden has GPS coordinates) --}}
                     <div id="gweather-active-content" class="flex flex-col gap-3 w-full">
                         {{-- Weather Metrics Row --}}
-                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
-                            {{-- Current Weather & Temp --}}
-                            <div class="flex items-center gap-3 min-w-0">
+                        <div class="flex items-center justify-between gap-3 sm:gap-4 w-full">
+                            {{-- Current Weather & Temp (Main Weather) --}}
+                            <div class="flex items-center gap-3 min-w-0 flex-1">
                                 <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                                    <span class="material-symbols-outlined text-[22px]" id="garden-weather-icon">cloud</span>
+                                    <span class="material-symbols-outlined text-[24px]" id="garden-weather-icon">cloud</span>
                                 </div>
-                                <div class="min-w-0">
-                                    <div class="flex items-baseline gap-2">
-                                        <span id="gweather-temp" class="text-[22px] font-black text-on-surface tracking-tight leading-none">--°C</span>
-                                        <span id="garden-weather-title" class="text-[13px] font-semibold text-on-surface-variant truncate">Memuat Cuaca...</span>
+                                <div class="min-w-0 flex-1">
+                                    <div class="flex items-baseline gap-2 flex-wrap">
+                                        <span id="gweather-temp" class="text-[22px] sm:text-[24px] font-black text-on-surface tracking-tight leading-none shrink-0">--°C</span>
+                                        <span id="garden-weather-title" class="text-[13.5px] sm:text-[14px] font-bold text-on-surface-variant break-words">Memuat Cuaca...</span>
                                     </div>
                                     <span id="garden-weather-location" class="hidden"></span>
                                     <span id="garden-weather-badge" style="display: none !important;"></span>
                                 </div>
                             </div>
 
-                            {{-- Metrics Chips (Horizontal, Low Profile) --}}
-                            <div id="garden-weather-metrics" class="flex items-center gap-2 sm:gap-2.5 flex-wrap w-full sm:w-auto">
-                                <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container-low border border-outline-variant/10 text-[12px]">
-                                    <span class="material-symbols-outlined text-[15px] text-primary">water_drop</span>
-                                    <span class="text-on-surface-variant font-medium">Lembap:</span>
-                                    <span id="gweather-humidity" class="font-bold text-on-surface">--%</span>
+                            {{-- Metrics Icons (Compact Logos with Hover Tooltip Popovers shifted to left) --}}
+                            <div id="garden-weather-metrics" class="flex items-center gap-2 shrink-0">
+                                {{-- Kelembapan --}}
+                                <div class="relative group/tip" id="gweather-humidity-tip" title="Kelembapan: --%">
+                                    <div class="w-9 h-9 rounded-xl bg-surface-container-low hover:bg-primary/10 border border-outline-variant/20 flex items-center justify-center text-primary transition-all cursor-pointer">
+                                        <span class="material-symbols-outlined text-[18px]">water_drop</span>
+                                    </div>
+                                    <div class="absolute bottom-full mb-2 right-0 pointer-events-none opacity-0 group-hover/tip:opacity-100 translate-y-1 group-hover/tip:translate-y-0 transition-all duration-200 z-30 whitespace-nowrap bg-on-surface text-surface text-[11px] font-semibold px-2.5 py-1 rounded-lg shadow-lg flex items-center gap-1">
+                                        <span>Lembap:</span>
+                                        <span id="gweather-humidity" class="font-bold">--%</span>
+                                        <div class="absolute -bottom-1 right-3.5 w-2 h-2 bg-on-surface rotate-45 pointer-events-none"></div>
+                                    </div>
                                 </div>
-                                <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container-low border border-outline-variant/10 text-[12px]">
-                                    <span class="material-symbols-outlined text-[15px] text-sky-600">rainy</span>
-                                    <span class="text-on-surface-variant font-medium">Hujan:</span>
-                                    <span id="gweather-rain" class="font-bold text-on-surface">--%</span>
+
+                                {{-- Peluang Hujan --}}
+                                <div class="relative group/tip" id="gweather-rain-tip" title="Peluang Hujan: --%">
+                                    <div class="w-9 h-9 rounded-xl bg-surface-container-low hover:bg-sky-50 border border-outline-variant/20 flex items-center justify-center text-sky-600 transition-all cursor-pointer">
+                                        <span class="material-symbols-outlined text-[18px]">rainy</span>
+                                    </div>
+                                    <div class="absolute bottom-full mb-2 right-0 pointer-events-none opacity-0 group-hover/tip:opacity-100 translate-y-1 group-hover/tip:translate-y-0 transition-all duration-200 z-30 whitespace-nowrap bg-on-surface text-surface text-[11px] font-semibold px-2.5 py-1 rounded-lg shadow-lg flex items-center gap-1">
+                                        <span>Peluang Hujan:</span>
+                                        <span id="gweather-rain" class="font-bold">--%</span>
+                                        <div class="absolute -bottom-1 right-3.5 w-2 h-2 bg-on-surface rotate-45 pointer-events-none"></div>
+                                    </div>
                                 </div>
-                                <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container-low border border-outline-variant/10 text-[12px]">
-                                    <span class="material-symbols-outlined text-[15px] text-stone-600">air</span>
-                                    <span class="text-on-surface-variant font-medium">Angin:</span>
-                                    <span id="gweather-wind" class="font-bold text-on-surface">-- km/j</span>
+
+                                {{-- Kecepatan Angin --}}
+                                <div class="relative group/tip" id="gweather-wind-tip" title="Kecepatan Angin: -- km/j">
+                                    <div class="w-9 h-9 rounded-xl bg-surface-container-low hover:bg-stone-100 border border-outline-variant/20 flex items-center justify-center text-stone-600 transition-all cursor-pointer">
+                                        <span class="material-symbols-outlined text-[18px]">air</span>
+                                    </div>
+                                    <div class="absolute bottom-full mb-2 right-0 pointer-events-none opacity-0 group-hover/tip:opacity-100 translate-y-1 group-hover/tip:translate-y-0 transition-all duration-200 z-30 whitespace-nowrap bg-on-surface text-surface text-[11px] font-semibold px-2.5 py-1 rounded-lg shadow-lg flex items-center gap-1">
+                                        <span>Angin:</span>
+                                        <span id="gweather-wind" class="font-bold">-- km/j</span>
+                                        <div class="absolute -bottom-1 right-3.5 w-2 h-2 bg-on-surface rotate-45 pointer-events-none"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -781,39 +801,31 @@ window.GardenApp = (() => {
             grid.innerHTML = plants.map((p, pIdx) => {
                 const stage = STAGE_CONFIG[p.stage] || STAGE_CONFIG['SEED'];
                 const status = STATUS_CONFIG[p.status] || STATUS_CONFIG['ACTIVE'];
+                const ageDays = (!p.hst || p.hst <= 0) ? 1 : p.hst;
+                const isHarvestReady = p.estimated_harvest_days !== null && p.estimated_harvest_days <= 0;
                 const harvestText = p.estimated_harvest_days !== null
-                    ? (p.estimated_harvest_days <= 0 ? 'Siap panen!' : `${p.estimated_harvest_days} hari lagi`)
-                    : '-';
-                const harvestColor = p.estimated_harvest_days !== null && p.estimated_harvest_days <= 0 ? 'text-[#006c49]' : 'text-on-surface-variant';
+                    ? (isHarvestReady ? 'Siap Panen!' : `${p.estimated_harvest_days} Hari Lagi`)
+                    : 'Belum Ditentukan';
+                const harvestColor = isHarvestReady ? 'text-primary' : 'text-on-surface';
 
                 return `
                     <button type="button" onclick="GardenApp.openPlantDetail(${p.id})"
-                        class="bg-surface rounded-[20px] p-5 ambient-shadow text-left hover:-translate-y-1 hover:ambient-shadow-lg transition-all duration-200 flex flex-col gap-3 group relative">
+                        class="bg-surface rounded-[24px] p-5 ambient-shadow text-left hover:-translate-y-1 hover:ambient-shadow-lg transition-all duration-200 flex flex-col gap-3.5 group relative border border-outline-variant/20 hover:border-primary/30">
                         <div class="flex items-start justify-between">
                             <div class="flex items-center gap-3 min-w-0">
                                 <div class="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 relative" style="background: ${stage.color}15;">
                                     <span class="material-symbols-outlined text-[22px]" style="color: ${stage.color};">${stage.icon}</span>
                                 </div>
                                 <div class="min-w-0">
-                                    <h4 class="text-[14px] font-bold text-on-surface truncate">${escHtml(p.template_name)}</h4>
+                                    <h4 class="text-[14.5px] font-bold text-on-surface truncate">${escHtml(p.template_name)}</h4>
                                     <p class="text-[11px] text-on-surface-variant italic truncate">${escHtml(p.scientific_name)}</p>
                                 </div>
                             </div>
                             <span class="material-symbols-outlined text-[18px] text-outline-variant group-hover:text-primary transition-colors">open_in_new</span>
                         </div>
                         <div class="flex items-center gap-2 flex-wrap">
-                            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full" style="background: ${stage.color}15; color: ${stage.color};">${stage.label}</span>
-                            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full ${status.bg} ${status.text}">${status.label}</span>
-                        </div>
-                        <div class="flex items-center justify-between text-[12px] text-on-surface-variant pt-1 border-t border-outline-variant/20">
-                            <div class="flex items-center gap-1">
-                                <span class="material-symbols-outlined text-[14px]">calendar_today</span>
-                                <span class="font-bold text-on-surface">${(!p.hst || p.hst <= 0) ? '1 Hari' : p.hst + ' Hari'}</span>
-                            </div>
-                            <div class="flex items-center gap-1 ${harvestColor}">
-                                <span class="material-symbols-outlined text-[14px]">schedule</span>
-                                <span class="font-medium">${harvestText}</span>
-                            </div>
+                            <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full" style="background: ${stage.color}15; color: ${stage.color};">${stage.label}</span>
+                            <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${status.bg} ${status.text}">${status.label}</span>
                         </div>
                     </button>
                 `;
@@ -1038,6 +1050,13 @@ window.GardenApp = (() => {
                 if (humidityEl) humidityEl.textContent = `${ag.humidity}%`;
                 if (rainEl) rainEl.textContent = `${ag.rain_probability}%`;
                 if (windEl) windEl.textContent = `${ag.wind_speed} km/j`;
+
+                const hTip = document.getElementById('gweather-humidity-tip');
+                const rTip = document.getElementById('gweather-rain-tip');
+                const wTip = document.getElementById('gweather-wind-tip');
+                if (hTip) hTip.setAttribute('title', `Kelembapan: ${ag.humidity}%`);
+                if (rTip) rTip.setAttribute('title', `Peluang Hujan: ${ag.rain_probability}%`);
+                if (wTip) wTip.setAttribute('title', `Kecepatan Angin: ${ag.wind_speed} km/j`);
 
                 if (ag.watering) {
                     if (adviceTitleEl) adviceTitleEl.textContent = ag.watering.title;
