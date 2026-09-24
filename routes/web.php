@@ -217,6 +217,7 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::patch('/api/events/{event}/reschedule', [\App\Http\Controllers\GrowthCalendarController::class, 'rescheduleEvent'])->name('api.events.reschedule');
     Route::delete('/api/events/{event}', [\App\Http\Controllers\GrowthCalendarController::class, 'destroyEvent'])->name('api.events.destroy');
 
+    Route::redirect('/tasks', '/care-tasks');
     Route::get('/care-tasks', [\App\Http\Controllers\CareTaskController::class, 'index'])->name('care-tasks');
     Route::patch('/care-tasks/{event}/complete', [\App\Http\Controllers\CareTaskController::class, 'complete'])->name('care-tasks.complete');
     Route::patch('/care-tasks/{event}/skip', [\App\Http\Controllers\CareTaskController::class, 'skip'])->name('care-tasks.skip');
