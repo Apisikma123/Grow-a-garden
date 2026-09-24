@@ -41,7 +41,7 @@
         @endforeach
         
         <div style="margin-top: 30px; text-align: center;">
-            <a href="{{ url('/tasks') }}" style="display: inline-block; background-color: #006c49; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: bold;">
+            <a href="{{ url('/care-tasks') }}" style="display: inline-block; background-color: #006c49; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: bold;">
                 Lihat & Kerjakan Tugas
             </a>
         </div>

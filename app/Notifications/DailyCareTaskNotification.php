@@ -61,7 +61,7 @@ class DailyCareTaskNotification extends Notification implements ShouldQueue, Sho
         return [
             'title' => 'Tugas Perawatan Hari Ini 🌿',
             'message' => 'Ada ' . $this->totalTasks . ' tugas perawatan kebun yang menunggu.',
-            'action_url' => url('/tasks'),
+            'action_url' => url('/care-tasks'),
             'type' => 'daily_task'
         ];
     }
@@ -74,7 +74,7 @@ class DailyCareTaskNotification extends Notification implements ShouldQueue, Sho
         return new BroadcastMessage([
             'title' => 'Tugas Perawatan Hari Ini 🌿',
             'message' => 'Ada ' . $this->totalTasks . ' tugas perawatan kebun yang menunggu.',
-            'action_url' => url('/tasks'),
+            'action_url' => url('/care-tasks'),
             'type' => 'daily_task',
             'created_at' => now()->toIso8601String(),
         ]);
