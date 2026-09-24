@@ -163,8 +163,8 @@ class CareTaskController extends Controller
                         }
                     }
 
-                    // 2. Post Heavy Rain / Storm Drainage Check Quest
-                    if ($hadStorm || $pastPrecip >= 5.0 || ($agronomic['irrigation_decision'] ?? '') === 'SKIP') {
+                    // 2. Post Heavy Rain / Storm Drainage Check Quest (Only on actual heavy rain/storm, not mere drizzle)
+                    if (($hadStorm || $pastPrecip >= 10.0 || ($weather['upcoming_has_storm'] ?? false))) {
                         $drainType = \App\Models\EventType::firstOrCreate(
                             ['code' => 'DRAINAGE_CHECK'],
                             ['label' => 'Pemeriksaan Drainase Pot', 'category' => 'MAINTENANCE', 'default_priority' => 'MEDIUM']
@@ -188,8 +188,8 @@ class CareTaskController extends Controller
                         }
                     }
 
-                    // 3. High Fungus Risk Check Quest
-                    if ($humidity >= 85 || $hadStorm) {
+                    // 3. High Fungus Risk Check Quest (Only for established plants with leaves, HST >= 14)
+                    if ($hst >= 14 && ($humidity >= 85 || $hadStorm)) {
                         $fungusType = \App\Models\EventType::firstOrCreate(
                             ['code' => 'FUNGUS_CHECK'],
                             ['label' => 'Sanitasi Jamur Daun', 'category' => 'MAINTENANCE', 'default_priority' => 'MEDIUM']

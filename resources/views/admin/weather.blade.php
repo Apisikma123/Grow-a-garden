@@ -190,7 +190,6 @@
                     <label for="ar_is_active" class="text-[13px] font-bold text-on-surface">Aturan Aktif</label>
                 </div>
                 <div class="flex justify-end gap-3 mt-4 pt-4 border-t border-outline-variant/20">
-                    <button type="button" onclick="closeRuleModal('activity')" class="px-5 py-2.5 rounded-lg font-bold text-on-surface-variant hover:bg-surface-container-highest transition-colors">Batal</button>
                     <button type="submit" class="px-5 py-2.5 rounded-lg bg-[#006c49] text-white font-bold hover:bg-[#005236] transition-colors">Simpan Aturan</button>
                 </div>
             </form>
@@ -258,7 +257,6 @@
                     <label for="wr_is_active" class="text-[13px] font-bold text-on-surface">Aturan Aktif</label>
                 </div>
                 <div class="flex justify-end gap-3 mt-4 pt-4 border-t border-outline-variant/20">
-                    <button type="button" onclick="closeRuleModal('weather')" class="px-5 py-2.5 rounded-lg font-bold text-on-surface-variant hover:bg-surface-container-highest transition-colors">Batal</button>
                     <button type="submit" class="px-5 py-2.5 rounded-lg bg-[#006c49] text-white font-bold hover:bg-[#005236] transition-colors">Simpan Peringatan</button>
                 </div>
             </form>

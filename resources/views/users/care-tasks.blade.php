@@ -17,21 +17,21 @@
             </div>
         </div>
 
-        {{-- Top Summary Stats (Clean, cohesive 3-card metrics row) --}}
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 w-full items-stretch">
+        {{-- Top Summary Stats (Clean 2-card metrics row without duplicate weather card) --}}
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full items-stretch">
             {{-- Card 1: Tugas Selesai --}}
-            <div class="bg-surface rounded-2xl p-5 border border-outline-variant/20 flex flex-col justify-between shadow-xs transition-all duration-200">
-                <div class="flex justify-between items-start mb-3">
-                    <div class="w-11 h-11 bg-primary/10 text-primary rounded-xl flex items-center justify-center shrink-0">
-                        <span class="material-symbols-outlined text-[24px]">task_alt</span>
+            <div class="bg-white rounded-2xl p-4 sm:p-5 border border-outline-variant/20 flex flex-col justify-between shadow-xs">
+                <div class="flex justify-between items-start mb-2.5">
+                    <div class="w-10 h-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-[22px]">task_alt</span>
                     </div>
                     <div class="text-right">
-                        <span class="text-[26px] font-black text-on-surface leading-none">{{ $totalCompleted }}</span>
-                        <span class="text-[16px] font-bold text-on-surface-variant">/{{ $totalTasks }}</span>
+                        <span class="text-[24px] font-black text-on-surface leading-none">{{ $totalCompleted }}</span>
+                        <span class="text-[15px] font-bold text-on-surface-variant">/{{ $totalTasks }}</span>
                     </div>
                 </div>
                 <div>
-                    <div class="flex items-center justify-between text-[13px] font-bold text-on-surface mb-2">
+                    <div class="flex items-center justify-between text-[12px] font-bold text-on-surface mb-1.5">
                         <span>Tugas Selesai</span>
                         <span class="text-[12px] font-bold text-primary">{{ $totalTasks > 0 ? round(($totalCompleted / $totalTasks) * 100) : 0 }}%</span>
                     </div>
@@ -41,66 +41,21 @@
                 </div>
             </div>
 
-            {{-- Card 2: Prioritas Tinggi (Terracotta theme token) --}}
-            <div class="bg-surface rounded-2xl p-5 border border-outline-variant/20 flex flex-col justify-between shadow-xs transition-all duration-200">
-                <div class="flex justify-between items-start mb-3">
-                    <div class="w-11 h-11 bg-secondary/10 text-secondary rounded-xl flex items-center justify-center shrink-0">
-                        <span class="material-symbols-outlined text-[24px]">priority_high</span>
+            {{-- Card 2: Prioritas Tinggi --}}
+            <div class="bg-white rounded-2xl p-4 sm:p-5 border border-outline-variant/20 flex flex-col justify-between shadow-xs">
+                <div class="flex justify-between items-start mb-2.5">
+                    <div class="w-10 h-10 bg-secondary/10 text-secondary rounded-xl flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-[22px]">priority_high</span>
                     </div>
-                    <div class="text-[26px] font-black text-secondary leading-none">{{ $highPriorityCount }}</div>
+                    <div class="text-[24px] font-black text-secondary leading-none">{{ $highPriorityCount }}</div>
                 </div>
                 <div>
                     <h3 class="text-[13px] font-bold text-on-surface mb-0.5">Prioritas Tinggi</h3>
-                    <p class="text-[12px] text-on-surface-variant font-medium">
+                    <p class="text-[11px] text-on-surface-variant font-medium">
                         {{ $highPriorityCount > 0 ? 'Membutuhkan perhatian segera hari ini' : 'Semua tugas prioritas terkendali' }}
                     </p>
                 </div>
             </div>
-
-            {{-- Card 3: Cuaca & Kondisi Kebun --}}
-            @if(isset($weatherAdvice) && $weatherAdvice)
-            <div class="bg-surface rounded-2xl p-5 border border-outline-variant/20 flex flex-col justify-between shadow-xs transition-all duration-200">
-                <div class="flex justify-between items-start mb-3">
-                    <div class="w-11 h-11 bg-primary/10 text-primary rounded-xl flex items-center justify-center shrink-0">
-                        <span class="material-symbols-outlined text-[24px]">{{ $weatherAdvice['icon'] ?? 'wb_sunny' }}</span>
-                    </div>
-                    <div class="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1 rounded-full text-[12px] font-bold">
-                        <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
-                        {{ (int) round($agronomic['temperature'] ?? 29) }}°C
-                    </div>
-                </div>
-                <div class="min-w-0 w-full">
-                    <div class="text-[11px] font-bold text-primary uppercase tracking-wider mb-0.5 flex items-center gap-1">
-                        <span class="material-symbols-outlined text-[13px]">auto_awesome</span> Adaptasi Cuaca
-                    </div>
-                    <h3 class="text-[14px] font-bold text-on-surface truncate">{{ $agronomic['watering']['title'] ?? 'Penyiraman Normal' }}</h3>
-                    <p class="text-[12px] text-on-surface-variant font-medium truncate">{{ $agronomic['summary'] ?? 'Kondisi cuaca ideal untuk kebun' }}</p>
-                </div>
-            </div>
-            @else
-            @php
-                $dailyAdviceList = [
-                    ['title' => 'Periksa Kebun', 'desc' => 'Observasi daun & kelembapan tanah', 'icon' => 'eco'],
-                    ['title' => 'Cek Kelembapan', 'desc' => 'Pastikan media tanam tetap seimbang', 'icon' => 'water_drop'],
-                    ['title' => 'Pangkas Daun Tua', 'desc' => 'Bersihkan daun kuning penguras nutrisi', 'icon' => 'content_cut'],
-                    ['title' => 'Cek Hama Daun', 'desc' => 'Inspeksi bagian balik daun rutin', 'icon' => 'search'],
-                    ['title' => 'Sinar Matahari', 'desc' => 'Pastikan pencahayaan cukup', 'icon' => 'light_mode'],
-                ];
-                $todayAdvice = $dailyAdviceList[\Carbon\Carbon::now()->dayOfYear % count($dailyAdviceList)];
-            @endphp
-            <div class="bg-surface rounded-2xl p-5 border border-outline-variant/20 flex flex-col justify-between shadow-xs transition-all duration-200">
-                <div class="flex justify-between items-start mb-3">
-                    <div class="w-11 h-11 bg-primary/10 text-primary rounded-xl flex items-center justify-center shrink-0">
-                        <span class="material-symbols-outlined text-[24px]">{{ $todayAdvice['icon'] }}</span>
-                    </div>
-                    <span class="text-[11px] font-bold bg-surface-container-high text-on-surface-variant px-2.5 py-0.5 rounded-full">Tips Hari Ini</span>
-                </div>
-                <div class="min-w-0 w-full">
-                    <h3 class="text-[14px] font-bold text-on-surface mb-0.5 truncate">{{ $todayAdvice['title'] }}</h3>
-                    <p class="text-[12px] text-on-surface-variant font-medium truncate">{{ $todayAdvice['desc'] }}</p>
-                </div>
-            </div>
-            @endif
         </div>
 
         {{-- Main Layout: Left Task List (2 cols) & Right Insights/Mission (1 col) --}}
@@ -210,14 +165,14 @@
                             }
                         @endphp
                         
-                        <div class="bg-white rounded-2xl p-4 sm:p-5 border border-outline-variant/20 hover:border-outline-variant/40 hover:shadow-sm transition-all duration-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 w-full">
-                            <div class="flex items-start sm:items-center gap-3.5 min-w-0 w-full sm:w-auto">
-                                <div class="w-12 h-12 rounded-xl {{ $bgClass }} {{ $textClass }} flex items-center justify-center shrink-0">
-                                    <span class="material-symbols-outlined text-[24px]">{{ $icon }}</span>
+                        <div class="bg-white rounded-2xl p-3.5 sm:p-4 border border-outline-variant/20 hover:border-outline-variant/40 hover:shadow-xs transition-all duration-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 w-full">
+                            <div class="flex items-start sm:items-center gap-3 min-w-0 w-full sm:w-auto flex-1">
+                                <div class="w-10 h-10 rounded-xl {{ $bgClass }} {{ $textClass }} flex items-center justify-center shrink-0">
+                                    <span class="material-symbols-outlined text-[20px]">{{ $icon }}</span>
                                 </div>
                                 <div class="min-w-0 flex-1">
-                                    <div class="flex items-center gap-2 mb-1 flex-wrap">
-                                        <h3 class="text-[15px] sm:text-[16px] font-bold text-on-surface">{{ $taskDisplayTitle }}</h3>
+                                    <div class="flex items-center gap-1.5 mb-0.5 flex-wrap">
+                                        <h3 class="text-[14px] sm:text-[15px] font-bold text-on-surface">{{ $taskDisplayTitle }}</h3>
                                         
                                         {{-- Priority Badge --}}
                                         @if($task->priority == 'HIGH' || $task->priority == 'CRITICAL')
@@ -238,17 +193,17 @@
                                     </div>
                                     
                                     {{-- Subline: Plant & Details --}}
-                                    <div class="flex items-center gap-1.5 text-[12px] sm:text-[13px] text-on-surface-variant flex-wrap">
+                                    <div class="flex items-center gap-1.5 text-[12px] text-on-surface-variant flex-wrap">
                                         <span class="font-bold text-on-surface">{{ $task->plant->plantTemplate->name_id }}</span>
                                         <span class="text-outline-variant">•</span>
                                         <span class="text-on-surface-variant">{{ $task->plant->garden->name ?? 'Kebun' }}</span>
                                         
                                         @if(isset($task->weather_reason))
                                             <span class="text-outline-variant hidden md:inline">•</span>
-                                            <span class="text-on-surface-variant/80 text-[12px] truncate max-w-xs hidden md:inline">{{ $task->weather_reason }}</span>
+                                            <span class="text-on-surface-variant/80 text-[11px] truncate max-w-xs hidden md:inline">{{ $task->weather_reason }}</span>
                                         @endif
 
-                                        <a href="{{ route('growth-calendar', ['plant_id' => $task->plant->id]) }}" class="text-primary hover:underline flex items-center gap-0.5 ml-1" title="Lihat di Kalender">
+                                        <a href="{{ route('growth-calendar', ['plant_id' => $task->plant->id]) }}" class="text-primary hover:underline flex items-center gap-0.5 ml-0.5" title="Lihat di Kalender">
                                             <span class="material-symbols-outlined text-[15px]">calendar_month</span>
                                         </a>
                                     </div>
@@ -256,24 +211,24 @@
                             </div>
 
                             {{-- Actions & Status on Right --}}
-                            <div class="flex items-center justify-between sm:justify-end gap-3 sm:gap-4 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-outline-variant/15">
+                            <div class="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-outline-variant/15 shrink-0">
                                 <div class="text-left sm:text-right">
-                                    <div class="text-[12px] font-bold text-secondary">Tertunda</div>
-                                    <div class="text-[11px] text-on-surface-variant">{{ $task->scheduled_date ? \Carbon\Carbon::parse($task->scheduled_date)->isoFormat('D MMM') : 'Hari Ini' }}</div>
+                                    <div class="text-[11px] font-bold text-secondary">Tertunda</div>
+                                    <div class="text-[10px] text-on-surface-variant">{{ $task->scheduled_date ? \Carbon\Carbon::parse($task->scheduled_date)->isoFormat('D MMM') : 'Hari Ini' }}</div>
                                 </div>
                                 <div class="flex items-center gap-1.5 shrink-0">
                                     <form action="{{ route('care-tasks.complete', $task->id) }}" method="POST" class="inline" onsubmit="return preventDoubleSubmit(this)">
                                         @csrf
                                         @method('PATCH')
-                                        <button type="submit" class="w-9 h-9 rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all duration-200 flex items-center justify-center cursor-pointer shadow-xs active:scale-95" title="Tandai Selesai">
-                                            <span class="material-symbols-outlined text-[18px]">check</span>
+                                        <button type="submit" class="w-8 h-8 rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all duration-200 flex items-center justify-center cursor-pointer shadow-2xs active:scale-95" title="Tandai Selesai">
+                                            <span class="material-symbols-outlined text-[17px]">check</span>
                                         </button>
                                     </form>
                                     <form action="{{ route('care-tasks.skip', $task->id) }}" method="POST" class="inline" onsubmit="return preventDoubleSubmit(this)">
                                         @csrf
                                         @method('PATCH')
-                                        <button type="submit" class="w-9 h-9 rounded-xl bg-surface-container-high text-on-surface-variant hover:bg-error-container hover:text-on-error-container transition-all duration-200 flex items-center justify-center cursor-pointer active:scale-95" title="Lewati">
-                                            <span class="material-symbols-outlined text-[18px]">close</span>
+                                        <button type="submit" class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-error-container hover:text-on-error-container transition-all duration-200 flex items-center justify-center cursor-pointer active:scale-95" title="Lewati">
+                                            <span class="material-symbols-outlined text-[17px]">close</span>
                                         </button>
                                     </form>
                                 </div>
@@ -333,51 +288,51 @@
             {{-- Right Column: Assistant Sidebar (Smart Irrigation & Weekly Mission) --}}
             <div class="lg:col-span-1 flex flex-col gap-5 w-full">
                 
-                {{-- Smart Irrigation Assistant Widget (Unified, No nested card clutter) --}}
+                {{-- Smart Irrigation Assistant Widget --}}
                 @if(isset($agronomic))
-                <div class="bg-surface rounded-2xl p-5 border border-outline-variant/20 shadow-xs flex flex-col gap-4 w-full">
-                    <div class="flex items-center justify-between gap-2 pb-3 border-b border-outline-variant/20">
-                        <div class="flex items-center gap-2.5 min-w-0">
-                            <div class="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                                <span class="material-symbols-outlined text-[20px]">{{ $agronomic['icon'] ?? 'thermostat' }}</span>
+                <div class="bg-white rounded-2xl p-4 sm:p-5 border border-outline-variant/20 shadow-xs flex flex-col gap-3.5 w-full">
+                    <div class="flex items-center justify-between gap-2 pb-2.5 border-b border-outline-variant/15">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <div class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-[19px]">{{ $agronomic['icon'] ?? 'thermostat' }}</span>
                             </div>
                             <div class="min-w-0">
-                                <span class="text-[11px] font-bold text-primary uppercase tracking-wider block">Smart Irrigation</span>
-                                <h3 class="text-[14px] font-bold text-on-surface leading-tight">Evaluasi Cuaca</h3>
+                                <span class="text-[10px] font-extrabold text-primary uppercase tracking-wider block">Smart Irrigation</span>
+                                <h3 class="text-[13px] font-bold text-on-surface leading-tight">Evaluasi Cuaca</h3>
                             </div>
                         </div>
-                        <span class="text-[11px] font-bold bg-primary/10 text-primary px-2.5 py-1 rounded-full shrink-0 flex items-center gap-1.5">
+                        <span class="text-[10px] font-bold bg-primary/10 text-primary px-2.5 py-0.5 rounded-full shrink-0 flex items-center gap-1.5">
                             <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
                             Live Sync
                         </span>
                     </div>
 
                     {{-- Decision Pill --}}
-                    <div class="bg-primary/10 rounded-xl p-3.5 border border-primary/20">
-                        <div class="text-[11px] font-bold text-primary uppercase tracking-wider mb-1">Keputusan Hari Ini</div>
-                        <div class="text-[15px] font-bold text-on-surface leading-snug">{{ $agronomic['watering']['title'] ?? 'Penyiraman Normal' }}</div>
-                        <div class="text-[12px] font-semibold text-primary mt-1">
+                    <div class="bg-primary/5 rounded-xl p-3 border border-primary/15">
+                        <div class="text-[10px] font-extrabold text-primary uppercase tracking-wider mb-0.5">Keputusan Hari Ini</div>
+                        <div class="text-[14px] font-black text-on-surface leading-snug">{{ $agronomic['watering']['title'] ?? 'Penyiraman Normal' }}</div>
+                        <div class="text-[11px] font-semibold text-primary mt-0.5">
                             {{ $agronomic['watering']['badge'] ?? 'Normal' }} • {{ (int) round($agronomic['temperature'] ?? 29) }}°C
                         </div>
                     </div>
 
-                    {{-- Advice & Schedule Text (Clean typographic flow without nested card boxes) --}}
-                    <div class="space-y-3 text-[12px] sm:text-[13px] text-on-surface-variant">
+                    {{-- Advice & Schedule Text --}}
+                    <div class="space-y-2 text-[12px] text-on-surface-variant">
                         <div>
-                            <span class="font-bold text-on-surface block mb-1">Rekomendasi Real-Time:</span>
+                            <span class="font-bold text-on-surface block mb-0.5">Rekomendasi Cuaca:</span>
                             <p class="leading-relaxed">{{ $agronomic['watering']['advice'] ?? $agronomic['summary'] }}</p>
                         </div>
 
-                        <div class="pt-2 border-t border-outline-variant/15 flex items-center gap-2 text-[12px]">
-                            <span class="material-symbols-outlined text-[16px] text-primary shrink-0">schedule</span>
+                        <div class="pt-2 border-t border-outline-variant/15 flex items-center gap-1.5 text-[11px]">
+                            <span class="material-symbols-outlined text-[15px] text-primary shrink-0">schedule</span>
                             <span class="font-medium">Jadwal Pantau: Pagi (06–09) • Sore (16–18)</span>
                         </div>
                     </div>
 
-                    {{-- Agronomic Warning (Using secondary terracotta design token) --}}
+                    {{-- Agronomic Warning --}}
                     @if(!empty($agronomic['watering']['warning']))
-                    <div class="bg-secondary/10 border border-secondary/20 rounded-xl p-3 flex items-start gap-2.5 text-[12px]">
-                        <span class="material-symbols-outlined text-[18px] text-secondary shrink-0 mt-0.5">warning</span>
+                    <div class="bg-secondary/5 border border-secondary/20 rounded-xl p-2.5 flex items-start gap-2 text-[11px]">
+                        <span class="material-symbols-outlined text-[16px] text-secondary shrink-0 mt-0.5">warning</span>
                         <div class="min-w-0">
                             <span class="font-bold text-secondary block mb-0.5">Peringatan Agronomi</span>
                             <p class="text-on-surface-variant leading-relaxed">{{ $agronomic['watering']['warning'] }}</p>
@@ -385,56 +340,6 @@
                     </div>
                     @endif
                 </div>
-                @endif
-
-                {{-- Misi Mingguan Widget (Cohesive, polished styling) --}}
-                @if(isset($closestBadge) && $closestBadge)
-                    <div class="bg-surface rounded-2xl p-5 border border-outline-variant/20 shadow-xs flex flex-col justify-between gap-4 w-full">
-                        <div>
-                            <div class="flex items-center justify-between mb-3">
-                                <div class="w-10 h-10 rounded-xl bg-tertiary/10 text-tertiary flex items-center justify-center shrink-0">
-                                    <span class="material-symbols-outlined text-[22px]">{{ $closestBadge->icon_url ?? 'military_tech' }}</span>
-                                </div>
-                                <span class="text-[11px] font-bold bg-surface-container-high text-on-surface-variant px-2.5 py-1 rounded-full">Misi Aktif</span>
-                            </div>
-                            <h3 class="text-[16px] font-bold text-on-surface mb-1">Misi Mingguan</h3>
-                            <p class="text-[13px] text-on-surface-variant leading-relaxed">
-                                Selesaikan <span class="font-bold text-on-surface">{{ max(1, $closestTarget - $closestCurrent) }}</span> tugas lagi untuk membuka badge <span class="font-bold text-primary">"{{ $closestBadge->name }}"</span>.
-                            </p>
-                        </div>
-
-                        <div class="pt-2 border-t border-outline-variant/15 flex items-center justify-between gap-3">
-                            <a href="{{ route('badges') }}" class="text-[13px] font-bold text-primary hover:underline flex items-center gap-1">
-                                <span>Lihat Semua Badge</span>
-                                <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
-                            </a>
-                            <div class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-on-surface-variant shrink-0" title="{{ $closestBadge->name }}">
-                                <span class="material-symbols-outlined text-[18px]">{{ $closestBadge->icon_url ?? 'military_tech' }}</span>
-                            </div>
-                        </div>
-                    </div>
-                @else
-                    <div class="bg-surface rounded-2xl p-5 border border-outline-variant/20 shadow-xs flex flex-col justify-between gap-4 w-full">
-                        <div>
-                            <div class="flex items-center justify-between mb-3">
-                                <div class="w-10 h-10 rounded-xl bg-tertiary/10 text-tertiary flex items-center justify-center shrink-0">
-                                    <span class="material-symbols-outlined text-[22px]">military_tech</span>
-                                </div>
-                                <span class="text-[11px] font-bold bg-surface-container-high text-on-surface-variant px-2.5 py-1 rounded-full">Misi Aktif</span>
-                            </div>
-                            <h3 class="text-[16px] font-bold text-on-surface mb-1">Misi Mingguan</h3>
-                            <p class="text-[13px] text-on-surface-variant leading-relaxed">
-                                Selesaikan tugas harian kebun Anda secara konsisten untuk mengumpulkan badge eksklusif.
-                            </p>
-                        </div>
-
-                        <div class="pt-2 border-t border-outline-variant/15 flex items-center justify-between gap-3">
-                            <a href="{{ route('badges') }}" class="text-[13px] font-bold text-primary hover:underline flex items-center gap-1">
-                                <span>Katalog Badge</span>
-                                <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
-                            </a>
-                        </div>
-                    </div>
                 @endif
 
             </div>

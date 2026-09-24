@@ -222,7 +222,7 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::patch('/care-tasks/{event}/complete', [\App\Http\Controllers\CareTaskController::class, 'complete'])->name('care-tasks.complete');
     Route::patch('/care-tasks/{event}/skip', [\App\Http\Controllers\CareTaskController::class, 'skip'])->name('care-tasks.skip');
 
-    Route::get('/activity-log', [\App\Http\Controllers\ActivityLogController::class, 'index'])->name('activity-log');
+    Route::redirect('/activity-log', '/care-tasks')->name('activity-log');
 
     Route::get('/settings', [\App\Http\Controllers\SettingsController::class, 'index'])->name('settings');
     Route::get('/badges', [\App\Http\Controllers\BadgeController::class, 'index'])->name('badges');

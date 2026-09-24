@@ -184,11 +184,10 @@
                 </div>
                 <div class="bg-primary/5 rounded-xl p-3 border border-primary/20 text-[11px] text-on-surface-variant flex items-center gap-2.5">
                     <span class="material-symbols-outlined text-primary text-[18px] shrink-0">info</span>
-                    <span><strong>💡 Penjelasan Mudah untuk Pemula:</strong> Nilai pH menunjukkan keasaman tanah. Angka <strong>6.0 - 7.0</strong> adalah tanah netral yang paling subur untuk sayuran pekarangan. Di bawah 6.0 tanah tergolong asam, dan di atas 7.0 tergolong basa.</span>
+                    <span><strong>Penjelasan Mudah untuk Pemula:</strong> Nilai pH menunjukkan keasaman tanah. Angka <strong>6.0 - 7.0</strong> adalah tanah netral yang paling subur untuk sayuran pekarangan. Di bawah 6.0 tanah tergolong asam, dan di atas 7.0 tergolong basa.</span>
                 </div>
 
                 <div class="pt-4 border-t border-outline-variant/20 flex justify-end gap-3 w-full">
-                    <button type="button" onclick="closePlantModal()" class="px-5 py-2.5 rounded-xl font-bold text-on-surface-variant hover:bg-surface-container-highest transition-colors text-sm">Batal</button>
                     <button type="button" onclick="savePlant()" class="px-5 py-2.5 rounded-xl bg-[#006c49] text-white font-bold hover:bg-[#005c3a] transition-colors text-sm shadow-sm">Simpan Data</button>
                 </div>
             </form>
