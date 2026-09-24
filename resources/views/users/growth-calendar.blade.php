@@ -43,10 +43,10 @@
         @else
 
         {{-- 1. Compact Stage Tracker (Fase Pertumbuhan Tanaman Aktif) --}}
-        <div class="w-full bg-white rounded-[24px] p-5 md:p-7 border border-outline-variant/30 ambient-shadow-lg relative overflow-hidden">
-            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 pb-5 border-b border-outline-variant/20">
+        <div class="w-full bg-white rounded-[24px] p-5 md:p-6 border border-outline-variant/30 ambient-shadow-lg relative overflow-hidden">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4">
                 {{-- Plant Overview --}}
-                <div class="flex items-center gap-4">
+                <div class="flex items-center gap-3.5">
                     @php
                         $imgSrc = 'https://images.unsplash.com/photo-1592841200221-a6898f307baa?w=160&h=160&fit=crop&q=80';
                         $plantNameLower = strtolower($mainPlant->plantTemplate->name_id ?? '');
@@ -57,88 +57,71 @@
                         }
                         $activeStage = collect($timeline)->firstWhere('status', 'active') ?? collect($timeline)->last();
                     @endphp
-                    <img src="{{ $imgSrc }}" alt="{{ $mainPlant->plantTemplate->name_id }}" class="w-16 h-16 md:w-20 md:h-20 rounded-[18px] object-cover border-2 border-primary/20 shadow-sm shrink-0">
+                    <img src="{{ $imgSrc }}" alt="{{ $mainPlant->plantTemplate->name_id }}" class="w-13 h-13 md:w-14 md:h-14 rounded-2xl object-cover border border-primary/20 shadow-xs shrink-0">
                     <div>
                         <div class="flex items-center gap-2 flex-wrap">
-                            <h2 class="text-[20px] md:text-[24px] font-black text-on-surface leading-tight tracking-tight">{{ $mainPlant->plantTemplate->name_id }}</h2>
+                            <h2 class="text-[19px] md:text-[21px] font-black text-on-surface leading-tight tracking-tight">{{ $mainPlant->plantTemplate->name_id }}</h2>
                             <span class="bg-primary/10 text-primary px-2.5 py-0.5 rounded-full text-[11px] font-extrabold uppercase tracking-wider border border-primary/20">
                                 Fase {{ $activeStage['label'] ?? 'Tumbuh' }}
                             </span>
                         </div>
-                        <p class="text-[13px] text-on-surface-variant font-medium mt-1">
-                            Kebun: <span class="text-on-surface font-bold">{{ $mainPlant->garden->name ?? 'Kebun Utama' }}</span> • 
-                            Umur Tanaman: <span class="text-primary font-black">{{ max(1, $currentHst) }} Hari</span> • 
-                            Perkiraan Panen: <span class="text-[#944a23] font-black">Hari ke-{{ $mainPlant->plantTemplate->harvest_start_day ?? 30 }}</span>
+                        <p class="text-[12px] text-on-surface-variant font-medium mt-0.5">
+                            Kebun: <span class="text-on-surface font-semibold">{{ $mainPlant->garden->name ?? 'Kebun Utama' }}</span> • 
+                            Umur: <span class="text-primary font-bold">{{ max(1, $currentHst) }} Hari</span> • 
+                            Panen: <span class="text-[#944a23] font-bold">H-{{ $mainPlant->plantTemplate->harvest_start_day ?? 30 }}</span>
                         </p>
                     </div>
                 </div>
 
                 {{-- Quick Stage Stats / Days Left --}}
-                <div class="flex items-center gap-3 bg-surface-container-low px-4 py-2.5 rounded-2xl border border-outline-variant/30">
-                    <span class="material-symbols-outlined text-primary text-[24px]">timelapse</span>
-                    <div>
-                        <p class="text-[11px] text-on-surface-variant font-bold uppercase tracking-wider">Status Fase Saat Ini</p>
-                        <p class="text-[13px] font-black text-on-surface">
-                            @if(isset($activeStage['daysLeft']) && $activeStage['daysLeft'] > 0)
-                                {{ $activeStage['daysLeft'] }} hari lagi menuju fase berikutnya
-                            @else
-                                Mendekati / di fase akhir
-                            @endif
-                        </p>
-                    </div>
+                <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/5 text-primary border border-primary/20 text-xs font-bold shrink-0 self-start sm:self-auto">
+                    <span class="material-symbols-outlined text-[16px]">timelapse</span>
+                    <span>
+                        @if(isset($activeStage['daysLeft']) && $activeStage['daysLeft'] > 0)
+                            {{ $activeStage['daysLeft'] }} hari lagi ke fase berikutnya
+                        @else
+                            Fase akhir
+                        @endif
+                    </span>
                 </div>
             </div>
 
-            {{-- Compact Stepper / Horizontal Progress --}}
-            <div class="mt-5">
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-{{ count($timeline) }} gap-3">
+            {{-- Sleek Pipeline Stepper --}}
+            <div class="mt-4 pt-4 border-t border-outline-variant/20">
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-{{ count($timeline) }} gap-2 sm:gap-2.5">
                     @foreach($timeline as $idx => $stage)
                         @php
                             $isDone = ($stage['status'] === 'completed');
                             $isActive = ($stage['status'] === 'active');
                         @endphp
-                        <div class="p-3 rounded-2xl border transition-all relative {{ $isActive ? 'bg-primary/5 border-primary shadow-xs' : ($isDone ? 'bg-surface-container-low/60 border-outline-variant/30' : 'bg-surface border-outline-variant/20 opacity-70') }}">
-                            <div class="flex items-center justify-between mb-1.5">
-                                <span class="text-[11px] font-extrabold tracking-wider uppercase {{ $isActive ? 'text-primary' : ($isDone ? 'text-slate-600' : 'text-slate-400') }}">
-                                    Langkah {{ $idx + 1 }}
-                                </span>
+                        <div class="flex items-center gap-2.5 p-2 rounded-xl transition-all {{ $isActive ? 'bg-primary/10 border border-primary/30 shadow-2xs' : ($isDone ? 'bg-surface-container-low/50 border border-transparent' : 'opacity-60 border border-transparent') }}">
+                            <div class="w-7 h-7 rounded-full flex items-center justify-center shrink-0 {{ $isActive ? 'bg-primary text-white shadow-xs' : ($isDone ? 'bg-[#006c49]/15 text-[#006c49]' : 'bg-surface-container-high text-on-surface-variant') }}">
                                 @if($isDone)
-                                    <span class="material-symbols-outlined text-[16px] text-[#006c49] font-black">check_circle</span>
+                                    <span class="material-symbols-outlined text-[15px] font-black">check</span>
                                 @elseif($isActive)
-                                    <span class="w-2.5 h-2.5 rounded-full bg-primary animate-ping"></span>
+                                    <span class="w-2 h-2 rounded-full bg-white"></span>
                                 @else
-                                    <span class="material-symbols-outlined text-[16px] text-slate-300">radio_button_unchecked</span>
+                                    <span class="text-[11px] font-bold">{{ $idx + 1 }}</span>
                                 @endif
                             </div>
-                            <h4 class="text-[13px] md:text-[14px] font-black text-on-surface leading-snug">{{ $stage['label'] }}</h4>
-                            <p class="text-[11px] text-on-surface-variant font-medium mt-0.5">{{ $stage['date']->isoFormat('D MMM') }}</p>
-
-                            @if(!empty($stage['weatherBadge']))
-                            <div class="mt-1">
-                                <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-md {{ $stage['weatherBadgeBg'] }} inline-block">
-                                    {{ $stage['weatherBadge'] }}
-                                </span>
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center gap-1">
+                                    <span class="text-[12px] font-extrabold truncate leading-tight {{ $isActive ? 'text-primary' : 'text-on-surface' }}">{{ $stage['label'] }}</span>
+                                    @if($isActive)
+                                        <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse shrink-0"></span>
+                                    @endif
+                                </div>
+                                <span class="text-[10px] text-on-surface-variant font-medium block truncate">{{ $stage['date']->isoFormat('D MMM') }}</span>
                             </div>
-                            @endif
-
-                            @if($isActive)
-                            <div class="mt-2.5 w-full bg-outline-variant/30 h-1.5 rounded-full overflow-hidden">
-                                <div class="bg-primary h-full rounded-full transition-all duration-500" style="width: {{ $stage['progress'] ?? 50 }}%;"></div>
-                            </div>
-                            @endif
                         </div>
                     @endforeach
                 </div>
 
-                {{-- Weather Advice Alert Banner --}}
+                {{-- Slim Weather Advice Note --}}
                 @if(isset($stageWeatherAdvice['text']) && $stageWeatherAdvice['text'])
-                <div class="mt-4 bg-primary/5 border border-primary/20 rounded-2xl p-3.5 flex items-start gap-3">
-                    <div class="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0 mt-0.5">
-                        <span class="material-symbols-outlined text-[18px]">auto_awesome</span>
-                    </div>
-                    <div class="text-[12px] md:text-[13px] text-on-surface leading-relaxed">
-                        <span class="font-bold text-primary">Saran Agronomis Cuaca:</span> {{ $stageWeatherAdvice['text'] }}
-                    </div>
+                <div class="mt-3 pt-2.5 border-t border-outline-variant/15 flex items-center gap-2 text-[12px] text-on-surface-variant">
+                    <span class="material-symbols-outlined text-primary text-[17px] shrink-0">auto_awesome</span>
+                    <span class="leading-relaxed"><strong class="text-on-surface font-semibold">Saran Agronomis:</strong> {{ $stageWeatherAdvice['text'] }}</span>
                 </div>
                 @endif
             </div>
@@ -250,63 +233,62 @@
 
                 {{-- Card: Penyesuaian Cuaca & Kalender (Agronomic Weather Intelligence) --}}
                 @if(isset($agronomic))
-                <div class="w-full bg-white rounded-[24px] p-6 border border-outline-variant/30 ambient-shadow-lg flex flex-col gap-4">
+                <div class="w-full bg-white rounded-[24px] p-5 border border-outline-variant/30 ambient-shadow-lg flex flex-col gap-3.5">
                     <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
                         <div class="flex items-center gap-2.5">
-                            <div class="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                                <span class="material-symbols-outlined text-[20px]">{{ $agronomic['icon'] ?? 'partly_cloudy_day' }}</span>
+                            <div class="w-8 h-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-[19px]">{{ $agronomic['icon'] ?? 'partly_cloudy_day' }}</span>
                             </div>
                             <div>
-                                <h3 class="text-[15px] font-black text-on-surface leading-snug">Penyesuaian Cuaca</h3>
+                                <h3 class="text-[14px] font-black text-on-surface leading-snug">Penyesuaian Cuaca</h3>
                                 <p class="text-[11px] text-on-surface-variant font-medium">{{ $agronomic['condition_title'] ?? 'Kondisi Hari Ini' }}</p>
                             </div>
                         </div>
-                        <span class="text-[11px] font-extrabold px-2.5 py-1 rounded-full {{ $agronomic['watering']['badge_bg'] ?? 'bg-primary/10 text-primary' }}">
+                        <span class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full {{ $agronomic['watering']['badge_bg'] ?? 'bg-primary/10 text-primary' }}">
                             {{ $agronomic['watering']['badge'] ?? 'Normal' }}
                         </span>
                     </div>
 
-                    {{-- Metrics grid --}}
-                    <div class="grid grid-cols-3 gap-2 text-center">
-                        <div class="bg-surface-container-low rounded-xl p-2.5 border border-outline-variant/15">
+                    {{-- Metrics: Sleek inline stat row with dividers instead of chunky cards --}}
+                    <div class="flex items-center justify-around py-2.5 px-3 rounded-xl bg-surface-container-low/60 border border-outline-variant/20 text-center">
+                        <div>
                             <span class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold block">Suhu</span>
-                            <span class="text-[14px] font-black text-on-surface">{{ (int) round($agronomic['temperature'] ?? 29) }}°C</span>
+                            <span class="text-[13px] font-black text-on-surface">{{ (int) round($agronomic['temperature'] ?? 29) }}°C</span>
                         </div>
-                        <div class="bg-surface-container-low rounded-xl p-2.5 border border-outline-variant/15">
+                        <div class="w-px h-5 bg-outline-variant/30"></div>
+                        <div>
                             <span class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold block">Lembap</span>
-                            <span class="text-[14px] font-black text-on-surface">{{ $agronomic['humidity'] ?? 75 }}%</span>
+                            <span class="text-[13px] font-black text-on-surface">{{ $agronomic['humidity'] ?? 75 }}%</span>
                         </div>
-                        <div class="bg-surface-container-low rounded-xl p-2.5 border border-outline-variant/15">
+                        <div class="w-px h-5 bg-outline-variant/30"></div>
+                        <div>
                             <span class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold block">Hujan</span>
-                            <span class="text-[14px] font-black text-on-surface">{{ $agronomic['rain_probability'] ?? 0 }}%</span>
+                            <span class="text-[13px] font-black text-on-surface">{{ $agronomic['rain_probability'] ?? 0 }}%</span>
                         </div>
                     </div>
 
                     {{-- Impact & Advice on Calendar --}}
-                    <div class="bg-primary/5 rounded-xl p-3 border border-primary/20 space-y-1.5">
-                        <div class="flex items-center gap-1.5 text-xs font-black text-primary">
-                            <span class="material-symbols-outlined text-[16px]">info</span>
-                            <span>Pengaruh Terhadap Jadwal:</span>
-                        </div>
-                        <p class="text-[12px] text-on-surface leading-relaxed font-medium">
-                            {{ $agronomic['watering']['advice'] ?? 'Kondisi cuaca normal. Jadwal perawatan berjalan sesuai kalender.' }}
+                    <div class="bg-primary/5 rounded-xl p-2.5 border border-primary/20 flex items-start gap-2">
+                        <span class="material-symbols-outlined text-primary text-[16px] shrink-0 mt-0.5">info</span>
+                        <p class="text-[11px] text-on-surface leading-relaxed font-medium">
+                            <strong class="font-bold text-primary">Pengaruh Jadwal:</strong> {{ $agronomic['watering']['advice'] ?? 'Kondisi cuaca normal. Jadwal perawatan berjalan sesuai kalender.' }}
                         </p>
                     </div>
                 </div>
                 @endif
 
                 {{-- Card: Tugas Hari Ini --}}
-                <div class="w-full bg-white rounded-[24px] p-6 border border-outline-variant/30 ambient-shadow-lg flex flex-col">
-                    <div class="flex items-center justify-between mb-4">
+                <div class="w-full bg-white rounded-[24px] p-5 border border-outline-variant/30 ambient-shadow-lg flex flex-col">
+                    <div class="flex items-center justify-between mb-3.5">
                         <div class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-primary text-[22px]">checklist</span>
-                            <h3 class="text-[17px] font-black text-on-surface">Tugas Hari Ini</h3>
+                            <span class="material-symbols-outlined text-primary text-[20px]">checklist</span>
+                            <h3 class="text-[15px] font-black text-on-surface">Tugas Hari Ini</h3>
                         </div>
-                        <a href="{{ route('care-tasks') }}" class="text-[12px] text-primary font-extrabold hover:underline">Lihat Semua</a>
+                        <a href="{{ route('care-tasks') }}" class="text-[11px] text-primary font-extrabold hover:underline">Lihat Semua</a>
                     </div>
 
                     @if(isset($todayTasks) && $todayTasks->count() > 0)
-                        <div class="space-y-3">
+                        <div class="space-y-2.5">
                             @foreach($todayTasks->take(4) as $task)
                                 @php
                                     $code = strtolower($task->eventType->code ?? '');
@@ -315,21 +297,21 @@
                                     elseif(str_contains($code, 'fertiliz')) $tIcon = 'science';
                                     elseif(str_contains($code, 'pest')) $tIcon = 'pest_control';
                                 @endphp
-                                <div class="p-3 rounded-2xl border border-outline-variant/30 bg-surface-container-lowest hover:border-primary/40 transition-colors flex items-start gap-3">
-                                    <div class="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0 mt-0.5">
-                                        <span class="material-symbols-outlined text-[18px]">{{ $tIcon }}</span>
+                                <div class="p-2.5 rounded-xl border border-outline-variant/30 bg-surface-container-lowest hover:border-primary/40 transition-colors flex items-start gap-2.5">
+                                    <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0 mt-0.5">
+                                        <span class="material-symbols-outlined text-[16px]">{{ $tIcon }}</span>
                                     </div>
                                     <div class="flex-1 min-w-0">
-                                        <div class="flex items-center justify-between gap-2 flex-wrap">
-                                            <h4 class="text-[13px] font-bold text-on-surface truncate">{{ $task->eventType->label ?? $task->message ?? 'Tugas Perawatan' }}</h4>
+                                        <div class="flex items-center justify-between gap-1 flex-wrap">
+                                            <h4 class="text-[12px] font-bold text-on-surface truncate">{{ $task->eventType->label ?? $task->message ?? 'Tugas Perawatan' }}</h4>
                                             <div class="flex items-center gap-1 shrink-0">
                                                 @if(!empty($task->weather_tag))
-                                                    <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded-full {{ $task->weather_badge_bg ?? 'bg-primary/10 text-primary' }}">
+                                                    <span class="text-[9px] font-extrabold px-1.5 py-0.2 rounded-full {{ $task->weather_badge_bg ?? 'bg-primary/10 text-primary' }}">
                                                         {{ $task->weather_tag }}
                                                     </span>
                                                 @endif
                                                 @if($task->status === 'MISSED')
-                                                    <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-[#ffdad6] text-[#ba1a1a] uppercase">Terlewat</span>
+                                                    <span class="text-[9px] font-extrabold px-1.5 py-0.2 rounded bg-[#ffdad6] text-[#ba1a1a] uppercase">Terlewat</span>
                                                 @endif
                                             </div>
                                         </div>
@@ -343,16 +325,16 @@
                                             </p>
                                         @endif
                                     </div>
-                                    <button type="button" onclick="quickRescheduleById({{ $task->id }})" class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded-lg transition-colors shrink-0" title="Kelola / Reschedule Jadwal">
-                                        <span class="material-symbols-outlined text-[18px]">edit_calendar</span>
+                                    <button type="button" onclick="quickRescheduleById({{ $task->id }})" class="p-1 text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded-md transition-colors shrink-0" title="Kelola / Reschedule Jadwal">
+                                        <span class="material-symbols-outlined text-[16px]">edit_calendar</span>
                                     </button>
                                 </div>
                             @endforeach
                         </div>
                     @else
-                        <div class="w-full py-8 text-center bg-surface-container-low rounded-2xl border border-outline-variant/20 flex flex-col items-center justify-center self-stretch" style="width: 100% !important;">
-                            <span class="material-symbols-outlined text-[32px] text-primary/50 mb-1 shrink-0">task_alt</span>
-                            <p class="text-[13px] font-bold text-on-surface w-full self-stretch" style="white-space: normal !important; word-break: normal !important;">Semua Beres!</p>
+                        <div class="w-full py-6 text-center bg-surface-container-low/50 rounded-xl border border-outline-variant/20 flex flex-col items-center justify-center self-stretch" style="width: 100% !important;">
+                            <span class="material-symbols-outlined text-[28px] text-primary/50 mb-1 shrink-0">task_alt</span>
+                            <p class="text-[12px] font-bold text-on-surface w-full self-stretch" style="white-space: normal !important; word-break: normal !important;">Semua Beres!</p>
                             <p class="text-[11px] text-on-surface-variant w-full self-stretch" style="white-space: normal !important; word-break: normal !important;">Tidak ada tugas mendesak hari ini.</p>
                         </div>
                     @endif
@@ -360,53 +342,38 @@
 
                 {{-- Card: Tanaman Lainnya --}}
                 @if(isset($otherPlants) && $otherPlants->count() > 0)
-                <div class="w-full bg-white rounded-[24px] p-6 border border-outline-variant/30 ambient-shadow-lg flex flex-col">
-                    <div class="flex items-center justify-between mb-4">
+                <div class="w-full bg-white rounded-[24px] p-5 border border-outline-variant/30 ambient-shadow-lg flex flex-col">
+                    <div class="flex items-center justify-between mb-3.5">
                         <div class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-[#944a23] text-[22px]">potted_plant</span>
-                            <h3 class="text-[17px] font-black text-on-surface">Tanaman Kebun Anda</h3>
+                            <span class="material-symbols-outlined text-[#944a23] text-[20px]">potted_plant</span>
+                            <h3 class="text-[15px] font-black text-on-surface">Tanaman Kebun Anda</h3>
                         </div>
-                        <span class="text-[12px] font-bold text-on-surface-variant">{{ $plants->count() }} Total</span>
+                        <span class="text-[11px] font-bold text-on-surface-variant">{{ $plants->count() }} Total</span>
                     </div>
 
-                    <div class="space-y-2.5 max-h-[320px] overflow-y-auto pr-1">
+                    <div class="space-y-2 max-h-[300px] overflow-y-auto pr-1">
                         @foreach($plants as $p)
                             @php $isCurrent = ($mainPlant && $mainPlant->id == $p->id); @endphp
-                            <a href="{{ route('growth-calendar', ['plant_id' => $p->id]) }}" class="flex items-center justify-between p-2.5 rounded-2xl border transition-all {{ $isCurrent ? 'bg-primary/10 border-primary font-bold' : 'bg-surface border-outline-variant/30 hover:border-primary/50 hover:bg-surface-container-low' }}">
-                                <div class="flex items-center gap-3 min-w-0">
-                                    <div class="w-9 h-9 rounded-xl {{ $isCurrent ? 'bg-primary text-white' : 'bg-surface-container-high text-primary' }} flex items-center justify-center font-bold text-sm shrink-0">
-                                        <span class="material-symbols-outlined text-[18px]">eco</span>
+                            <a href="{{ route('growth-calendar', ['plant_id' => $p->id]) }}" class="flex items-center justify-between p-2 rounded-xl border transition-all {{ $isCurrent ? 'bg-primary/10 border-primary font-bold' : 'bg-surface border-outline-variant/30 hover:border-primary/50 hover:bg-surface-container-low' }}">
+                                <div class="flex items-center gap-2.5 min-w-0">
+                                    <div class="w-8 h-8 rounded-lg {{ $isCurrent ? 'bg-primary text-white' : 'bg-surface-container-high text-primary' }} flex items-center justify-center font-bold text-xs shrink-0">
+                                        <span class="material-symbols-outlined text-[16px]">eco</span>
                                     </div>
                                     <div class="min-w-0">
-                                        <h4 class="text-[13px] font-bold text-on-surface truncate">{{ $p->plantTemplate->name_id }}</h4>
-                                        <p class="text-[11px] text-on-surface-variant truncate">Kebun: {{ $p->garden->name ?? '-' }} • Umur {{ max(1, $p->hst) }} Hari</p>
+                                        <h4 class="text-[12px] font-bold text-on-surface truncate">{{ $p->plantTemplate->name_id }}</h4>
+                                        <p class="text-[10px] text-on-surface-variant truncate">Kebun: {{ $p->garden->name ?? '-' }} • Umur {{ max(1, $p->hst) }} Hari</p>
                                     </div>
                                 </div>
                                 @if($isCurrent)
-                                    <span class="text-[10px] font-black uppercase text-primary bg-white px-2 py-0.5 rounded-full shadow-2xs border border-primary/20 shrink-0">Aktif</span>
+                                    <span class="text-[9px] font-black uppercase text-primary bg-white px-2 py-0.5 rounded-full shadow-2xs border border-primary/20 shrink-0">Aktif</span>
                                 @else
-                                    <span class="material-symbols-outlined text-[18px] text-outline-variant shrink-0">chevron_right</span>
+                                    <span class="material-symbols-outlined text-[16px] text-outline-variant shrink-0">chevron_right</span>
                                 @endif
                             </a>
                         @endforeach
                     </div>
                 </div>
                 @endif
-
-                {{-- Card: Edukasi & Bantuan --}}
-                <div class="w-full bg-gradient-to-br from-[#006c49]/10 via-surface to-[#944a23]/10 rounded-[24px] p-6 border border-primary/20 ambient-shadow-lg flex flex-col">
-                    <div class="flex items-center gap-2 mb-2 text-primary font-black text-[14px]">
-                        <span class="material-symbols-outlined text-[20px]">lightbulb</span>
-                        <span>Fleksibilitas Kalender</span>
-                    </div>
-                    <p class="text-[12px] text-on-surface-variant leading-relaxed mb-3">
-                        Anda dapat menambah jadwal perawatan baru kapan saja serta memindahkan tanggal jadwal maju/mundur atau menghapusnya jika sudah tidak diperlukan.
-                    </p>
-                    <div class="flex items-center gap-2 text-[11px] font-bold text-[#006c49] bg-white/80 p-2.5 rounded-xl border border-primary/20">
-                        <span class="material-symbols-outlined text-[16px]">verified</span>
-                        <span>Klik tombol (+) di tanggal atau klik tombol Tambah Kegiatan untuk menambahkan jadwal baru!</span>
-                    </div>
-                </div>
 
             </div>
 

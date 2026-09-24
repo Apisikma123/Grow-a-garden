@@ -52,7 +52,6 @@
                     ['route' => 'gardens', 'label' => 'Kebun Saya', 'icon' => 'potted_plant', 'url' => '/gardens'],
                     ['route' => 'growth-calendar', 'label' => 'Kalender Tanam', 'icon' => 'calendar_month', 'url' => '/growth-calendar'],
                     ['route' => 'care-tasks', 'label' => 'Tugas Perawatan', 'icon' => 'water_drop', 'url' => '/care-tasks'],
-                    ['route' => 'activity-log', 'label' => 'Activity Log', 'icon' => 'history', 'url' => '/activity-log'],
                 ];
                 $currentRoute = request()->path();
             @endphp
@@ -189,7 +188,6 @@
             ['route' => 'gardens', 'label' => 'Kebun', 'icon' => 'potted_plant', 'url' => '/gardens'],
             ['route' => 'growth-calendar', 'label' => 'Kalender', 'icon' => 'event_note', 'url' => '/growth-calendar'],
             ['route' => 'care-tasks', 'label' => 'Tugas', 'icon' => 'checklist', 'url' => '/care-tasks'],
-            ['route' => 'activity-log', 'label' => 'Riwayat', 'icon' => 'history', 'url' => '/activity-log'],
         ];
     @endphp
 
