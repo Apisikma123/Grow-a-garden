@@ -158,7 +158,6 @@
                     </div>
 
                     <div class="flex justify-end gap-3 pt-4">
-                        <button type="button" onclick="document.getElementById('create-badge-modal').classList.add('hidden')" class="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-100">Batal</button>
                         <button type="submit" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-[#006c49] hover:bg-[#005236]">Simpan Badge</button>
                     </div>
                 </form>
@@ -220,7 +219,6 @@
                     </div>
 
                     <div class="flex justify-end gap-3 pt-4">
-                        <button type="button" onclick="document.getElementById('edit-badge-modal').classList.add('hidden')" class="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-100">Batal</button>
                         <button type="submit" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-[#006c49] hover:bg-[#005236]">Perbarui Badge</button>
                     </div>
                 </form>

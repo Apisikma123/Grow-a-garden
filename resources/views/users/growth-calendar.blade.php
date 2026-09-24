@@ -813,7 +813,6 @@
                     </div>
                     
                     <div class="flex gap-3 justify-end">
-                        <button type="button" onclick="document.getElementById('edit-jadwal-modal').classList.add('hidden')" class="px-5 py-2 rounded-full font-bold text-sm text-on-surface-variant hover:bg-surface-container-high transition-colors">Batal</button>
                         <button type="submit" class="px-5 py-2 rounded-full font-bold text-sm bg-primary text-white shadow-sm hover:bg-[#005236] transition-colors">Simpan Perubahan</button>
                     </div>
                 </form>

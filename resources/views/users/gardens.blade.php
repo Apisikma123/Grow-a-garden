@@ -308,9 +308,6 @@
                         </div>
                     </div>
                     <div class="flex items-center justify-end gap-3 pt-2 w-full">
-                        <button type="button" onclick="GardenApp.closeAddGardenModal()" class="px-5 py-2.5 rounded-full text-[14px] font-bold text-on-surface-variant hover:bg-surface-container-high transition-colors cursor-pointer">
-                            Batal
-                        </button>
                         <button type="submit" id="add-garden-submit" class="bg-primary text-on-primary font-bold text-[14px] px-6 py-2.5 rounded-full hover:bg-primary/90 active:scale-95 transition-all shadow-sm cursor-pointer">
                             Buat Kebun
                         </button>
@@ -370,9 +367,6 @@
                         </div>
                     </div>
                     <div class="flex items-center justify-end gap-3 pt-2 w-full">
-                        <button type="button" onclick="GardenApp.closeEditGardenModal()" class="px-5 py-2.5 rounded-full text-[14px] font-bold text-on-surface-variant hover:bg-surface-container-high transition-colors cursor-pointer">
-                            Batal
-                        </button>
                         <button type="submit" id="edit-garden-submit" class="bg-primary text-on-primary font-bold text-[14px] px-6 py-2.5 rounded-full hover:bg-primary/90 active:scale-95 transition-all shadow-sm cursor-pointer">
                             Simpan Perubahan
                         </button>
@@ -439,9 +433,6 @@
 
                             {{-- Actions --}}
                             <div class="flex items-center gap-2 shrink-0">
-                                <button type="button" onclick="GardenApp.closeAddPlantModal()" class="px-4 py-2 rounded-full text-[13px] font-bold text-on-surface-variant hover:bg-surface-container-high transition-colors whitespace-nowrap shrink-0">
-                                    Batal
-                                </button>
                                 <button type="submit" id="add-plant-submit" disabled class="bg-primary text-on-primary font-bold text-[13px] px-6 py-2 rounded-full hover:bg-primary/90 active:scale-95 transition-all shadow-xs disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap shrink-0">
                                     Tanam
                                 </button>

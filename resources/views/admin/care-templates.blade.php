@@ -262,7 +262,6 @@
                 </form>
             </div>
             <div class="pt-4 border-t border-outline-variant/20 flex justify-end gap-3 w-full">
-                <button onclick="closeCareModal()" class="px-5 py-2.5 rounded-xl font-bold text-on-surface-variant hover:bg-surface-container-highest transition-colors text-sm">Batal</button>
                 <button onclick="saveCareRules()" class="px-5 py-2.5 rounded-xl bg-[#006c49] text-white font-bold hover:bg-[#005c3a] transition-colors text-sm shadow-sm">Simpan</button>
             </div>
         </div>
