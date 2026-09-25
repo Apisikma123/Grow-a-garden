@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Pelajari Sistem Cerdas — Grow a Garden')
+@section('title', 'Cara Kerja — Grow a Garden')
 @section('description', 'Jelajahi bagaimana Grow a Garden menggunakan rule engine cerdas, template pertumbuhan otomatis, dan adaptasi cuaca untuk merawat kebun Anda secara autopilot.')
 
 @push('head')
@@ -161,16 +161,6 @@
     text-transform: uppercase;
     margin-top: 24px;
 }
-.scroll-cue-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: #006c49;
-    animation: scrollPulse 2s ease-in-out infinite;
-}
-@keyframes scrollPulse {
-    0%,100%{ transform: translateY(0); opacity: .4; }
-    50%{ transform: translateY(10px); opacity: 1; }
-}
 
 /* CTA Button */
 .cta-btn {
@@ -201,7 +191,6 @@
 
 @media (prefers-reduced-motion: reduce) {
     .holo { animation: none !important; }
-    .scroll-cue-dot { animation: none !important; }
     #hero-sequence { transition: none !important; opacity: 1 !important; }
     .s-panel { transition-duration: 0.01ms !important; opacity: 1 !important; transform: none !important; }
 }
@@ -249,10 +238,9 @@
     <div class="content-wrap">
         <section class="s-block" id="s-intro" style="min-height: 140vh; padding-top: 20vh;">
         <div class="s-panel" data-panel="intro">
-            <div class="s-chip"><span class="material-symbols-outlined" style="font-size:16px;">auto_awesome</span> Sistem Cerdas</div>
             <h1>Berkebun di era digital.<br>Lebih cerdas, <span class="holo">lebih presisi.</span></h1>
             <p>Grow a Garden adalah asisten kebun pintar Anda — tanpa sensor IoT. Dirancang dengan keanggunan modern untuk pekebun rumahan, urban farming, hidroponik, hingga sekolah.</p>
-            <div class="scroll-cue"><span>Scroll untuk menjelajahi</span><div class="scroll-cue-dot"></div></div>
+            <div class="scroll-cue"><span>Scroll untuk menjelajahi</span></div>
         </div>
     </section>
 
