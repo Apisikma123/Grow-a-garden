@@ -400,5 +400,11 @@ html {
     word-break: normal;
 }
 
+/* Enforce lowercase ligatures for Google Material Symbols against uppercase parents */
+.material-symbols-outlined {
+    text-transform: none !important;
+}
+
+
 
 

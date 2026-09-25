@@ -201,8 +201,8 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap-1 shrink-0">
-                                <span class="w-6 h-6 rounded-full bg-[#e6f4ea] text-[#006c49] flex items-center justify-center text-[12px] font-bold">✓</span>
-                                <span class="w-6 h-6 rounded-full bg-[#ffdad6] text-[#ba1a1a] flex items-center justify-center text-[12px] font-bold">✕</span>
+                                <span class="w-6 h-6 rounded-full bg-[#e6f4ea] text-[#006c49] flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[13px] font-bold">check</span></span>
+                                <span class="w-6 h-6 rounded-full bg-[#ffdad6] text-[#ba1a1a] flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[13px] font-bold">close</span></span>
                             </div>
                         </div>
 
@@ -218,8 +218,8 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap-1 shrink-0">
-                                <span class="w-6 h-6 rounded-full bg-[#e6f4ea] text-[#006c49] flex items-center justify-center text-[12px] font-bold">✓</span>
-                                <span class="w-6 h-6 rounded-full bg-[#ffdad6] text-[#ba1a1a] flex items-center justify-center text-[12px] font-bold">✕</span>
+                                <span class="w-6 h-6 rounded-full bg-[#e6f4ea] text-[#006c49] flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[13px] font-bold">check</span></span>
+                                <span class="w-6 h-6 rounded-full bg-[#ffdad6] text-[#ba1a1a] flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[13px] font-bold">close</span></span>
                             </div>
                         </div>
 
@@ -235,8 +235,8 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap-1 shrink-0">
-                                <span class="w-6 h-6 rounded-full bg-[#e6f4ea] text-[#006c49] flex items-center justify-center text-[12px] font-bold">✓</span>
-                                <span class="w-6 h-6 rounded-full bg-[#ffdad6] text-[#ba1a1a] flex items-center justify-center text-[12px] font-bold">✕</span>
+                                <span class="w-6 h-6 rounded-full bg-[#e6f4ea] text-[#006c49] flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[13px] font-bold">check</span></span>
+                                <span class="w-6 h-6 rounded-full bg-[#ffdad6] text-[#ba1a1a] flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[13px] font-bold">close</span></span>
                             </div>
                         </div>
                     </div>
@@ -265,8 +265,8 @@
                                 <span class="bg-primary/10 text-primary text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase">Bayam</span>
                             </div>
                             <div class="flex items-center gap-1 text-[10px] text-on-surface-variant font-bold">
-                                <span class="w-4 h-4 rounded bg-white border border-outline-variant/40 flex items-center justify-center text-[9px]">‹</span>
-                                <span class="w-4 h-4 rounded bg-white border border-outline-variant/40 flex items-center justify-center text-[9px]">›</span>
+                                <span class="w-4 h-4 rounded bg-white border border-outline-variant/40 flex items-center justify-center text-on-surface-variant"><span class="material-symbols-outlined text-[12px]">chevron_left</span></span>
+                                <span class="w-4 h-4 rounded bg-white border border-outline-variant/40 flex items-center justify-center text-on-surface-variant"><span class="material-symbols-outlined text-[12px]">chevron_right</span></span>
                             </div>
                         </div>
 
@@ -281,7 +281,7 @@
                             {{-- Day 14 (Hari Ini) --}}
                             <div class="p-1 rounded-lg border border-primary bg-primary/10 text-center font-black text-primary ring-1 ring-primary/40 relative shadow-2xs">
                                 <span>14</span>
-                                <span class="block w-1.5 h-1.5 rounded-full bg-cyan-500 mx-auto mt-0.5"></span>
+                                <span class="block w-1.5 h-1.5 rounded-full bg-primary mx-auto mt-0.5"></span>
                             </div>
                             {{-- Day 15 --}}
                             <div class="p-1 rounded-lg border border-outline-variant/30 bg-white text-center font-bold text-slate-700">15</div>
@@ -303,8 +303,8 @@
                         {{-- Active Task Info Box --}}
                         <div class="bg-white rounded-xl p-2.5 border border-primary/25 flex items-center justify-between gap-2 shadow-2xs">
                             <div class="flex items-center gap-2 min-w-0">
-                                <div class="w-6 h-6 rounded-lg bg-cyan-50 text-cyan-700 flex items-center justify-center text-[12px] shrink-0">
-                                    💧
+                                <div class="w-6 h-6 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                                    <span class="material-symbols-outlined text-[14px]">water_drop</span>
                                 </div>
                                 <div class="min-w-0">
                                     <p class="text-[11px] font-black text-on-surface truncate leading-tight">Penyiraman & Perawatan</p>

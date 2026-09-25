@@ -105,6 +105,9 @@
     border: 1px solid rgba(0, 108, 73, 0.15);
     margin-bottom: 16px;
 }
+.s-chip .material-symbols-outlined {
+    text-transform: none !important;
+}
 .s-panel h1 {
     font-size: clamp(32px, 5vw, 54px);
     font-weight: 800;
@@ -130,22 +133,6 @@
     word-break: normal;
     font-weight: 400;
 }
-.s-panel .s-metric {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 14px;
-    border-radius: 12px;
-    background: rgba(0, 108, 73, 0.05);
-    border: 1px solid rgba(0, 108, 73, 0.1);
-    font-size: 13px;
-    color: #374151;
-    margin-bottom: 6px;
-    font-weight: 500;
-}
-.s-metric b { color: #006c49; font-size: 18px; font-weight: 800; }
-.s-metric.drought b { color: #d97706; } 
-.s-metric.drought { background: rgba(217, 119, 6, 0.05); border-color: rgba(217, 119, 6, 0.1); }
 
 /* Holographic Text */
 .holo {
@@ -295,13 +282,9 @@
 
     <section class="s-block" id="s-weather" style="min-height: 150vh;">
         <div class="s-panel" data-panel="weather">
-            <div class="s-chip"><span class="material-symbols-outlined" style="font-size:16px;">thunderstorm</span> Adaptasi Cuaca</div>
+            <div class="s-chip"><span class="material-symbols-outlined" style="font-size:16px;">partly_cloudy_day</span> Langkah 4 — Adaptasi Cuaca</div>
             <h2>Sistem yang Membaca Cuaca untuk Anda</h2>
-            <p>Terhubung data cuaca lokal. Sistem otomatis menyesuaikan jadwal perawatan berdasarkan kondisi lingkungan kebun Anda setiap harinya.</p>
-            <div style="display:flex;flex-wrap:wrap;gap:10px;">
-                <div class="s-metric"><span class="material-symbols-outlined" style="font-size:18px;color:#0ea5e9;">water_drop</span> Hujan → Siram <b>-30%</b></div>
-                <div class="s-metric drought"><span class="material-symbols-outlined" style="font-size:18px;color:#d97706;">wb_sunny</span> Kemarau → Siram <b>+50%</b></div>
-            </div>
+            <p>Terhubung langsung dengan data cuaca lokal. Jadwal dan takaran penyiraman otomatis disesuaikan saat hari hujan lebat maupun kemarau terik demi menjaga kelembapan ideal kebun Anda.</p>
         </div>
     </section>
 
