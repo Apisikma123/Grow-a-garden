@@ -118,7 +118,7 @@ Prioritas:
 
 ---
 
-## 6. Activity Log
+## 6. Care Tasks (Tugas Perawatan)
 
 Input:
 
@@ -401,7 +401,7 @@ Tampilkan reminder
 
 ✅ Care Reminder
 
-✅ Activity Log
+✅ Care Tasks (Tugas Perawatan)
 
 ✅ Plant Master
 

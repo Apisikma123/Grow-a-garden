@@ -276,7 +276,7 @@
         <div class="s-panel s-panel--right" data-panel="water">
             <div class="s-chip"><span class="material-symbols-outlined" style="font-size:16px;">water_drop</span> Langkah 3 — Perawatan Presisi</div>
             <h2>Penyiraman yang Tepat Waktu & Tepat Takaran</h2>
-            <p>Jadwal perawatan harian dihasilkan otomatis dari template. Setiap tugas — penyiraman, pemupukan, pemangkasan — tercatat rapi di Activity Log Anda.</p>
+            <p>Jadwal perawatan harian dihasilkan otomatis dari template. Setiap tugas — penyiraman, pemupukan, pemangkasan — tercatat rapi di Tugas Perawatan Anda.</p>
         </div>
     </section>
 

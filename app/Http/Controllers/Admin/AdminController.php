@@ -467,27 +467,6 @@ class AdminController extends Controller
         return response()->json(['success' => true, 'logs' => $logs]);
     }
 
-    public function activityLogs()
-    {
-        $events = \App\Models\Event::with(['plant.garden.user', 'eventType'])
-            ->orderBy('updated_at', 'desc')
-            ->take(25)
-            ->get()
-            ->map(function($e) {
-                $userName = $e->plant->garden->user->name ?? 'Pengguna';
-                $plantName = $e->plant->plantTemplate->name_id ?? 'Tanaman';
-                $typeName = $e->eventType->name_id ?? $e->eventType->name ?? 'Perawatan';
-                return [
-                    'timestamp' => $e->updated_at ? $e->updated_at->format('d M Y, H:i') : now()->format('d M Y, H:i'),
-                    'user' => $userName,
-                    'action' => "{$typeName} untuk {$plantName}",
-                    'status' => $e->status
-                ];
-            });
-
-        return response()->json(['success' => true, 'logs' => $events]);
-    }
-
     public function loginLogs()
     {
         $users = User::select('id', 'name', 'email', 'role', 'updated_at', 'created_at')

@@ -362,8 +362,7 @@ window.Alert = {
                 { icon: 'all_inclusive', title: 'Kapasitas Maksimal', desc: 'Maksimal 100 Kebun & Tanaman Tanpa Batas.' },
                 { icon: 'calendar_month', title: 'Growth Calendar', desc: 'Jadwal estimasi tanam hingga panen interaktif.' },
                 { icon: 'cloud_done', title: 'Weather Adjustment', desc: 'Anti gagal panen karena cuaca ekstrem.' },
-                { icon: 'emoji_events', title: 'Harvest Notification', desc: 'Notifikasi panen di dashboard.' },
-                { icon: 'history', title: 'Activity Log Tanpa Batas', desc: 'Tracking historis tanpa batas sepanjang masa.' }
+                { icon: 'emoji_events', title: 'Harvest Notification', desc: 'Notifikasi panen di dashboard.' }
             ] : [
                 { icon: 'yard', title: 'Kapasitas Ekstra', desc: 'Maksimal 10 Kebun & 100 Tanaman Aktif.' },
                 { icon: 'calendar_month', title: 'Growth Calendar', desc: 'Jadwal estimasi tanam hingga panen interaktif.' },

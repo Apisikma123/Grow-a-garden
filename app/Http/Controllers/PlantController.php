@@ -149,7 +149,7 @@ class PlantController extends Controller
             'stage' => 'HARVEST',
         ]);
 
-        // Cari tipe event HARVEST_READY jika ada, kalau tidak ya buat activity log dummy
+        // Cari tipe event HARVEST_READY jika ada, buat event panen berstatus COMPLETED
         $harvestEventType = \App\Models\EventType::where('code', 'HARVEST_READY')->first();
         if ($harvestEventType) {
             \App\Models\Event::create([

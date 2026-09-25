@@ -101,13 +101,4 @@ class User extends Authenticatable
         // All users can use weather adjustment
         return true;
     }
-
-    /**
-     * Whether this user has unlimited activity log.
-     */
-    public function hasUnlimitedActivityLog(): bool
-    {
-        // All users get unlimited activity log
-        return true;
-    }
 }

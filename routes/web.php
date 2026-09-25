@@ -222,7 +222,7 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::patch('/care-tasks/{event}/complete', [\App\Http\Controllers\CareTaskController::class, 'complete'])->name('care-tasks.complete');
     Route::patch('/care-tasks/{event}/skip', [\App\Http\Controllers\CareTaskController::class, 'skip'])->name('care-tasks.skip');
 
-    Route::redirect('/activity-log', '/care-tasks')->name('activity-log');
+    Route::redirect('/activity-log', '/care-tasks');
 
     Route::get('/settings', [\App\Http\Controllers\SettingsController::class, 'index'])->name('settings');
     Route::get('/badges', [\App\Http\Controllers\BadgeController::class, 'index'])->name('badges');
@@ -301,7 +301,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 
     Route::get('/settings', [\App\Http\Controllers\Admin\AdminController::class, 'settings'])->name('admin.settings');
     Route::get('/settings/error-logs', [\App\Http\Controllers\Admin\AdminController::class, 'errorLogs']);
-    Route::get('/settings/activity-logs', [\App\Http\Controllers\Admin\AdminController::class, 'activityLogs']);
     Route::get('/settings/login-logs', [\App\Http\Controllers\Admin\AdminController::class, 'loginLogs']);
     Route::post('/settings/clear-error-logs', [\App\Http\Controllers\Admin\AdminController::class, 'clearErrorLogs']);
     
