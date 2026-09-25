@@ -146,10 +146,6 @@
                             <p class="text-sm font-semibold text-on-surface">Air Cukup</p>
                         </div>
                     </div>
-
-                    {{-- Map Dots --}}
-                    <div class="absolute top-1/3 left-1/3 w-3 h-3 bg-primary-container rounded-full ring-2 ring-white/60 animate-pulse"></div>
-                    <div class="absolute top-2/3 right-1/3 w-3 h-3 bg-primary-container rounded-full ring-2 ring-white/60 animate-pulse" style="animation-delay: 0.5s;"></div>
                 </div>
             </div>
         </div>
