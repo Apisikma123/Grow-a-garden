@@ -188,43 +188,43 @@ class WeatherService
             $title = 'Hujan Ringan';
             $icon = 'rainy';
             $badgeBg = 'bg-sky-100 text-sky-900 border border-sky-300';
-            $summary = "Hujan ringan terdeteksi (Peluang hujan {$rainProb}%). Penyiraman dapat dilewati atau dikurangi.";
+            $summary = "Hujan ringan terdeteksi di sekitar kebun (Peluang {$rainProb}%).";
         } elseif (in_array($code, [51, 53, 55, 56, 57])) {
             $conditionCategory = 'DRIZZLE';
             $title = 'Gerimis';
             $icon = 'water_drop';
             $badgeBg = 'bg-sky-100 text-sky-800 border border-sky-200';
-            $summary = "Gerimis terdeteksi di sekitar kebun. Kurangi volume air penyiraman.";
+            $summary = "Gerimis terdeteksi di sekitar area kebun.";
         } elseif (in_array($code, [45, 48])) {
             $conditionCategory = 'FOG';
             $title = 'Berkabut';
             $icon = 'foggy';
             $badgeBg = 'bg-stone-100 text-stone-800 border border-stone-200';
-            $summary = "Kondisi berkabut saat ini. Kelembapan udara tinggi, pertimbangkan pengurangan penyiraman.";
+            $summary = "Kondisi berkabut di sekitar kebun. Kelembapan udara meningkat.";
         } elseif ($code === 3 || $cloud >= 80) {
             $conditionCategory = 'OVERCAST';
             $title = 'Mendung';
             $icon = 'cloud';
             $badgeBg = 'bg-slate-200 text-slate-900 border border-slate-300';
-            $summary = "Langit mendung berawan tebal. Kelembapan tanah terawat, siram secukupnya.";
+            $summary = "Langit mendung berawan tebal di sekitar kebun.";
         } elseif ($code === 2 || ($cloud >= 40 && $cloud < 80)) {
             $conditionCategory = 'CLOUDY';
             $title = 'Berawan';
             $icon = 'cloud';
             $badgeBg = 'bg-slate-100 text-slate-800 border border-slate-200';
-            $summary = "Cuaca berawan saat ini. Kelembapan tanah stabil & sejuk, waktu ideal untuk perawatan harian.";
+            $summary = "Cuaca berawan dan sejuk di sekitar kebun saat ini.";
         } elseif ($temp >= 33 && $code <= 1) {
             $conditionCategory = 'VERY_HOT';
             $title = 'Sangat Panas';
             $icon = 'wb_sunny';
             $badgeBg = 'bg-amber-100 text-amber-900 border border-amber-300';
-            $summary = "Cuaca terik sangat panas dengan suhu {$temp}°C. Risiko penguapan tinggi, lakukan penyiraman ekstra.";
+            $summary = "Cuaca terik sangat panas ({$temp}°C) di sekitar kebun.";
         } else {
             $conditionCategory = 'PARTLY_CLOUDY';
             $title = 'Cerah Berawan';
             $icon = 'partly_cloudy_day';
             $badgeBg = 'bg-emerald-100 text-emerald-800 border border-emerald-200';
-            $summary = 'Cuaca sejuk & sinar matahari cukup. Kondisi ideal untuk pertumbuhan tanaman.';
+            $summary = 'Cuaca sejuk & sinar matahari cukup di kebun.';
         }
 
         // Priority Evaluation Chain for Smart Irrigation
@@ -250,16 +250,22 @@ class WeatherService
         elseif ($hadRecentStorm || $past24hPrecip >= 5.0 || $hasRecentRain) {
             $decision = 'SKIP';
             $waterStatus = 'RAINED';
-            $stormDetail = $hadRecentStorm ? "Terjadi badai/hujan lebat dalam 24 jam terakhir" : "Akumulasi curah hujan {$past24hPrecip} mm dalam 24 jam terakhir";
+            if ($hadRecentStorm) {
+                $stormDetail = "Terjadi badai/hujan lebat sebelumnya";
+            } elseif ($past24hPrecip > 0) {
+                $stormDetail = "Akumulasi curah hujan {$past24hPrecip} mm dalam 24 jam terakhir";
+            } else {
+                $stormDetail = "Tercatat riwayat hujan hari ini";
+            }
             
             if ($temp >= 32) {
-                $advice = "{$stormDetail} dan cuaca saat ini terik panas ({$temp}°C). Lapisan tanah bawah masih basah—HINDARI menyiram di siang terik agar akar tidak melepuh/terkukus. Cukup cek kembali kelembapan di sore hari (16.00–18.00).";
-                $warning = "HINDARI MENYIRAM DI SIANG TERIK ({$temp}°C)! Tanah masih basah akibat badai semalam. Menyiram saat matahari panas terik akan merebus akar (root scalding) dan membuat tanaman layu mendadak.";
-                $badge = 'Lewati (Pasca Badai + Siang Terik)';
+                $advice = "{$stormDetail} dan cuaca saat ini terik ({$temp}°C). Lapisan tanah bawah masih basah—hindari menyiram di siang terik agar akar tidak stres/terkukus. Cukup cek kembali kelembapan di sore hari (16.00–18.00).";
+                $warning = "Hindari menyiram di siang terik ({$temp}°C). Lapisan tanah masih basah pasca hujan. Menyiram saat matahari panas terik dapat merebus akar (root scalding).";
+                $badge = 'Lewati (Siang Terik)';
             } else {
                 $advice = "{$stormDetail}. Tanah masih sangat lembap & jenuh air, sehingga penyiraman sesi ini dilewati untuk mencegah pembusukan akar.";
-                $warning = "Tanah masih jenuh air pasca hujan/badai semalam. Lewati sesi penyiraman ini untuk mencegah pembusukan akar.";
-                $badge = 'Penyiraman Dilewati (Pasca Hujan/Badai)';
+                $warning = "Tanah masih jenuh air pasca hujan. Lewati sesi penyiraman ini untuk mencegah pembusukan akar.";
+                $badge = 'Lewati (Pasca Hujan)';
             }
 
             $watering = [

@@ -7,7 +7,7 @@
     <div class="flex flex-col gap-6 pb-10 w-full overflow-x-hidden">
         
         {{-- Header Section --}}
-        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 w-full">
+        <div class="flex flex-col lg:flex-row justify-between items-start gap-6 w-full">
             <div class="w-full lg:w-auto min-w-0">
                 @php
                     $hour = now()->format('H');
@@ -29,7 +29,7 @@
             </div>
             
             {{-- Weather Widget (Dynamic - Premium Card Style) --}}
-            <div id="weather-widget" class="bg-white rounded-3xl p-5 sm:p-6 md:p-8 ambient-shadow max-w-[480px] w-full transition-all duration-500 shrink-0 border border-outline-variant/20">
+            <div id="weather-widget" class="bg-white rounded-3xl p-5 sm:p-6 ambient-shadow max-w-[480px] w-full transition-all duration-300 shrink-0 border border-outline-variant/20">
                 
                 {{-- Default: Ask Location State --}}
                 <div id="weather-ask" class="flex flex-col gap-4">
@@ -59,48 +59,70 @@
 
                 {{-- Active Weather State --}}
                 <div id="weather-active" class="hidden flex flex-col w-full min-w-0">
-                    {{-- Card Header --}}
-                    <div class="flex items-center justify-between mb-5 gap-2">
-                        <div class="flex items-center gap-2 sm:gap-2.5 min-w-0">
-                            <span class="material-symbols-outlined text-on-surface-variant shrink-0" style="font-size: 22px;" id="weather-icon-main">partly_cloudy_day</span>
-                            <span class="text-xs sm:text-sm font-bold text-on-surface truncate min-w-0" id="weather-title">Prediksi Cuaca: Hujan</span>
+                    {{-- Card Header: Weather Title, Badge, & Location --}}
+                    <div class="flex items-start justify-between gap-3 mb-3.5">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="w-10 h-10 rounded-2xl bg-surface-container-high text-primary flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-[24px]" id="weather-icon-main">partly_cloudy_day</span>
+                            </div>
+                            <div class="min-w-0">
+                                <h2 class="text-xs sm:text-sm font-bold text-on-surface truncate" id="weather-title">Cuaca: Cerah Berawan</h2>
+                                <div class="flex items-center gap-1 text-[11px] text-on-surface-variant/80 min-w-0 mt-0.5">
+                                    <span class="material-symbols-outlined text-[13px] shrink-0 text-primary">location_on</span>
+                                    <span id="weather-location" class="truncate">Lokasi Kebun</span>
+                                </div>
+                            </div>
                         </div>
-                        <span class="text-[10px] sm:text-[11px] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap shrink-0" id="weather-badge">Hujan Ringan</span>
+                        <span class="text-[10px] sm:text-[11px] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap shrink-0 border" id="weather-badge">29°C • Cerah</span>
                     </div>
 
                     {{-- Card Body: Adaptasi Pintar Box --}}
-                    <div id="adaptasi-card" class="bg-surface-container-low rounded-xl p-4 transition-all duration-300">
-                        <div class="min-w-0 w-full">
-                            <div class="flex items-center gap-1.5 text-[11px] font-bold text-primary uppercase tracking-wider mb-1">
-                                <span class="material-symbols-outlined text-[14px]">auto_awesome</span> Adaptasi Pintar
+                    <div id="adaptasi-card" class="bg-surface-container-low rounded-2xl p-3.5 sm:p-4 transition-all duration-300 border border-outline-variant/15 flex flex-col gap-2.5">
+                        {{-- Top bar inside Adaptasi Pintar --}}
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-1.5 text-[11px] font-extrabold text-primary uppercase tracking-wider">
+                                <span class="material-symbols-outlined text-[15px]">auto_awesome</span>
+                                <span>Adaptasi Pintar</span>
                             </div>
+                            <button type="button" onclick="window.toggleAdaptasiPintar(true)" class="flex items-center gap-1 text-[11px] font-semibold text-on-surface-variant/70 hover:text-primary transition-colors cursor-pointer py-0.5 px-2 rounded-lg hover:bg-white/80 group" title="Sembunyikan Adaptasi Pintar" aria-label="Sembunyikan Adaptasi Pintar">
+                                <span class="text-[11px]">Sembunyikan</span>
+                                <span class="material-symbols-outlined text-[16px] transition-transform duration-200 group-hover:-translate-y-0.5">keyboard_arrow_up</span>
+                            </button>
+                        </div>
 
-                            <p class="text-[12px] sm:text-[13px] text-on-surface-variant leading-relaxed mb-3 break-words" id="weather-desc">
-                                Jadwal penyiraman otomatis ditunda hari ini karena curah hujan yang cukup.
+                        {{-- Action & Recommendation Card --}}
+                        <div class="bg-white/90 rounded-xl p-3 border border-outline-variant/20 shadow-xs flex flex-col gap-1">
+                            <div class="flex items-center justify-between gap-2 flex-wrap mb-0.5">
+                                <span class="text-[10px] font-extrabold text-primary uppercase tracking-wider">Rekomendasi Hari Ini</span>
+                                <span id="weather-action-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">Normal</span>
+                            </div>
+                            <div class="text-[13px] font-bold text-on-surface leading-snug" id="weather-action-title">
+                                Penyiraman Normal
+                            </div>
+                            <p class="text-[11px] sm:text-[12px] text-on-surface-variant leading-relaxed break-words" id="weather-desc">
+                                Kondisi cuaca ideal. Lakukan penyiraman normal sesuai jadwal tetap harian.
                             </p>
-                            <div class="flex items-center gap-1.5 text-[11px] text-on-surface-variant/80 border-t border-outline-variant/30 pt-3 min-w-0">
-                                <span class="material-symbols-outlined text-[14px] shrink-0">location_on</span>
-                                <span id="weather-location" class="truncate">Lokasi</span>
-                            </div>
+                        </div>
 
-                            {{-- Bottom Arrow Button to Close Adaptasi Pintar --}}
-                            <div class="flex justify-center pt-2.5 -mb-1 border-t border-outline-variant/20 mt-3">
-                                <button type="button" onclick="window.toggleAdaptasiPintar(true)" class="flex items-center gap-1 text-[11px] font-bold text-on-surface-variant/70 hover:text-primary transition-colors cursor-pointer py-1 px-3 rounded-full hover:bg-white/60 group" title="" aria-label="Tutup Adaptasi Pintar">
-                                    <span> </span>
-                                    <span class="material-symbols-outlined text-[18px] transition-transform duration-200 group-hover:-translate-y-0.5">keyboard_arrow_up</span>
-                                </button>
+                        {{-- Additional Agronomic Warning (if any) --}}
+                        <div id="weather-warning-box" class="hidden bg-secondary/5 border border-secondary/20 rounded-xl p-2.5 flex items-start gap-2 text-[11px]">
+                            <span class="material-symbols-outlined text-[16px] text-secondary shrink-0 mt-0.5">info</span>
+                            <div class="min-w-0">
+                                <span class="font-bold text-secondary block mb-0.5">Catatan Perawatan</span>
+                                <p class="text-on-surface-variant leading-relaxed break-words" id="weather-warning-text"></p>
                             </div>
                         </div>
                     </div>
 
                     {{-- Re-open Button (Shown when Adaptasi Pintar is closed) --}}
-                    <div id="adaptasi-reopen-bar" class="hidden pt-1">
-                        <button type="button" onclick="window.toggleAdaptasiPintar(false)" class="w-full flex items-center justify-between px-4 py-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container text-xs font-bold text-primary transition-all cursor-pointer group border border-outline-variant/20" title="Buka Adaptasi Pintar">
-                            <span class="flex items-center gap-1.5">
-                                <span class="material-symbols-outlined text-[15px]">auto_awesome</span>
-                                <span>Adaptasi Pintar Aktif</span>
+                    <div id="adaptasi-reopen-bar" class="hidden pt-0.5">
+                        <button type="button" onclick="window.toggleAdaptasiPintar(false)" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container text-xs font-bold text-primary transition-all cursor-pointer group border border-outline-variant/20" title="Buka Adaptasi Pintar">
+                            <span class="flex items-center gap-1.5 min-w-0">
+                                <span class="material-symbols-outlined text-[15px] shrink-0">auto_awesome</span>
+                                <span class="truncate">Adaptasi Pintar Aktif</span>
+                                <span id="weather-collapsed-badge" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary shrink-0 ml-1"></span>
                             </span>
-                            <span class="material-symbols-outlined text-[20px] transition-transform duration-200 group-hover:translate-y-0.5 text-on-surface-variant/70">keyboard_arrow_down</span>
+                            <span class="material-symbols-outlined text-[18px] transition-transform duration-200 group-hover:translate-y-0.5 text-on-surface-variant/70 shrink-0">keyboard_arrow_down</span>
                         </button>
                     </div>
                 </div>
@@ -395,8 +417,8 @@ function initDashboard() {
                     icons: ['sunny', 'wb_sunny'],
                     title: 'Cuaca: Kemarau',
                     badge: 'Suhu Tinggi',
-                    badgeBg: 'bg-orange-100',
-                    badgeText: 'text-orange-800',
+                    badgeBg: 'bg-secondary/15',
+                    badgeText: 'text-secondary font-bold',
                     desc: 'Frekuensi penyiraman ditambah 50% untuk mengkompensasi penguapan tinggi.',
                     modifier: '+50%',
                     color: '#944a23'
@@ -479,12 +501,46 @@ function initDashboard() {
 
                     document.getElementById('weather-icon-main').textContent = agro.icon || 'partly_cloudy_day';
                     document.getElementById('weather-title').textContent = `Cuaca: ${agro.condition_title || 'Cerah Berawan'}`;
-                    document.getElementById('weather-desc').textContent = `${agro.summary} ${agro.watering ? agro.watering.advice : ''}`;
                     document.getElementById('weather-location').textContent = locName;
 
                     const badgeElem = document.getElementById('weather-badge');
                     badgeElem.textContent = `${agro.condition_title} (${temp}°C)`;
                     badgeElem.className = `text-[10px] sm:text-[11px] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap ${agro.badge_bg}`;
+
+                    // Populate Structured Adaptasi Pintar Card
+                    const actionTitle = agro.watering?.title || 'Penyiraman Normal';
+                    const actionBadge = agro.watering?.badge || (agro.watering?.action === 'SKIP' ? 'Lewati Siram' : 'Normal');
+                    const adviceText = agro.watering?.advice || agro.summary || 'Kondisi cuaca ideal. Lakukan penyiraman normal sesuai jadwal.';
+
+                    const titleEl = document.getElementById('weather-action-title');
+                    if (titleEl) titleEl.textContent = actionTitle;
+
+                    const badgeEl = document.getElementById('weather-action-badge');
+                    if (badgeEl) {
+                        badgeEl.textContent = actionBadge;
+                        if (agro.watering?.badge_bg) {
+                            badgeEl.className = `text-[10px] font-bold px-2 py-0.5 rounded-full ${agro.watering.badge_bg}`;
+                        }
+                    }
+
+                    const descEl = document.getElementById('weather-desc');
+                    if (descEl) descEl.textContent = adviceText;
+
+                    const collapsedBadge = document.getElementById('weather-collapsed-badge');
+                    if (collapsedBadge) {
+                        collapsedBadge.textContent = actionBadge;
+                    }
+
+                    const warningBox = document.getElementById('weather-warning-box');
+                    const warningText = document.getElementById('weather-warning-text');
+                    if (warningBox && warningText) {
+                        if (agro.watering?.warning && agro.watering.warning !== adviceText) {
+                            warningText.textContent = agro.watering.warning;
+                            warningBox.classList.remove('hidden');
+                        } else {
+                            warningBox.classList.add('hidden');
+                        }
+                    }
 
                     showWeatherState('active');
 
@@ -767,15 +823,16 @@ function initDashboard() {
         if (!card || !reopenBar) return;
 
         if (close) {
+            card.classList.add('hidden');
             card.style.display = 'none';
-            reopenBar.style.display = 'block';
             reopenBar.classList.remove('hidden');
+            reopenBar.style.display = 'block';
             try { localStorage.setItem('adaptasi_pintar_closed', '1'); } catch(e){}
         } else {
-            card.style.display = 'block';
             card.classList.remove('hidden');
-            reopenBar.style.display = 'none';
+            card.style.display = 'flex';
             reopenBar.classList.add('hidden');
+            reopenBar.style.display = 'none';
             try { localStorage.setItem('adaptasi_pintar_closed', '0'); } catch(e){}
         }
     };
