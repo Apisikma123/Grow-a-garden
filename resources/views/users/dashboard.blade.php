@@ -29,7 +29,7 @@
             </div>
             
             {{-- Weather Widget (Dynamic - Premium Card Style) --}}
-            <div id="weather-widget" class="bg-white rounded-3xl p-5 sm:p-6 ambient-shadow max-w-[480px] w-full transition-all duration-300 shrink-0 border border-outline-variant/20">
+            <div id="weather-widget" class="relative bg-white rounded-3xl p-4 sm:p-5 ambient-shadow max-w-[480px] w-full transition-all duration-300 shrink-0 border border-outline-variant/20 z-30">
                 
                 {{-- Default: Ask Location State --}}
                 <div id="weather-ask" class="flex flex-col gap-4">
@@ -60,7 +60,7 @@
                 {{-- Active Weather State --}}
                 <div id="weather-active" class="hidden flex flex-col w-full min-w-0">
                     {{-- Card Header: Weather Title, Badge, & Location --}}
-                    <div class="flex items-start justify-between gap-3 mb-3.5">
+                    <div class="flex items-start justify-between gap-3">
                         <div class="flex items-center gap-3 min-w-0">
                             <div class="w-10 h-10 rounded-2xl bg-surface-container-high text-primary flex items-center justify-center shrink-0">
                                 <span class="material-symbols-outlined text-[24px]" id="weather-icon-main">partly_cloudy_day</span>
@@ -76,54 +76,46 @@
                         <span class="text-[10px] sm:text-[11px] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap shrink-0 border" id="weather-badge">29°C • Cerah</span>
                     </div>
 
-                    {{-- Card Body: Adaptasi Pintar Box --}}
-                    <div id="adaptasi-card" class="bg-surface-container-low rounded-2xl p-3.5 sm:p-4 transition-all duration-300 border border-outline-variant/15 flex flex-col gap-2.5">
-                        {{-- Top bar inside Adaptasi Pintar --}}
-                        <div class="flex items-center justify-between gap-2">
-                            <div class="flex items-center gap-1.5 text-[11px] font-extrabold text-primary uppercase tracking-wider">
-                                <span class="material-symbols-outlined text-[15px]">auto_awesome</span>
-                                <span>Adaptasi Pintar</span>
+                    {{-- Compact Adaptasi Pintar Trigger Strip --}}
+                    <div class="relative mt-3 pt-2.5 border-t border-outline-variant/15" id="adaptasi-wrapper">
+                        <button type="button" id="adaptasi-trigger" onclick="window.toggleAdaptasiPintar(event)" class="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-surface-container-low hover:bg-surface-container text-xs font-semibold text-on-surface transition-all cursor-pointer group border border-outline-variant/20 select-none" aria-expanded="false" aria-haspopup="true">
+                            <div class="flex items-center gap-1.5 min-w-0 pointer-events-none">
+                                <span class="material-symbols-outlined text-[16px] text-primary shrink-0">auto_awesome</span>
+                                <span class="text-[11px] sm:text-xs font-bold text-primary truncate">Adaptasi Pintar:</span>
+                                <span id="weather-collapsed-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 shrink-0">Normal</span>
                             </div>
-                            <button type="button" onclick="window.toggleAdaptasiPintar(true)" class="flex items-center gap-1 text-[11px] font-semibold text-on-surface-variant/70 hover:text-primary transition-colors cursor-pointer py-0.5 px-2 rounded-lg hover:bg-white/80 group" title="Sembunyikan Adaptasi Pintar" aria-label="Sembunyikan Adaptasi Pintar">
-                                <span class="text-[11px]">Sembunyikan</span>
-                                <span class="material-symbols-outlined text-[16px] transition-transform duration-200 group-hover:-translate-y-0.5">keyboard_arrow_up</span>
-                            </button>
-                        </div>
-
-                        {{-- Action & Recommendation Card --}}
-                        <div class="bg-white/90 rounded-xl p-3 border border-outline-variant/20 shadow-xs flex flex-col gap-1">
-                            <div class="flex items-center justify-between gap-2 flex-wrap mb-0.5">
-                                <span class="text-[10px] font-extrabold text-primary uppercase tracking-wider">Rekomendasi Hari Ini</span>
-                                <span id="weather-action-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">Normal</span>
+                            <div class="flex items-center gap-1 text-[11px] text-on-surface-variant/80 group-hover:text-primary transition-colors shrink-0 pointer-events-none">
+                                <span class="text-[11px]">Detail</span>
+                                <span class="material-symbols-outlined text-[16px] transition-transform duration-200" id="adaptasi-arrow">expand_more</span>
                             </div>
-                            <div class="text-[13px] font-bold text-on-surface leading-snug" id="weather-action-title">
-                                Penyiraman Normal
-                            </div>
-                            <p class="text-[11px] sm:text-[12px] text-on-surface-variant leading-relaxed break-words" id="weather-desc">
-                                Kondisi cuaca ideal. Lakukan penyiraman normal sesuai jadwal tetap harian.
-                            </p>
-                        </div>
-
-                        {{-- Additional Agronomic Warning (if any) --}}
-                        <div id="weather-warning-box" class="hidden bg-secondary/5 border border-secondary/20 rounded-xl p-2.5 flex items-start gap-2 text-[11px]">
-                            <span class="material-symbols-outlined text-[16px] text-secondary shrink-0 mt-0.5">info</span>
-                            <div class="min-w-0">
-                                <span class="font-bold text-secondary block mb-0.5">Catatan Perawatan</span>
-                                <p class="text-on-surface-variant leading-relaxed break-words" id="weather-warning-text"></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- Re-open Button (Shown when Adaptasi Pintar is closed) --}}
-                    <div id="adaptasi-reopen-bar" class="hidden pt-0.5">
-                        <button type="button" onclick="window.toggleAdaptasiPintar(false)" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container text-xs font-bold text-primary transition-all cursor-pointer group border border-outline-variant/20" title="Buka Adaptasi Pintar">
-                            <span class="flex items-center gap-1.5 min-w-0">
-                                <span class="material-symbols-outlined text-[15px] shrink-0">auto_awesome</span>
-                                <span class="truncate">Adaptasi Pintar Aktif</span>
-                                <span id="weather-collapsed-badge" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary shrink-0 ml-1"></span>
-                            </span>
-                            <span class="material-symbols-outlined text-[18px] transition-transform duration-200 group-hover:translate-y-0.5 text-on-surface-variant/70 shrink-0">keyboard_arrow_down</span>
                         </button>
+
+                        {{-- Floating Popover Overlay (Ringkas & fokus inti saran saja) --}}
+                        <div id="adaptasi-card" class="hidden absolute top-full mt-2 left-0 right-0 z-50 bg-white/98 backdrop-blur-md rounded-2xl p-3.5 sm:p-4 shadow-xl border border-outline-variant/30 flex flex-col gap-2 transition-all duration-200" style="display: none;">
+                            {{-- Inti Rekomendasi --}}
+                            <div class="flex flex-col gap-1 w-full">
+                                <div class="text-[13px] font-bold text-on-surface leading-snug w-full break-words" id="weather-action-title">
+                                    Penyiraman Normal
+                                </div>
+                                <p class="text-[11px] sm:text-xs text-on-surface-variant leading-relaxed break-words w-full" id="weather-desc">
+                                    Kondisi cuaca ideal. Lakukan penyiraman normal sesuai jadwal tetap harian.
+                                </p>
+                            </div>
+
+                            {{-- Catatan Perawatan (Hanya muncul jika ada catatan khusus) --}}
+                            <div id="weather-warning-box" class="hidden bg-secondary/5 border border-secondary/20 rounded-xl p-2.5 flex items-start gap-2 text-[11px] w-full">
+                                <span class="material-symbols-outlined text-[15px] text-secondary shrink-0 mt-0.5">info</span>
+                                <div class="min-w-0 flex-1 w-full">
+                                    <p class="text-on-surface-variant leading-relaxed break-words w-full text-[11px]" id="weather-warning-text"></p>
+                                </div>
+                            </div>
+
+                            {{-- Compatibility placeholder for weather-action-badge --}}
+                            <span id="weather-action-badge" class="hidden"></span>
+                        </div>
+
+                        {{-- Compatibility dummy for adaptasi-reopen-bar so no legacy code fails --}}
+                        <div id="adaptasi-reopen-bar" class="hidden" style="display: none;"></div>
                     </div>
                 </div>
             </div>
@@ -351,6 +343,55 @@
 
 @push('scripts')
 <script>
+window.toggleAdaptasiPintar = function(arg) {
+    if (arg && arg.stopPropagation) {
+        arg.stopPropagation();
+    }
+    const card = document.getElementById('adaptasi-card');
+    const arrow = document.getElementById('adaptasi-arrow');
+    const trigger = document.getElementById('adaptasi-trigger');
+    if (!card) return;
+
+    if (arg === true) {
+        card.classList.add('hidden');
+        card.style.display = 'none';
+        if (arrow) arrow.style.transform = 'rotate(0deg)';
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+        return;
+    }
+    if (arg === false) {
+        card.classList.remove('hidden');
+        card.style.display = 'flex';
+        if (arrow) arrow.style.transform = 'rotate(180deg)';
+        if (trigger) trigger.setAttribute('aria-expanded', 'true');
+        return;
+    }
+
+    const isHidden = card.classList.contains('hidden') || card.style.display === 'none' || !card.style.display;
+    if (isHidden) {
+        card.classList.remove('hidden');
+        card.style.display = 'flex';
+        if (arrow) arrow.style.transform = 'rotate(180deg)';
+        if (trigger) trigger.setAttribute('aria-expanded', 'true');
+    } else {
+        card.classList.add('hidden');
+        card.style.display = 'none';
+        if (arrow) arrow.style.transform = 'rotate(0deg)';
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+    }
+};
+
+window.closeAdaptasiPopover = function() {
+    window.toggleAdaptasiPintar(true);
+};
+
+document.addEventListener('click', function(e) {
+    const wrapper = document.getElementById('adaptasi-wrapper');
+    if (wrapper && !wrapper.contains(e.target)) {
+        window.toggleAdaptasiPintar(true);
+    }
+});
+
 function initDashboard() {
     // ── Indonesian Regional Season Map ──
     const RAINY_MONTHS = {
@@ -529,6 +570,9 @@ function initDashboard() {
                     const collapsedBadge = document.getElementById('weather-collapsed-badge');
                     if (collapsedBadge) {
                         collapsedBadge.textContent = actionBadge;
+                        if (agro.watering?.badge_bg) {
+                            collapsedBadge.className = `text-[10px] font-bold px-2 py-0.5 rounded-full ${agro.watering.badge_bg} shrink-0`;
+                        }
                     }
 
                     const warningBox = document.getElementById('weather-warning-box');
@@ -815,34 +859,6 @@ function initDashboard() {
             }
         });
     }
-
-    // Global function for instant toggle with zero timing dependencies
-    window.toggleAdaptasiPintar = function(close) {
-        const card = document.getElementById('adaptasi-card');
-        const reopenBar = document.getElementById('adaptasi-reopen-bar');
-        if (!card || !reopenBar) return;
-
-        if (close) {
-            card.classList.add('hidden');
-            card.style.display = 'none';
-            reopenBar.classList.remove('hidden');
-            reopenBar.style.display = 'block';
-            try { localStorage.setItem('adaptasi_pintar_closed', '1'); } catch(e){}
-        } else {
-            card.classList.remove('hidden');
-            card.style.display = 'flex';
-            reopenBar.classList.add('hidden');
-            reopenBar.style.display = 'none';
-            try { localStorage.setItem('adaptasi_pintar_closed', '0'); } catch(e){}
-        }
-    };
-
-    // Restore saved state
-    try {
-        if (localStorage.getItem('adaptasi_pintar_closed') === '1') {
-            window.toggleAdaptasiPintar(true);
-        }
-    } catch(e){}
 }
 
 if (document.readyState === 'loading') {
