@@ -58,7 +58,6 @@
                     ['route' => 'admin.care-templates', 'label' => 'Care Template', 'icon' => 'assignment', 'url' => '/admin/care-templates'],
                     ['route' => 'admin.badges', 'label' => 'Badge', 'icon' => 'workspace_premium', 'url' => '/admin/badges'],
                     ['route' => 'admin.weather', 'label' => 'Weather Rules', 'icon' => 'partly_cloudy_day', 'url' => '/admin/weather'],
-                    ['route' => 'admin.settings', 'label' => 'Settings', 'icon' => 'settings', 'url' => '/admin/settings'],
                 ];
                 $currentRoute = request()->path();
             @endphp

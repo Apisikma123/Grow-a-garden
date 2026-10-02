@@ -33,6 +33,10 @@ class GrowthCalendarController extends Controller
 
         if ($plants->isEmpty()) {
             return view('users.growth-calendar', [
+                'gardens' => $gardens ?? collect(),
+                'selectedGarden' => null,
+                'requestedGardenId' => null,
+                'requestedPlantId' => null,
                 'plants' => collect(),
                 'mainPlant' => null,
                 'otherPlants' => collect(),
@@ -45,9 +49,20 @@ class GrowthCalendarController extends Controller
             ]);
         }
 
-        // Determine main plant
-        $mainPlantId = $request->query('plant_id');
-        $mainPlant = $mainPlantId ? $plants->firstWhere('id', $mainPlantId) : $plants->sortByDesc('created_at')->first();
+        // Determine selected garden and main plant (Per Kebun)
+        $requestedGardenId = $request->query('garden_id');
+        $requestedPlantId = $request->query('plant_id');
+
+        if ($requestedPlantId && $requestedPlantId !== 'all') {
+            $mainPlant = $plants->firstWhere('id', (int)$requestedPlantId);
+            $selectedGarden = $mainPlant ? $mainPlant->garden : $gardens->first();
+        } elseif ($requestedGardenId) {
+            $selectedGarden = $gardens->firstWhere('id', (int)$requestedGardenId) ?? $gardens->first();
+            $mainPlant = $selectedGarden ? ($selectedGarden->plants->sortByDesc('created_at')->first() ?? $plants->first()) : $plants->first();
+        } else {
+            $selectedGarden = $gardens->first();
+            $mainPlant = $selectedGarden ? ($selectedGarden->plants->sortByDesc('created_at')->first() ?? $plants->first()) : $plants->first();
+        }
 
         if (!$mainPlant) {
             $mainPlant = $plants->first();
@@ -141,6 +156,10 @@ class GrowthCalendarController extends Controller
         ];
 
         return view('users.growth-calendar', [
+            'gardens' => $gardens,
+            'selectedGarden' => $selectedGarden,
+            'requestedGardenId' => $requestedGardenId,
+            'requestedPlantId' => $requestedPlantId,
             'plants' => $plants,
             'mainPlant' => $mainPlant,
             'otherPlants' => $otherPlants,
@@ -256,12 +275,30 @@ class GrowthCalendarController extends Controller
             ->delete();
 
         $requestedPlantId = $request->query('plant_id');
+        $requestedGardenId = $request->query('garden_id');
+
         if ($requestedPlantId && $requestedPlantId !== 'all' && $plantIds->contains((int)$requestedPlantId)) {
             $targetPlantIds = [(int)$requestedPlantId];
             $selectedPlant = $plants->firstWhere('id', (int)$requestedPlantId);
+        } elseif ($requestedGardenId) {
+            $targetGarden = $gardens->firstWhere('id', (int)$requestedGardenId);
+            if ($targetGarden && $targetGarden->plants->isNotEmpty()) {
+                $targetPlantIds = $targetGarden->plants->pluck('id')->toArray();
+                $selectedPlant = $targetGarden->plants->first();
+            } else {
+                $targetPlantIds = [];
+                $selectedPlant = $plants->first();
+            }
         } else {
-            $targetPlantIds = $plantIds->toArray();
-            $selectedPlant = $plants->first();
+            // Default to the first garden (per kebun), NOT all plants across all gardens!
+            $targetGarden = $gardens->first();
+            if ($targetGarden && $targetGarden->plants->isNotEmpty()) {
+                $targetPlantIds = $targetGarden->plants->pluck('id')->toArray();
+                $selectedPlant = $targetGarden->plants->first();
+            } else {
+                $targetPlantIds = $plantIds->toArray();
+                $selectedPlant = $plants->first();
+            }
         }
 
         // Fetch agronomic weather for selected plant or first plant

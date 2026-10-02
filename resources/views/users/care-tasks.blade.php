@@ -235,13 +235,13 @@
                             </div>
                         </div>
                     @empty
-                        <div class="w-full bg-surface rounded-2xl p-8 text-center text-on-surface-variant border border-outline-variant/20 flex flex-col items-center justify-center gap-2">
+                        <div class="w-full bg-surface rounded-2xl p-8 sm:p-10 text-center text-on-surface-variant border border-outline-variant/20 flex flex-col items-center justify-center gap-2">
                             <div class="w-14 h-14 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-1">
                                 <span class="material-symbols-outlined text-[28px]">done_all</span>
                             </div>
-                            <div class="w-full self-stretch max-w-md mx-auto text-center" style="white-space: normal; word-break: normal;">
+                            <div class="w-full max-w-md mx-auto text-center">
                                 <h3 class="font-bold text-on-surface text-[16px]">Semua Tugas Beres!</h3>
-                                <p class="text-[13px] text-on-surface-variant mt-0.5">Tidak ada tugas perawatan tertunda untuk filter ini. Tanaman Anda terawat dengan baik.</p>
+                                <p class="text-[13px] text-on-surface-variant mt-1 leading-relaxed">Tidak ada tugas perawatan tertunda untuk filter ini. Tanaman Anda terawat dengan baik.</p>
                             </div>
                         </div>
                     @endforelse

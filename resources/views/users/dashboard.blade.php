@@ -81,11 +81,11 @@
                         <button type="button" id="adaptasi-trigger" onclick="window.toggleAdaptasiPintar(event)" class="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-surface-container-low hover:bg-surface-container text-xs font-semibold text-on-surface transition-all cursor-pointer group border border-outline-variant/20 select-none" aria-expanded="false" aria-haspopup="true">
                             <div class="flex items-center gap-1.5 min-w-0 pointer-events-none">
                                 <span class="material-symbols-outlined text-[16px] text-primary shrink-0">auto_awesome</span>
-                                <span class="text-[11px] sm:text-xs font-bold text-primary truncate">Adaptasi Pintar:</span>
+                                <span class="hidden sm:inline text-[11px] sm:text-xs font-bold text-primary truncate">Adaptasi Pintar:</span>
                                 <span id="weather-collapsed-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 shrink-0">Normal</span>
                             </div>
                             <div class="flex items-center gap-1 text-[11px] text-on-surface-variant/80 group-hover:text-primary transition-colors shrink-0 pointer-events-none">
-                                <span class="text-[11px]">Detail</span>
+                                <span class="hidden sm:inline text-[11px]">Detail</span>
                                 <span class="material-symbols-outlined text-[16px] transition-transform duration-200" id="adaptasi-arrow">expand_more</span>
                             </div>
                         </button>

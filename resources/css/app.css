@@ -88,12 +88,6 @@
     --color-status-new-bg: #dbeafe;
     --color-status-new-text: #1e3a8a;
 
-    /* ---- Spacing Scale (8px base) ---- */
-    --spacing-xs: 4px;
-    --spacing-base: 8px;
-    --spacing-sm: 12px;
-    --spacing-md: 16px;
-    --spacing-gutter: 20px;
 
     /* ---- Border Radius ---- */
     --radius-sm: 0.25rem;

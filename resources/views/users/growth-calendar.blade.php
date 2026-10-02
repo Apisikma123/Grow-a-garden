@@ -134,10 +134,10 @@
             <div class="lg:col-span-3 bg-white rounded-[24px] p-5 md:p-8 border border-outline-variant/30 ambient-shadow-lg flex flex-col">
                 
                 {{-- Calendar Navigation Bar --}}
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-outline-variant/20">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-outline-variant/20">
                     {{-- Month Title & Year --}}
-                    <div class="flex items-center gap-3">
-                        <h2 id="calendar-month-year" class="text-[22px] md:text-[26px] font-black text-on-surface tracking-tight">
+                    <div class="flex items-center gap-2.5 shrink-0">
+                        <h2 id="calendar-month-year" class="text-[20px] sm:text-[24px] font-black text-on-surface tracking-tight whitespace-nowrap">
                             September 2026
                         </h2>
                         <div id="calendar-spinner" class="hidden items-center text-xs font-bold text-primary gap-1">
@@ -145,15 +145,14 @@
                         </div>
                     </div>
 
-                    {{-- Controls: Plant Filter, Add Task, Today, Prev/Next --}}
-                    <div class="flex items-center gap-2 flex-wrap">
-                        {{-- Plant Filter --}}
+                    {{-- Controls: Kebun Filter, Today, Prev/Next --}}
+                    <div class="flex items-center gap-2 shrink-0 flex-wrap sm:flex-nowrap">
+                        {{-- Filter Per Kebun (Hanya Nama Kebun, Tanpa Tanaman, Tanpa Emoji) --}}
                         <div class="relative">
-                            <select id="calendar-plant-filter" onchange="onPlantFilterChange(this.value)" class="text-[13px] font-bold text-on-surface bg-surface border border-outline-variant/50 rounded-xl px-3 py-2 pr-8 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer">
-                                <option value="all" {{ request('plant_id') === 'all' ? 'selected' : '' }}>Semua Tanaman</option>
-                                @foreach($plants as $p)
-                                    <option value="{{ $p->id }}" {{ $mainPlant && $mainPlant->id == $p->id && request('plant_id') !== 'all' ? 'selected' : '' }}>
-                                        {{ $p->plantTemplate->name_id }} ({{ $p->garden->name ?? 'Kebun' }})
+                            <select id="calendar-filter" onchange="onFilterChange(this.value)" class="text-[13px] font-bold text-on-surface bg-surface border border-outline-variant/60 rounded-full pl-4 pr-8 py-2 focus:outline-none focus:border-primary appearance-none cursor-pointer hover:border-primary transition-colors shadow-2xs">
+                                @foreach($gardens as $g)
+                                    <option value="{{ $g->id }}" {{ ($selectedGarden && $selectedGarden->id == $g->id) ? 'selected' : '' }}>
+                                        Kebun {{ $g->name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -161,17 +160,17 @@
                         </div>
 
                         {{-- Today Button --}}
-                        <button type="button" onclick="jumpToToday()" class="text-[12px] font-extrabold text-on-surface border border-outline-variant/50 hover:bg-surface-container-high active:scale-95 px-3 py-2 rounded-xl transition-all shadow-2xs">
+                        <button type="button" onclick="jumpToToday()" class="text-[12px] font-bold text-on-surface bg-surface border border-outline-variant/60 hover:bg-surface-container-high active:scale-95 px-3.5 py-2 rounded-full transition-all shadow-2xs whitespace-nowrap">
                             Hari Ini
                         </button>
 
                         {{-- Prev & Next Month Buttons --}}
-                        <div class="inline-flex items-center bg-surface rounded-xl border border-outline-variant/40 p-0.5">
-                            <button type="button" onclick="prevMonth()" class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface hover:bg-surface-container-high transition-colors active:scale-95" title="Bulan Sebelumnya">
-                                <span class="material-symbols-outlined text-[18px]">chevron_left</span>
+                        <div class="inline-flex items-center bg-surface rounded-full border border-outline-variant/60 p-0.5">
+                            <button type="button" onclick="prevMonth()" class="w-7 h-7 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-container-high transition-colors active:scale-95 cursor-pointer" title="Bulan Sebelumnya">
+                                <span class="material-symbols-outlined text-[17px]">chevron_left</span>
                             </button>
-                            <button type="button" onclick="nextMonth()" class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface hover:bg-surface-container-high transition-colors active:scale-95" title="Bulan Berikutnya">
-                                <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+                            <button type="button" onclick="nextMonth()" class="w-7 h-7 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-container-high transition-colors active:scale-95 cursor-pointer" title="Bulan Berikutnya">
+                                <span class="material-symbols-outlined text-[17px]">chevron_right</span>
                             </button>
                         </div>
                     </div>
@@ -345,14 +344,14 @@
                 <div class="w-full bg-white rounded-[24px] p-5 border border-outline-variant/30 ambient-shadow-lg flex flex-col">
                     <div class="flex items-center justify-between mb-3.5">
                         <div class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-[#944a23] text-[20px]">potted_plant</span>
-                            <h3 class="text-[15px] font-black text-on-surface">Tanaman Kebun Anda</h3>
+                            <span class="material-symbols-outlined text-primary text-[20px]">potted_plant</span>
+                            <h3 class="text-[15px] font-black text-on-surface">Tanaman di {{ $selectedGarden->name ?? 'Kebun' }}</h3>
                         </div>
-                        <span class="text-[11px] font-bold text-on-surface-variant">{{ $plants->count() }} Total</span>
+                        <span class="text-[11px] font-bold text-on-surface-variant">{{ $selectedGarden ? $selectedGarden->plants->count() : $plants->count() }} Tanaman</span>
                     </div>
 
                     <div class="space-y-2 max-h-[300px] overflow-y-auto pr-1">
-                        @foreach($plants as $p)
+                        @foreach(($selectedGarden ? $selectedGarden->plants : $plants) as $p)
                             @php $isCurrent = ($mainPlant && $mainPlant->id == $p->id); @endphp
                             <a href="{{ route('growth-calendar', ['plant_id' => $p->id]) }}" class="flex items-center justify-between p-2 rounded-xl border transition-all {{ $isCurrent ? 'bg-primary/10 border-primary font-bold' : 'bg-surface border-outline-variant/30 hover:border-primary/50 hover:bg-surface-container-low' }}">
                                 <div class="flex items-center gap-2.5 min-w-0">
@@ -361,7 +360,7 @@
                                     </div>
                                     <div class="min-w-0">
                                         <h4 class="text-[12px] font-bold text-on-surface truncate">{{ $p->plantTemplate->name_id }}</h4>
-                                        <p class="text-[10px] text-on-surface-variant truncate">Kebun: {{ $p->garden->name ?? '-' }} • Umur {{ max(1, $p->hst) }} Hari</p>
+                                        <p class="text-[10px] text-on-surface-variant truncate">Umur {{ max(1, $p->hst) }} Hari</p>
                                     </div>
                                 </div>
                                 @if($isCurrent)
@@ -808,7 +807,7 @@
 
     let currentYear = {{ date('Y') }};
     let currentMonth = {{ date('n') }}; // 1 - 12
-    let activePlantFilter = "{{ request('plant_id', ($mainPlant ? $mainPlant->id : 'all')) }}";
+    let activeGardenId = "{{ $selectedGarden ? $selectedGarden->id : '' }}";
     let eventsData = [];
     let activeEvent = null;
     let todayWeather = null;
@@ -836,9 +835,8 @@
         }, 3500);
     }
 
-    function onPlantFilterChange(plantId) {
-        activePlantFilter = plantId;
-        fetchEvents();
+    function onFilterChange(gardenId) {
+        window.location.href = `{{ route('growth-calendar') }}?garden_id=${encodeURIComponent(gardenId)}`;
     }
 
     function prevMonth() {
@@ -877,7 +875,7 @@
         }
 
         try {
-            const url = `/api/growth-calendar/events?plant_id=${encodeURIComponent(activePlantFilter)}&month=${currentMonth}&year=${currentYear}`;
+            const url = `/api/growth-calendar/events?garden_id=${encodeURIComponent(activeGardenId)}&month=${currentMonth}&year=${currentYear}`;
             const res = await fetch(url, {
                 headers: {
                     'Accept': 'application/json'
@@ -945,40 +943,37 @@
                 openDateModal(dateStr);
             };
 
-            // Day Header (Date number + optional weather icon, NO 'Hari Ini' text)
+            // Day Header (Date number only - no weather/cloud icon)
             let headerHtml = `
                 <div class="flex items-center justify-between gap-1 w-full mb-1">
                     <span class="text-[12px] md:text-[14px] font-black ${isToday ? 'text-primary' : (isPast ? 'text-slate-400' : 'text-on-surface')}">
                         ${d}
                     </span>
-                    ${isToday && todayWeather ? `
-                        <span class="material-symbols-outlined text-primary text-[15px] leading-none shrink-0 transition-transform group-hover:scale-110" title="Cuaca Hari Ini: ${todayWeather.condition_title} (${todayWeather.temperature}°C)">
-                            ${todayWeather.icon || 'wb_sunny'}
-                        </span>
-                    ` : ''}
                 </div>
             `;
 
-            // Tasks Dots (Titik-titik kegiatan)
+            // Filter active/incomplete events for dots (tugas yang sudah siap/selesai tidak dimunculkan titiknya)
+            const activeDayEvents = dayEvents.filter(evt => {
+                const s = (evt.status || '').toUpperCase();
+                return s !== 'COMPLETED' && s !== 'SKIPPED' && s !== 'DONE';
+            });
+
+            // Tasks Dots (Maksimal 5 titik, titik ke-6 menjadi badge overflow +1 dst)
             let tasksHtml = '';
-            if (dayEvents.length > 0) {
-                tasksHtml = '<div class="flex items-center justify-start gap-1.5 flex-wrap mt-auto pt-1 w-full">';
+            if (activeDayEvents.length > 0) {
+                tasksHtml = '<div class="flex items-center justify-start gap-1 flex-wrap mt-auto pt-1 w-full">';
                 const maxDots = 5;
-                const visibleEvents = dayEvents.slice(0, maxDots);
-                const remaining = dayEvents.length - maxDots;
+                const visibleEvents = activeDayEvents.slice(0, maxDots);
+                const remaining = activeDayEvents.length - maxDots;
 
                 visibleEvents.forEach(evt => {
-                    const isCompleted = (evt.status === 'COMPLETED');
                     const isMissed = (evt.status === 'MISSED');
 
                     let dotColor = 'bg-[#006c49]';
                     let dotTitle = evt.title || 'Kegiatan';
                     if (evt.plant_name) dotTitle += ` (${evt.plant_name})`;
 
-                    if (isCompleted) {
-                        dotColor = 'bg-emerald-500';
-                        dotTitle += ' [Selesai]';
-                    } else if (isMissed) {
+                    if (isMissed) {
                         dotColor = 'bg-[#ba1a1a]';
                         dotTitle += ' [Terlewat]';
                     } else {
@@ -999,7 +994,7 @@
 
                 if (remaining > 0) {
                     tasksHtml += `
-                        <span class="text-[9px] font-extrabold text-on-surface-variant leading-none ml-0.5" title="${remaining} kegiatan lainnya">+${remaining}</span>
+                        <span class="inline-flex items-center justify-center min-w-[16px] h-3.5 px-1 rounded-full bg-primary/10 text-primary text-[9px] font-black leading-none shrink-0 shadow-2xs" title="${remaining} kegiatan lagi">+${remaining}</span>
                     `;
                 }
 
