@@ -38,8 +38,7 @@
                 </div>
             </div>
             <div class="text-[32px] font-black text-on-surface leading-tight mb-2 relative z-10">{{ number_format($totalCareTemplates) }}</div>
-            <div class="flex items-center gap-1 text-[11px] text-tertiary font-bold relative z-10">
-                <span class="material-symbols-outlined text-[14px]">assignment</span>
+            <div class="text-[11px] text-tertiary font-bold relative z-10">
                 Total template perawatan
             </div>
             <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-tertiary-container/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
@@ -54,8 +53,7 @@
                 </div>
             </div>
             <div class="text-[32px] font-black text-on-surface leading-tight mb-2 relative z-10">{{ number_format($totalPlantTemplates) }}</div>
-            <div class="flex items-center gap-1 text-[11px] text-secondary font-bold relative z-10">
-                <span class="material-symbols-outlined text-[14px]">eco</span>
+            <div class="text-[11px] text-secondary font-bold relative z-10">
                 Total tanaman terdaftar
             </div>
             <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-secondary-container/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
@@ -70,8 +68,7 @@
                 </div>
             </div>
             <div class="text-[32px] font-black text-on-surface leading-tight mb-2 relative z-10">{{ number_format($totalBadges) }}</div>
-            <div class="flex items-center gap-1 text-[11px] text-primary font-bold relative z-10">
-                <span class="material-symbols-outlined text-[14px]">workspace_premium</span>
+            <div class="text-[11px] text-primary font-bold relative z-10">
                 Total badge sistem
             </div>
             <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-primary/5 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
