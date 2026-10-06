@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\OnboardingController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -28,11 +27,8 @@ Route::get('/otp', [AuthController::class, 'showOtp'])->name('otp.show');
 Route::post('/otp', [AuthController::class, 'verifyOtp'])->name('otp.verify');
 Route::post('/otp/resend', [AuthController::class, 'resendOtp'])->name('otp.resend');
 
-// Onboarding Questionnaire Routes
-Route::get('/onboarding', [OnboardingController::class, 'show'])->name('onboarding')->middleware('auth');
-Route::post('/onboarding', [OnboardingController::class, 'complete'])->name('onboarding.complete')->middleware('auth');
-Route::match(['get', 'post'], '/onboarding/skip', [OnboardingController::class, 'skip'])->name('onboarding.skip')->middleware('auth');
-Route::post('/api/onboarding/complete', [OnboardingController::class, 'complete'])->name('api.onboarding.complete')->middleware('auth');
+// Onboarding fallback redirect
+Route::redirect('/onboarding', '/dashboard');
 
 
 // Protected User Routes

@@ -34,7 +34,6 @@ Google OAuth 2.0 is integrated via Laravel Socialite alongside an OTP verificati
 ## Features
 
 - **Streamlined Authentication & Google OAuth**: Seamless registration, OTP email verification, instant password reset, and Google OAuth 2.0 Single Sign-On.
-- **Interactive Onboarding Questionnaire**: Tailors garden recommendations based on garden type (indoor, balcony, yard), farming method (soil/hydroponics), and regional preferences.
 - **Multi-Garden & Plant Tracking**: Manage multiple gardens and plant instances with details on variety, plant count, planting date, growth stages, and harvest logs.
 - **Automated Growth Calendar**: Dynamic milestone generation tracking plant progression through Germination, Seedling, Vegetative, Flowering, Fruiting, and Harvest phases.
 - **Intelligent Care Task Engine**: Auto-generates scheduled tasks for watering, fertilizing, pest control, and pruning with priority levels and status tracking (Pending, Completed, Skipped).

@@ -55,10 +55,6 @@ class AuthController extends Controller
                     return redirect()->intended('/admin/dashboard');
                 }
 
-                if (!$user->hasCompletedOnboarding()) {
-                    return redirect()->route('onboarding');
-                }
-
                 return redirect()->intended('/dashboard');
             }
 
@@ -145,8 +141,6 @@ class AuthController extends Controller
                 
                 if (in_array($user->role, ['admin', 'super_admin'])) {
                     $response = redirect()->intended('/admin/dashboard');
-                } elseif (!$user->hasCompletedOnboarding()) {
-                    $response = redirect()->route('onboarding');
                 } else {
                     $response = redirect()->intended('/dashboard');
                 }
@@ -167,7 +161,7 @@ class AuthController extends Controller
                 
                 Auth::login($user, true);
                 $request->session()->regenerate();
-                return redirect()->route('onboarding');
+                return redirect()->intended('/dashboard');
             }
             
         } catch (\Exception $e) {
@@ -260,8 +254,6 @@ class AuthController extends Controller
 
             if (in_array($user->role, ['admin', 'super_admin'])) {
                 $response = redirect()->intended('/admin/dashboard');
-            } elseif (!$user->hasCompletedOnboarding()) {
-                $response = redirect()->route('onboarding');
             } else {
                 $response = redirect()->intended('/dashboard');
             }
